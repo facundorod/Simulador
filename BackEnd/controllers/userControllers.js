@@ -33,11 +33,11 @@ const login = (req, res) => {
 };
 
 const register = (req, res) => {
-  const nombre = req.body.nombre;
-  const apellido = req.body.apellido;
-  const usuario = req.body.usuario;
-  const contraseña = req.body.contraseña;
-  var datos = [nombre, apellido, usuario, contraseña];
+  const name = req.body.name;
+  const surname = req.body.surname;
+  const user = req.body.user;
+  const password = req.body.password;
+  var datos = [name, surname, user, password];
   bd.insertUsuario(datos);
 
 };

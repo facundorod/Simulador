@@ -7,9 +7,9 @@ import { Observable } from 'rxjs';
 })
 export class LoginService {
 
-  rutaLogin = "http://localhost:8001/api/login";
-  rutaUpdate = "http://localhost:8001/api/updateUsers";
-  rutaGetUsers = "http://localhost:8001/api/getUsers";
+  pathLogin = "http://localhost:8001/api/login";
+  pathUpdate = "http://localhost:8001/api/updateUsers";
+  pathGetUsers = "http://localhost:8001/api/getUsers";
 
   httpOptions = {
     headers: new HttpHeaders({
@@ -18,9 +18,9 @@ export class LoginService {
     })
   };
   
-  login(usuario:String, psw: String){ 
+  login(user:String, psw: String){ 
     
-    return this.http.post(this.rutaLogin, {usuario:usuario, psw:psw } );
+    return this.http.post(this.pathLogin, {user:user, psw:psw } );
 
   }
 

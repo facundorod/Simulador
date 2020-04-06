@@ -7,7 +7,6 @@ const bodyParser = require('body-parser');
 app.use(bodyParser.urlencoded({ extended: false })); // Permite obtener los parámetros de peticiones
 app.use(bodyParser.json()); // Parámetros con formato Json
 
-app.get('/api/usuarios', bd.usuarios);
 app.use(routesIndex);
 app.use(routesUser);
 app.get('*', (req, res) => {

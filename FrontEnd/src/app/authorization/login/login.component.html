@@ -3,14 +3,14 @@
         <h1> Iniciar sesión </h1>
         <form (ngSubmit)="onSubmit()" #loginForm="ngForm">
             <div class="form-group">
-                <label for="usuario"> Usuario </label>
+                <label for="usuario"> User </label>
                 <input type="text" class="form-control" name="user" required [(ngModel)]="usuario" #user="ngModel">
                 <div [hidden]="user.valid || user.pristine" class="alert alert-danger">
-                    El usuario es requerido.
+                    User is required.
                 </div>
             </div>
             <div class="form-group"> 
-                <label for="psw"> Contraseña </label>
+                <label for="psw"> Password </label>
                 <input type="password" class="form-control" name="psw" required [(ngModel)]="psw">
             </div>
             <button type="submit" class="btn btn-sucess" (click)="login(usuario, psw); loginForm.reset()" [disabled]="!loginForm.form.valid"> Iniciar Sesión </button>
@@ -19,7 +19,7 @@
 </div>
 
 <div [hidden]="!submitted">
-    <h2> Logueo exitoso! </h2>
+    <h2> Login succesfull! </h2>
     <br>
-    <button class="btn btn-primary" (click)="submitted=false">Cerrar Sesión</button>
+    <button class="btn btn-primary" (click)="submitted=false">Log out</button>
   </div>
