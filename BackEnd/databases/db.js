@@ -2,15 +2,15 @@ const { Client } = require('pg');
 const client = new Client({
     host: 'localhost',
     port: 5432,
-    database: 'tesis',
+    database: 'Simulador',
     user: 'postgres',
-    password: 'Facundo95'
+    password: 'facundo95'
 });
 
-const bd = client.connect();
+client.connect();
 
 module.exports.usuarios = function (req, res) {
-    bd.query('SELECT * FROM simulador.usuario', [true])
+    client.query('SELECT * FROM "Simulator".user', [true])
         .then(resultado => {
             res.send(resultado);
         })
@@ -19,8 +19,12 @@ module.exports.usuarios = function (req, res) {
         });
 }
 
-module.exports.insertUsuario = function(datos){
-    bd.query('INSERT INTO simulador.usuario(email, nombre, apellido, contraseña) VALUES ($1, $2, $3, $4)', datos)
+module.exports.insertUsuario = function(data){
+    /* client.query('SELECT * FROM "Simulator".ROLE').
+    then(resultado => {
+        console.log(resultado);
+    }); */
+    client.query('INSERT INTO "Simulator"."User"(id_user, e_mail, name, surname, password, institution) VALUES (1, $1, $2, $3, $4, $5)', data)
     .then(resultado => {
         console.log(resultado)
     })
@@ -30,4 +34,4 @@ module.exports.insertUsuario = function(datos){
 };
 
 
-module.exports.bd = bd;
+module.exports.bd = client;

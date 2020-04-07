@@ -35,10 +35,11 @@ const login = (req, res) => {
 const register = (req, res) => {
   const name = req.body.name;
   const surname = req.body.surname;
-  const user = req.body.user;
+  const e_mail = req.body.e_mail;
   const password = req.body.password;
-  var datos = [name, surname, user, password];
-  bd.insertUsuario(datos);
+  const institution = req.body.institution;
+  var data = [e_mail, name, surname, password, institution];
+  bd.insertUsuario(data);
 
 };
 
