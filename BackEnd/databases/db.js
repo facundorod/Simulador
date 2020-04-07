@@ -20,11 +20,7 @@ module.exports.usuarios = function (req, res) {
 }
 
 module.exports.insertUsuario = function(data){
-    /* client.query('SELECT * FROM "Simulator".ROLE').
-    then(resultado => {
-        console.log(resultado);
-    }); */
-    client.query('INSERT INTO "Simulator"."User"(id_user, e_mail, name, surname, password, institution) VALUES (1, $1, $2, $3, $4, $5)', data)
+    client.query('INSERT INTO "Simulator"."User"(e_mail, name, surname, password, institution) VALUES ($1, $2, $3, $4, $5)', data)
     .then(resultado => {
         console.log(resultado)
     })

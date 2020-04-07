@@ -10,20 +10,11 @@ app.use(body_parser.urlencoded({extended:true}));
 
 
 const createUser = (req, res) => {
-  res.header('Access-Control-Allow-Origin: *');
-  res.header(
-    'Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept'
-  );
-  res.header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE');
   res.send({ status: 'OK', message: 'Usuario creado' });
 };
 
 const login = (req, res) => {
-  res.header('Access-Control-Allow-Origin: *');
-  res.header(
-    'Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept'
-  );
-  res.header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE');
+
   const user = { id: 3 };
   const token = jwt.sign({ user }, 'my_secret_key', { expiresIn });
 
@@ -40,39 +31,21 @@ const register = (req, res) => {
   const institution = req.body.institution;
   var data = [e_mail, name, surname, password, institution];
   bd.insertUsuario(data);
+  console.log(data);
 
 };
 
 const deleteUser = (req, res) => {
-  res.header('Access-Control-Allow-Origin', '*');
-  res.header(
-    'Access-Control-Allow-Headers',
-    'Authorization, X-API-KEY, Origin, X-Requested-With, Content-Type, Accept, Access-Control-Allow-Request-Method'
-  );
-  res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, DELETE');
-  res.header('Allow', 'GET, POST, OPTIONS, PUT, DELETE');
   res.send({ status: 'OK', message: 'Usuario eliminado' });
 };
 
 const getUsers = (req, res) => {
-  res.header('Access-Control-Allow-Origin', '*');
-  res.header(
-    'Access-Control-Allow-Headers',
-    'Authorization, X-API-KEY, Origin, X-Requested-With, Content-Type, Accept, Access-Control-Allow-Request-Method'
-  );
-  res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, DELETE');
-  res.header('Allow', 'GET, POST, OPTIONS, PUT, DELETE');
+  req.header('Access-Control-Allow-Origin: *');
+  console.log(req.headers);  
   res.send({ status: 'OK', data: [] });
 };
 
 const updateUsers = (req, res) => {
-  res.header('Access-Control-Allow-Origin', '*');
-  res.header(
-    'Access-Control-Allow-Headers',
-    'Authorization, X-API-KEY, Origin, X-Requested-With, Content-Type, Accept, Access-Control-Allow-Request-Method'
-  );
-  res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, DELETE');
-  res.header('Allow', 'GET, POST, OPTIONS, PUT, DELETE');
   res.send({ status: 'OK', message: 'Usuario actualizado' });
 };
 

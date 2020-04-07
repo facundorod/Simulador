@@ -4,7 +4,7 @@
         <div class="form-row">
           <div class="form-group col-md-6">
             <label for="inputEmail4">Email</label>
-            <input type="email" class="form-control" id="inputEmail4" name="usuario" [(ngModel)]="usuario">
+            <input type="email" class="form-control" id="inputEmail4" name="email" [(ngModel)]="email">
           </div>
           <div class="form-group col-md-6">
             <label for="inputPassword4">Password</label>
@@ -12,13 +12,17 @@
           </div>
         </div>
         <div class="form-group">
-          <label for="inputNombre">Nombre</label>
-          <input type="text" class="form-control" id="inputNombre" name="nombre" [(ngModel)]="nombre">
+          <label for="inputName">Name</label>
+          <input type="text" class="form-control" id="inputName" name="name" [(ngModel)]="name">
         </div>
         <div class="form-group">
-          <label for="inputApellido">Apellido</label>
-          <input type="text" class="form-control" id="inputApellido" name="apellido" [(ngModel)]="apellido">
+          <label for="inputSurname">Surname</label>
+          <input type="text" class="form-control" id="inputSurname" name="surname" [(ngModel)]="surname">
         </div>
-        <button type="submit" class="btn btn-primary" (click)="sign()"> Registrarse </button>
+        <div class="form-group">
+          <label for="inputInstitution"> Institution </label>
+          <input type="text" class="form-control" id="inputInstitution" name="institution" [(ngModel)]="institution">
+        </div>
+        <button type="submit" class="btn btn-primary" (click)="sign()"> Create account </button>
       </form>
     </div>

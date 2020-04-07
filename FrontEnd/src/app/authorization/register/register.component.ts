@@ -8,18 +8,20 @@ import { LoginService } from '../login.service';
 })
 export class RegisterComponent implements OnInit {
 
-  nombre: string;
-  apellido: string;
-  password: string;
-  usuario: string;
-
+  name: String;
+  surname: String;
+  password: String;
+  email: String;
+  institution: String;
   constructor(private login: LoginService) { }
 
   ngOnInit() {
   }
 
   sign(){
-    console.log(this.nombre + this.apellido + this.password + this.usuario);
+    this.login.register(this.email, this.name, this.surname, this.password, this.institution).subscribe(data => {
+      console.log(data);
+    });
   }
 
 }
