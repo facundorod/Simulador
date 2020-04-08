@@ -14,39 +14,29 @@ const createUser = (req, res) => {
 };
 
 const login = (req, res) => {
-
   const user = { id: 3 };
   const token = jwt.sign({ user }, 'my_secret_key', { expiresIn });
-
+  const e_mail = req.e_mail;
+  bd.getUserByEmail(e_mail);
   res.json({
-    token
+      token
   });
+  
 };
 
 const register = (req, res) => {
-  const name = req.body.name;
-  const surname = req.body.surname;
-  const e_mail = req.body.e_mail;
-  const password = req.body.password;
-  const institution = req.body.institution;
-  var data = [e_mail, name, surname, password, institution];
-  bd.insertUsuario(data);
-  console.log(data);
-
+  bd.insertUsuario(req);
 };
 
 const deleteUser = (req, res) => {
-  res.send({ status: 'OK', message: 'Usuario eliminado' });
 };
 
 const getUsers = (req, res) => {
-  req.header('Access-Control-Allow-Origin: *');
   console.log(req.headers);  
   res.send({ status: 'OK', data: [] });
 };
 
 const updateUsers = (req, res) => {
-  res.send({ status: 'OK', message: 'Usuario actualizado' });
 };
 
 module.exports = {

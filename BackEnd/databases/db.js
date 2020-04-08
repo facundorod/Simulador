@@ -9,7 +9,7 @@ const client = new Client({
 
 client.connect();
 
-module.exports.usuarios = function (req, res) {
+const getUsers = function (req, res) {
     client.query('SELECT * FROM "Simulator".user', [true])
         .then(resultado => {
             res.send(resultado);
@@ -19,7 +19,8 @@ module.exports.usuarios = function (req, res) {
         });
 }
 
-module.exports.insertUsuario = function(data){
+const insertUser = (req) => {
+    data = [req.e_mail, req.name, req.surname, req.password, req.institution];
     client.query('INSERT INTO "Simulator"."User"(e_mail, name, surname, password, institution) VALUES ($1, $2, $3, $4, $5)', data)
     .then(resultado => {
         console.log(resultado)
@@ -29,5 +30,16 @@ module.exports.insertUsuario = function(data){
     });
 };
 
+const getUserByEmail = (e_mail) => {
 
-module.exports.bd = client;
+    client.query('SELECT * FROM "Simulator"."User" WHERE e_mail=$1', [e_mail], (error, results) => {
+        console.log(results.rows);
+    });
+}
+
+
+module.exports = {
+    getUsers,
+    getUserByEmail,
+    insertUser
+}

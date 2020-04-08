@@ -1,22 +1,20 @@
-<div class="container">
-    <div [hidden]="submitted"> 
-        <h1> Sign In </h1>
-        <form  #loginForm="ngForm">
-            <div class="form-group">
-                <label for="usuario"> User </label>
-                <input type="text" class="form-control" name="e_mail" required [(ngModel)]="e_mail" #user="ngModel">
-                <div [hidden]="user.valid" class="alert alert-danger">
-                    E_mail is required.
-                </div>
+<div [hidden]="submit" class="container">
+    <h1> Sign In </h1>
+    <form  #loginForm="ngForm">
+        <div class="form-group">
+            <label for="usuario"> User </label>
+            <input type="text" class="form-control" name="e_mail" required [(ngModel)]="e_mail" #user="ngModel">
+            <div [hidden]="user.valid" class="alert alert-danger">
+                E_mail is required.
             </div>
-            <div class="form-group"> 
-                <label for="psw"> Password </label>
-                <input type="password" class="form-control" name="password" required [(ngModel)]="password" #psw="ngModel">
-                <div [hidden]="psw.valid" class="alert alert-danger">
-                    Password is required
-                </div>
+        </div>
+        <div class="form-group"> 
+            <label for="psw"> Password </label>
+            <input type="password" class="form-control" name="password" required [(ngModel)]="password" #psw="ngModel">
+            <div [hidden]="psw.valid" class="alert alert-danger">
+                Password is required
             </div>
-            <button type="submit" class="btn btn-sucess" (click)="login(); loginForm.reset()" [disabled]="!loginForm.form.valid"> Sign In </button>
-        </form>
-    </div>
+        </div>
+        <button type="submit"  (click)="login(); loginForm.reset()" [disabled]="!loginForm.form.valid"> Sign In </button>
+    </form>
 </div>

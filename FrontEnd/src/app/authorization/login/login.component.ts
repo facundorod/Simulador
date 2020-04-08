@@ -10,6 +10,7 @@ import {ToastrService } from 'ngx-toastr';
 export class LoginComponent implements OnInit {
   e_mail:String;
   password:String;
+  submit: Boolean = false;
 
   constructor(private loginService: LoginService, private toast: ToastrService) { }
 
@@ -18,12 +19,9 @@ export class LoginComponent implements OnInit {
     this.loginService.login(this.e_mail, this.password)
     .subscribe(token => {
       localStorage.setItem('Token', JSON.stringify(token));
-     // this.toast.success('Login Sucessful');
-    }); 
-  }
-
-  showSuccess(){
-    this.toast.success('Exito', 'T');
+      this.submit = true;
+    });
+    
   }
 
   ngOnInit() {
