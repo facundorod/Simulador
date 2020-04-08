@@ -19,7 +19,8 @@ export class RegisterComponent implements OnInit {
   }
 
   sign(){
-    this.login.register(this.email, this.name, this.surname, this.password, this.institution).subscribe(data => {
+    this.login.register(this.email, this.name, this.surname, this.password, this.institution)
+    .subscribe(data => {
       console.log(data);
     });
   }

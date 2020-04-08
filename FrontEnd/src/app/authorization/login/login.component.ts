@@ -1,34 +1,30 @@
 import { Component, OnInit } from '@angular/core';
 import { LoginService } from '../login.service';
+import {ToastrService } from 'ngx-toastr';
+
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent implements OnInit {
-  usuario:String;
-  psw:String;
-  submitted=false;
+  e_mail:String;
+  password:String;
 
-  login(usuario:String, psw:String){
-    //this.loginService.login(usuario, psw).subscribe((user:Usuario) => console.log(user));
+  constructor(private loginService: LoginService, private toast: ToastrService) { }
+
+
+  login(){
+    this.loginService.login(this.e_mail, this.password)
+    .subscribe(token => {
+      localStorage.setItem('Token', JSON.stringify(token));
+     // this.toast.success('Login Sucessful');
+    }); 
   }
 
-
-  updateUser(){
-    // this.user = { nombreUsuario: "Facu", password: "Facu95" };
-    // this.loginService.updateUser(this.user).subscribe( (data) => {
-    //   console.log(data);
-    // })
-
+  showSuccess(){
+    this.toast.success('Exito', 'T');
   }
-
-  onSubmit(){
-    this.submitted = true;
-  }
-
-  
-  constructor(private loginService: LoginService) { }
 
   ngOnInit() {
   }
