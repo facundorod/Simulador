@@ -3,6 +3,7 @@ const expiresIn = 60 * 10; // 10 minutos de validez.
 const bd = require('../databases/db');
 const body_parser = require('body-parser');
 const express = require('express');
+const errorLogin = require('../errors/loginError');
 const app = express();
 
 app.use(body_parser.json()); // Peticiones application/json
@@ -16,16 +17,23 @@ const createUser = (req, res) => {
 const login = (req, res) => {
   const user = { id: 3 };
   const token = jwt.sign({ user }, 'my_secret_key', { expiresIn });
-  const e_mail = req.e_mail;
-  bd.getUserByEmail(e_mail);
-  res.json({
-      token
+  const e_mail = req.body.e_mail;
+  bd.getUserByEmail(e_mail)
+  .then(result => {
+    if (result == 1 ) {
+      res.json({token})
+    }
+    else {
+      err = new errorLogin();
+      res.json(err.toJson());
+    }
   });
   
 };
 
 const register = (req, res) => {
-  bd.insertUsuario(req);
+  const data = [req.body.e_mail, req.body.name, req.body.surname, req.body.password, req.body.institution];
+  bd.insertUser(data);
 };
 
 const deleteUser = (req, res) => {

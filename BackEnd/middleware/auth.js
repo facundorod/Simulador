@@ -1,6 +1,8 @@
 const express = require('express');
 const app = express();
 const jwt = require('jsonwebtoken');
+const AuthError = require('../errors/authError');
+
 
 const isAuth = (req, res, next) => {
     const bearerHeader = req.headers['authorization'];
@@ -10,7 +12,7 @@ const isAuth = (req, res, next) => {
             req.token = bearerToken;
             next();
         } else {
-            res.sendStatus(403);
+            next(new AuthError());
         }
 }
 

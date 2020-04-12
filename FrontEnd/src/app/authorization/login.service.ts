@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
+import { throwError } from 'rxjs';
+
 
 @Injectable({
   providedIn: 'root'
@@ -10,13 +11,7 @@ export class LoginService {
   pathLogin = "http://localhost:8001/api/login";
   pathUpdate = "http://localhost:8001/api/updateUsers";
   pathGetUsers = "http://localhost:8001/api/getUsers";
-  pathRegister = "http://localhost:8001/api/register"
-/*   httpOptions = {
-    headers: new HttpHeaders({
-      'Content-Type':  'application/json',
-      'Access-Control-Allow-Origin': '*'
-    })
-  }; */
+  pathRegister = "http://localhost:8001/api/register";
 
 
   constructor(private http:HttpClient) { }

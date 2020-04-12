@@ -17,9 +17,14 @@ export class LoginComponent implements OnInit {
 
   login(){
     this.loginService.login(this.e_mail, this.password)
-    .subscribe(token => {
-      localStorage.setItem('Token', JSON.stringify(token));
+    .subscribe( res => {
+      localStorage.setItem('Token', JSON.stringify(res));
       this.submit = true;
+      console.log(res);
+    },
+    err => {
+      console.log("errorrrr");
+      console.log(err);
     });
     
   }

@@ -1,3 +1,4 @@
+import { ToastrService } from 'ngx-toastr';
 import { Component, OnInit } from '@angular/core';
 import { LoginService } from '../login.service';
 
@@ -13,7 +14,7 @@ export class RegisterComponent implements OnInit {
   password: String;
   email: String;
   institution: String;
-  constructor(private login: LoginService) { }
+  constructor(private login: LoginService, private toast: ToastrService) { }
 
   ngOnInit() {
   }
@@ -21,8 +22,11 @@ export class RegisterComponent implements OnInit {
   sign(){
     this.login.register(this.email, this.name, this.surname, this.password, this.institution)
     .subscribe(data => {
-      console.log(data);
-    });
+        this.toast.success('Login', 'Prueba');
+        console.log(data);
+      } )
+    this.toast.error('No se pudo loguear');
+  
   }
 
 }
