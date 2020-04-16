@@ -1,3 +1,4 @@
+
 class LoginError extends Error {
     constructor() {
         super('The data entered is wrong');

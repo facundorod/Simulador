@@ -1,57 +1,46 @@
 const jwt = require('jsonwebtoken');
 const expiresIn = 60 * 10; // 10 minutos de validez.
 const bd = require('../databases/db');
-const body_parser = require('body-parser');
-const express = require('express');
 const errorLogin = require('../errors/loginError');
-const app = express();
+const registerError = require('../errors/registerError');
 
-app.use(body_parser.json()); // Peticiones application/json
-app.use(body_parser.urlencoded({extended:true}));
-
-
-const createUser = (req, res) => {
-  res.send({ status: 'OK', message: 'Usuario creado' });
-};
 
 const login = (req, res) => {
-  const user = { id: 3 };
-  const token = jwt.sign({ user }, 'my_secret_key', { expiresIn });
+  const user = { e_mail: req.body.e_mail };
   const e_mail = req.body.e_mail;
-  bd.getUserByEmail(e_mail)
-  .then(result => {
-    if (result == 1 ) {
-      res.json({token})
-    }
-    else {
-      err = new errorLogin();
-      res.json(err.toJson());
-    }
-  });
-  
+  const password = req.body.password;
+  bd.client.query('SELECT * FROM "Simulator"."User" WHERE e_mail=$1 AND password=$2', [e_mail, password])
+    .then(result => {
+      if (result.rowCount === 0) {
+        throw res.json(new errorLogin().message);
+      } else {
+        const token = jwt.sign({ user }, password, { expiresIn });
+        return res.json(token);
+      }
+    })
+    .catch(err => {
+      return new errorLogin().message;
+    });
 };
 
 const register = (req, res) => {
   const data = [req.body.e_mail, req.body.name, req.body.surname, req.body.password, req.body.institution];
-  bd.insertUser(data);
-};
-
-const deleteUser = (req, res) => {
+  bd.client.query('INSERT INTO "Simulator"."User"(e_mail, name, surname, password, institution) VALUES ($1, $2, $3, $4, $5)', data)
+    .then(result => {
+      return res.json("The account has been created");
+    })
+    .catch( err => {
+      return res.send(new registerError().message);
+    })
 };
 
 const getUsers = (req, res) => {
-  console.log(req.headers);  
+  console.log(req.headers);
   res.send({ status: 'OK', data: [] });
 };
 
-const updateUsers = (req, res) => {
-};
-
 module.exports = {
-  createUser,
-  deleteUser,
   getUsers,
-  updateUsers,
   login,
   register
 };

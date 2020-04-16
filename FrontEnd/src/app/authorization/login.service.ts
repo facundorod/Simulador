@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
-import { throwError } from 'rxjs';
 
 
 @Injectable({
@@ -13,12 +12,9 @@ export class LoginService {
   pathGetUsers = "http://localhost:8001/api/getUsers";
   pathRegister = "http://localhost:8001/api/register";
 
-
   constructor(private http:HttpClient) { }
   
   login(e_mail:String, password: String){ 
-    console.log(e_mail);
-    console.log(password);
     return this.http.post(this.pathLogin, {e_mail: e_mail, password:password } );
 
   }

@@ -10,14 +10,20 @@ app.use(cors()); // Soluciono problemas del CORS.
 app.use(bodyParser.urlencoded({ extended: false })); // Permite obtener los parámetros de peticiones
 app.use(bodyParser.json()); // Parámetros con formato Json
 
+
 app.use(routesIndex);
 app.use(routesUser);
-app.use(errors);
 
+app.post('/api/as', (req, res) => {
+    throw new Error();
+})
 
-app.get('*', (req, res) => {
+app.get('/api/*', (req, res) => {
   res.status(404).send('Not Found');
 });
+
+app.use(errors);
+
 
 
 app.listen(8001);

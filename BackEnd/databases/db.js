@@ -1,6 +1,6 @@
 const { Client } = require('pg');
 const RegisterError = require('../errors/registerError');
-
+const LoginError = require('../errors/loginError');
 
 // Conexión a base de datos
 const client = new Client({
@@ -28,9 +28,7 @@ const getUsers = function (req, res) {
 const insertUser = (data) => {
     client.query('INSERT INTO "Simulator"."User"(e_mail, name, surname, password, institution) VALUES ($1, $2, $3, $4, $5)', data, (error, result) => {
         if (error) {
-            console.log(error);
             re = new RegisterError();
-            console.log(re);
         } else {
             console.log(result);
         }
@@ -38,16 +36,10 @@ const insertUser = (data) => {
     
 };
 
-// Obtiene un usuario según un email
-const getUserByEmail = async (e_mail) => {
-    const response = await client.query('SELECT * FROM "Simulator"."User" WHERE e_mail=$1', [e_mail]);
-    const row = response.rowCount;
-    return row;
-}
 
 
 module.exports = {
     getUsers,
-    getUserByEmail,
-    insertUser
+    insertUser,
+    client
 }

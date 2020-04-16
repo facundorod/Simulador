@@ -21,11 +21,10 @@ export class RegisterComponent implements OnInit {
 
   sign(){
     this.login.register(this.email, this.name, this.surname, this.password, this.institution)
-    .subscribe(data => {
-        this.toast.success('Login', 'Prueba');
-        console.log(data);
+    .subscribe(res => {
+        this.toast.success(res.toString());
       } )
-    this.toast.error('No se pudo loguear');
+
   
   }
 

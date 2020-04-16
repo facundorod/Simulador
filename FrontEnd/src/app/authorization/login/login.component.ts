@@ -18,15 +18,12 @@ export class LoginComponent implements OnInit {
   login(){
     this.loginService.login(this.e_mail, this.password)
     .subscribe( res => {
+      // Logueo exitoso
       localStorage.setItem('Token', JSON.stringify(res));
       this.submit = true;
-      console.log(res);
-    },
-    err => {
-      console.log("errorrrr");
-      console.log(err);
+      this.toast.success("Login successful");
+      // En caso de error lo intercepta el servicio Interceptor.
     });
-    
   }
 
   ngOnInit() {
