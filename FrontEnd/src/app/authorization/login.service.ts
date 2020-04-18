@@ -16,7 +16,6 @@ export class LoginService {
   
   login(e_mail:String, password: String){ 
     return this.http.post(this.pathLogin, {e_mail: e_mail, password:password } );
-
   }
 
   register(e_mail:String, name: String, surname: String, password: String, institution: String){

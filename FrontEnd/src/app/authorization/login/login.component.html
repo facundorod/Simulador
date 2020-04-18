@@ -15,6 +15,6 @@
                 Password is required
             </div>
         </div>
-        <button type="submit"  (click)="login(); loginForm.reset()" [disabled]="!loginForm.form.valid"> Sign In </button>
+        <button type="submit" class="btn btn-primary" (click)="login()" [disabled]="!loginForm.form.valid"> Sign In </button>
     </form>
 </div>

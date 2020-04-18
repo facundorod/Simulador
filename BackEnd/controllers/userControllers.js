@@ -12,14 +12,11 @@ const login = (req, res) => {
   bd.client.query('SELECT * FROM "Simulator"."User" WHERE e_mail=$1 AND password=$2', [e_mail, password])
     .then(result => {
       if (result.rowCount === 0) {
-        throw res.json(new errorLogin().message);
+        res.status(402).send(new errorLogin().toJson());
       } else {
         const token = jwt.sign({ user }, password, { expiresIn });
-        return res.json(token);
+        res.json(token);
       }
-    })
-    .catch(err => {
-      return new errorLogin().message;
     });
 };
 
@@ -27,20 +24,15 @@ const register = (req, res) => {
   const data = [req.body.e_mail, req.body.name, req.body.surname, req.body.password, req.body.institution];
   bd.client.query('INSERT INTO "Simulator"."User"(e_mail, name, surname, password, institution) VALUES ($1, $2, $3, $4, $5)', data)
     .then(result => {
-      return res.json("The account has been created");
+      res.json("The account has been created");
     })
     .catch( err => {
-      return res.send(new registerError().message);
+      res.status(402).send(new registerError().message);
     })
 };
 
-const getUsers = (req, res) => {
-  console.log(req.headers);
-  res.send({ status: 'OK', data: [] });
-};
 
 module.exports = {
-  getUsers,
   login,
   register
 };

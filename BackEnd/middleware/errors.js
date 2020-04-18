@@ -9,7 +9,7 @@ var middleware = (err, req, res, next) => {
     errorObject = {
       status: 500,
       name: 'Unknown error',
-      message: 'Unkown error',
+      message: 'Something bad has happened',
     }
   }
   res.status(errorObject.status).json(errorObject.message);
