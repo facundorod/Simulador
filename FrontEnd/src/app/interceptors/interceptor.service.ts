@@ -29,11 +29,13 @@ export class InterceptorService implements HttpInterceptor{
       catchError((err: HttpErrorResponse) => {
         if (err.error == 'undefined'){
           message = err.message;
+          this.toast.error(message);
         } else {
           message = err.error.message;
           this.toast.toastrConfig.timeOut = 0;
+          this.toast.error("Retry again!", `${ message }`);
         }
-        this.toast.error("Retry again!", `${ message }`);
+
         this.router.navigateByUrl('/login');
         return throwError(message);
       })
