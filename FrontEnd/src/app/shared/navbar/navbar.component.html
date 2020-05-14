@@ -1,23 +1,76 @@
-<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-    <a class="navbar-brand" href="/"><img src="../../../assets/logo transparente.png"></a>
-    <div class="collapse navbar-collapse" id="navbarColor01">
-      <ul class="navbar-nav mr-auto">
-        <li class="nav-item active">
-          <a class="nav-link" [routerLink]="['/']"> Home </a>
-        </li>
-        <li class="nav-item" *ngIf="!isLogged">
-          <a class="nav-link" [routerLink]="['/login']" >Login</a>
-        </li>
-        <li class="nav-item" *ngIf="isLogged"> 
-          <a class="nav-link" [routerLink]="['/home']"> Logout </a>
-        </li>
-        <li class="nav-item" *ngIf="!isLogged">
-          <a class="nav-link" [routerLink]="['/register']">Register</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" [routerLink]="">About</a>
-        </li>
-      </ul>
 
-    </div>
-  </nav>
+<!--  contenedor estructural -->
+<mat-sidenav-container>
+
+
+    <!-- Contenido lateral -->
+    <mat-sidenav #sidenav mode="side" [fixedInViewport]="'Fixed'" opened >
+        
+        <img src="../../../assets/logo transparente.png">
+        <br>
+        <br>
+        <br>
+        <h3 class="font-weight-bold text-center"> Welcome </h3>
+        <br>
+
+        <ul class="list-group">
+            <li class="nav-item active">
+                <a class="nav-link" [routerLink]="['/']"> 
+                <svg class="bi bi-house" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                    <path fill-rule="evenodd" d="M2 13.5V7h1v6.5a.5.5 0 00.5.5h9a.5.5 0 00.5-.5V7h1v6.5a1.5 1.5 0 01-1.5 1.5h-9A1.5 1.5 0 012 13.5zm11-11V6l-2-2V2.5a.5.5 0 01.5-.5h1a.5.5 0 01.5.5z" clip-rule="evenodd"/>
+                    <path fill-rule="evenodd" d="M7.293 1.5a1 1 0 011.414 0l6.647 6.646a.5.5 0 01-.708.708L8 2.207 1.354 8.854a.5.5 0 11-.708-.708L7.293 1.5z" clip-rule="evenodd"/>
+                  </svg>
+                  Home 
+                </a>
+            </li> 
+            <li class="nav-item">
+                <a class="nav-link "  [routerLink]="['/login']"> <svg class="bi bi-lock" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                    <path fill-rule="evenodd" d="M11.5 8h-7a1 1 0 00-1 1v5a1 1 0 001 1h7a1 1 0 001-1V9a1 1 0 00-1-1zm-7-1a2 2 0 00-2 2v5a2 2 0 002 2h7a2 2 0 002-2V9a2 2 0 00-2-2h-7zm0-3a3.5 3.5 0 117 0v3h-1V4a2.5 2.5 0 00-5 0v3h-1V4z" clip-rule="evenodd"/>
+                  </svg>Login </a> 
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" [routerLink]="['/register']"> <svg class="bi bi-person-plus" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                    <path fill-rule="evenodd" d="M11 14s1 0 1-1-1-4-6-4-6 3-6 4 1 1 1 1h10zm-9.995-.944v-.002.002zM1.022 13h9.956a.274.274 0 00.014-.002l.008-.002c-.001-.246-.154-.986-.832-1.664C9.516 10.68 8.289 10 6 10c-2.29 0-3.516.68-4.168 1.332-.678.678-.83 1.418-.832 1.664a1.05 1.05 0 00.022.004zm9.974.056v-.002.002zM6 7a2 2 0 100-4 2 2 0 000 4zm3-2a3 3 0 11-6 0 3 3 0 016 0zm4.5 0a.5.5 0 01.5.5v2a.5.5 0 01-.5.5h-2a.5.5 0 010-1H13V5.5a.5.5 0 01.5-.5z" clip-rule="evenodd"/>
+                    <path fill-rule="evenodd" d="M13 7.5a.5.5 0 01.5-.5h2a.5.5 0 010 1H14v1.5a.5.5 0 01-1 0v-2z" clip-rule="evenodd"/>
+                  </svg> Register </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" [routerLink]="['/about']"> 
+                    <svg class="bi bi-info-circle-fill" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                        <path fill-rule="evenodd" d="M8 16A8 8 0 108 0a8 8 0 000 16zm.93-9.412l-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533L8.93 6.588zM8 5.5a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd"/>
+                      </svg>
+                    About 
+                </a>
+            </li>
+        </ul>
+
+    </mat-sidenav>
+
+
+     <!-- contenido principal -->
+    <mat-sidenav-content>
+
+        <button mat-button (click)="sidenav.toggle()"> 
+            <div *ngIf="!sidenav.opened">  
+
+                <svg class="bi bi-toggle-on" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                    <path fill-rule="evenodd" d="M5 3a5 5 0 000 10h6a5 5 0 000-10H5zm6 9a4 4 0 100-8 4 4 0 000 8z" clip-rule="evenodd"/>
+                </svg> 
+            </div>
+
+            <div *ngIf="sidenav.opened">
+                <svg class="bi bi-toggle-off" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                    <path fill-rule="evenodd" d="M11 4a4 4 0 010 8H8a4.992 4.992 0 002-4 4.992 4.992 0 00-2-4h3zm-6 8a4 4 0 110-8 4 4 0 010 8zM0 8a5 5 0 005 5h6a5 5 0 000-10H5a5 5 0 00-5 5z" clip-rule="evenodd"/>
+                </svg>
+            </div>
+        </button>
+        
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+
+    </mat-sidenav-content>
+
+</mat-sidenav-container>

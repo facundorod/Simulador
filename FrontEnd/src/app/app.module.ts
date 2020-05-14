@@ -9,12 +9,16 @@ import { AuthorizationModule } from './authorization/authorization.module';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { ToastrModule } from 'ngx-toastr';
+import { MatSliderModule } from '@angular/material/slider';
+import { MatSidenavModule } from '@angular/material/sidenav';
+import {MatButtonToggleModule} from '@angular/material/button-toggle';
+import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 
 
 @NgModule({
   declarations: [
     AppComponent,
-    NavbarComponent
+    NavbarComponent,
   ],
   imports: [
     BrowserModule,
@@ -22,7 +26,11 @@ import { ToastrModule } from 'ngx-toastr';
     FormsModule,
     AuthorizationModule,
     BrowserAnimationsModule,
-    ToastrModule.forRoot()
+    ToastrModule.forRoot(),
+    MatSliderModule,
+    MatSidenavModule,
+    MatButtonToggleModule,
+    MatSlideToggleModule
   ],
   providers: [
     {
