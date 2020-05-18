@@ -4,6 +4,8 @@ const routesUser = require('./routes/userRoutes');
 const cors = require('cors'); // Solucionar encabezados CORS.
 const bodyParser = require('body-parser'); // Permite trabajar con el body del req
 const errors = require('./middleware/errors'); // Manejo de errores.
+const environment = require('./env/enviroment');
+
 
 app.use(cors()); // Soluciono problemas del CORS.
 
@@ -19,4 +21,4 @@ app.use(errors);
 
 
 
-app.listen(8001);
+app.listen(environment.port);

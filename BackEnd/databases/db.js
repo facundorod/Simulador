@@ -1,14 +1,15 @@
 const { Client } = require('pg');
 const RegisterError = require('../errors/registerError');
-const LoginError = require('../errors/loginError');
+const environment = require('../env/enviroment');
+
 
 // Conexión a base de datos
 const client = new Client({
-    host: 'localhost',
-    port: 5432,
-    database: 'Simulador',
-    user: 'postgres',
-    password: 'facundo95'
+    host: environment.host_postgre,
+    port: environment.port_postgre,
+    database: environment.database_postgre,
+    user: environment.user_postgre,
+    password: environment.password_postgre,
 });
 
 client.connect();
