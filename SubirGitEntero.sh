@@ -1,6 +1,6 @@
 #!/bin/bash
 
-if [$# -eq 0]; then
+if [ $# -eq 0 ]; then
 	echo "Debe especificar un mensaje para el commit" >&2
 else 
 	git add .
