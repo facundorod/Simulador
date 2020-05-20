@@ -1,4 +1,4 @@
-const connection = require('../db');
+const connection = require('../databases/db');
 
 module.exports = {
     // Inserta una fila en la tabla
