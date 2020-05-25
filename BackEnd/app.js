@@ -5,13 +5,14 @@ const cors = require('cors'); // Solucionar encabezados CORS.
 const bodyParser = require('body-parser'); // Permite trabajar con el body del req
 const errors = require('./middleware/errors'); // Manejo de errores.
 const environment = require('./env/enviroment');
-
+const medicationRoutes = require('./routes/medicationRoutes');
 
 app.use(cors()); // Soluciono problemas del CORS.
 
 app.use(bodyParser.urlencoded({ extended: false })); // Permite obtener los parámetros de peticiones
 app.use(bodyParser.json()); // Parámetros con formato Json
-app.use(routesUser);
+//app.use(routesUser);
+app.use(medicationRoutes);
 
 app.get('/api/*', (req, res) => {
   res.status(404).send('Not Found');

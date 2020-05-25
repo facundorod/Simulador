@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken');
 const expiresIn = 60 * 10; // 10 minutos de validez.
-const bd = require('../databases/db');
+const bd = require('../database/db');
 const errorLogin = require('../errors/loginError');
 const registerError = require('../errors/registerError');
 
