@@ -4,10 +4,10 @@
 
 export const environment = {
   production: false,
-  apiLogin: "http://localhost:8001/api/login",
-  apiUpdate: "http://localhost:8001/api/updateUsers",
-  apiGetUsers: "http://localhost:8001/api/getUsers",
-  apiRegister: "http://localhost:8001/api/register",
+  apiLogin: "http://localhost:8001/api/user/login",
+  apiUpdate: "http://localhost:8001/api/user/update",
+  apiGetUsers: "http://localhost:8001/api/user/get",
+  apiRegister: "http://localhost:8001/api/user/register",
 
 };
 

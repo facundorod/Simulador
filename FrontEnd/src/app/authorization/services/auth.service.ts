@@ -9,9 +9,9 @@ import { environment } from '@environments/environment';
 export class AuthService {
 
   constructor(private http:HttpClient) { }
-  
-  login(e_mail:String, password: String){ 
-    return this.http.post(environment.apiLogin, {e_mail: e_mail, password:password } );
+
+  login(email:String, password: String){
+    return this.http.post(environment.apiLogin, {email: email, password:password } );
   }
 
   register(e_mail:String, name: String, surname: String, password: String, institution: String){

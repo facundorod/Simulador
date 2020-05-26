@@ -3,7 +3,7 @@ const connection = require('../database/db');
 module.exports = {
     // Inserta una fila en la tabla
     async insert(name, description){
-        let results = await connection.query(`INSERT INTO "Simulador".arrhythmia
+        const results = await connection.query(`INSERT INTO "Simulador".arrhythmia
         (name, description) VALUES ($1,$2)`, [name, description]);
         return results;
     },

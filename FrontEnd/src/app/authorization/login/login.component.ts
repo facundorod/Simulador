@@ -10,8 +10,8 @@ import { ToastrService } from 'ngx-toastr';
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent implements OnInit {
-  
-  e_mail:String;
+
+  email:String;
   password:String;
   submit: Boolean = false;
 
@@ -20,15 +20,13 @@ export class LoginComponent implements OnInit {
 
   login(){
     this.toast.toastrConfig.timeOut = 1000;
-    this.toast.toastrConfig.positionClass = "toast-bottom-full-width"; 
-    this.authService.login(this.e_mail, this.password)
+    this.toast.toastrConfig.positionClass = "toast-bottom-full-width";
+    this.authService.login(this.email, this.password)
     .subscribe( res => {
       // Logueo exitoso
       localStorage.setItem('Token', JSON.stringify(res));
       this.submit = true;
       this.toast.success("Login successful");
-      this.router.navigateByUrl('/charts');
-      
       // En caso de error lo intercepta el servicio Interceptor.
     });
   }

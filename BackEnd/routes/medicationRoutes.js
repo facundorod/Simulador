@@ -2,9 +2,9 @@ const medicationController = require('../controllers/medicationController');
 const express = require('express');
 const router = express.Router();
 
-router.post('/api/insertMedication', medicationController.insert);
-router.get('/api/getMedication', medicationController.get);
-router.post('/api/deleteMedication', medicationController.deleteMed);
-router.post('/api/updateMedication', medicationController.update);
+router.post('/api/medication/insert', medicationController.insert);
+router.get('/api/medication/get', medicationController.get);
+router.post('/api/medication/delete', medicationController.deleteMed);
+router.post('/api/medication/update', medicationController.update);
 
 module.exports = router;

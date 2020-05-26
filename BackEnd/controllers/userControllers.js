@@ -1,38 +1,77 @@
 const jwt = require('jsonwebtoken');
 const expiresIn = 60 * 10; // 10 minutos de validez.
-const bd = require('../database/db');
-const errorLogin = require('../errors/loginError');
+const userModel = require('../models/user');
+
+// Errores.
+const loginError = require('../errors/loginError');
+const generalError = require('../errors/generalError');
 const registerError = require('../errors/registerError');
 
-
-const login = (req, res) => {
-  const user = { e_mail: req.body.e_mail };
-  const e_mail = req.body.e_mail;
-  const password = req.body.password;
-  bd.client.query('SELECT * FROM "Simulator"."User" WHERE e_mail=$1 AND password=$2', [e_mail, password])
-    .then(result => {
-      if (result.rowCount === 0) {
-        res.status(402).send(new errorLogin().toJson());
-      } else {
-        const token = jwt.sign({ user }, password, { expiresIn });
-        res.json(token);
-      }
-    });
-};
-
-const register = (req, res) => {
-  const data = [req.body.e_mail, req.body.name, req.body.surname, req.body.password, req.body.institution];
-  bd.client.query('INSERT INTO "Simulator"."User"(e_mail, name, surname, password, institution) VALUES ($1, $2, $3, $4, $5)', data)
-    .then(result => {
-      res.json("The account has been created");
-    })
-    .catch( err => {
-      res.status(402).send(new registerError().message);
-    })
-};
-
+// Código de errores en consultas PostgreSQL.
+const codesErrors = require('../database/codes');
 
 module.exports = {
-  login,
-  register
-};
+    login : (req, res, next) => {
+      const { email, password } = req.body;
+      let token;
+      userModel
+        .getCredentials(email, password)
+        .then( data => {
+          if (data) {
+            token = jwt.sign({ email }, password, { expiresIn });
+            return res.json(token);
+          }
+          else {
+            next(new loginError());
+          }
+        })
+        .catch( err => {
+          console.log(err);
+          next(err);
+        })
+    },
+
+    register : (req, res, next) => {
+      const { email, name, surname, password, institution } = req.body;
+      userModel
+        .insert(email, name, surname, password, institution)
+        .then( data => {
+          if (data) {
+            return res.send("The account has been created");
+          }
+        })
+        .catch( err => {
+          if (err.code == codesErrors.UNIQUE_VIOLATION) {
+            next(new registerError());
+          } else {
+            next(err);
+          }
+        });
+    },
+
+    update : (req, res, next) => {
+      const { email, name, surname, password, institution, id_user } = req.body;
+      userModel 
+        .update(id_user, email, name, surname, password, institution)
+        .then( data => {
+          return res.send("The update has been succesfull")
+        })
+        .catch( err => {
+          console.log(err);
+          next(err);
+        })
+    },
+
+    delete : (req, res, next) => {
+      const { id_user } = req.body;
+      userModel
+        .delete(id_user)
+        .then( data => {
+          return res.send("The delete has been succesfull");
+        })
+        .catch( err => {
+          console.log(err);
+          next(err);
+        })
+    }
+}

@@ -4,6 +4,7 @@ class LoginError extends Error {
         super('The data entered is wrong');
         this.name = 'AuthError';
         this.status = 403;
+        this.message = "The data entered is wrong";
     }
 
     toJson(){
