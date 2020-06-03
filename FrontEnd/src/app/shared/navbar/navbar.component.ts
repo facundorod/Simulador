@@ -9,7 +9,7 @@ import { Component, OnInit } from '@angular/core';
 })
 export class NavbarComponent implements OnInit {
 
-  public isLogged : boolean = false; 
+  public isLogged : boolean = false;
 
 
   constructor(private authService: AuthService) { }
@@ -17,6 +17,12 @@ export class NavbarComponent implements OnInit {
   ngOnInit(): void {
       //this.isLogged = true;
   }
+
+  setLogged(s : boolean ) {
+    this.isLogged = s;
+  }
+
+
 
 
 }

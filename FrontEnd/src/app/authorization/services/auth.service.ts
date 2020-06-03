@@ -24,6 +24,13 @@ export class AuthService {
     });
   }
 
+  public isLogged() : boolean {
+    const token = localStorage.getItem('Token');
+    if (token != undefined) {
+      return true;
+    }
+    return false;
+  }
 
   logout(){
     localStorage.removeItem('Token');

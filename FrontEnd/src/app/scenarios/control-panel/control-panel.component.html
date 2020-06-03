@@ -1,0 +1,44 @@
+<div class="container">
+  <div class="row">
+    <div class="col-3">
+      <label for="simulationName"> Simulation Name </label>
+      <input type="text" class="form-control" id="simulationName" placeholder="Simulation Name...">
+    </div>
+  </div>
+  <br>
+  <br>
+  <div class="row">
+    <div class="col-3">
+
+      <label for="animalSpecies"> Animal species </label>
+      <div class="dropdown">
+        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownAnimalSpecies" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+          Choose the Animal Species
+        </button>
+        <div class="dropdown-menu" aria-labelledby="dropdownAnimalSpecies">
+       <!--- Aca iría un ngFor por cada especie animal -->
+          <a class="dropdown-item" > Cat </a>
+          <a class="dropdown-item" > Dog </a>
+          <a class="dropdown-item" > Horse </a>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <br>
+  <br>
+
+  <div class="row">
+    <div class="col-3">
+      <div class="input-group">
+        <label for="descriptionSimulation"> Simulation description</label>
+        <div>
+          <textarea class="form-control" aria-label="Simulation description"></textarea>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
