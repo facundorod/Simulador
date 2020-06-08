@@ -2,10 +2,9 @@
   "compileOnSave": false,
   "compilerOptions": {
     "baseUrl": "./",
-    "paths": { 
+    "paths": {
       "@app/*": ["src/app/*"],
       "@auth/*": ["src/app/authorization/*"],
-      "@scenarios/*": ["src/app/scenarios/*"],
       "@shared/*": ["src/app/shared/*"],
       "@environments/*": ["src/environments/*"]
     },

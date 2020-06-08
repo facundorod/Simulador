@@ -17,11 +17,13 @@ import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 import { NavbarUserComponent } from './shared/navbar-user/navbar-user.component';
 import { NavbarComponent } from './shared/navbar/navbar.component';
 
+
+
 @NgModule({
   declarations: [
     AppComponent,
     NavbarUserComponent,
-    NavbarComponent
+    NavbarComponent,
   ],
   imports: [
     BrowserModule,
@@ -34,7 +36,7 @@ import { NavbarComponent } from './shared/navbar/navbar.component';
     MatSliderModule,
     MatSidenavModule,
     MatButtonToggleModule,
-    MatSlideToggleModule
+    MatSlideToggleModule,
   ],
   providers: [
     {
