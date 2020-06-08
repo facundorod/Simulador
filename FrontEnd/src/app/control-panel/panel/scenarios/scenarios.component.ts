@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { PanelService } from '@app/control-panel/services/panel.service';
 
 @Component({
   selector: 'app-scenarios',
@@ -6,10 +7,17 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./scenarios.component.css']
 })
 export class ScenariosComponent implements OnInit {
+  scenarios : any;
 
-  constructor() { }
+  constructor(private panelService: PanelService) { }
 
   ngOnInit(): void {
+    this.panelService.getScenarios()
+      .subscribe(scenarios => {
+        this.scenarios = scenarios;
+      })
   }
+
+
 
 }

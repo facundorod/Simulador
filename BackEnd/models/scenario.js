@@ -10,7 +10,7 @@ module.exports = {
 
     async get(){
         const results = await connection.query(`SELECT * FROM "Simulador".scenario`);
-        return results.rows[0];
+        return results.rows;
     },
 
     async getById(id){

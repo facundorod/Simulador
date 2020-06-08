@@ -4,7 +4,7 @@ const router = express.Router();
 
 router.post('/api/medication/insert', medicationController.insert);
 router.get('/api/medication/get', medicationController.get);
-router.post('/api/medication/delete', medicationController.deleteMed);
-router.post('/api/medication/update', medicationController.update);
+router.delete('/api/medication/:med', medicationController.deleteMed);
+router.put('/api/medication/:med', medicationController.update);
 
 module.exports = router;

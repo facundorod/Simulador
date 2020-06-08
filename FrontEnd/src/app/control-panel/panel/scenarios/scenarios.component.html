@@ -1,10 +1,7 @@
 <div class="card" style="width: 18rem;">
 
   <ul class="list-group list-group-flush">
-    <li class="li-group-item"> Scenario 1 </li>
-    <li class="li-group-item"> Scenario 2 </li>
-    <li class="li-group-item"> Scenario 3 </li>
-
+    <li class="li-group-item" *ngFor="let scenario of scenarios"> {{scenario}} </li>
   </ul>
 
 </div>
