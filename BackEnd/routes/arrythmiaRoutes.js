@@ -2,9 +2,9 @@ const arrythmiaController = require('../controllers/arrythmiaController');
 const express = require('express');
 const router = express.Router();
 
-router.post('/api/arrythmia/insert', arrythmiaController.insert);
-router.get('/api/arrythmia/get', arrythmiaController.get);
-router.post('/api/arrythmia/update', arrythmiaController.update);
-router.post('/api/arrythmia/delete', arrythmiaController.delete);
+router.put('/api/arrhythmias/insert', arrythmiaController.insert);
+router.get('/api/arrhythmias/all', arrythmiaController.get);
+router.post('/api/arrhythmias/update', arrythmiaController.update);
+router.delete('/api/arrhythmias/delete', arrythmiaController.delete);
 
 module.exports = router;

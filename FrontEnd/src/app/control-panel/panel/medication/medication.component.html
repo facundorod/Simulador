@@ -1,0 +1,24 @@
+<label for="medication"> Medications list </label>
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col"> Medication </th>
+      <th scope="col"> Doses </th>
+      <th scope="col"> [units] </th>
+    </tr>
+
+  </thead>
+  <tbody>
+    <tr *ngFor="let medication of medications; trackBy: trackByFn" >
+      <td>
+        <select id="medicationList" class="form-control" >
+          <option> Choose the medication </option>
+          <option > {{medication.name}} </option>
+        </select>
+      </td>
+      <td> Dose 1 </td>
+      <td> Unit 1 </td>
+    </tr>
+
+  </tbody>
+</table>

@@ -4,9 +4,7 @@
     <label for="animalSpecieSelected" > Animal Specie </label>
     <select id="animalSpecieSelected">
       <option> Choose the animal specie </option>
-      <option> Horse </option>
-      <option> Dog </option>
-      <option> Cat </option>
+      <option  *ngFor="let animalS of animalSpecies; trackBy: trackByFn" > {{ animalS.name }} </option>
     </select>
   </div>
 

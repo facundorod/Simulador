@@ -1,0 +1,5 @@
+<label for="medication"> Arrhythmias list </label>
+<select id="medicationList" class="form-control" >
+  <option> Choose the arrhythmia </option>
+  <option *ngFor="let arrhythmia of arrhythmias; trackBy: trackByFn"> {{arrhythmia.name}} </option>
+</select>

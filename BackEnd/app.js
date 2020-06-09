@@ -11,6 +11,8 @@ const medicationRoutes = require('./routes/medicationRoutes');
 const arrythmiaRoutes = require('./routes/arrythmiaRoutes');
 const userRoutes = require('./routes/userRoutes');
 const scenarioRoutes = require('./routes/scenarioRoutes');
+const pathologyRoutes = require('./routes/pathologyRoutes');
+const animalSpeciesRoutes = require('./routes/animalSpeciesRoutes');
 
 app.use(cors()); // Soluciono problemas del CORS.
 
@@ -22,6 +24,11 @@ app.use(userRoutes);
 app.use(medicationRoutes);
 app.use(arrythmiaRoutes);
 app.use(scenarioRoutes);
+app.use(pathologyRoutes);
+app.use(animalSpeciesRoutes);
+
+
+
 app.get('/api/*', (req, res) => {
   res.status(404).send('Not Found');
 });

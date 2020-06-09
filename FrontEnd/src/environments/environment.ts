@@ -8,8 +8,10 @@ export const environment = {
   apiUpdate: "http://localhost:8001/api/user/update",
   apiGetUsers: "http://localhost:8001/api/user/get",
   apiRegister: "http://localhost:8001/api/user/register",
-  apiGetScenarios: "http://localhost:8001/api/scenario/getAll",
-  apiGetAnimalSpecies: "http://localhost:8001/api/animalSpecies",
+  apiGetScenarios: "http://localhost:8001/api/scenario/all",
+  apiGetAnimalSpecies: "http://localhost:8001/api/animalSpecies/all",
+  apiGetMedication: "http://localhost:8001/api/medication/all",
+  apiGetArrhythmia: "http://localhost:8001/api/arrhythmias/all",
 
 };
 

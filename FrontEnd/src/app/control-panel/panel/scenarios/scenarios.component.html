@@ -1,7 +1,7 @@
 <div class="card" style="width: 18rem;">
 
   <ul class="list-group list-group-flush">
-    <li class="li-group-item" *ngFor="let scenario of scenarios"> {{scenario}} </li>
+    <li class="li-group-item" *ngFor="let scenario of scenarios; trackBy: trackByFn"> {{scenario.name}} </li>
   </ul>
 
 </div>
