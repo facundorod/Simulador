@@ -1,12 +1,10 @@
 <div class="container">
-
-  <div class="col-3">
-    <label for="animalSpecieSelected" > Animal Specie </label>
-    <select id="animalSpecieSelected">
-      <option> Choose the animal specie </option>
-      <option  *ngFor="let animalS of animalSpecies; trackBy: trackByFn" > {{ animalS.name }} </option>
-    </select>
-  </div>
-
-
+  <label for="animalSpecieSelected" > Animal Specie </label>
+  <select id="animalSpecieSelected" class="form-control">
+    <option> Choose the animal specie </option>
+    <option  *ngFor="let animalS of animalSpecies; trackBy: trackByFn" > {{ animalS.name }} </option>
+  </select>
 </div>
+
+
+

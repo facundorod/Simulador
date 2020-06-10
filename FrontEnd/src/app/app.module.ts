@@ -1,4 +1,3 @@
-
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { InterceptorService } from './interceptors/interceptor.service';
 import { BrowserModule } from '@angular/platform-browser';
@@ -10,33 +9,21 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { ToastrModule } from 'ngx-toastr';
 import { HomeModule } from './home/home.module';
-import { MatSliderModule } from '@angular/material/slider';
-import { MatSidenavModule } from '@angular/material/sidenav';
-import {MatButtonToggleModule} from '@angular/material/button-toggle';
-import {MatSlideToggleModule} from '@angular/material/slide-toggle';
-import { NavbarUserComponent } from './shared/navbar-user/navbar-user.component';
-import { NavbarComponent } from './shared/navbar/navbar.component';
+
 
 
 
 @NgModule({
   declarations: [
     AppComponent,
-    NavbarUserComponent,
-    NavbarComponent,
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     FormsModule,
-    AuthorizationModule,
     BrowserAnimationsModule,
     HomeModule,
     ToastrModule.forRoot(),
-    MatSliderModule,
-    MatSidenavModule,
-    MatButtonToggleModule,
-    MatSlideToggleModule,
   ],
   providers: [
     {
