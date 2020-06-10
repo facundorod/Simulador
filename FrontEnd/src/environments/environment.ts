@@ -12,6 +12,7 @@ export const environment = {
   apiGetAnimalSpecies: "http://localhost:8001/api/animalSpecies/all",
   apiGetMedication: "http://localhost:8001/api/medication/all",
   apiGetArrhythmia: "http://localhost:8001/api/arrhythmias/all",
+  apiGetPathology: "http://localhost:8001/api/pathology/all",
 
 };
 

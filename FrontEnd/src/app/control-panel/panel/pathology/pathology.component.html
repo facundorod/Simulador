@@ -1,0 +1,7 @@
+<div class="container">
+<label for="pathology"> Pathology list </label>
+<select id="pathologyList" class="form-control" >
+  <option> Choose the pathology </option>
+  <option *ngFor="let pat of pathologies; trackBy: trackByFn"> {{pat.name}} </option>
+</select>
+</div>

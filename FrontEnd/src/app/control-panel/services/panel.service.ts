@@ -6,6 +6,7 @@ import { AnimalSpecies } from '@app/models/animal-species';
 import { Scenario } from '@app/models/scenario';
 import { Medication } from '@app/models/medication';
 import { Arrhythmia } from '@app/models/arrhythmia';
+import { Pathology } from '@app/models/pathology';
 
 @Injectable({
   providedIn: 'root'
@@ -28,5 +29,9 @@ export class PanelService {
 
   getArrhythmia(): Observable<Arrhythmia[]> {
     return this.httpClient.get<Arrhythmia[]>(environment.apiGetArrhythmia);
+  }
+
+  getPathology(): Observable<Pathology[]> {
+    return this.httpClient.get<Pathology[]>(environment.apiGetPathology);
   }
 }

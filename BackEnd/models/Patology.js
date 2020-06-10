@@ -11,7 +11,7 @@ module.exports = {
 
     async get(){
         const results = await connection.query(`SELECT * FROM "Simulador".patology`);
-        return result.rows;   
+        return results.rows;   
     },
 
     async getById(id_pat){
