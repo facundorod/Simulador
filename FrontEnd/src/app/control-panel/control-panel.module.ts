@@ -19,12 +19,26 @@ import { CycleCardiacComponent } from './panel/cycle-cardiac/cycle-cardiac.compo
 import { TemperatureComponent } from './panel/temperature/temperature.component';
 import { RespirationComponent } from './panel/respiration/respiration.component';
 
+
 @NgModule({
-  declarations: [SimulationComponent,  NavbarUserComponent, PanelComponent ,AnimalSpeciesComponent, ScenariosComponent, MedicationComponent, ArrhythmiaComponent, ScenarioNameComponent, SimulationDescriptionComponent, PathologyComponent, CycleCardiacComponent, TemperatureComponent, RespirationComponent],
+  declarations: [
+    SimulationComponent,
+    NavbarUserComponent,
+    PanelComponent ,
+    AnimalSpeciesComponent,
+    ScenariosComponent,
+    MedicationComponent,
+    ArrhythmiaComponent,
+    ScenarioNameComponent,
+    SimulationDescriptionComponent,
+    PathologyComponent,
+    CycleCardiacComponent,
+    TemperatureComponent,
+    RespirationComponent
+  ],
   imports: [
     CommonModule,
     ControlPanelRoutingModule,
-
     MatSliderModule,
     MatSidenavModule,
     MatButtonToggleModule,

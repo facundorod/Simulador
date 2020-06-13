@@ -1,6 +1,9 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '@environments/environment';
+import { Observable } from 'rxjs';
+import { JwtResponseI } from '@app/models/jwt-responseI';
+import { tap } from 'rxjs/operators';
 
 
 @Injectable({
@@ -10,12 +13,22 @@ export class AuthService {
 
   constructor(private http:HttpClient) { }
 
-  login(email:String, password: String){
-    return this.http.post(environment.apiLogin, {email: email, password:password } );
+  login(email:String, password: String) : Observable<JwtResponseI>{
+    return this.http.post<JwtResponseI>(environment.apiLogin,
+      {email: email, password:password } )
+      .pipe( tap(
+        (res: JwtResponseI) => {
+          if (res) {
+            this.saveToken(res.accesToken, res.expiresIn);
+          }
+        }
+      )
+      )
   }
 
-  register(e_mail:String, name: String, surname: String, password: String, institution: String){
-    return this.http.post(environment.apiRegister, {
+  register(e_mail:String, name: String, surname: String, password: String,
+      institution: String) : Observable<JwtResponseI> {
+    return this.http.post<JwtResponseI>(environment.apiRegister, {
       e_mail: e_mail,
       name: name,
       surname: surname,
@@ -24,16 +37,17 @@ export class AuthService {
     });
   }
 
-  public isLogged() : boolean {
-    const token = localStorage.getItem('Token');
-    if (token != undefined) {
-      return true;
-    }
-    return false;
+
+  private saveToken(token: string, expiresIn: string): void {
+    localStorage.setItem('ACCESS_TOKEN', token);
+    localStorage.setItem('EXPIRESIN', expiresIn);
   }
 
+
   logout(){
-    localStorage.removeItem('Token');
+    localStorage.removeItem('ACCESS_TOKEN');
+    localStorage.removeItem('EXPIRESIN');
+
   }
 
 }

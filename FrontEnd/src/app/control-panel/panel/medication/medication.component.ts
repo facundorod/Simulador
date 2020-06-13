@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { PanelService } from '@app/control-panel/services/panel.service';
-import { Medication } from '@app/models/medication';
+import { MedicationI } from '@app/models/medicationI';
 
 @Component({
   selector: 'app-medication',
@@ -11,16 +11,16 @@ export class MedicationComponent implements OnInit {
 
   constructor(private panelService: PanelService) { }
 
-  medications : Medication[];
+  medications : MedicationI[];
 
   ngOnInit(): void {
     this.panelService.getMedication()
-      .subscribe((medications : Medication[]) => {
+      .subscribe((medications : MedicationI[]) => {
         this.medications = medications;
       })
   }
 
-  trackByFn(index: number, name: Medication): number {
+  trackByFn(index: number, name: MedicationI): number {
     return name.id_medication;
   }
 }

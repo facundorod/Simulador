@@ -2,11 +2,11 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '@environments/environment';
 import { Observable } from 'rxjs';
-import { AnimalSpecies } from '@app/models/animal-species';
-import { Scenario } from '@app/models/scenario';
-import { Medication } from '@app/models/medication';
-import { Arrhythmia } from '@app/models/arrhythmia';
-import { Pathology } from '@app/models/pathology';
+import { AnimalSpeciesI } from '@app/models/animal-speciesI';
+import { ScenarioI } from '@app/models/scenarioI';
+import { MedicationI } from '@app/models/medicationI';
+import { ArrhythmiaI } from '@app/models/arrhythmiaI';
+import { PathologyI } from '@app/models/pathologyI';
 
 @Injectable({
   providedIn: 'root'
@@ -15,23 +15,23 @@ export class PanelService {
 
   constructor(private httpClient: HttpClient) { }
 
-  getScenarios(): Observable<Scenario[]> {
-    return this.httpClient.get<Scenario[]>(environment.apiGetScenarios);
+  getScenarios(): Observable<ScenarioI[]> {
+    return this.httpClient.get<ScenarioI[]>(environment.apiGetScenarios);
   }
 
-  getAnimalSpecies(): Observable<AnimalSpecies[]> {
-    return this.httpClient.get<AnimalSpecies[]>(environment.apiGetAnimalSpecies);
+  getAnimalSpecies(): Observable<AnimalSpeciesI[]> {
+    return this.httpClient.get<AnimalSpeciesI[]>(environment.apiGetAnimalSpecies);
   }
 
-  getMedication(): Observable<Medication[]> {
-    return this.httpClient.get<Medication[]>(environment.apiGetMedication);
+  getMedication(): Observable<MedicationI[]> {
+    return this.httpClient.get<MedicationI[]>(environment.apiGetMedication);
   }
 
-  getArrhythmia(): Observable<Arrhythmia[]> {
-    return this.httpClient.get<Arrhythmia[]>(environment.apiGetArrhythmia);
+  getArrhythmia(): Observable<ArrhythmiaI[]> {
+    return this.httpClient.get<ArrhythmiaI[]>(environment.apiGetArrhythmia);
   }
 
-  getPathology(): Observable<Pathology[]> {
-    return this.httpClient.get<Pathology[]>(environment.apiGetPathology);
+  getPathology(): Observable<PathologyI[]> {
+    return this.httpClient.get<PathologyI[]>(environment.apiGetPathology);
   }
 }

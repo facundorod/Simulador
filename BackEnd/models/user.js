@@ -14,9 +14,9 @@ module.exports = {
         return results.rows;
     },
 
-    async getById(id_user){
+    async getById(email){
         const result = await connection.query(`SELECT * FROM "Simulador"."User"
-            WHERE id_user = $1`, [id_user]);
+            WHERE e_mail = $1`, [email]);
         return result.rows[0];
     },
 
@@ -28,12 +28,12 @@ module.exports = {
 
     async update(id_user, e_mail, name, surname, password, institution){
         const results = await connection.query(`UPDATE "Simulador"."User" SET
-                e_mail = $2,
                 name = $3, 
                 surname = $4,
                 password = $5,
                 institution = $6
-            WHERE id_use = $1`, [id_user, e_mail, name, surname, password, institution]);
+            WHERE id_user = $1 
+                AND e_mail=$2`, [id_user, e_mail, name, surname, password, institution]);
         return results;
     },
 

@@ -2,7 +2,7 @@
 // Recibe todos los errores que se producen - Express manda los errores a esta función
 var handleError = (err, req, res, next) => {
   let errorObject;
-  console.log("fas");
+  console.log(err);
   if (typeof err.toJson === 'function'){
     errorObject = err.toJson();
   } else {

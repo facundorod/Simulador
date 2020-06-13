@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { PanelService } from '@app/control-panel/services/panel.service';
-import { AnimalSpecies } from '@app/models/animal-species';
+import { AnimalSpeciesI } from '@app/models/animal-speciesI';
 
 
 @Component({
@@ -10,18 +10,18 @@ import { AnimalSpecies } from '@app/models/animal-species';
 })
 export class AnimalSpeciesComponent implements OnInit {
 
-  animalSpecies : AnimalSpecies[];
+  animalSpecies : AnimalSpeciesI[];
 
   constructor(private panelService: PanelService) { }
 
   ngOnInit(): void {
     this.panelService.getAnimalSpecies()
-      .subscribe((animalSpecies: AnimalSpecies[]) => {
+      .subscribe((animalSpecies: AnimalSpeciesI[]) => {
         this.animalSpecies = animalSpecies;
       })
   }
 
-  trackByFn(index: number, name: AnimalSpecies): number {
+  trackByFn(index: number, name: AnimalSpeciesI): number {
     return name.id_as;
   }
 

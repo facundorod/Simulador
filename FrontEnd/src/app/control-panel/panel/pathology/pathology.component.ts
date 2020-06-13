@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { PanelService } from '@app/control-panel/services/panel.service';
-import { Pathology } from '@app/models/pathology';
+import { PathologyI } from '@app/models/pathologyI';
 
 @Component({
   selector: 'app-pathology',
@@ -9,17 +9,17 @@ import { Pathology } from '@app/models/pathology';
 })
 export class PathologyComponent implements OnInit {
 
-  pathologies : Pathology[];
+  pathologies : PathologyI[];
   constructor(private panelSvc : PanelService) { }
 
   ngOnInit(): void {
     this.panelSvc.getPathology()
-      .subscribe((pathologies : Pathology[]) => {
+      .subscribe((pathologies : PathologyI[]) => {
         this.pathologies = pathologies;
       })
   }
 
-  trackByFn(index: number, name: Pathology): number {
+  trackByFn(index: number, name: PathologyI): number {
     return name.id_pat;
   }
 

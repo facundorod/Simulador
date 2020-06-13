@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { PanelService } from '@app/control-panel/services/panel.service';
-import { Arrhythmia } from '@app/models/arrhythmia';
+import { ArrhythmiaI } from '@app/models/arrhythmiaI';
 
 @Component({
   selector: 'app-arrhythmia',
@@ -11,16 +11,16 @@ export class ArrhythmiaComponent implements OnInit {
 
   constructor(private panelService : PanelService) { }
 
-  arrhythmias : Arrhythmia[];
+  arrhythmias : ArrhythmiaI[];
 
   ngOnInit(): void {
     this.panelService.getArrhythmia()
-      .subscribe((arrhythmias : Arrhythmia[]) => {
+      .subscribe((arrhythmias : ArrhythmiaI[]) => {
         this.arrhythmias = arrhythmias;
       })
   }
 
-  trackByFn(index: number, name: Arrhythmia): number {
+  trackByFn(index: number, name: ArrhythmiaI): number {
     return name.id_arr;
   }
 

@@ -25,7 +25,7 @@ export class RegisterComponent implements OnInit {
         this.toast.success(res.toString());
       } )
 
-  
+
   }
 
 }

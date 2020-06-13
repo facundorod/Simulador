@@ -1,4 +1,4 @@
-export interface Medication {
+export interface MedicationI {
 
   id_medication : number,
   name : string,

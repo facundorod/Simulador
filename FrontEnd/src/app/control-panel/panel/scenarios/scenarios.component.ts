@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { PanelService } from '@app/control-panel/services/panel.service';
-import { Scenario } from '@app/models/scenario';
+import { ScenarioI } from '@app/models/scenarioI';
 
 @Component({
   selector: 'app-scenarios',
@@ -8,18 +8,18 @@ import { Scenario } from '@app/models/scenario';
   styleUrls: ['./scenarios.component.css']
 })
 export class ScenariosComponent implements OnInit {
-  scenarios : Scenario[];
+  scenarios : ScenarioI[];
 
   constructor(private panelService: PanelService) { }
 
   ngOnInit(): void {
     this.panelService.getScenarios()
-      .subscribe((scenarios : Scenario[]) => {
+      .subscribe((scenarios : ScenarioI[] ) => {
         this.scenarios = scenarios;
       })
   }
 
-  trackByFn(index: number, name: Scenario): number {
+  trackByFn(index: number, name: ScenarioI): number {
     return name.id_scenario;
   }
 

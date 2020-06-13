@@ -1,25 +1,39 @@
 const jwt = require('jsonwebtoken');
-const expiresIn = 60 * 10; // 10 minutos de validez.
+const expiresIn = 24 * 60 * 60; // 10 minutos de validez.
 const userModel = require('../models/user');
+const bcrypt = require('bcryptjs');
+const salt = bcrypt.genSaltSync(10);
 
 // Errores.
 const loginError = require('../errors/loginError');
 const generalError = require('../errors/generalError');
 const registerError = require('../errors/registerError');
-
+const SECRET_KEY = 'secretkey123456';
 // Código de errores en consultas PostgreSQL.
 const codesErrors = require('../database/codes');
 
 module.exports = {
     login : (req, res, next) => {
-      const { email, password } = req.body;
-      let token;
+      const userData = {
+        email : req.body.email,
+        password : req.body.password,
+      }
       userModel
-        .getCredentials(email, password)
+        .getById(userData.email)
         .then( data => {
           if (data) {
-            token = jwt.sign({ email }, password, { expiresIn });
-            return res.json(token);
+            const resultPassword = bcrypt.compareSync(userData.password, data.password);
+            if (resultPassword) {
+              const accesToken = jwt.sign({ id: data.id_user }, SECRET_KEY, { expiresIn });
+              return res.json(
+                { id_user: data.id_user, 
+                  email: data.e_mail,
+                  accesToken: accesToken,
+                  expiresIn : expiresIn
+                });
+            } else {
+              next(new loginError());
+            }
           }
           else {
             next(new loginError());
@@ -32,9 +46,17 @@ module.exports = {
     },
 
     register : (req, res, next) => {
-      const { email, name, surname, password, institution } = req.body;
+      const userData = 
+        { 
+          email : req.body.email,
+          name: req.body.name,
+          surname: req.body.surname,
+          password: bcrypt.hashSync(req.body.password, salt),
+          institution: req.body.institution 
+        };
+
       userModel
-        .insert(email, name, surname, password, institution)
+        .insert(userData.email, userData.name, userData.surname, userData.password, userData.institution)
         .then( data => {
           if (data) {
             return res.send("The account has been created");
@@ -50,9 +72,16 @@ module.exports = {
     },
 
     update : (req, res, next) => {
-      const { email, name, surname, password, institution, id_user } = req.body;
+      const userData = 
+        { 
+          email : req.body.email,
+          name: req.body.name,
+          surname: req.body.surname,
+          password: bcrypt.hashSync(req.body.password),
+          institution: req.body.institution 
+        };
       userModel 
-        .update(id_user, email, name, surname, password, institution)
+        .update(userData.id_user, userData.email, userData.name, userData.surname, userData.password, userData.institution)
         .then( data => {
           return res.send("The update has been succesfull")
         })

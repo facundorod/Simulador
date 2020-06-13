@@ -1,4 +1,4 @@
-export interface AnimalSpecies {
+export interface AnimalSpeciesI {
 
   id_as : number,
   name : string
