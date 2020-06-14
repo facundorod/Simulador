@@ -8,6 +8,8 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import {MatButtonToggleModule} from '@angular/material/button-toggle';
 import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 import { AuthorizationModule } from '@app/authorization/authorization.module';
+import {MatToolbarModule} from '@angular/material/toolbar';
+import {MatListModule} from '@angular/material/list';
 
 
 @NgModule({
@@ -20,6 +22,8 @@ import { AuthorizationModule } from '@app/authorization/authorization.module';
     MatButtonToggleModule,
     MatSlideToggleModule,
     AuthorizationModule,
+    MatToolbarModule,
+    MatListModule
   ],
   exports: [HomeComponent]
 })

@@ -18,6 +18,8 @@ import { PathologyComponent } from './panel/pathology/pathology.component';
 import { CycleCardiacComponent } from './panel/cycle-cardiac/cycle-cardiac.component';
 import { TemperatureComponent } from './panel/temperature/temperature.component';
 import { RespirationComponent } from './panel/respiration/respiration.component';
+import {MatToolbarModule} from '@angular/material/toolbar';
+import {MatListModule} from '@angular/material/list';
 
 
 @NgModule({
@@ -43,6 +45,8 @@ import { RespirationComponent } from './panel/respiration/respiration.component'
     MatSidenavModule,
     MatButtonToggleModule,
     MatSlideToggleModule,
+    MatToolbarModule,
+    MatListModule
   ],
   exports: [
     SimulationComponent,

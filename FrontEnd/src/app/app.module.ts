@@ -9,7 +9,8 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { ToastrModule } from 'ngx-toastr';
 import { HomeModule } from './home/home.module';
-
+import {MatToolbarModule} from '@angular/material/toolbar';
+import {MatListModule} from '@angular/material/list';
 
 
 
@@ -23,6 +24,8 @@ import { HomeModule } from './home/home.module';
     FormsModule,
     BrowserAnimationsModule,
     HomeModule,
+    MatListModule,
+    MatToolbarModule,
     ToastrModule.forRoot(),
   ],
   providers: [

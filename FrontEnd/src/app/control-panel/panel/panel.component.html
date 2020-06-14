@@ -1,105 +1,104 @@
-<mat-sidenav-container>
-  <mat-sidenav #sidenav mode="side" [fixedInViewport]="'Fixed'" opened >
-    <app-navbar-user></app-navbar-user>
+<mat-sidenav-container fullscreen>
+    <mat-sidenav #sidenav mode="side" fixedInViewport="true"
+      [fixedTopGap]=0 [fixedBottomGap]=0 opened >
+      <app-navbar-user></app-navbar-user>
 
-  </mat-sidenav>
-  <mat-sidenav-content>
-
-    <button mat-button (click)="sidenav.toggle()">
-      <div *ngIf="!sidenav.opened">
+    </mat-sidenav>
+    <mat-sidenav-content>
+      <mat-toolbar>  <button mat-button (click)="sidenav.toggle()">
 
         <img src="https://img.icons8.com/ios-glyphs/30/000000/sorting-options.png"/>
-      </div>
 
-      <div *ngIf="sidenav.opened">
-        <img src="https://img.icons8.com/ios-glyphs/30/000000/sorting-options.png"/>
-      </div>
-  </button>
+    </button>
+    <div class="container" >
+      <h3> Control Panel </h3>
+    </div>
 
-    <div class="container">
-      <br>
-      <br>
-      <div class="row">
-        <div class="col-3">
-          <app-simulation> </app-simulation>
-        </div>
+      </mat-toolbar>
 
-        <div class="col-3">
-          <app-scenario-name></app-scenario-name>
-        </div>
 
-        <div class="col-3">
-          <label for="scenarioId"> Scenario id </label>
-          <input class="form-control" type="text" placeholder="id_simulation" readonly>
-        </div>
 
-        <div class="col-3">
-          <div class="container">
-            <br>
-            <button type="button" class="btn btn-primary">Save Changes</button>
+      <div class="container">
+        <br>
+        <br>
+        <div class="row">
+          <div class="col-3">
+            <app-simulation> </app-simulation>
+          </div>
+
+          <div class="col-3">
+            <app-scenario-name></app-scenario-name>
+          </div>
+
+          <div class="col-3">
+            <label for="scenarioId"> Scenario id </label>
+            <input class="form-control" type="text" placeholder="id_simulation" readonly>
+          </div>
+
+          <div class="col-3">
+            <div class="container">
+              <br>
+              <button type="button" class="btn btn-primary">Save Changes</button>
+            </div>
+
           </div>
 
         </div>
 
+        <br>
+        <div class="row">
+          <div class="col-3">
+            <app-animal-species> </app-animal-species>
+          </div>
+
+          <div class="col-3">
+            <app-medication></app-medication>
+          </div>
+          <div class="col-3">
+
+            <app-pathology></app-pathology>
+
+          </div>
+
+          <div class="col-3">
+            <app-arrhythmia></app-arrhythmia>
+          </div>
+
+        </div>
+
+        <div class="row">
+          <div class="col-3">
+            <app-simulation-description></app-simulation-description>
+          </div>
+
+          <div class="col-3">
+            <app-cycle-cardiac></app-cycle-cardiac>
+          </div>
+
+          <div class="col-3">
+            <app-temperature></app-temperature>
+          </div>
+
+          <div class="col-3">
+            <app-respiration></app-respiration>
+          </div>
+
+        </div>
+
+
+
+        <br>
+        <br>
+        <div class="row">
+          <div class="col-3">
+            <app-scenarios></app-scenarios>
+          </div>
+        </div>
+
+
       </div>
 
-      <br>
-      <div class="row">
-        <div class="col-3">
-          <app-animal-species> </app-animal-species>
-        </div>
-
-        <div class="col-3">
-          <app-medication></app-medication>
-        </div>
-        <div class="col-3">
-
-          <app-pathology></app-pathology>
-
-        </div>
-
-        <div class="col-3">
-          <app-arrhythmia></app-arrhythmia>
-        </div>
-
-      </div>
-
-      <div class="row">
-        <div class="col-3">
-          <app-simulation-description></app-simulation-description>
-        </div>
-
-        <div class="col-3">
-          <app-cycle-cardiac></app-cycle-cardiac>
-        </div>
-
-        <div class="col-3">
-          <app-temperature></app-temperature>
-        </div>
-
-        <div class="col-3">
-          <app-respiration></app-respiration>
-        </div>
-
-      </div>
+    </mat-sidenav-content>
 
 
-
-      <br>
-      <br>
-      <div class="row">
-        <div class="col-3">
-          <app-scenarios></app-scenarios>
-        </div>
-      </div>
-
-
-    </div>
-
-  </mat-sidenav-content>
-
-
-</mat-sidenav-container>
-
-
-
+  </mat-sidenav-container>

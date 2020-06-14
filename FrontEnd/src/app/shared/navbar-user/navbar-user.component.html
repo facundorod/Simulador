@@ -8,41 +8,49 @@
       <br>
       <h3 class="font-weight-bold text-center"> SimVet </h3>
       <br>
-      <h4 class="font-weight-bold text-align-center"> Simulation </h4>
+      <section class="container">
+        <h4 class="font-weight-bold text-align-center"> Simulation </h4>
+      </section>
+
       <ul class="list-group">
 
         <li class="nav-item active">
-          <a class="nav-link" [routerLink]="['/panel']"> <img src="https://img.icons8.com/bubbles/28/000000/new.png"/>New </a>
+          <a class="nav-link" [routerLink]="['/panel']"> <img src="https://img.icons8.com/bubbles/28/000000/new.png"/> New </a>
         </li>
 
-        <li class="nav-item active">
-          <a class="nav-link"> <img src="https://img.icons8.com/dusk/28/000000/admin-settings-male.png"/> Manage simulations </a>
+        <li class="nav-item">
+          <a class="nav-link" [routerLink]="['/panel']"> <img src="https://img.icons8.com/dusk/28/000000/admin-settings-male.png"/> Manage simulations </a>
         </li>
-
 
       </ul>
 
-  <!-- <mat-sidenav-content>
-
-      <button mat-button (click)="sidenav.toggle()">
-          <div *ngIf="!sidenav.opened">
-
-              <svg class="bi bi-toggle-on" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                  <path fill-rule="evenodd" d="M5 3a5 5 0 000 10h6a5 5 0 000-10H5zm6 9a4 4 0 100-8 4 4 0 000 8z" clip-rule="evenodd"/>
-              </svg>
-          </div>
-
-          <div *ngIf="sidenav.opened">
-              <svg class="bi bi-toggle-off" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                  <path fill-rule="evenodd" d="M11 4a4 4 0 010 8H8a4.992 4.992 0 002-4 4.992 4.992 0 00-2-4h3zm-6 8a4 4 0 110-8 4 4 0 010 8zM0 8a5 5 0 005 5h6a5 5 0 000-10H5a5 5 0 00-5 5z" clip-rule="evenodd"/>
-              </svg>
-          </div>
-      </button>
-
-      <br>
-      <br>
-      <br>
-      <br>
       <br>
 
-  </mat-sidenav-content> -->
+      <section #manageDatabase class="container">
+        <h4 class="font-weight-bold text-align-center"> Manage DataBase </h4>
+      </section>
+
+      <ul class="list-group">
+        <li class="nav-item active">
+          <a class="nav-link" [routerLink]="['/panel']"> <img src="https://img.icons8.com/color/28/000000/dog.png"/> Animal Species</a>
+        </li>
+
+        <li class="nav-item active">
+          <a class="nav-link" [routerLink]="['/panel']"> <img src="https://img.icons8.com/color/28/000000/microorganisms.png"/> Pathologies </a>
+        </li>
+
+        <li class="nav-item active">
+          <a class="nav-link" [routerLink]="['/panel']"> <img src="https://img.icons8.com/color/28/000000/pills.png"/> Medications</a>
+        </li>
+
+        <li class="nav-item active">
+          <a class="nav-link" [routerLink]="['/panel']"> <img src="https://img.icons8.com/color/28/000000/pulse.png"/> Arrhythmias </a>
+        </li>
+      </ul>
+
+      <br>
+      <section class="container">
+
+        <a class="nav-link" [routerLink]="['/panel']"> <h4 class="font-weight-bold text-align-center">  My Profile </h4></a>
+
+      </section>
