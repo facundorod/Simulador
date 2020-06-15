@@ -37,6 +37,13 @@ export class AuthService {
     });
   }
 
+  public isLogged(): boolean {
+    const token = localStorage.getItem('ACCESS_TOKEN');
+    if (token){
+      return true
+    }
+    return false;
+  }
 
   private saveToken(token: string, expiresIn: string): void {
     localStorage.setItem('ACCESS_TOKEN', token);

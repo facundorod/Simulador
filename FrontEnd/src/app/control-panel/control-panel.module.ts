@@ -20,6 +20,7 @@ import { TemperatureComponent } from './panel/temperature/temperature.component'
 import { RespirationComponent } from './panel/respiration/respiration.component';
 import {MatToolbarModule} from '@angular/material/toolbar';
 import {MatListModule} from '@angular/material/list';
+import { AuthorizationModule } from '@app/authorization/authorization.module';
 
 
 @NgModule({
@@ -46,7 +47,8 @@ import {MatListModule} from '@angular/material/list';
     MatButtonToggleModule,
     MatSlideToggleModule,
     MatToolbarModule,
-    MatListModule
+    MatListModule,
+    AuthorizationModule
   ],
   exports: [
     SimulationComponent,

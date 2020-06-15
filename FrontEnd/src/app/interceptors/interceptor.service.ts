@@ -14,7 +14,7 @@ export class InterceptorService implements HttpInterceptor{
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
      // Intercepta todos los errores posibles en peticiones Http
-    const token: string = localStorage.getItem('Token');
+    const token: string = localStorage.getItem('ACCESS_TOKEN');
     let message;
     let request = req;
     if (token) {

@@ -7,15 +7,19 @@ import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { RegisterComponent } from './register/register.component';
 import { AuthRoutingModule } from './auth-routing.module';
+import { LogoutComponent } from './logout/logout.component';
 
 @NgModule({
-  declarations: [LoginComponent, RegisterComponent],
+  declarations: [LoginComponent, RegisterComponent, LogoutComponent],
   imports: [
     CommonModule,
     FormsModule,
     HttpClientModule,
     RouterModule,
     AuthRoutingModule
+  ],
+  exports: [
+    LogoutComponent
   ],
   providers: [AuthService]
 })
