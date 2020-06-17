@@ -21,6 +21,7 @@ import { RespirationComponent } from './panel/respiration/respiration.component'
 import {MatToolbarModule} from '@angular/material/toolbar';
 import {MatListModule} from '@angular/material/list';
 import { AuthorizationModule } from '@app/authorization/authorization.module';
+import { ManageDatabaseComponent } from './manage-database/manage-database.component';
 
 
 @NgModule({
@@ -37,7 +38,8 @@ import { AuthorizationModule } from '@app/authorization/authorization.module';
     PathologyComponent,
     CycleCardiacComponent,
     TemperatureComponent,
-    RespirationComponent
+    RespirationComponent,
+    ManageDatabaseComponent
   ],
   imports: [
     CommonModule,
