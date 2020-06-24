@@ -2,11 +2,11 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '@environments/environment';
 import { Observable } from 'rxjs';
-import { AnimalSpeciesI } from '@app/models/animal-speciesI';
-import { ScenarioI } from '@app/models/scenarioI';
-import { MedicationI } from '@app/models/medicationI';
-import { ArrhythmiaI } from '@app/models/arrhythmiaI';
-import { PathologyI } from '@app/models/pathologyI';
+import { AnimalSpeciesI } from '@models/animal-speciesI';
+import { ScenarioI } from '@models/scenarioI';
+import { MedicationI } from '@models/medicationI';
+import { ArrhythmiaI } from '@models/arrhythmiaI';
+import { PathologyI } from '@models/pathologyI';
 
 @Injectable({
   providedIn: 'root'

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { PanelService } from '@app/control-panel/services/panel.service';
-import { ScenarioI } from '@app/models/scenarioI';
+import { PanelService } from '@controlPanel/services/panel.service';
+import { ScenarioI } from '@models/scenarioI';
 
 @Component({
   selector: 'app-scenarios',

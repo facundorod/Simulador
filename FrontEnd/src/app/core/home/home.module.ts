@@ -7,7 +7,7 @@ import { MatSliderModule } from '@angular/material/slider';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import {MatButtonToggleModule} from '@angular/material/button-toggle';
 import {MatSlideToggleModule} from '@angular/material/slide-toggle';
-import { AuthorizationModule } from '@app/authorization/authorization.module';
+import { AuthorizationModule } from '@auth/authorization.module';
 import {MatToolbarModule} from '@angular/material/toolbar';
 import {MatListModule} from '@angular/material/list';
 

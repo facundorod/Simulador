@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { PanelService } from '@app/control-panel/services/panel.service';
-import { PathologyI } from '@app/models/pathologyI';
+import { PanelService } from '@controlPanel/services/panel.service';
+import { PathologyI } from '@models/pathologyI';
 
 @Component({
   selector: 'app-pathology',

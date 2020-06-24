@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '@environments/environment';
 import { Observable } from 'rxjs';
-import { JwtResponseI } from '@app/models/jwt-responseI';
+import { JwtResponseI } from '@app/shared/models/jwt-responseI';
 import { tap } from 'rxjs/operators';
 
 
@@ -29,7 +29,7 @@ export class AuthService {
   register(e_mail:String, name: String, surname: String, password: String,
       institution: String) : Observable<JwtResponseI> {
     return this.http.post<JwtResponseI>(environment.apiRegister, {
-      e_mail: e_mail,
+      email: e_mail,
       name: name,
       surname: surname,
       password: password,

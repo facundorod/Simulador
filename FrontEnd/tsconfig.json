@@ -4,9 +4,15 @@
     "baseUrl": "./",
     "paths": {
       "@app/*": ["src/app/*"],
-      "@auth/*": ["src/app/authorization/*"],
+      "@auth/*": ["src/app/auth/*"],
       "@shared/*": ["src/app/shared/*"],
-      "@environments/*": ["src/environments/*"]
+      "@environments/*": ["src/environments/*"],
+      "@models/*": ["src/app/shared/models/*"],
+      "@interceptors/*": ["src/app/shared/interceptors/*"],
+      "@home/*": ["src/app/core/home/*"],
+      "@guards/*": ["src/app/shared/guards/*"],
+      "@controlPanel/*": ["src/app/core/control-panel/*"],
+
     },
     "outDir": "./dist/out-tsc",
     "sourceMap": true,

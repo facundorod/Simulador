@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { PanelService } from '@app/control-panel/services/panel.service';
-import { MedicationI } from '@app/models/medicationI';
+import { PanelService } from '@controlPanel/services/panel.service';
+import { MedicationI } from '@models/medicationI';
 
 @Component({
   selector: 'app-medication',

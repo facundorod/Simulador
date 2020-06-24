@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
 
 import { ToastrService } from 'ngx-toastr';
-import { JwtResponseI } from '@app/models/jwt-responseI';
+import { JwtResponseI } from '@app/shared/models/jwt-responseI';
 
 @Component({
   selector: 'app-login',

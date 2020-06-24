@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { PanelService } from '@app/control-panel/services/panel.service';
-import { AnimalSpeciesI } from '@app/models/animal-speciesI';
+import { PanelService } from '@controlPanel/services/panel.service';
+import { AnimalSpeciesI } from '@models/animal-speciesI';
 
 
 @Component({

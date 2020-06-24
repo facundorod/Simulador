@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { PanelService } from '@app/control-panel/services/panel.service';
-import { ArrhythmiaI } from '@app/models/arrhythmiaI';
+import { PanelService } from '@controlPanel/services/panel.service';
+import { ArrhythmiaI } from '@models/arrhythmiaI';
 
 @Component({
   selector: 'app-arrhythmia',
