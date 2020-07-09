@@ -1,4 +1,5 @@
 const connection = require('../database/db');
+const { delete } = require('./arrhythmia');
 
 module.exports = {
     async insert(id_scenario, id_arr){
@@ -49,4 +50,11 @@ module.exports = {
             WHERE id_arr = $1`, [id_arr]);
         return result;
     },
+
+    async delete(id_arr, id_scenario) {
+        const result = await connection.query(`DELETE FROM "simulador".arrhythmiaperscenario
+            WHERE id_arr = $1
+                AND id_scenario = $2`, [id_arr, id_scenario]);
+        return result;
+    }
 }

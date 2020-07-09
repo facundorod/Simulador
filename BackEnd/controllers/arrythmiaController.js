@@ -6,15 +6,14 @@ module.exports = {
     insert : (req, res, next) => {
         const { name, description } = req.body;
         if ( !name || !description) {
-            return res.status(500).send("The name and description can't be empty");
+            next(new Error());
         }
         arrythmiaModel
             .insert(name, description)
-            .then(
-                res.send("The insert has been succesfull")
-            )
+            .then( () => {
+                res.status(200);
+            })
             .catch( err => {
-                console.log(err);
                 next(err);
             });
     },
@@ -23,10 +22,9 @@ module.exports = {
         arrythmiaModel
             .get()
             .then( arr => {
-                res.send(arr)
+                res.status(200).json(arr);
             })
             .catch( err => {
-                console.log(err);
                 next(err);
             });
     },
@@ -34,31 +32,29 @@ module.exports = {
     update : (req, res, next) => {
         const { id_arr, name, description } = req.body;
         if ( !name || !description) {
-            return res.status(500).send("The name and description can't be empty");
+            next(new Error());
         }
         arrythmiaModel
             .update(id_arr, name, description)
-            .then(
-                res.send("The update has been succesfull")
-            )
+            .then( () => {
+                return res.status(200);
+            })
             .catch( err => {
-                console.log(err);
                 next(err);
             });
     },
 
     delete : (req, res, next) => {
-        const id_arr = req.body;
+        const id_arr = req.body.id_arr;
         if (!id_arr) {
-            return res.status(500).send("The identifier can't be empty");
+            next(new Error());
         }
         arrythmiaModel
             .delete(id_arr)
-            .then(
-                res.send("The delete has been succesfull")
-            )
+            .then( () => {
+                return res.status(200);
+            })
             .catch( err => {
-                console.log(err);
                 next(err);
             });
     }

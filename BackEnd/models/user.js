@@ -26,14 +26,13 @@ module.exports = {
         return result.rows[0]; 
     }, 
 
-    async update(id_user, e_mail, name, surname, password, institution){
+    async update(e_mail, name, surname, password, institution){
         const results = await connection.query(`UPDATE "simulador"."User" SET
-                name = $3, 
-                surname = $4,
-                password = $5,
-                institution = $6
-            WHERE id_user = $1 
-                AND e_mail=$2`, [id_user, e_mail, name, surname, password, institution]);
+                name = $2, 
+                surname = $3,
+                password = $4,
+                institution = $5
+            WHERE e_mail=$1`, [e_mail, name, surname, password, institution]);
         return results;
     },
 

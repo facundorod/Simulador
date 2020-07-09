@@ -23,10 +23,10 @@ module.exports = {
     },
 
     async update(id_med, name, description){
-        const result = await connection.query(`UPDATE FROM "simulador".medication SET 
+        const result = await connection.query(`UPDATE "simulador".medication SET 
             name = $2,
             description = $3
-            WHERE id_med = $1`, [id_med, name, description]);
+            WHERE id_medication = $1`, [id_med, name, description]);
         return result;
     },
 

@@ -11,5 +11,4 @@ const isAuth = (req, res, next) => {
             next(new AuthError());
         }
 }
-
 module.exports = isAuth;

@@ -35,7 +35,7 @@ module.exports = {
 
     async delete(id){
         const results = await connection.query(`DELETE FROM "simulador".arrhytmia 
-            WHERE id = $1`, [id]);
+            WHERE id_arr = $1`, [id]);
         return results;
     }
 

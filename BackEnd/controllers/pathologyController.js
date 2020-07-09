@@ -4,14 +4,14 @@ module.exports = {
     insert : (req, res, next) => {
         const { name, description } = req.body;
         if (!name || !description){
-            return res.status(500).send("The name and description can't be empty");
+            next(new Error());
         }
 
         pathologyModel
             .insert(name, description)
-            .then(
-                res.send("Insert operation has been succesfull")
-            )
+            .then( () => {
+                return res.status(200);
+            })
             .catch(err => {
                 next(err);
             });
@@ -21,7 +21,7 @@ module.exports = {
         pathologyModel
             .get()
             .then(data => {
-                res.send(data)
+                return res.status(200).send(data);
             })
             .catch(err => {
                 next(err);
@@ -29,17 +29,16 @@ module.exports = {
     },
 
     delete : (req, res, next) => {
-        const id_pat = req.body;
+        const id_pat = req.body.id_pat;
         if (!id_pat) {
-            return res.status(500).send("The identifier can't be empty");
+            next(new Error());
         }
         pathologyModel
-            .delete(id_oat)
-            .then(
-                res.send("The pathology has been deleted")
-            )
+            .delete(id_pat)
+            .then( () => {
+                return res.status(200);
+            })
             .catch( err => {
-                console.log(err);
                 next(err);
             })
     },
@@ -47,15 +46,14 @@ module.exports = {
     update : (req, res, next) => {
         const { id_pat, name, description } = req.body;
         if (!name || !description){
-            return res.status(500).send("The name and description can't be empty");
+            next(new Error());
         }
         pathologyModel
             .update(id_pat, name, description)
-            .then(
-                res.send("The update has been succesfull")
-            )
+            .then( () => {
+                return res.status(200);
+            })
             .catch( err => {
-                console.log(err);
                 next(err);
             })
     }

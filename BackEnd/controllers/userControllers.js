@@ -25,7 +25,7 @@ module.exports = {
             const resultPassword = bcrypt.compareSync(userData.password, data.password);
             if (resultPassword) {
               const accesToken = jwt.sign({ id: data.id_user }, SECRET_KEY, { expiresIn });
-              return res.json(
+              return res.status(200).json(
                 { id_user: data.id_user, 
                   email: data.e_mail,
                   accesToken: accesToken,
@@ -40,7 +40,6 @@ module.exports = {
           }
         })
         .catch( err => {
-          console.log(err);
           next(err);
         })
     },
@@ -59,7 +58,7 @@ module.exports = {
         .insert(userData.email, userData.name, userData.surname, userData.password, userData.institution)
         .then( data => {
           if (data) {
-            return res.send("The account has been created");
+            return res.status(200).send("The account has been created");
           }
         })
         .catch( err => {
@@ -81,18 +80,17 @@ module.exports = {
           institution: req.body.institution 
         };
       userModel 
-        .update(userData.id_user, userData.email, userData.name, userData.surname, userData.password, userData.institution)
+        .update(userData.email, userData.name, userData.surname, userData.password, userData.institution)
         .then( data => {
-          return res.send("The update has been succesfull")
+          return res.status(200).send("The update has been succesfull")
         })
         .catch( err => {
-          console.log(err);
           next(err);
         })
     },
 
     delete : (req, res, next) => {
-      const { id_user } = req.body;
+      const id_user = req.body.id_user;
       userModel
         .delete(id_user)
         .then( data => {

@@ -4,15 +4,14 @@ module.exports = {
     insert : (req, res, next) => {
         const { name } = req.body;
         if ( !name ) {
-            return res.status(500).send("The name can't be empty");
+            next(new Error());
         }
         animalSpeciesModel
             .insert(name)
-            .then(
-                res.send("The insert has been succesfull")
-            )
+            .then( () => {
+                return res.status(200);
+            })
             .catch( err => {
-                console.log(err);
                 next(err);
             });
     },
@@ -21,10 +20,9 @@ module.exports = {
         animalSpeciesModel
             .get()
             .then( arr => {
-                res.send(arr)
+                res.status(200).send(arr);
             })
             .catch( err => {
-                console.log(err);
                 next(err);
             });
     },
@@ -32,31 +30,29 @@ module.exports = {
     update : (req, res, next) => {
         const { id_as, name  } = req.body;
         if ( !name ) {
-            return res.status(500).send("The name can't be empty");
+            next(new Error());
         }
         animalSpeciesModel
             .update(id_as, name)
-            .then(
-                res.send("The update has been succesfull")
-            )
+            .then( () => {
+                return res.status(200);
+            })
             .catch( err => {
-                console.log(err);
                 next(err);
             });
     },
 
     delete : (req, res, next) => {
-        const id_as = req.body;
+        const id_as = req.body.id_as;
         if (!id_as) {
-            return res.status(500).send("The identifier can't be empty");
+            next(new Error());
         }
         animalSpeciesModel
             .delete(id_as)
-            .then(
-                res.send("The delete has been succesfull")
-            )
+            .then(() => {
+                return res.status(200);
+            })
             .catch( err => {
-                console.log(err);
                 next(err);
             });
     }

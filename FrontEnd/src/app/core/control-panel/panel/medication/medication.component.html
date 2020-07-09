@@ -9,11 +9,11 @@
 
   </thead>
   <tbody>
-    <tr *ngFor="let medication of medications; trackByFn" >
+    <tr>
       <td>
-        <select id="medicationList" class="form-control" >
-          <option> Choose the medication </option>
-          <option > {{medication.name}} </option>
+        <select id="medicationList" class="form-control">
+          <option > Choose the medication </option>
+          <option *ngFor="let medication of medications; trackByFn" > {{medication.name}} </option>
         </select>
       </td>
       <td> Dose 1 </td>

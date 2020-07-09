@@ -4,14 +4,15 @@ module.exports = {
     insert : (req, res, next) => {
         const { name, description } = req.body;
         if (!name || !description ){
-            return res.status(500).send("The name and description can't be empty");
+            next(new Error());
         }
 
         scenariosModel
             .insert(name, description)
-                .then( res.send("The insert has been succesfull"))
+                .then( () => {
+                    return res.status(200);   
+                })
                 .catch( err => {
-                    console.log(err);
                     next(err);
                 });
     },
@@ -20,10 +21,9 @@ module.exports = {
         scenariosModel
         .get()
         .then( arr => {
-            res.send(arr)
+            return res.status(200).json(arr);
         })
         .catch( err => {
-            console.log(err);
             next(err);
         });
     },
@@ -32,25 +32,25 @@ module.exports = {
         const {id_scenario, name, description} = req.body;
         scenariosModel
             .update(id_scenario, name, description)
-                .then( res.send("The update has been succesfull"))
+                .then( () => {
+                    return res.status(200);
+                })
                 .catch( err => {
-                    console.log(err);
                     next(err);
                 });
     },
 
     delete : (req, res, next) => {
-        const id_scenario = req.body;
+        const id_scenario = req.body.id_scenario;
         if (!id_scenario) {
-            return res.status(500).send("The identifier can't be empty");
+            next(new Error());
         }
         scenariosModel
             .delete(id_scenario)
-            .then(
-                res.send("The delete has been succesfull")
-            )
+            .then(()=> {
+                return res.status(200);
+            })
             .catch( err => {
-                console.log(err);
                 next(err);
             });
     }

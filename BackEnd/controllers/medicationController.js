@@ -4,14 +4,14 @@ module.exports = {
     insert : (req, res, next) => {
         const { name, description } = req.body;
         if (!name || !description){
-            return res.status(500).send("The name and description can't be empty");
+            next(new Error());
         }
 
         medicationModel
             .insert(name, description)
-            .then(
-                res.send("Insert operation has been succesfull")
-            )
+            .then( () => {
+                return res.status(200);
+            })
             .catch(err => {
                 next(err);
             });
@@ -21,7 +21,7 @@ module.exports = {
         medicationModel
             .get()
             .then(data => {
-                res.send(data)
+                res.status(200).send(data);
             })
             .catch(err => {
                 next(err);
@@ -29,17 +29,16 @@ module.exports = {
     },
 
     deleteMed : (req, res, next) => {
-        const id_med = req.body;
+        const id_med = req.body.id_med;
         if (!id_med) {
-            return res.status(500).send("The identifier can't be empty");
+           next(new Error());
         }
         medicationModel
             .delete(id_med)
-            .then(
-                res.send("The medication has been deleted")
-            )
+            .then( () => {
+                return res.status(200);
+            })
             .catch( err => {
-                console.log(err);
                 next(err);
             })
     },
@@ -47,15 +46,14 @@ module.exports = {
     update : (req, res, next) => {
         const { id_med, name, description } = req.body;
         if (!name || !description){
-            return res.status(500).send("The name and description can't be empty");
+           next(new Error());
         }
         medicationModel
             .update(id_med, name, description)
-            .then(
-                res.send("The update has been succesfull")
-            )
+            .then( () => {
+                return res.status(200);
+            })
             .catch( err => {
-                console.log(err);
                 next(err);
             })
     }

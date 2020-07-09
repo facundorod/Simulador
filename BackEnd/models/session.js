@@ -3,7 +3,7 @@ const connection = require('../database/db');
 module.exports = {
 
     async insert(id_user, id_role){
-        const result = await connection.query(`INSERT INTO "simulador".sesion 
+        const result = await connection.query(`INSERT INTO "simulador".session 
             (id_user, id_role) 
             VALUES ($1, $2)`, [id_user, id_role]);
         return result;
@@ -49,6 +49,13 @@ module.exports = {
     async deleteRole(id_role){
         const result = await connection.query(`DELETE FROM Session 
             WHERE id_role = $1`, [id_role]);
+        return result;
+    },
+
+    async delete(id_role, id_user) {
+        const result = await connection.query(`DELETE FROM Session 
+            WHERE id_role = $1 
+                AND id_user = $2`, [id_role, id_user]);
         return result;
     }
 }
