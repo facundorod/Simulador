@@ -2,7 +2,7 @@ class AuthError extends Error {
     constructor() {
         super('You do not access');
         this.name = 'AuthError';
-        this.status = 403;
+        this.status = 401;
     }
 
     toJson(){

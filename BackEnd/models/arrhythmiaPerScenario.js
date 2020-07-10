@@ -1,5 +1,4 @@
 const connection = require('../database/db');
-const { delete } = require('./arrhythmia');
 
 module.exports = {
     async insert(id_scenario, id_arr){
