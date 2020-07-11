@@ -15,8 +15,10 @@ export class LoginComponent implements OnInit {
   email:String;
   password:String;
   submit: Boolean = false;
-
-  constructor(private authService: AuthService, private toast: ToastrService, private router:Router) { }
+  toggle: boolean = false;
+  constructor(private authService: AuthService, private toast: ToastrService, private router:Router) {
+    this.toggle=false;
+   }
 
 
   login(){
@@ -30,6 +32,11 @@ export class LoginComponent implements OnInit {
       this.toast.success("Login successful");
       // En caso de error lo intercepta el servicio Interceptor.
     });
+  }
+
+
+  collapse() : void {
+    this.toggle = !this.toggle;
   }
 
   ngOnInit() {
