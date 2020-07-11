@@ -72,5 +72,13 @@ module.exports = {
         const result = await connection.query(`DELETE FROM "simulador".spp
             WHERE id_pp = $1`, [id_pp]);
         return result;
+    },
+
+    async delete(id_as, id_pp, id_scenario){
+        const result = await connection.query(`DELETE FROM "simulador".spp
+            WHERE id_as = $1 AND id_pp = $2
+                AND id_scenario = $3`, [id_pp, id_as, id_scenario]);
+        return result;
     }
+
 }

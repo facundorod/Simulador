@@ -45,6 +45,12 @@ module.exports = {
         return result;
     },
 
+    async delete(id_scenario, id_simulation){
+        const result = await connection.query(`DELETE FROM "simulador".scenariopersimulation
+            WHERE id_scenario = $1 AND id_simulation = $2`, [id_scenario, id_simulation]);
+        return result;
+    },
+
     async deleteScenario(id_simulation){
         const result = await connection.query(`DELETE FROM "simulador".scenariopersimulation
             WHERE id_simulation = $1`, [id_simulation]);

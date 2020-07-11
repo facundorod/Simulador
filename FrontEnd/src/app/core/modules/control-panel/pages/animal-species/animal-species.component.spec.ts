@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ManageDatabaseComponent } from './manage-database.component';
+import { AnimalSpeciesComponent } from './animal-species.component';
 
-describe('ManageDatabaseComponent', () => {
-  let component: ManageDatabaseComponent;
-  let fixture: ComponentFixture<ManageDatabaseComponent>;
+describe('AnimalSpeciesComponent', () => {
+  let component: AnimalSpeciesComponent;
+  let fixture: ComponentFixture<AnimalSpeciesComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ ManageDatabaseComponent ]
+      declarations: [ AnimalSpeciesComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ManageDatabaseComponent);
+    fixture = TestBed.createComponent(AnimalSpeciesComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

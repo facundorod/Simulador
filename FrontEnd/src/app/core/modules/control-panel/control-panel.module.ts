@@ -11,14 +11,14 @@ import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 import {MatToolbarModule} from '@angular/material/toolbar';
 import {MatListModule} from '@angular/material/list';
 import { AuthorizationModule } from '@auth/authorization.module';
-import { ManageDatabaseComponent } from './manage-database/manage-database.component';
+import { AnimalSpeciesComponent } from './pages/animal-species/animal-species.component';
 
 
 @NgModule({
   declarations: [
     NavbarUserComponent,
-    PanelComponent ,
-    ManageDatabaseComponent
+    PanelComponent,
+    AnimalSpeciesComponent ,
   ],
   imports: [
     CommonModule,
