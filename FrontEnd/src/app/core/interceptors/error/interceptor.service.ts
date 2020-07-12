@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpInterceptor, HttpRequest, HttpHandler, HttpEvent, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
-import { catchError } from 'rxjs/operators';
+import { catchError, map } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { throwError, Observable } from 'rxjs';
 import { ToastrService } from 'ngx-toastr';
@@ -16,16 +16,19 @@ export class InterceptorService implements HttpInterceptor{
      // Intercepta todos los errores posibles en peticiones Http
     let message;
     let request = req;
-
     return next.handle(request).pipe(
       catchError((err: HttpErrorResponse) => {
-        message = err.error;
-        this.toast.toastrConfig.timeOut = 0;
-        this.toast.error("Retry again!", `${ message }`);
-        this.router.navigateByUrl('/login');
-        return throwError(message);
-      })
-    );
+          message = err.error;
+          this.toast.toastrConfig.timeOut = 0;
+          this.toast.error("Retry again!", `${ message }`);
+          this.router.navigateByUrl('/login');
+          return throwError(message);
+      }),
+      map((event: HttpEvent<any>) => {
+        return event;
+      }))
+
+
   }
 
 

@@ -7,11 +7,12 @@ import { MatSliderModule } from '@angular/material/slider';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import {MatButtonToggleModule} from '@angular/material/button-toggle';
 import {MatSlideToggleModule} from '@angular/material/slide-toggle';
-
 import {MatToolbarModule} from '@angular/material/toolbar';
 import {MatListModule} from '@angular/material/list';
 import { AuthorizationModule } from '@auth/authorization.module';
 import { AnimalSpeciesComponent } from './pages/animal-species/animal-species.component';
+import { FormsModule } from '@angular/forms';
+import { ToastrModule } from 'ngx-toastr';
 
 
 @NgModule({
@@ -29,7 +30,9 @@ import { AnimalSpeciesComponent } from './pages/animal-species/animal-species.co
     MatSlideToggleModule,
     MatToolbarModule,
     MatListModule,
-    AuthorizationModule
+    AuthorizationModule,
+    FormsModule,
+    ToastrModule.forRoot(),
   ],
   exports: [
   ]
