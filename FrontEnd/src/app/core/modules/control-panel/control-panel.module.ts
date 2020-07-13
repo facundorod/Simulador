@@ -13,13 +13,19 @@ import { AuthorizationModule } from '@auth/authorization.module';
 import { AnimalSpeciesComponent } from './pages/animal-species/animal-species.component';
 import { FormsModule } from '@angular/forms';
 import { ToastrModule } from 'ngx-toastr';
+import { PathologiesComponent } from './pages/pathologies/pathologies.component';
+import { MedicationsComponent } from './pages/medications/medications.component';
+import { ArrhythmiasComponent } from './pages/arrhythmias/arrhythmias.component';
 
 
 @NgModule({
   declarations: [
     NavbarUserComponent,
     PanelComponent,
-    AnimalSpeciesComponent ,
+    AnimalSpeciesComponent,
+    PathologiesComponent,
+    MedicationsComponent,
+    ArrhythmiasComponent ,
   ],
   imports: [
     CommonModule,
