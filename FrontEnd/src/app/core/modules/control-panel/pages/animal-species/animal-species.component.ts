@@ -20,7 +20,7 @@ export class AnimalSpeciesComponent implements OnInit {
 
     this.toast.toastrConfig.timeOut = 1000;
     this.toast.toastrConfig.positionClass = "toast-bottom-full-width";
-    this.abm.insertAnimalSpecies(this.nameAnimal).subscribe( (data:any) => {
+    this.abm.insertAnimalSpecies(this.nameAnimal).subscribe( () => {
       console.log("lo que me pinte");
        this.toast.success("The insert has been successful"); // ver
 

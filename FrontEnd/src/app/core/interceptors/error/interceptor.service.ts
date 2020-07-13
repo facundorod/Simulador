@@ -16,20 +16,16 @@ export class InterceptorService implements HttpInterceptor{
      // Intercepta todos los errores posibles en peticiones Http
     let message;
     let request = req;
-    return next.handle(request).pipe(
-      catchError((err: HttpErrorResponse) => {
-          message = err.error;
-          this.toast.toastrConfig.timeOut = 0;
-          this.toast.error("Retry again!", `${ message }`);
-          this.router.navigateByUrl('/login');
-          return throwError(message);
-      }),
-      map((event: HttpEvent<any>) => {
-        return event;
-      }))
-
-
+    console.log (request);
+    return next.handle(request)
+      .pipe(
+        catchError((err: HttpErrorResponse) => {
+            message = err.error;
+            this.toast.toastrConfig.timeOut = 0;
+            this.toast.error("Retry again!", `${ message }`);
+            this.router.navigateByUrl('/login');
+            return throwError(message);
+        })
+      )
   }
-
-
 }
