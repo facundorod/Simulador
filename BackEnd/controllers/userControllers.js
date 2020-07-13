@@ -21,6 +21,7 @@ module.exports = {
       userModel
         .getById(userData.email)
         .then( data => {
+          console.log(data);
           if (data) {
             const resultPassword = bcrypt.compareSync(userData.password, data.password);
             if (resultPassword) {

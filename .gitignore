@@ -4,3 +4,4 @@ FrontEnd/node_modules/*
 Dockerfile
 .dockerignore
 BackEnd/env/*
+BackEnd/.env
