@@ -15,8 +15,10 @@ module.exports = {
     },
 
     async getById(email){
-        const result = await connection.query(`SELECT * FROM "simulador"."User"
+        console.log(email);
+        const result = await connection.query(`SELECT * FROM "simulador".User
             WHERE e_mail = $1`, [email]);
+        console.log(result);
         return result.rows[0];
     },
 

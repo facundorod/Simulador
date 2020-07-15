@@ -26,8 +26,9 @@ export class LoginComponent implements OnInit {
     this.toast.toastrConfig.positionClass = "toast-bottom-full-width";
     this.authService.login(this.email, this.password)
     .subscribe( () => {
+
       // Logueo exitoso
-      this.router.navigateByUrl('panel');
+      this.router.navigateByUrl('/panel');
       this.submit = true;
       this.toast.success("Login successful");
       // En caso de error lo intercepta el servicio Interceptor.

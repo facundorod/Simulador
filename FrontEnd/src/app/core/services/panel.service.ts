@@ -34,12 +34,5 @@ export class PanelService {
   getPathology(): Observable<PathologyI[]> {
     return this.httpClient.get<PathologyI[]>(environment.apiGetPathology);
   }
-  //para este ya tenemos el abm service
-  /*insertAnimalSpecies() {
-    return this.httpClient.post(environment.apiInsertAnimalSpecies, {
-      name: "Testnuevo",
-      description: "TestDesc",
-    });
-  }
-  */
+
 }
