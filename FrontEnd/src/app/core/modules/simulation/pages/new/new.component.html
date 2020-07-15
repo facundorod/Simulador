@@ -1,0 +1,20 @@
+<div class = "container col-md-6 divCenter">
+  <h1 class="text-center">New simulation</h1>
+  <h3 class="font-italic" >Choose how do you want to initiate your new simulation</h3>
+  <form class="form-group" #form="ngForm">
+    <div class="form-check">
+    <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios1" value="option1" [(ngModel)]="blank" checked>
+    <label class="form-check-label " for="exampleRadios1">
+      Blank simulation
+    </label>
+  </div>
+  <div class="form-check">
+    <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios2" value="option2">
+    <label class="form-check-label" for="exampleRadios2">
+      Initiate with previous simulation
+    </label>
+  </div>
+  <br>
+  <button type="submit" class= "btn btn-primary btn-block" (click)="initiateSimulation()" [disabled]="!form.form.valid" > INITIATE SIMULATION </button>
+  </form>
+</div>

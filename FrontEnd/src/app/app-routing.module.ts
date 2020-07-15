@@ -14,6 +14,10 @@ const routes: Routes = [
     path: 'panel',
     canActivate: [AuthGuard],
     loadChildren: () => import('@controlPanel/control-panel.module').then(m => m.ControlPanelModule)
+  },
+  {
+    path: 'simulation',
+    loadChildren: () => import('./core/modules/simulation/simulation.module').then(m=> m.SimulationModule)
   }
 ];
 

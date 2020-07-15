@@ -28,7 +28,7 @@ export class LoginComponent implements OnInit {
     .subscribe( () => {
 
       // Logueo exitoso
-      this.router.navigateByUrl('/panel');
+      this.router.navigateByUrl('/new');
       this.submit = true;
       this.toast.success("Login successful");
       // En caso de error lo intercepta el servicio Interceptor.

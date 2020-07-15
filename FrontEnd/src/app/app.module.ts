@@ -11,6 +11,7 @@ import { ToastrModule } from 'ngx-toastr';
 import { HomeModule } from '@home/home.module';
 import {MatToolbarModule} from '@angular/material/toolbar';
 import {MatListModule} from '@angular/material/list';
+import { SimulationModule } from './core/modules/simulation/simulation.module';
 
 
 
@@ -27,6 +28,7 @@ import {MatListModule} from '@angular/material/list';
     MatListModule,
     MatToolbarModule,
     ToastrModule.forRoot(),
+    SimulationModule,
   ],
   providers: [
     {
