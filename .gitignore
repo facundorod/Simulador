@@ -3,4 +3,3 @@ FrontEnd/node_modules/*
 *.sh
 Dockerfile
 .dockerignore
-BackEnd/env/*
