@@ -9,8 +9,8 @@ module.exports = {
 
         pathologyModel
             .insert(name, description)
-            .then( () => {
-                return res.status(200);
+            .then( (data) => {
+                return res.status(200).json(data);
             })
             .catch(err => {
                 next(err);
