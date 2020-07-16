@@ -29,14 +29,14 @@ module.exports = {
     },
 
     delete : (req, res, next) => {
-        const id_pat = req.body.id_pat;
+        const id_pat = req.params.id_pat;
         if (!id_pat) {
             next(new Error());
         }
         pathologyModel
             .delete(id_pat)
-            .then( () => {
-                return res.status(200);
+            .then( (data) => {
+                return res.status(200).json(data);
             })
             .catch( err => {
                 next(err);
@@ -44,7 +44,8 @@ module.exports = {
     },
 
     update : (req, res, next) => {
-        const { id_pat, name, description } = req.body;
+        const id_pat = req.params.id_pat;
+        const { name, description } = req.body;
         if (!name || !description){
             next(new Error());
         }

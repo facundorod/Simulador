@@ -30,7 +30,8 @@ module.exports = {
     },
 
     update : (req, res, next) => {
-        const { id_arr, name, description } = req.body;
+        const id_arr = req.params.id_arr;
+        const { name, description } = req.body;
         if ( !name || !description) {
             next(new Error());
         }
@@ -45,14 +46,14 @@ module.exports = {
     },
 
     delete : (req, res, next) => {
-        const id_arr = req.body.id_arr;
+        const id_arr = req.params.id_arr;
         if (!id_arr) {
             next(new Error());
         }
         arrythmiaModel
             .delete(id_arr)
-            .then( () => {
-                return res.status(200);
+            .then( (data) => {
+                return res.status(200).json(data);
             })
             .catch( err => {
                 next(err);

@@ -1,3 +1,4 @@
+import { PathologyI } from './../../shared/models/pathologyI';
 import { ArrhythmiaI } from './../../shared/models/arrhythmiaI';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
@@ -14,28 +15,32 @@ export class AbmService {
       name:nameAnimal
     });
   }
-  insertPathologies(pathologie:string, pathologieDescription:string){
-    return this.http.post(environment.apiGetPathology, {
-      name:pathologie,
-      description:pathologieDescription
+
+
+  insertPathologies(pathology: PathologyI){
+    return this.http.post( environment.apiPathology, {
+      name:pathology.id_pat,
+      description:pathology.description
     })
   }
+
+
   insertMedications (medication:string, medicationDescription:string){
-    return this.http.post(environment.apiGetMedication,{
+    return this.http.post(environment.apiMedication,{
       name: medication,
       description:medicationDescription
     })
   }
 
   insertArrhythmias (arrhythmia:string, arrhythmiaDescription:string){
-    return this.http.post(environment.apiGetArrhythmia, {
+    return this.http.post(environment.apiArrhythmia, {
       name: arrhythmia,
       description:arrhythmiaDescription
     })
   }
 
   deleteArrhythmia(arr: ArrhythmiaI) {
-    return this.http.delete(environment.apiDeleteArrhythmia);
+    return this.http.delete(`${environment.apiArrhythmia}/${arr.id_arr}`);
   }
 
 }

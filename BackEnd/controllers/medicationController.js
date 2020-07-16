@@ -29,14 +29,14 @@ module.exports = {
     },
 
     deleteMed : (req, res, next) => {
-        const id_med = req.body.id_med;
+        const id_med = req.params.id_med;
         if (!id_med) {
            next(new Error());
         }
         medicationModel
             .delete(id_med)
-            .then( () => {
-                return res.status(200);
+            .then( (data) => {
+                return res.status(200).json(data);
             })
             .catch( err => {
                 next(err);
@@ -44,14 +44,15 @@ module.exports = {
     },
 
     update : (req, res, next) => {
-        const { id_med, name, description } = req.body;
+        const id_med = req.params.id_med;
+        const { name, description } = req.body;
         if (!name || !description){
            next(new Error());
         }
         medicationModel
             .update(id_med, name, description)
-            .then( () => {
-                return res.status(200);
+            .then( (data) => {
+                return res.status(200).json(data);
             })
             .catch( err => {
                 next(err);

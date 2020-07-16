@@ -24,11 +24,11 @@ export class PanelService {
   }
 
   getMedication(): Observable<MedicationI[]> {
-    return this.httpClient.get<MedicationI[]>(environment.apiGetMedication);
+    return this.httpClient.get<MedicationI[]>(environment.apiMedication);
   }
 
   getArrhythmia(): Observable<ArrhythmiaI[]> {
-    return this.httpClient.get<ArrhythmiaI[]>(environment.apiGetArrhythmia);
+    return this.httpClient.get<ArrhythmiaI[]>(environment.apiArrhythmia);
   }
 
   getPathology(): Observable<PathologyI[]> {
