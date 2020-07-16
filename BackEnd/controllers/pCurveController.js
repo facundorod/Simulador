@@ -5,8 +5,8 @@ module.exports = {
         const { id_as, id_pp, id_scenario, t, value } = req.body;
         pCurveModel
         .insert(id_as, id_pp, id_scenario, t, value)
-        .then( () => {
-            return res.status(200);
+        .then( (p) => {
+            return res.status(200).json(p);
         })
         .catch(err => {
             next(err);

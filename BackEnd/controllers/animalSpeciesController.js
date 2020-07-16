@@ -20,7 +20,7 @@ module.exports = {
         animalSpeciesModel
             .get()
             .then( arr => {
-                res.status(200).send(arr);
+                res.status(200).json(arr);
             })
             .catch( err => {
                 next(err);

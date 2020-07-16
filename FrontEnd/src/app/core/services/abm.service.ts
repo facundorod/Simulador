@@ -1,3 +1,4 @@
+import { ArrhythmiaI } from './../../shared/models/arrhythmiaI';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '@environments/environment';
@@ -32,4 +33,9 @@ export class AbmService {
       description:arrhythmiaDescription
     })
   }
+
+  deleteArrhythmia(arr: ArrhythmiaI) {
+    return this.http.delete(environment.apiDeleteArrhythmia);
+  }
+
 }

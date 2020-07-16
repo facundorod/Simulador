@@ -2,11 +2,11 @@
   <h1>Pathologies</h1>
   <form action="" class="form-group" #form ="ngForm">
     <div class="form-group">
-      <label for="pathologieName">Patologie name</label>
+      <label for="pathologieName"> Pathology name</label>
       <input class = "form-control" type="text" name = "pathologieName" required [(ngModel)]= "pathologieName">
     </div>
     <div class="form-group">
-      <label for="description">Pathologie description</label>
+      <label for="description">Pathology description</label>
       <input class ="form-control" type="text" name= "description" required [(ngModel)]= "description">
     </div>
     <button type="submit" [disabled]="!form.form.valid" class="btn btn-primary btn-block" (click)="savePathologie()">

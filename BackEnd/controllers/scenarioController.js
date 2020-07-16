@@ -9,8 +9,8 @@ module.exports = {
 
         scenariosModel
             .insert(name, description)
-                .then( () => {
-                    return res.status(200);   
+                .then( (scenario) => {
+                    return res.status(200).json(scenario);   
                 })
                 .catch( err => {
                     next(err);
@@ -20,8 +20,8 @@ module.exports = {
     get : (req, res, next) => {
         scenariosModel
         .get()
-        .then( arr => {
-            return res.status(200).json(arr);
+        .then( scenarios => {
+            return res.status(200).json(scenarios);
         })
         .catch( err => {
             next(err);
@@ -47,8 +47,8 @@ module.exports = {
         }
         scenariosModel
             .delete(id_scenario)
-            .then(()=> {
-                return res.status(200);
+            .then((data)=> {
+                return res.status(200).json(data);
             })
             .catch( err => {
                 next(err);

@@ -5,8 +5,8 @@ module.exports = {
         const { id_as, id_pp, alarm_low, alarm_high } = req.body;
         ppPerAsModel
         .insert(id_as, id_pp, alarm_low, alarm_high)
-        .then( () => {
-            return res.status(200);
+        .then( (pp) => {
+            return res.status(200).json(pp);
         })
         .catch( err => {
             next(err);

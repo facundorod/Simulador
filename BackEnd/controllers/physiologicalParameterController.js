@@ -5,8 +5,8 @@ module.exports = {
         const { name, description, label, unit } = req.body;
         physiologicalP
         .insert(name, description, label, unit)
-        .then( () => {
-            return res.status(200);
+        .then( (ph) => {
+            return res.status(200).json(ph);
         })
         .catch( err => {
             next(err);

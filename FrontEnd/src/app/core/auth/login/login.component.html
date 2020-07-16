@@ -1,43 +1,5 @@
 <div class="wrapper" >
-
-  <nav [ngClass]="toggle ? 'sidebar': 'sidebarToggle'">
-    <div class="sidebar-header">
-      <button type="button" class="btn btn-info sidebarCollapse" (click)="collapse()">
-        <i class="fas fa-align-left">
-          <img src="https://img.icons8.com/ios-glyphs/20/000000/sorting-options.png" *ngIf="!toggle"/>
-        </i>
-        <i class="fas fa-align-left">
-        <img src="https://img.icons8.com/flat_round/30/000000/arrow--v1.png" *ngIf="toggle"/>
-      </i>
-      </button>
-
-      <img src="../../../assets/logo transparente.png" class="hidden">
-
-      <h3 class="font-weight-bold text-center"> Welcome </h3>
-    </div>
-
-    <ul class="list-unstyled components">
-      <li class="nav-item active">
-        <a class="nav-link" [routerLink]="['/']"> <img src="https://img.icons8.com/color/28/000000/home-page.png"/>
-          Home
-        </a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link"  [routerLink]="['/auth/login']"> <img src="https://img.icons8.com/color/28/000000/login-rounded-right.png"/> Login </a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link" [routerLink]="['/auth/register']">
-          <img src="https://img.icons8.com/color/28/000000/add-user-male--v1.png"/> Register </a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link" [routerLink]="['/about']">
-          <img src="https://img.icons8.com/color/28/000000/about.png"/>
-            About
-        </a>
-    </li>
-
-    </ul>
-  </nav>
+  <app-navbar></app-navbar>
 
   <div id="content">
 
@@ -73,5 +35,5 @@
 
 
 </div>
-</div>
+
 

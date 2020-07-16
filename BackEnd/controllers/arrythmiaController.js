@@ -10,8 +10,8 @@ module.exports = {
         }
         arrythmiaModel
             .insert(name, description)
-            .then( (data) => {
-                res.status(200).json(data);
+            .then( (arr) => {
+                res.status(200).json(arr);
             })
             .catch( err => {
                 next(err);

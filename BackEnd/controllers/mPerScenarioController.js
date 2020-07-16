@@ -5,8 +5,8 @@ module.exports = {
         const { id_scenario, id_medication, dose, unit} = req.body;
         mPerScenarioModel
         .insert(id_scenario, id_medication, dose, unit)
-        .then( () => {
-            return res.status(200);
+        .then( (med) => {
+            return res.status(200).json(med);
         })
         .catch( err => {
             next(err);

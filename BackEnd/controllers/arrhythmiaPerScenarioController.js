@@ -10,8 +10,8 @@ module.exports = {
 
         arrhythmiaPerScenarioModel
         .insert(id_scenario, id_arr)
-        .then( () => {
-            return res.status(200);
+        .then( (arr) => {
+            return res.status(200).json(arr);
         })
         .catch( err => {
             next(err);

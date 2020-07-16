@@ -9,8 +9,8 @@ module.exports = {
 
         medicationModel
             .insert(name, description)
-            .then( (data) => {
-                return res.status(200).json(data);
+            .then( (med) => {
+                return res.status(200).json(med);
             })
             .catch(err => {
                 next(err);

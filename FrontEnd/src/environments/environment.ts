@@ -14,7 +14,7 @@ export const environment = {
   apiGetArrhythmia: "http://localhost:8001/api/arrhythmias/all",
   apiGetPathology: "http://localhost:8001/api/pathology/all",
   apiInsertAnimalSpecies: "http://localhost:8001/api/animalSpecies/id",
-
+  apiDeleteArrhythmia: "http://localhost:8001/api/arrhythmias/id",
 };
 
 /*

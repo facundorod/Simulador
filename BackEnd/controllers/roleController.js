@@ -5,8 +5,8 @@ module.exports = {
         const name = req.body.name;
         roleModel
         .insert(name)
-        .then( () => {
-            return res.status(200);
+        .then( (rc) => {
+            return res.status(200).json(rc);
         })
         .catch( err => {
             next(err);

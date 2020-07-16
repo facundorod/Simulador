@@ -10,16 +10,21 @@ import { Component, OnInit } from '@angular/core';
 export class NavbarComponent implements OnInit {
 
   public isLogged : boolean = false;
-
-
-  constructor(private authService: AuthService) { }
+  public toggle : boolean;
+  constructor(private authService: AuthService) {
+    this.toggle = false;
+  }
 
   ngOnInit(): void {
-      //this.isLogged = true;
+
   }
 
   setLogged(s : boolean ) {
     this.isLogged = s;
+  }
+
+  collapse() : void {
+    this.toggle = !this.toggle;
   }
 
 
