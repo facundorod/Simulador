@@ -28,7 +28,8 @@ module.exports = {
     },
 
     update : (req, res, next) => {
-        const { id_as, name  } = req.body;
+        const name = req.body.name;
+        const id_as = req.params.id_as;
         if ( !name ) {
             next(new Error());
         }
@@ -43,7 +44,7 @@ module.exports = {
     },
 
     delete : (req, res, next) => {
-        const id_as = req.body.id_as;
+        const id_as = req.params.id_as;
         if (!id_as) {
             next(new Error());
         }
