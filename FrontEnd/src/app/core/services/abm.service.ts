@@ -43,4 +43,8 @@ export class AbmService {
     return this.http.delete(`${environment.apiArrhythmia}/${arr.id_arr}`);
   }
 
+  deletePathology(pat: PathologyI) {
+    return this.http.delete(`${environment.apiPathology}/${pat.id_pat}`);
+  }
+
 }
