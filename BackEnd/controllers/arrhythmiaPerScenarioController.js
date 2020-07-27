@@ -31,7 +31,7 @@ module.exports = {
     },
 
     deleteScenario : (req, res, next) => {
-        const id_scenario = req.body.id_scenario;
+        const id_scenario = req.params.id_scenario;
         if (!id_scenario) {
             next(new Error());
         }
@@ -46,7 +46,7 @@ module.exports = {
     },
 
     deleteArrhythmia : (req, res, next) => {
-        const id_arr = req.body.id_arr;
+        const id_arr = req.params.id_arr;
         if (! id_arr) {
             next(new Error());
         }

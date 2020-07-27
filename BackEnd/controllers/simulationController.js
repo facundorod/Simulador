@@ -5,8 +5,8 @@ module.exports = {
         const { name, description, id_as } = req.body;
         simulationModel
         .insert(name, description, id_as)
-        .then(() => {
-            return res.status(200);
+        .then((data) => {
+            return res.status(200).json(data);
         })
         .catch( err => {
             next(err);
@@ -28,8 +28,8 @@ module.exports = {
         const { id_simulation, name, description, id_as } = req.body;
         simulationModel
         .update(id_simulation, name, description, id_as)
-        .then(() => {
-            return res.status(200);
+        .then((data) => {
+            return res.status(200).json(data);
         })
         .catch(err => {
             next(err);
@@ -40,8 +40,8 @@ module.exports = {
         const id_simulation = req.body.id_simulation;
         simulationModel
         .delete(id_simulation)
-        .then( () => {
-            return res.status(200);
+        .then( (data) => {
+            return res.status(200).json(data);
         })
         .catch( err => {
             next(err);

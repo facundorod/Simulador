@@ -81,7 +81,7 @@ module.exports = {
       userModel 
         .update(userData.email, userData.name, userData.surname, userData.password, userData.institution)
         .then( data => {
-          return res.status(200).send("The update has been succesfull")
+          return res.status(200).json(data);
         })
         .catch( err => {
           next(err);
@@ -89,11 +89,11 @@ module.exports = {
     },
 
     delete : (req, res, next) => {
-      const id_user = req.body.id_user;
+      const id_user = req.params.id_user;
       userModel
         .delete(id_user)
         .then( data => {
-          return res.send("The delete has been succesfull");
+          return res.status(200).json(data);
         })
         .catch( err => {
           console.log(err);

@@ -30,13 +30,10 @@ module.exports = {
     update : (req, res, next) => {
         const name = req.body.name;
         const id_as = req.params.id_as;
-        if ( !name ) {
-            next(new Error());
-        }
         animalSpeciesModel
             .update(id_as, name)
-            .then( () => {
-                return res.status(200);
+            .then( (data) => {
+                return res.status(200).json(data);
             })
             .catch( err => {
                 next(err);
@@ -50,8 +47,8 @@ module.exports = {
         }
         animalSpeciesModel
             .delete(id_as)
-            .then(() => {
-                return res.status(200);
+            .then((data) => {
+                return res.status(200).json(data);
             })
             .catch( err => {
                 next(err);

@@ -28,8 +28,8 @@ module.exports = {
         const { id_role, name } = req.body;
         roleModel
         .update(id_role, name)
-        .then( () => {
-            return res.status(200);
+        .then( (data) => {
+            return res.status(200).json(data);
         })
         .catch( err => {
             next(err);
@@ -40,8 +40,8 @@ module.exports = {
         const id_role = req.body.id_role;
         roleModel
         .delete(id_role)
-        .then( () => {
-            return res.status(200);
+        .then( (data) => {
+            return res.status(200).json(data);
         })
         .catch( err => {
             next(err);

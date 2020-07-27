@@ -5,8 +5,8 @@ module.exports = {
         const { id_scenario, id_simulation } = req.body;
         scenarioPerSimulation
         .insert(id_scenario, id_simulation)
-        .then( () => {
-            return res.status(200);
+        .then( (data) => {
+            return res.status(200).json(data);
         })
         .catch( err => {
             next(err);
@@ -40,8 +40,8 @@ module.exports = {
         const { id_scenario, id_simulation } = req.body;
         scenarioPerSimulation
         .delete(id_scenario, id_simulation) 
-        .then( () => {
-            return res.status(200);
+        .then( (data) => {
+            return res.status(200).json(data);
         })
         .catch( err => {
             next(err);

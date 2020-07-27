@@ -30,9 +30,6 @@ module.exports = {
 
     deleteMed : (req, res, next) => {
         const id_med = req.params.id_med;
-        if (!id_med) {
-           next(new Error());
-        }
         medicationModel
             .delete(id_med)
             .then( (data) => {
@@ -46,9 +43,6 @@ module.exports = {
     update : (req, res, next) => {
         const id_med = req.params.id_med;
         const { name, description } = req.body;
-        if (!name || !description){
-           next(new Error());
-        }
         medicationModel
             .update(id_med, name, description)
             .then( (data) => {

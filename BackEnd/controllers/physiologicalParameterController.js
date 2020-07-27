@@ -28,8 +28,8 @@ module.exports = {
         const { id_pp, name, description, label, unit } = req.body;
         physiologicalP
         .update(id_pp, name, description, label, unit)
-        .then( () => {
-            return res.status(200);
+        .then( (data) => {
+            return res.status(200).json(data);
         })
         .catch( err => {
             next(err);
@@ -40,8 +40,8 @@ module.exports = {
         const id_pp = req.body.id_pp;
         physiologicalP
         .delete(id_pp)
-        .then( () => {
-            return res.status(200);
+        .then( (data) => {
+            return res.status(200).json(data);
         })
         .catch( err => {
             next(err);

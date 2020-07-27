@@ -28,8 +28,8 @@ module.exports = {
         const { id_as, id_pp, alarm_low, alarm_high } = req.body;
         ppPerAsModel
         .update(id_as, id_pp, alarm_low, alarm_high)
-        .then( () => {
-            return res.status(200);
+        .then( (data) => {
+            return res.status(200).json(data);
         })
         .catch( err => {
             next(err);
@@ -40,8 +40,8 @@ module.exports = {
         const { id_as, id_pp } = req.body;
         ppPerAsModel
         .delete (id_as, id_pp)
-        .then(() => {
-            return res.status(200);
+        .then((data) => {
+            return res.status(200).json(data);
         })
         .catch( err => {
             next(err);

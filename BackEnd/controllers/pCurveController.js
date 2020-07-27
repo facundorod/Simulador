@@ -28,8 +28,8 @@ module.exports = {
         const { id_as, id_pp, id_scenario, t, value } = req.body;
         pCurveModel
         .update( id_as, id_pp, id_scenario, t, value)
-        .then( () => {
-            return res.status(200);
+        .then( (data) => {
+            return res.status(200).json(data);
         })
         .catch( err => {
             next(err);
@@ -40,8 +40,8 @@ module.exports = {
         const { id_as, id_pp, id_scenario } = req.body;
         pCurveModel
         .delete(id_as, id_pp, id_scenario)
-        .then( () => {
-            return res.status(200);
+        .then( (data) => {
+            return res.status(200).json(data);
         })
         .catch( err => {
             next(err);

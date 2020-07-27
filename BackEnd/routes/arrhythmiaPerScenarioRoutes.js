@@ -3,9 +3,9 @@ const express = require('express');
 const router = express.Router();
 const isAuth = require('../middleware/auth');
 
-router.post('/api/arrhythmiaPerScenario/:id', isAuth, arrhythmiaPerScenarioController.insert);
-router.get('/api/arrhythmiaPerScenario/all', isAuth, arrhythmiaPerScenarioController.get);
-router.delete('/api/arrhythmiaPerScenario/:id', isAuth, arrhythmiaPerScenarioController.delete);
+router.post('/api/arrhythmiaPerScenario', isAuth, arrhythmiaPerScenarioController.insert);
+router.get('/api/arrhythmiaPerScenario', isAuth, arrhythmiaPerScenarioController.get);
+router.delete('/api/arrhythmiaPerScenario/:id_arr', isAuth, arrhythmiaPerScenarioController.delete);
 
 module.exports = router;
 

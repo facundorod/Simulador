@@ -37,7 +37,7 @@ module.exports = {
     },
 
     delete : (req, res, next) => {
-        const {id_scenario, id_medication} = req.body;
+        const {id_scenario, id_medication} = req.params;
         mPerScenarioModel
         .delete(id_scenario, id_medication)
         .then( () => {

@@ -32,8 +32,8 @@ module.exports = {
         const {id_scenario, name, description} = req.body;
         scenariosModel
             .update(id_scenario, name, description)
-                .then( () => {
-                    return res.status(200);
+                .then( (data) => {
+                    return res.status(200).json(data);
                 })
                 .catch( err => {
                     next(err);
