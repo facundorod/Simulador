@@ -1,3 +1,4 @@
+import { ArrhythmiaI } from '@models/arrhythmiaI';
 import { Component, OnInit } from '@angular/core';
 import { AbmService } from '@app/core/services/abm.service';
 import { ToastrService } from 'ngx-toastr';
@@ -9,15 +10,16 @@ import { Router } from '@angular/router';
   styleUrls: ['./arrhythmias.component.css']
 })
 export class ArrhythmiasComponent implements OnInit {
-  public arrhythmiaName:string;
-  public description:string;
+
+  public arrhythmia : ArrhythmiaI;
+
   constructor(private abm:AbmService, private toast:ToastrService, private route:Router) { }
 
   ngOnInit(): void {
   }
 
   saveArrhythmia(){
-    this.abm.insertArrhythmias(this.arrhythmiaName, this.description).subscribe(()=>{
+    this.abm.insertArrhythmias(this.arrhythmia).subscribe(()=>{
       this.toast.success("The insert has been successful")
     })
   }

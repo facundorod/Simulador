@@ -16,11 +16,11 @@ export class PanelService {
   constructor(private httpClient: HttpClient) { }
 
   getScenarios(): Observable<ScenarioI[]> {
-    return this.httpClient.get<ScenarioI[]>(environment.apiGetScenarios);
+    return this.httpClient.get<ScenarioI[]>(environment.apiScenario);
   }
 
   getAnimalSpecies(): Observable<AnimalSpeciesI[]> {
-    return this.httpClient.get<AnimalSpeciesI[]>(environment.apiGetAnimalSpecies);
+    return this.httpClient.get<AnimalSpeciesI[]>(environment.apiAnimalSpecies);
   }
 
   getMedication(): Observable<MedicationI[]> {
@@ -32,7 +32,7 @@ export class PanelService {
   }
 
   getPathology(): Observable<PathologyI[]> {
-    return this.httpClient.get<PathologyI[]>(environment.apiGetPathology);
+    return this.httpClient.get<PathologyI[]>(environment.apiPathology);
   }
 
 }
