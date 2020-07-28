@@ -4,17 +4,12 @@
 
 export const environment = {
   production: false,
-  apiLogin: "http://localhost:8001/api/auth/login",
-  apiUpdate: "http://localhost:8001/api/user/update",
-  apiGetUsers: "http://localhost:8001/api/user/get",
-  apiRegister: "http://localhost:8001/api/auth/register",
-  apiGetScenarios: "http://localhost:8001/api/scenario/all",
-  apiGetAnimalSpecies: "http://localhost:8001/api/animalSpecies/all",
-  apiGetPathology: "http://localhost:8001/api/pathology/all",
-  apiInsertAnimalSpecies: "http://localhost:8001/api/animalSpecies/id",
+  apiUsers: "http://localhost:8001/api/auth",
   apiArrhythmia: "http://localhost:8001/api/arrhythmias",
   apiMedication: "http://localhost:8001/api/medication",
   apiPathology: "http://localhost:8001/api/pathology",
+  apiScenario: "http://localhost:8001/api/scenario",
+  apiAnimalSpecies: "http://localhost:8001/api/animalSpecies",
 };
 
 /*

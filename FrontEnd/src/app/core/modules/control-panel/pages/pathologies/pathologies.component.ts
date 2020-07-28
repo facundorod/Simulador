@@ -11,8 +11,8 @@ import { Router } from '@angular/router';
 })
 export class PathologiesComponent implements OnInit {
 
-  // Interfaz para manejar la descripción y nombre en una única variable.
   public pathology : PathologyI;
+
   constructor(private abm:AbmService, private toast:ToastrService, private route:Router) { }
 
   ngOnInit(): void {

@@ -14,7 +14,7 @@ export class AuthService {
   constructor(private http:HttpClient) { }
 
   login(email:String, password: String) : Observable<JwtResponseI>{
-    return this.http.post<JwtResponseI>(environment.apiLogin,
+    return this.http.post<JwtResponseI>(`${environment.apiUsers}/login`,
       {email: email, password:password } )
       .pipe( tap(
         (res: JwtResponseI) => {
@@ -28,7 +28,7 @@ export class AuthService {
 
   register(e_mail:String, name: String, surname: String, password: String,
       institution: String) : Observable<JwtResponseI> {
-    return this.http.post<JwtResponseI>(environment.apiRegister, {
+    return this.http.post<JwtResponseI>(`${environment.apiUsers}/register`, {
       email: e_mail,
       name: name,
       surname: surname,
