@@ -1,9 +1,9 @@
 .sidebar {
-  min-width: 150px;
-  max-width: 200px;
+  /* min-width: 10%;
+  max-width: 20%; */
   background: #393836;
   color: #fff;
-  height: 100%;
+  height: 100% ;
   transition: all 0.5s;
 }
 
@@ -11,8 +11,8 @@
   margin:20px;
 }
 .sidebarToggle {
-  min-width: 80px;
-  max-width: 80px;
+  /* min-width: 10%;
+  max-width: 10%; */
   height: 100%;
   text-align: center;
   transition: all 0.2s;

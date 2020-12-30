@@ -4,6 +4,10 @@
 
 export const environment = {
   production: false,
+  api: {
+    baseUrl: 'http://localhost:8001/api',
+    animalSpecies: '/animalSpecies/'
+  },
   apiUsers: "http://localhost:8001/api/auth",
   apiArrhythmia: "http://localhost:8001/api/arrhythmias",
   apiMedication: "http://localhost:8001/api/medication",

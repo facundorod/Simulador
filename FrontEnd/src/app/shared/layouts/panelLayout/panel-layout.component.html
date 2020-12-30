@@ -1,0 +1,24 @@
+<ng-sidebar-container>
+
+    <!-- Sidebar -->
+    <ng-sidebar #sidebar [mode]="'push'">
+        <button (click)="sidebar.close()">Close sidebar</button>
+        <app-navbar [type]="'user'"></app-navbar>
+    </ng-sidebar>
+
+    <!-- Page content -->
+    <div ng-sidebar-content>
+        <button (click)="sidebar.open()">Open sidebar</button>
+        <main role="main" class="container">
+            <p> as </p>
+            <div class="template">
+                <div class="card shadow-sm p-3 mb-5 bg-white rounded">
+                    <router-outlet></router-outlet>
+                </div>
+            </div>
+
+        </main>
+    </div>
+</ng-sidebar-container>
+
+

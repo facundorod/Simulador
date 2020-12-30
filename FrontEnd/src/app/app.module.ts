@@ -1,8 +1,8 @@
+import { LayoutModule } from './shared/layouts/layout.module';
 import { RouterModule } from '@angular/router';
-import { NavbarComponent } from '@app/shared/navbar/navbar.component';
-import { AuthInterceptor } from './core/interceptors/auth/auth.interceptor';
+import { AuthInterceptor } from './interceptors/auth/auth.interceptor';
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
-import { InterceptorService } from '@app/core/interceptors/error/interceptor.service';
+import { InterceptorService } from './interceptors/error/interceptor.service';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgModule } from '@angular/core';
@@ -12,8 +12,9 @@ import { AppComponent } from './app.component';
 import { ToastrModule } from 'ngx-toastr';
 import {MatToolbarModule} from '@angular/material/toolbar';
 import {MatListModule} from '@angular/material/list';
-import { SimulationModule } from './core/modules/simulation/simulation.module';
+import { SimulationModule } from './modules/simulation/simulation.module';
 import { SharedModule } from './shared/shared.module';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 
 
@@ -32,7 +33,10 @@ import { SharedModule } from './shared/shared.module';
     ToastrModule.forRoot(),
     SimulationModule,
     HttpClientModule,
+    LayoutModule,
     SharedModule,
+    LayoutModule,
+    NgbModule,
   ],
   providers: [
     {

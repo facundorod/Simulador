@@ -1,5 +1,5 @@
-import { AuthService } from '@app/core/services/auth.service';
-import { Component, OnInit } from '@angular/core';
+import { AuthService } from '@app/services/auth.service';
+import { Component, Input, OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-navbar',
@@ -8,8 +8,7 @@ import { Component, OnInit } from '@angular/core';
   providers: [AuthService]
 })
 export class NavbarComponent implements OnInit {
-
-  public isLogged : boolean = false;
+  @Input() type: any ;
   public toggle : boolean;
   constructor(private authService: AuthService) {
     this.toggle = false;
@@ -19,15 +18,8 @@ export class NavbarComponent implements OnInit {
 
   }
 
-  setLogged(s : boolean ) {
-    this.isLogged = s;
-  }
-
   collapse() : void {
     this.toggle = !this.toggle;
   }
-
-
-
 
 }

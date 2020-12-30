@@ -4,16 +4,16 @@
     "baseUrl": "./",
     "paths": {
       "@app/*": ["src/app/*"],
-      "@auth/*": ["src/app/core/auth/*"],
+      "@auth/*": ["src/app/auth/*"],
       "@shared/*": ["src/app/shared/*"],
       "@environments/*": ["src/environments/*"],
       "@models/*": ["src/app/shared/models/*"],
-      "@interceptors/*": ["src/app/core/interceptors/*"],
-      "@home/*": ["src/app/core/modules/home/*"],
-      "@guards/*": ["src/app/core/guards/*"],
-      "@controlPanel/*": ["src/app/core/modules/control-panel/*"],
-      "@services/*": ["src/app/core/services/*"],
-      "@panel/*": ["src/app/core/modules/control-panel/*"]
+      "@interceptors/*": ["src/app/interceptors/*"],
+      "@home/*": ["src/app/modules/home/*"],
+      "@guards/*": ["src/app/guards/*"],
+      "@controlPanel/*": ["src/app/modules/control-panel/*"],
+      "@services/*": ["src/app/services/*"],
+      "@panel/*": ["src/app/modules/control-panel/*"]
 
     },
     "outDir": "./dist/out-tsc",

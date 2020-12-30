@@ -1,0 +1,15 @@
+/* :host {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 100%;
+} */
+
+/* .navbar {
+  padding: 0;
+  height: 100 v;
+} */
+
+.content {
+  width: 80%;
+  height: 100%;
+}

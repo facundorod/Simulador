@@ -1,0 +1,139 @@
+<!-- Formulario con todas las entradas -->
+
+<div class="container divForm">
+  <!-- Linea Vertical-->
+  <!--<div class="lineVert">
+
+  </div>
+  -->
+  <form>
+
+
+    <!-- Inicio Fila 1 -->
+    <div class="form-row" id="fila1">
+      <div class="form-group filaForm" >
+        <label for="simulationName"> Simulation Name </label>
+        <input type="text" class="form-control" id="simulationName">
+      </div>
+
+      <div class="form-group filaForm">
+        <label for="scenarioName"> Scenario Name </label>
+        <input type="text" class="form-control" id="scenarioName">
+      </div>
+
+      <div class="form-group filaForm">
+        <label for="scenarioId"> Scenario Id </label>
+        <input type="text" class="form-control" id="scenarioId" readonly>
+      </div>
+
+      <button type="submit" class="btn btn-primary btnSave col-sm-1"> Save changes</button>
+    <!-- Fin Fila 1 -->
+    </div>
+
+
+    <!-- Inicio Fila 2-->
+    <div class="form-row">
+      <div class="form-group filaForm">
+        <label for="animalSpecieSelected" > Animal Species </label>
+        <select id="animalSpecieSelected" class="form-control choose">
+        <option> Choose the animal specie </option>
+          <option *ngFor="let animalS of animalSpecies; trackBy: trackByFnAnimalSpecies" >
+            {{ animalS.name }}
+          </option>
+        </select>
+      </div>
+
+      <div class="form-group filaForm" >
+        <label for="medication"> Medications list </label>
+        <table class="table tableMedication">
+          <thead>
+            <tr>
+              <th scope="col"> Medication </th>
+              <th scope="col"> Doses </th>
+              <th scope="col"> [units] </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>
+                <select id="medicationList" class="form-control choose">
+                  <option > Choose the medication </option>
+                  <option *ngFor="let medication of medications; trackByFnMedications" >
+                    {{medication.name}}
+                  </option>
+                </select>
+              </td>
+              <td>
+                <input type="text" class="form-control" id="dose" placeholder="Dose">
+              </td>
+              <td>
+                <input type="text" class="form-control" id="unit" placeholder="Unit">
+              </td>
+            </tr>
+
+          </tbody>
+        </table>
+
+      </div>
+
+      <div class="form-group filaForm pathology">
+        <label for="pathology"> Pathology list </label>
+        <select id="pathologyList" class="form-control choose" >
+          <option> Choose the pathology </option>
+          <option *ngFor="let pat of pathologies; trackBy: trackByFnPathologies">
+            {{pat.name}}
+          </option>
+        </select>
+      </div>
+
+      <div class="form-group filaForm arrhythmia">
+        <label for="arrhythmia"> Arrhythmia list </label>
+        <select id="arrhythmia" class="form-control choose">
+          <option> Choose the arrhythmia </option>
+          <option *ngFor="let arrhythmia of arrhythmias; trackBy: trackByFnArrhythmias">
+            {{arrhythmia.name}}
+          </option>
+        </select>
+      </div>
+    <!-- Fin fila 2 -->
+    </div>
+
+    <!-- Inicio Fila 3 -->
+    <div class="form-row" id="row3">
+      <div class="form-group filaForm" >
+        <label for="simDescription"> Simulation description </label>
+        <textarea name="simDescription" id="simDescription" class="form-control"
+        placeholder="Put here the description of the simulation"></textarea>
+      </div>
+
+      <div class="form-group filaForm">
+        <label for="cycleC"> Cardiac cycle [rpm] </label>
+        <input type="text" class="form-control">
+      </div>
+
+      <div class="form-group filaForm">
+        <label for="temp"> TEMP [°C] </label>
+        <input type="text" class="form-control">
+      </div>
+
+      <div class="form-group filaForm">
+        <label for="respirationRate"> Respiration rate [rpm] </label>
+        <input type="text" class="form-control">
+      </div>
+      <!-- Fin Fila 3-->
+    </div>
+
+    <!-- Inicio Fila 4 -->
+    <div class="form-row filaForm" id="row4">
+      <label for="medication"> Scenarios list </label>
+      <select id="medicationList" class="form-control choose" >
+        <option> Choose the Scenarios </option>
+        <option *ngFor="let scenario of scenarios; trackBy: trackByFnScenarios">
+          {{scenario.name}}
+        </option>
+      </select>
+    </div>
+
+
+  </form>
+</div>

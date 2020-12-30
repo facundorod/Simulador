@@ -1,105 +1,97 @@
 <nav [ngClass]="toggle ? 'sidebar': 'sidebarToggle'">
-  <div class="sidebar-header">
-    <button type="button" class="btn btn-info sidebarCollapse" (click)="collapse()">
-    <i class="fas fa-align-center">
-        <img src="https://img.icons8.com/ios-glyphs/20/000000/sorting-options.png" *ngIf="!toggle"/>
-    </i>
-      <i class="fas fa-align-center">
-      <img src="https://img.icons8.com/ios-glyphs/20/000000/sorting-options.png" *ngIf="toggle"/>
-    </i>
-    </button>
+    <ng-template [ngIf]="type === 'home'">
+        <div class="sidebar-header">
+            <h3 class="font-weight-bold text-center"> Welcome </h3>
+        </div>
 
-   <!-- <img src="../../../assets/logo transparente.png" *ngIf="toggle" />-->
-
-    <h3 class="font-weight-bold text-center"> Welcome </h3>
-  </div>
-
-  <ul class="list-unstyled components">
-    <li class="nav-item active">
-      <a class="nav-link" [routerLink]="['/']"> <img src="https://img.icons8.com/color/28/000000/home-page.png"/>
-        Home
-      </a>
-  </li>
-  <li class="nav-item">
-      <a class="nav-link"  [routerLink]="['/auth/login']"> <img src="https://img.icons8.com/color/28/000000/login-rounded-right.png"/> Login </a>
-  </li>
-  <li class="nav-item">
-      <a class="nav-link" [routerLink]="['/auth/register']">
-        <img src="https://img.icons8.com/color/28/000000/add-user-male--v1.png"/> Register </a>
-  </li>
-  <li class="nav-item">
-      <a class="nav-link" [routerLink]="['/about']">
-        <img src="https://img.icons8.com/color/28/000000/about.png"/>
-          About
-      </a>
-  </li>
-
-  </ul>
-</nav>
-
-
-
-
-
-<!--
-<mat-sidenav-container fullscreen>
-
-
-    <mat-sidenav #sidenav mode="side" [fixedInViewport]=true opened >
-
-        <img src="../../../assets/logo transparente.png">
-        <br>
-        <br>
-        <br>
-        <h3 class="font-weight-bold text-center"> Welcome </h3>
-        <br>
-
-        <ul class="list-group" *ngIf="!isLogged">
+        <ul class="list-unstyled components">
             <li class="nav-item active">
-                <a class="nav-link" [routerLink]="['/']"> <img src="https://img.icons8.com/color/28/000000/home-page.png"/>
-                  Home
+                <a class="nav-link" [routerLink]="['/']"> <img
+                        src="https://img.icons8.com/color/28/000000/home-page.png" />
+                    Home
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link"  [routerLink]="['/auth/login']"> <img src="https://img.icons8.com/color/28/000000/login-rounded-right.png"/> Login </a>
+                <a class="nav-link" [routerLink]="['/auth/login']"> <img
+                        src="https://img.icons8.com/color/28/000000/login-rounded-right.png" /> Login </a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" [routerLink]="['/auth/register']">
-                  <img src="https://img.icons8.com/color/28/000000/add-user-male--v1.png"/> Register </a>
+                    <img src="https://img.icons8.com/color/28/000000/add-user-male--v1.png" /> Register </a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" [routerLink]="['/about']">
-                  <img src="https://img.icons8.com/color/28/000000/about.png"/>
+                    <img src="https://img.icons8.com/color/28/000000/about.png" />
                     About
                 </a>
             </li>
         </ul>
+    </ng-template>
 
-    </mat-sidenav>
+    <ng-template [ngIf]="type === 'user'">
+        <div class="sidebar-header">
+            <h3 class="font-weight-bold text-center"> Welcome </h3>
+        </div>
+        <section class="container">
+            <h4 class="font-weight-bold text-align-center"> Simulation </h4>
+        </section>
 
+        <ul class="list-unstyled components">
+            <!-- <img
+                        src="https://img.icons8.com/bubbles/28/000000/new.png" /> -->
+            <li class="nav-item active">
+                <a class="nav-link" [routerLink]="['/new']"> New </a>
+            </li>
 
-    <mat-sidenav-content>
+            <li class="nav-item">
+                <!-- <img
+                        src="https://img.icons8.com/dusk/28/000000/admin-settings-male.png" /> -->
+                <a class="nav-link" [routerLink]="['/panel']"> Manage simulations </a>
+            </li>
 
-         <mat-toolbar>
-           <button mat-button (click)="sidenav.toggle()">
-
-             <img src="https://img.icons8.com/ios-glyphs/30/000000/sorting-options.png"/>
-
-            </button>
-
-            <div class="container" >
-              <h3> SimVet </h3>
-            </div>
-
-          </mat-toolbar>
+        </ul>
 
         <br>
-        <br>
-        <br>
-        <br>
+
+        <section #manageDatabase class="container">
+            <h4 class="font-weight-bold text-align-center"> Manage DataBase </h4>
+        </section>
+
+        <ul class="list-group">
+            <li class="nav-item">
+                <!-- <img
+                        src="https://img.icons8.com/color/28/000000/dog.png" /> -->
+                <a class="nav-link" [routerLink]="['/panel/animalSpecie']"> Animal Species</a>
+            </li>
+
+            <li class="nav-item">
+                <!-- <img
+                        src="https://img.icons8.com/color/28/000000/microorganisms.png" /> -->
+                <a class="nav-link" [routerLink]="['/panel/pathologies']"> Pathologies </a>
+            </li>
+
+            <li class="nav-item">
+                <!-- <img
+                src="https://img.icons8.com/color/28/000000/pills.png" /> -->
+                <a class="nav-link" [routerLink]="['/panel/medications']"> Medications</a>
+            </li>
+
+            <li class="nav-item">
+                <!-- <img
+                        src="https://img.icons8.com/color/28/000000/pulse.png" /> -->
+                <a class="nav-link" [routerLink]="['/panel/arrhythmias']"> Arrhythmias </a>
+            </li>
+            <section class="container">
+
+                <a class="nav-link" [routerLink]="['/panel']">
+                    <h4 class="font-weight-bold text-align-center"> My Profile </h4>
+                </a>
+
+            </section>
+        </ul>
+
         <br>
 
-    </mat-sidenav-content>
+    </ng-template>
 
-</mat-sidenav-container>
- -->
+</nav>
