@@ -1,14 +1,15 @@
 <ng-sidebar-container>
 
     <!-- Sidebar -->
-    <ng-sidebar #sidebar [mode]="'push'">
-        <button (click)="sidebar.close()">Close sidebar</button>
-        <app-navbar [type]="'user'"></app-navbar>
+    <ng-sidebar #sidebar [mode]="'push'" [animate]="true" [showBackdrop]="true" [trapFocus]="true" [autoFocus]="true"
+        [keyClose]="true" [closeOnClickBackdrop]="true" [closeOnClickOutside]="true"
+        [dock]="true">
+        <app-navbar [type]="'user'" class="sidebarS"></app-navbar>
     </ng-sidebar>
 
     <!-- Page content -->
     <div ng-sidebar-content>
-        <button (click)="sidebar.open()">Open sidebar</button>
+        <button (click)="sidebar.open()" class="ng-sidebar--closed">Open sidebar</button>
         <main role="main" class="container">
             <p> as </p>
             <div class="template">
@@ -20,5 +21,3 @@
         </main>
     </div>
 </ng-sidebar-container>
-
-

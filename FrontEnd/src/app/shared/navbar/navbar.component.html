@@ -1,4 +1,5 @@
-<nav [ngClass]="toggle ? 'sidebar': 'sidebarToggle'">
+<nav class="sidebar">
+
     <ng-template [ngIf]="type === 'home'">
         <div class="sidebar-header">
             <h3 class="font-weight-bold text-center"> Welcome </h3>
@@ -32,54 +33,54 @@
         <div class="sidebar-header">
             <h3 class="font-weight-bold text-center"> Welcome </h3>
         </div>
-        <section class="container">
+        <section class="container sub-header">
             <h4 class="font-weight-bold text-align-center"> Simulation </h4>
         </section>
 
         <ul class="list-unstyled components">
-            <!-- <img
-                        src="https://img.icons8.com/bubbles/28/000000/new.png" /> -->
+
             <li class="nav-item active">
-                <a class="nav-link" [routerLink]="['/new']"> New </a>
+                <a class="nav-link" [routerLink]="['/new']">  <img
+                    src="https://img.icons8.com/bubbles/28/000000/new.png" /> New </a>
             </li>
 
             <li class="nav-item">
-                <!-- <img
-                        src="https://img.icons8.com/dusk/28/000000/admin-settings-male.png" /> -->
-                <a class="nav-link" [routerLink]="['/panel']"> Manage simulations </a>
+
+                <a class="nav-link" [routerLink]="['/panel']">  <img
+                    src="https://img.icons8.com/dusk/28/000000/admin-settings-male.png" /> Manage simulations </a>
             </li>
 
         </ul>
 
         <br>
 
-        <section #manageDatabase class="container">
+        <section #manageDatabase class="container sub-header">
             <h4 class="font-weight-bold text-align-center"> Manage DataBase </h4>
         </section>
 
         <ul class="list-group">
             <li class="nav-item">
-                <!-- <img
-                        src="https://img.icons8.com/color/28/000000/dog.png" /> -->
-                <a class="nav-link" [routerLink]="['/panel/animalSpecie']"> Animal Species</a>
+
+                <a class="nav-link" [routerLink]="['/panel/animalSpecie']">  <img
+                    src="https://img.icons8.com/color/28/000000/dog.png" /> Animal Species</a>
             </li>
 
             <li class="nav-item">
-                <!-- <img
-                        src="https://img.icons8.com/color/28/000000/microorganisms.png" /> -->
-                <a class="nav-link" [routerLink]="['/panel/pathologies']"> Pathologies </a>
+
+                <a class="nav-link" [routerLink]="['/panel/pathologies']">  <img
+                    src="https://img.icons8.com/color/28/000000/microorganisms.png" /> Pathologies </a>
             </li>
 
             <li class="nav-item">
-                <!-- <img
-                src="https://img.icons8.com/color/28/000000/pills.png" /> -->
-                <a class="nav-link" [routerLink]="['/panel/medications']"> Medications</a>
+
+                <a class="nav-link" [routerLink]="['/panel/medications']">   <img
+                    src="https://img.icons8.com/color/28/000000/pills.png" /> Medications</a>
             </li>
 
             <li class="nav-item">
-                <!-- <img
-                        src="https://img.icons8.com/color/28/000000/pulse.png" /> -->
-                <a class="nav-link" [routerLink]="['/panel/arrhythmias']"> Arrhythmias </a>
+
+                <a class="nav-link" [routerLink]="['/panel/arrhythmias']">  <img
+                    src="https://img.icons8.com/color/28/000000/pulse.png" /> Arrhythmias </a>
             </li>
             <section class="container">
 
@@ -94,4 +95,5 @@
 
     </ng-template>
 
-</nav>
+    </nav>
+<!-- </div> -->
