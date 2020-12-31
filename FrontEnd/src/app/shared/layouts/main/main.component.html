@@ -1,7 +1,7 @@
 <ng-sidebar-container>
 
     <!-- Sidebar -->
-    <ng-sidebar #sidebar [mode]="'over'" [animate]="true" [showBackdrop]="true" [trapFocus]="true" [autoFocus]="true"
+    <ng-sidebar #sidebar [mode]="'push'" [animate]="true" [showBackdrop]="true" [trapFocus]="true" [autoFocus]="true"
         [keyClose]="true" [closeOnClickBackdrop]="true" [closeOnClickOutside]="true" [dock]="true">
         <app-navbar [type]="'home'" class="sidebarS"></app-navbar>
     </ng-sidebar>
@@ -10,6 +10,7 @@
     <div ng-sidebar-content>
         <nav class="navbar navbar-expand-lg">
             <button (click)="sidebar.open()" class="navbar__toogle">Open sidebar</button>
+            <h1 class="fs-1 text-center"> SIMVET - Vital Signs Monitor Simulator </h1>
         </nav>
         <main role="main" class="container">
             <div class="template">
