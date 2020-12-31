@@ -1,5 +1,5 @@
 .sidebar {
-    width: 100%;
+    min-width: 200px;
     text-align: center;
     background: #0273D4;
     color: #fff;

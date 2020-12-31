@@ -1,16 +1,24 @@
-<div class="row">
-  <div class="col-4">
-    <app-navbar [type]="'home'"></app-navbar>
-  </div>
-  <div class="col-8">
-    <router-outlet></router-outlet>
-  </div>
-</div>
+<ng-sidebar-container>
 
-<!-- <div fxLayout="row">
-    <app-navbar [type]="'home'" ></app-navbar>
-    <div class="content" fxLayout="column" fxFlex>
-      <router-outlet></router-outlet>
+    <!-- Sidebar -->
+    <ng-sidebar #sidebar [mode]="'over'" [animate]="true" [showBackdrop]="true" [trapFocus]="true" [autoFocus]="true"
+        [keyClose]="true" [closeOnClickBackdrop]="true" [closeOnClickOutside]="true" [dock]="true">
+        <app-navbar [type]="'home'" class="sidebarS"></app-navbar>
+    </ng-sidebar>
+
+    <!-- Page content -->
+    <div ng-sidebar-content>
+        <nav class="navbar navbar-expand-lg">
+            <button (click)="sidebar.open()" class="navbar__toogle">Open sidebar</button>
+        </nav>
+        <main role="main" class="container">
+            <div class="template">
+                <div class="card shadow-sm p-3 mb-5 bg-white rounded">
+                    <router-outlet></router-outlet>
+                </div>
+            </div>
+
+        </main>
+
     </div>
-
-  </div> -->
+</ng-sidebar-container>
