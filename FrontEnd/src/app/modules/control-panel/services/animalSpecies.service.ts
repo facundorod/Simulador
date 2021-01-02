@@ -1,3 +1,4 @@
+import { AnimalSpeciesI } from "@models/animal-speciesI";
 import { ApiService } from "./../../../shared/services/api.service";
 import { HelperService } from "@app/shared/services/helper.service";
 import { environment } from "@environments/environment";
@@ -38,6 +39,73 @@ export class AnimalSpeciesService {
             }
         );
 
+        return subject.asObservable();
+    }
+
+    /**
+     * Find animalSpecie by id.
+     * @param animalSpecieId
+     */
+    public findById(animalSpecieId: number) {
+        const subject = new Subject<any>();
+
+        let endpoint = environment.api.animalSpecies;
+
+        this.api.httpGet(`${endpoint}/${animalSpecieId}`).subscribe(
+            (animalSpecies: any) => {
+                subject.next(animalSpecies);
+            },
+            (err: any) => {
+                subject.error(err);
+            },
+            () => {
+                subject.complete();
+            }
+        );
+
+        return subject.asObservable();
+    }
+
+    /**
+     * Create a new Animal Specie
+     * @param animalSpecie
+     */
+    public create(animalSpecie: AnimalSpeciesI) {
+        const subject = new Subject<any>();
+
+        let endpoint = environment.api.animalSpecies;
+
+        this.api.httpPost(endpoint, animalSpecie).subscribe(
+            (animalSpecie: AnimalSpeciesI) => {
+                subject.next(animalSpecie);
+            },
+            (err: any) => {
+                subject.error(err);
+            },
+            () => {
+                subject.complete();
+            }
+        );
+
+        return subject.asObservable();
+    }
+
+    public updateById(animalSpecieId: number, animalSpecie: AnimalSpeciesI) {
+        const subject = new Subject<any>();
+
+        let endpoint = environment.api.animalSpecies + animalSpecieId;
+
+        this.api.httpPut(endpoint, animalSpecie).subscribe(
+            (animalSpecie: AnimalSpeciesI) => {
+                subject.next(animalSpecie);
+            },
+            (err: any) => {
+                subject.error(err);
+            },
+            () => {
+                subject.complete();
+            }
+        );
         return subject.asObservable();
     }
 }

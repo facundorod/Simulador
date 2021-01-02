@@ -1,0 +1,9 @@
+<h3 *ngIf="title" class="mt-4 ml-3">
+    <ng-template [ngIf]="breadcrumb">
+        <ng-template ngFor let-breadcrumbItem [ngForOf]="breadcrumb">
+            <a [routerLink]="breadcrumbItem.path">{{breadcrumbItem.title}}</a>
+            ­­»
+        </ng-template>
+    </ng-template>
+    {{title}}
+</h3>

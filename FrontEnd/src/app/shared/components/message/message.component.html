@@ -1,0 +1,6 @@
+<ng-template [ngIf]="errors && isDisplayErrors()">
+    <div *ngFor="let error of errors"
+        class="invalid-feedback mb-2" style="display: block">
+        {{error[key]}}
+    </div>
+</ng-template>

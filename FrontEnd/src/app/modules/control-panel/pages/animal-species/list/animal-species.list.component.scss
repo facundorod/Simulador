@@ -1,0 +1,23 @@
+.form-control {
+    &.readonly {
+        font-size: 1em;
+    }
+}
+.search-form {
+    margin-left: 1rem !important;
+    margin-right: 1rem !important;
+
+    .col, .col-1, .col-1, .col-3, .col-4,
+        .col-6, .col-8, .col-10, .col-12 {
+        padding-left: 0px !important;
+        padding-right: 0px !important;
+    }
+}
+
+
+ngb-pagination {
+    .pagination {
+        margin-top: 10px;
+        margin-bottom: 0;
+    }
+}
