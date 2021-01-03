@@ -5,7 +5,8 @@ import { ActivatedRoute, Router } from "@angular/router";
 import { BaseComponent } from "@app/shared/components/base.component";
 import { AnimalSpeciesService } from "../../../services/animalSpecies.service";
 import { FormBuilder } from "@angular/forms";
-
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { AnimalSpeciesEditComponent } from '../../../modals/animal-specie-edit.component';
 @Component({
     selector: "app-animal-species",
     templateUrl: "./animal-species.list.component.html",
@@ -33,7 +34,8 @@ export class AnimalSpeciesListComponent extends BaseComponent implements OnInit 
         private animalSpeciesService: AnimalSpeciesService,
         private toast: ToastrService,
         private router: Router,
-        private route: ActivatedRoute
+        private route: ActivatedRoute,
+        private modal: NgbModal
     ) {
         super();
     }
@@ -66,7 +68,6 @@ export class AnimalSpeciesListComponent extends BaseComponent implements OnInit 
             )
             .subscribe(
                 (data: any) => {
-                    debugger;
                     this.setLoading(false);
                     if (data) {
                         console.log(data);
@@ -93,15 +94,35 @@ export class AnimalSpeciesListComponent extends BaseComponent implements OnInit 
     //     })
 
 
-    onAddAnimalSpecie() {
+    public onAddAnimalSpecie() {
+
+    }
+
+    public onDelete(index: number) {
 
     }
 
     private initFormGroup() {
         this.formGroup = this.fb.group({
             q: [""],
-            status: "active",
+            name: [""],
+            description: [""]
         });
+    }
+
+    public onSubmit() {
+
+        this.setLoading(true);
+
+        this.animalSpeciesService.updateById(this.animal.id_as, this.animal)
+            .subscribe(
+                (data: AnimalSpeciesI) => {
+                    this.setLoading(false);
+                },
+                (err: any) => {
+                    console.error(err);
+                    this.setLoading(false);
+                });
     }
 
     private loadURLParams() {
@@ -123,5 +144,19 @@ export class AnimalSpeciesListComponent extends BaseComponent implements OnInit 
         this.queryOptions.page = 1;
         this.initFormGroup();
         this.loadData();
+    }
+
+    public onEdit(index:number) {
+        const modal = this.modal.open(AnimalSpeciesEditComponent);
+
+        if (index !== null)
+            modal.componentInstance.setAnimalSpecie(this.animalSpecies[index]);
+
+        modal.result.then((result: AnimalSpeciesI) => {
+            if (result) {
+                this.loadData();
+            }
+        })
+
     }
 }

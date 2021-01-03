@@ -5,6 +5,7 @@ import { AnimalSpeciesListComponent } from "./pages/animal-species/list/animal-s
 import { PathologiesComponent } from "./pages/pathologies/pathologies.component";
 import { MedicationsComponent } from "./pages/medications/medications.component";
 import { ArrhythmiasComponent } from "./pages/arrhythmias/arrhythmias.component";
+import { AnimalSpeciesEditComponent} from "./pages/animal-species/edit/animal-species.edit.component";
 
 const routes: Routes = [
     { path: "", component: PanelComponent },
@@ -12,6 +13,7 @@ const routes: Routes = [
     { path: "pathologies", component: PathologiesComponent },
     { path: "medications", component: MedicationsComponent },
     { path: "arrhythmias", component: ArrhythmiasComponent },
+    { path: "animalSpecie/create", component: AnimalSpeciesEditComponent}
 ];
 
 @NgModule({

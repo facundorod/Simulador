@@ -48,8 +48,11 @@
                         Last update
                     </th>
                     <th scope="col">
-
+                        <!-- For edit -->
                     </th>
+                    <!-- <th scope="col">
+                         For delete -->
+                    <!-- </th> -->
 
                 </tr>
             </thead>
@@ -66,7 +69,7 @@
 
             <!-- Listing -->
             <tbody *ngIf="!isLoading() && animalSpecies">
-                <tr *ngFor="let animalSpecie of animalSpecies">
+                <tr *ngFor="let animalSpecie of animalSpecies; let i = index">
                     <td scope="row">
                         {{animalSpecie.id_as}}
                     </td>
@@ -74,14 +77,21 @@
                         {{animalSpecie.name}}
                     </td>
                     <td scope="row">
-                        <!-- {{animalSpecie.description}} -->
+                        {{animalSpecie.description}}
                     </td>
                     <td scope="row">
-                        <!-- {{animalSpecie.lastUpdate}} -->
+                        {{animalSpecie.latest_update}}
                     </td>
-                    <td scope="row">
-                        <a [routerLink]="'/animalSpecie/edit/' + animalSpecie.id_as" class="btn btn-light btn-sm mr-1">Edit</a>
+                    <td scope="row" class="text-right">
+                        <button class="btn btn-light" (click)="onEdit(i)">Edit
+                        </button>
+                        <span>
+                            <button class="btn btn-trash btn-light" (click)="onDelete(i)">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </span>
                     </td>
+
                 </tr>
             </tbody>
             <!-- / Listing -->

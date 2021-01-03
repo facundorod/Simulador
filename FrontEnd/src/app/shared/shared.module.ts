@@ -1,3 +1,4 @@
+import { MessageComponent } from './components/message/message.component';
 import { MainTitleComponent } from './layouts/main-title/main-title.component';
 import { ApiService } from './services/api.service';
 import { RouterModule } from '@angular/router';
@@ -9,14 +10,14 @@ import { MainComponent } from './layouts/main/main.component';
 import { SidebarModule } from 'ng-sidebar';
 
 @NgModule({
-  declarations: [NavbarComponent, MainTitleComponent],
+  declarations: [NavbarComponent, MainTitleComponent, MessageComponent],
   imports: [
     CommonModule,
     FormsModule,
     RouterModule,
     SidebarModule.forRoot()
   ],
-  exports: [NavbarComponent, MainTitleComponent],
+  exports: [NavbarComponent, MainTitleComponent, MessageComponent],
   providers: [
       ApiService
   ]

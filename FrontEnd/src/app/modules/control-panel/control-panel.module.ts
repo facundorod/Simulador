@@ -12,6 +12,7 @@ import { MedicationsComponent } from './pages/medications/medications.component'
 import { ArrhythmiasComponent } from './pages/arrhythmias/arrhythmias.component';
 import { SharedModule } from '@app/shared/shared.module';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { AnimalSpeciesEditComponent } from './modals/animal-specie-edit.component';
 
 @NgModule({
   declarations: [
@@ -20,6 +21,8 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
     PathologiesComponent,
     MedicationsComponent,
     ArrhythmiasComponent ,
+    AnimalSpeciesEditComponent,
+
   ],
   imports: [
     CommonModule,
