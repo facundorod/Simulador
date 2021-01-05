@@ -1,23 +1,26 @@
-import { AnimalSpeciesI } from "@models/animal-speciesI";
-import { ApiService } from "./../../../shared/services/api.service";
+import { ArrhythmiaI } from './../../../shared/models/arrhythmiaI';
+import { Injectable } from "@angular/core";
+import { ApiService } from "@app/shared/services/api.service";
 import { HelperService } from "@app/shared/services/helper.service";
 import { environment } from "@environments/environment";
 import { Subject } from "rxjs";
-import { Injectable } from "@angular/core";
+
 
 @Injectable()
-export class AnimalSpeciesService {
+export class ArrhythmiasService {
+
     constructor(private api: ApiService) {}
 
+
     /**
-     * Return a list of animalSpecies
+     * Return a list of arrhythmias
      * @param query
      * @param order
      */
     public list(query: any, order: any) {
         const subject = new Subject<any>();
 
-        let endpoint = environment.api.animalSpecies;
+        let endpoint = environment.api.arrhythmias;
 
         if (query) endpoint += `?${HelperService.getQueryString(query)}`;
         if (order) {
@@ -44,17 +47,17 @@ export class AnimalSpeciesService {
     }
 
     /**
-     * Find animalSpecie by id.
-     * @param animalSpecieId
+     * Find arrhythmia by id.
+     * @param arrhythmiaId
      */
-    public findById(animalSpecieId: number) {
+    public findById(arrhythmiaId: number) {
         const subject = new Subject<any>();
 
-        let endpoint = environment.api.animalSpecies;
+        let endpoint = environment.api.arrhythmias;
 
-        this.api.httpGet(`${endpoint}/${animalSpecieId}`).subscribe(
-            (animalSpecies: any) => {
-                subject.next(animalSpecies);
+        this.api.httpGet(`${endpoint}/${arrhythmiaId}`).subscribe(
+            (arrhythmias: any) => {
+                subject.next(arrhythmias);
             },
             (err: any) => {
                 subject.error(err);
@@ -68,17 +71,17 @@ export class AnimalSpeciesService {
     }
 
     /**
-     * Create a new Animal Specie
-     * @param animalSpecie
+     * Create a new Arrhythmia
+     * @param arrhythmia
      */
-    public create(animalSpecie: AnimalSpeciesI) {
+    public create(arrhythmia: ArrhythmiaI) {
         const subject = new Subject<any>();
 
-        let endpoint = environment.api.animalSpecies;
+        let endpoint = environment.api.arrhythmias;
 
-        this.api.httpPost(endpoint, animalSpecie).subscribe(
-            (animalSpecie: AnimalSpeciesI) => {
-                subject.next(animalSpecie);
+        this.api.httpPost(endpoint, arrhythmia).subscribe(
+            (arrhythmia: ArrhythmiaI) => {
+                subject.next(arrhythmia);
             },
             (err: any) => {
                 subject.error(err);
@@ -91,14 +94,14 @@ export class AnimalSpeciesService {
         return subject.asObservable();
     }
 
-    public updateById(animalSpecieId: number, animalSpecie: AnimalSpeciesI) {
+    public updateById(arrhythmiaId: number, arrhythmia: ArrhythmiaI) {
         const subject = new Subject<any>();
 
-        let endpoint = environment.api.animalSpecies + animalSpecieId;
+        let endpoint = environment.api.arrhythmias + arrhythmiaId;
 
-        this.api.httpPut(endpoint, animalSpecie).subscribe(
-            (animalSpecie: AnimalSpeciesI) => {
-                subject.next(animalSpecie);
+        this.api.httpPut(endpoint, arrhythmia).subscribe(
+            (arrhythmia: ArrhythmiaI) => {
+                subject.next(arrhythmia);
             },
             (err: any) => {
                 subject.error(err);
@@ -110,10 +113,10 @@ export class AnimalSpeciesService {
         return subject.asObservable();
     }
 
-    public delete(animalSpecieId: number) {
+    public delete(arrhythmiaId: number) {
         const subject = new Subject<any>();
 
-        let endpoint = environment.api.animalSpecies + animalSpecieId;
+        let endpoint = environment.api.arrhythmias + arrhythmiaId;
 
         this.api.httpDelete(endpoint).subscribe(
             (data: any) => {

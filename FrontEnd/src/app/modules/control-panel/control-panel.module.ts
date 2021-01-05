@@ -1,10 +1,11 @@
+import { ArrhythmiasService } from './services/arrhythmias.service';
 import { AnimalSpeciesService } from './services/animalSpecies.service';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ControlPanelRoutingModule } from './control-panel-routing.module';
 import { PanelComponent } from '@panel/pages/panel/panel.component';
 import { AuthorizationModule } from '@auth/authorization.module';
-import { AnimalSpeciesListComponent } from './pages/animal-species/list/animal-species.list.component';
+import { AnimalSpeciesListComponent } from './pages/animal-species/animal-species.list.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ToastrModule } from 'ngx-toastr';
 import { PathologiesComponent } from './pages/pathologies/pathologies.component';
@@ -22,7 +23,6 @@ import { AnimalSpeciesEditComponent } from './modals/animal-specie-edit.componen
     MedicationsComponent,
     ArrhythmiasComponent ,
     AnimalSpeciesEditComponent,
-
   ],
   imports: [
     CommonModule,
@@ -37,7 +37,8 @@ import { AnimalSpeciesEditComponent } from './modals/animal-specie-edit.componen
   exports: [
   ],
   providers: [
-      AnimalSpeciesService
+      AnimalSpeciesService,
+      ArrhythmiasService
   ]
 })
 export class ControlPanelModule { }

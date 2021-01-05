@@ -1,19 +1,16 @@
 export class HelperService {
-
     /**
      * Return query string
      */
     static getQueryString(query: any) {
-        if (!query)
-            return null;
+        if (!query) return null;
+        let queryString = "";
 
-        let queryString = '';
         for (const key in query) {
             if (query.hasOwnProperty(key)) {
-                if (query[key] !== null) {
-                    if (queryString)
-                        queryString += '&';
-                    queryString += key + '=' + query[key];
+                if (query[key] !== null && query[key] !== '') {
+                    if (queryString) queryString += "&";
+                    queryString += key + "=" + query[key];
                 }
             }
         }
@@ -28,15 +25,13 @@ export class HelperService {
      * @param query
      */
     static getQueryStringForSearch(query: any) {
-        if (!query)
-            return null;
+        if (!query) return null;
 
-        let queryString = '';
+        let queryString = "";
         for (const key in query) {
             if (query.hasOwnProperty(key)) {
-                if (queryString)
-                    queryString += '|';
-                queryString += key + ',' + query[key];
+                if (queryString) queryString += "|";
+                queryString += key + "," + query[key];
             }
         }
 
@@ -47,22 +42,13 @@ export class HelperService {
      * Return query string
      * @param query
      */
-    static getOrderQueryString(query: { orderBy: string, order: string }) {
+    static getOrderQueryString(query: { orderBy: string; order: string }) {
+        if (!query) return null;
 
-        if (!query)
-            return null;
+        let _return = `orderBy=${
+            query.orderBy
+        }&order=${query.order.toUpperCase()}`;
 
-        const fields = (query.orderBy.split('|'));
-        if (fields.length > 0) {
-            let _return = 'order=';
-            for (let i = 0; i < fields.length; i++) {
-                _return += `${fields[i]}:${query.order}`;
-                if (i + 1 < fields.length)
-                    _return += `|`;
-            }
-            return _return;
-        }
-        else
-            return '';
+        return _return;
     }
 }

@@ -1,22 +1,23 @@
-import { ArrhythmiaI } from './../../../../shared/models/arrhythmiaI';
 import { ConfirmModalComponent } from "../../../../shared/modals/confirm/confirm-modal.component";
 import { AnimalSpeciesI } from "../../../../shared/models/animal-speciesI";
 import { Component, OnInit } from "@angular/core";
-import { ToastrService } from "ngx-toastr";
+import { Toast, ToastrService } from "ngx-toastr";
 import { ActivatedRoute, Router } from "@angular/router";
 import { BaseComponent } from "@app/shared/components/base.component";
+import { AnimalSpeciesService } from "../../services/animalSpecies.service";
 import { FormBuilder } from "@angular/forms";
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import { AnimalSpeciesEditComponent } from "../../modals/animal-specie-edit.component";
-import { ArrhythmiasService } from '../../services/arrhythmias.service';
 @Component({
-    selector: "app-arrhythmias",
-    templateUrl: "./arrhythmias.component.html",
-    styleUrls: ["./arrhythmias.component.scss"],
+    selector: "app-animal-species",
+    templateUrl: "./animal-species.list.component.html",
+    styleUrls: ["./animal-species.list.component.scss"],
 })
-export class ArrhythmiasComponent extends BaseComponent implements OnInit {
-    public arrhythmia: ArrhythmiaI;
-    public arrhythmias: ArrhythmiaI[];
+export class AnimalSpeciesListComponent
+    extends BaseComponent
+    implements OnInit {
+    public animal: AnimalSpeciesI;
+    public animalSpecies: AnimalSpeciesI[];
     public count: number;
     public page: number;
     public totalPages: number;
@@ -33,7 +34,7 @@ export class ArrhythmiasComponent extends BaseComponent implements OnInit {
 
     constructor(
         private fb: FormBuilder,
-        private arrhythmiasService: ArrhythmiasService,
+        private animalSpeciesService: AnimalSpeciesService,
         private toast: ToastrService,
         private router: Router,
         private route: ActivatedRoute,
@@ -57,7 +58,7 @@ export class ArrhythmiasComponent extends BaseComponent implements OnInit {
 
         this.setLoading(true);
 
-        this.arrhythmiasService
+        this.animalSpeciesService
             .list(
                 {
                     page: this.queryOptions.page,
@@ -72,7 +73,8 @@ export class ArrhythmiasComponent extends BaseComponent implements OnInit {
                 (data: any) => {
                     this.setLoading(false);
                     if (data) {
-                        this.arrhythmias = data.data;
+                        console.log(data);
+                        this.animalSpecies = data.data;
                         this.count = data.total;
                         this.page = data.currentPage;
                         this.totalPages = data.to;
@@ -119,19 +121,19 @@ export class ArrhythmiasComponent extends BaseComponent implements OnInit {
         const modal = this.modal.open(AnimalSpeciesEditComponent);
 
         if (index !== null) {
-            modal.componentInstance.setAnimalSpecie(this.arrhythmias[index]);
+            modal.componentInstance.setAnimalSpecie(this.animalSpecies[index]);
 
-            modal.result.then((result: ArrhythmiaI) => {
+            modal.result.then((result: AnimalSpeciesI) => {
                 if (result) {
-                    this.arrhythmiasService
-                        .updateById(this.arrhythmias[index].id_arr, result)
+                    this.animalSpeciesService
+                        .updateById(this.animalSpecies[index].id_as, result)
                         .subscribe(
                             () => {
                                 this.toast.toastrConfig.timeOut = 1000;
                                 this.toast.toastrConfig.positionClass =
                                     "toast-bottom-full-width";
                                 this.toast.success(
-                                    "The arrhythmia has been updated!"
+                                    "The animal specie has been updated"
                                 );
                                 this.loadData();
                             },
@@ -142,15 +144,15 @@ export class ArrhythmiasComponent extends BaseComponent implements OnInit {
                 }
             });
         } else {
-            modal.result.then((result: ArrhythmiaI) => {
+            modal.result.then((result: AnimalSpeciesI) => {
                 if (result) {
-                    this.arrhythmiasService.create(result).subscribe(
+                    this.animalSpeciesService.create(result).subscribe(
                         () => {
                             this.toast.toastrConfig.timeOut = 1000;
                             this.toast.toastrConfig.positionClass =
                                 "toast-bottom-full-width";
                             this.toast.success(
-                                "The arrhythmia has been inserted!"
+                                "The animal specie has been inserted"
                             );
                             this.loadData();
                         },
@@ -167,20 +169,20 @@ export class ArrhythmiasComponent extends BaseComponent implements OnInit {
         const modal = this.modal.open(ConfirmModalComponent);
 
         modal.componentInstance.setTitle(
-            `You will delete the arrhythmia ${this.arrhythmias[index].name}`
+            `You will delete the animal ${this.animalSpecies[index].name}`
         );
         modal.componentInstance.setContent("Are you sure?");
         modal.result.then((result) => {
             if (result) {
-                this.arrhythmiasService
-                    .delete(this.arrhythmias[index].id_arr)
+                this.animalSpeciesService
+                    .delete(this.animalSpecies[index].id_as)
                     .subscribe(
                         () => {
                             this.toast.toastrConfig.timeOut = 1000;
                             this.toast.toastrConfig.positionClass =
                                 "toast-bottom-full-width";
                             this.toast.success(
-                                "The arrhythmia has been deleted!"
+                                "The animal specie has been deleted"
                             );
                             this.loadData();
                         },

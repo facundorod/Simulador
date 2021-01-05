@@ -1,3 +1,4 @@
+import { ConfirmModalComponent } from './modals/confirm/confirm-modal.component';
 import { MessageComponent } from './components/message/message.component';
 import { MainTitleComponent } from './layouts/main-title/main-title.component';
 import { ApiService } from './services/api.service';
@@ -10,14 +11,14 @@ import { MainComponent } from './layouts/main/main.component';
 import { SidebarModule } from 'ng-sidebar';
 
 @NgModule({
-  declarations: [NavbarComponent, MainTitleComponent, MessageComponent],
+  declarations: [NavbarComponent, MainTitleComponent, MessageComponent, ConfirmModalComponent],
   imports: [
     CommonModule,
     FormsModule,
     RouterModule,
     SidebarModule.forRoot()
   ],
-  exports: [NavbarComponent, MainTitleComponent, MessageComponent],
+  exports: [NavbarComponent, MainTitleComponent, MessageComponent, ConfirmModalComponent],
   providers: [
       ApiService
   ]

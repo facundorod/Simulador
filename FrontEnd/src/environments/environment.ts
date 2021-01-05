@@ -6,7 +6,8 @@ export const environment = {
   production: false,
   api: {
     baseUrl: 'http://localhost:8001/api',
-    animalSpecies: '/animalSpecies/'
+    animalSpecies: '/animalSpecies/',
+    arrhythmias: '/arrhythmia/',
   },
   apiUsers: "http://localhost:8001/api/auth",
   apiArrhythmia: "http://localhost:8001/api/arrhythmias",

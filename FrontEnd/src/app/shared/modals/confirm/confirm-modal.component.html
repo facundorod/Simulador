@@ -1,0 +1,9 @@
+<div class="modal-body">
+    <p class="word-break title">{{title}}</p>
+    <p *ngIf="content" class="word-break">{{content}}</p>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-danger"
+        (click)="onClose(true)">Yes</button>
+    <button type="button" class="btn btn-light" (click)="onClose(false)">No</button>
+</div>
