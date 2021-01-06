@@ -8,7 +8,8 @@ export const environment = {
     baseUrl: 'http://localhost:8001/api',
     animalSpecies: '/animalSpecies/',
     arrhythmias: '/arrhythmia/',
-    medications: '/medication/'
+    medications: '/medication/',
+    pathologies: '/pathology/'
   },
   apiUsers: "http://localhost:8001/api/auth",
   apiArrhythmia: "http://localhost:8001/api/arrhythmias",

@@ -1,7 +1,29 @@
-.margen{
-  margin-top: 10px;
-  padding: 5px;
+.form-control {
+    font-size: 1em;
 }
-h1{
-  text-align: center;
+.search-form {
+    margin-left: 1rem !important;
+    margin-right: 1rem !important;
+}
+.search-form .col,
+.col-1,
+.col-1,
+.col-3,
+.col-4,
+.col-6,
+.col-8,
+.col-10,
+.col-12 {
+    padding-left: 0px !important;
+    padding-right: 0px !important;
+}
+
+.btn-trash {
+    margin-left: 5px;
+    padding-left: 10px;
+}
+
+ngb-pagination .pagination {
+    margin-top: 10px;
+    margin-bottom: 0;
 }

@@ -1,16 +1,122 @@
-<div class="container col-md-6 margen">
-  <h1>Pathologies</h1>
-  <form action="" class="form-group" #form ="ngForm">
-    <div class="form-group">
-      <label for="pathologieName"> Pathology name</label>
-      <input class = "form-control" type="text" name = "pathologieName" required [(ngModel)]= "pathology.name">
+<div class="row">
+    <div class="col">
+        <app-main-title [title]="'Pathologies'"></app-main-title>
     </div>
-    <div class="form-group">
-      <label for="description">Pathology description</label>
-      <input class ="form-control" type="text" name= "description" required [(ngModel)]= "pathology.description">
+    <div class="col text-right">
+        <div class="mt-4 mr-3">
+            <button class="btn btn-primary" (click)="onEdit()"> + Pathology </button>
+        </div>
     </div>
-    <button type="submit" [disabled]="!form.form.valid" class="btn btn-primary btn-block" (click)="savePathologie()">
-      Save
-    </button>
-    </form>
+</div>
+
+
+<div class="search-form row">
+    <div class="col-10">
+        <form class="form mt-3" [formGroup]="formGroup" (ngSubmit)="onSearch()">
+            <div class="form-row">
+                <div class="form-group col-md-auto">
+                    <label for="name">Name</label>
+                    <input type="text" id="name" class="form-control mr-1" formControlName="name">
+                </div>
+
+            <div class="form-group col-md-auto">
+                <label for="description">Description</label>
+                <input type="text" id="description" class="form-control mr-1" formControlName="description">
+            </div>
+            <div class="form-group col-md-4 d-flex align-items-end">
+                <button type="submit" class="btn btn-primary btn-large">Search</button>
+                <button class="btn btn-link btn-clear" (click)="onClearSearch()"><i class="fa fa-times"
+                    aria-hidden="true"></i></button>
+            </div>
+        </div>
+        </form>
+    </div>
+
+</div>
+
+<div class="row mt-3">
+    <div class="col">
+        <table class="table table-hover">
+            <thead class="thead-dark">
+                <tr>
+                    <th scope="col">
+                        Id
+                    </th>
+                    <th scope="col">
+                        Name
+                    </th>
+                    <th scope="col">
+                        Description
+                    </th>
+                    <th scope="col">
+                        Last update
+                    </th>
+                    <th scope="col">
+                        <!-- For edit -->
+                    </th>
+                    <!-- <th scope="col">
+                         For delete -->
+                    <!-- </th> -->
+
+                </tr>
+            </thead>
+
+            <!-- Loading -->
+            <tbody *ngIf="isLoading()">
+                <tr>
+                    <td colspan="7">
+                        Loading...
+                    </td>
+                </tr>
+            </tbody>
+            <!-- / Loading -->
+
+            <!-- Listing -->
+            <tbody *ngIf="!isLoading() && pathologies">
+                <tr *ngFor="let pathology of pathologies; let i = index">
+                    <td scope="row">
+                        {{pathology.id_pat}}
+                    </td>
+                    <td scope="row">
+                        {{pathology.name}}
+                    </td>
+                    <td scope="row">
+                        {{pathology.description}}
+                    </td>
+                    <td scope="row">
+                        {{pathology.latest_update}}
+                    </td>
+                    <td scope="row" class="text-right">
+                        <button class="btn btn-light" (click)="onEdit(i)">Edit
+                        </button>
+                        <span>
+                            <button class="btn btn-trash btn-light" (click)="onDelete(i)">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </span>
+                    </td>
+
+                </tr>
+            </tbody>
+            <!-- / Listing -->
+
+            <!-- No items found -->
+            <tbody *ngIf="!isLoading() && (!pathologies || pathologies.length === 0)">
+                <tr>
+                    <td colspan="7">
+                        Nothing to show you.
+                    </td>
+                </tr>
+            </tbody>
+            <!-- / No items found -->
+
+        </table>
+
+    </div>
+
+    <ngb-pagination *ngIf="!isLoading() && (count > queryOptions.pageSize)" [collectionSize]="count"
+        [(page)]="queryOptions.page" [maxSize]="15" [ellipses]="true" [pageSize]="queryOptions.pageSize"
+        (pageChange)="onPageChange()">
+    </ngb-pagination>
+
 </div>
