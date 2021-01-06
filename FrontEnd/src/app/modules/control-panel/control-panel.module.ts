@@ -1,3 +1,4 @@
+import { MedicationsService } from './services/medications.service';
 import { ArrhythmiasService } from './services/arrhythmias.service';
 import { AnimalSpeciesService } from './services/animalSpecies.service';
 import { NgModule } from '@angular/core';
@@ -38,7 +39,8 @@ import { AnimalSpeciesEditComponent } from './modals/animal-specie-edit.componen
   ],
   providers: [
       AnimalSpeciesService,
-      ArrhythmiasService
+      ArrhythmiasService,
+      MedicationsService
   ]
 })
 export class ControlPanelModule { }
