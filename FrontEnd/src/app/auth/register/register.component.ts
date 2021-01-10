@@ -24,7 +24,7 @@ export class RegisterComponent implements OnInit {
   sign(){
     this.authService.register(this.email, this.name, this.surname, this.password, this.institution)
     .subscribe(res => {
-        this.toast.success(res.toString());
+        this.toast.success('Your account has been created');
         this.router.navigateByUrl('/home');
       });
 

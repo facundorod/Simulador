@@ -1,3 +1,4 @@
+import { ScenarioService } from './services/scenario.service';
 import { PathologiesService } from './services/pathologies.service';
 import { MedicationsService } from './services/medications.service';
 import { ArrhythmiasService } from './services/arrhythmias.service';
@@ -42,7 +43,8 @@ import { AnimalSpeciesEditComponent } from './modals/animal-specie-edit.componen
       AnimalSpeciesService,
       ArrhythmiasService,
       MedicationsService,
-      PathologiesService
+      PathologiesService,
+      ScenarioService
   ]
 })
 export class ControlPanelModule { }

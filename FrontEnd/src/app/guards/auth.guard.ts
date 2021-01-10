@@ -1,22 +1,30 @@
-import { Injectable } from '@angular/core';
-import { CanActivate, Router } from '@angular/router';
-import { AuthService } from '@services/auth.service';
+import { Injectable } from "@angular/core";
+import { CanActivate, Router } from "@angular/router";
+import { AuthService } from "@services/auth.service";
+import { ToastrService } from "ngx-toastr";
 
 @Injectable({
-  providedIn: 'root'
+    providedIn: "root",
 })
 export class AuthGuard implements CanActivate {
+    constructor(
+        private authSvc: AuthService,
+        private router: Router,
+        private toast: ToastrService
+    ) {}
 
-  constructor(private authSvc : AuthService, private router: Router){}
-
-
-  canActivate(){
-    const statusUser = this.authSvc.isLogged();
-    if (statusUser == true) {
-      return true
+    canActivate() {
+        const statusUser = this.authSvc.isLogged();
+        if (statusUser == true) {
+            return true;
+        }
+        this.toast.toastrConfig.timeOut = 1000;
+        this.toast.toastrConfig.positionClass =
+            "toast-bottom-full-width";
+        this.toast.error(
+            "You do not access!"
+        );
+        this.router.navigateByUrl("/home");
+        return false;
     }
-    this.router.navigateByUrl('/home');
-    return false;
-  }
-
 }

@@ -16,6 +16,7 @@ import { AnimalSpeciesEditComponent } from "../../modals/animal-specie-edit.comp
 export class AnimalSpeciesListComponent
     extends BaseComponent
     implements OnInit {
+
     public animal: AnimalSpeciesI;
     public animalSpecies: AnimalSpeciesI[];
     public count: number;

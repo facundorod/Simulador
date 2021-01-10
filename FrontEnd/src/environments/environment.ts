@@ -9,7 +9,8 @@ export const environment = {
     animalSpecies: '/animalSpecies/',
     arrhythmias: '/arrhythmia/',
     medications: '/medication/',
-    pathologies: '/pathology/'
+    pathologies: '/pathology/',
+    scenarios: '/scenario/',
   },
   apiUsers: "http://localhost:8001/api/auth",
   apiArrhythmia: "http://localhost:8001/api/arrhythmias",

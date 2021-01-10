@@ -2,10 +2,10 @@
 @import "@fortawesome/fontawesome-free/css/all.css";
 /* @import "@fortawesome/fontawesome-free/css/all.css"; */
 
-@font-face {
+/* @font-face {
     font-family: Delivery;
     src: url('assets/fonts/Delivery/Latin_Greek_Cyrillic/Web/WOFF/Delivery_W_Rg.woff');
-  }
+  } */
 
 html, body { height: 100%}
 /* body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; } */

@@ -32,7 +32,7 @@ const routes: Routes = [
     },
     {
         path: "panel",
-        // canActivate: [AuthGuard],
+        canActivate: [AuthGuard],
         component: PanelLayoutComponent,
         children: [
             {
