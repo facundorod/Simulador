@@ -1,3 +1,4 @@
+import { AuthSession } from './services/authSession.service';
 import { ConfirmModalComponent } from './modals/confirm/confirm-modal.component';
 import { MessageComponent } from './components/message/message.component';
 import { MainTitleComponent } from './layouts/main-title/main-title.component';
@@ -7,7 +8,6 @@ import { FormsModule } from '@angular/forms';
 import { NavbarComponent } from '@app/shared/navbar/navbar.component';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MainComponent } from './layouts/main/main.component';
 import { SidebarModule } from 'ng-sidebar';
 
 @NgModule({
@@ -20,7 +20,8 @@ import { SidebarModule } from 'ng-sidebar';
   ],
   exports: [NavbarComponent, MainTitleComponent, MessageComponent, ConfirmModalComponent],
   providers: [
-      ApiService
+      ApiService,
+      AuthSession
   ]
 })
 export class SharedModule { }

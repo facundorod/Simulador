@@ -11,13 +11,11 @@ export const environment = {
     medications: '/medication/',
     pathologies: '/pathology/',
     scenarios: '/scenario/',
+    login: '/auth/login',
+    register: '/auth/register'
   },
   apiUsers: "http://localhost:8001/api/auth",
-  apiArrhythmia: "http://localhost:8001/api/arrhythmias",
-  apiMedication: "http://localhost:8001/api/medication",
-  apiPathology: "http://localhost:8001/api/pathology",
-  apiScenario: "http://localhost:8001/api/scenario",
-  apiAnimalSpecies: "http://localhost:8001/api/animalSpecies",
+  simulation: "http://localhost:4200/simulation/simulator"
 };
 
 /*

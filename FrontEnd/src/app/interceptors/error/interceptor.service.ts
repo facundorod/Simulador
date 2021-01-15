@@ -23,7 +23,7 @@ export class InterceptorService implements HttpInterceptor{
             message = err.error;
             this.toast.toastrConfig.timeOut = 0;
             this.toast.error("Retry again!", `${ message }`);
-            this.router.navigateByUrl('/login');
+            this.router.navigateByUrl('/auth/login');
             return throwError(message);
         })
       )

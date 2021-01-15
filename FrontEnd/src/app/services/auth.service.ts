@@ -1,57 +1,75 @@
-import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { environment } from '@environments/environment';
-import { Observable } from 'rxjs';
-import { JwtResponseI } from '@app/shared/models/jwt-responseI';
-import { tap } from 'rxjs/operators';
-
+import { UserI } from "./../shared/models/userI";
+import { ApiService } from "./../shared/services/api.service";
+import { Injectable } from "@angular/core";
+import { HttpClient } from "@angular/common/http";
+import { environment } from "@environments/environment";
+import { Subject } from "rxjs";
+import { JwtResponseI } from "@app/shared/models/jwt-responseI";
+import { AuthSession } from "@app/shared/services/authSession.service";
 
 @Injectable({
-  providedIn: 'root'
+    providedIn: "root",
 })
 export class AuthService {
+    constructor(private api: ApiService, private http: HttpClient) {}
 
-  constructor(private http:HttpClient) { }
+    login(email: String, password: String) {
+        const subject = new Subject<any>();
 
-  login(email:String, password: String) : Observable<JwtResponseI>{
-    return this.http.post<JwtResponseI>(`${environment.apiUsers}/login`,
-      {email: email, password:password } )
-      .pipe( tap(
-        (user: JwtResponseI) => {
-          if (user) {
-            this.saveUser(user);
-          }
-        }
-      )
-      )
-  }
+        const endpoint = environment.api.login;
 
-  register(e_mail:String, name: String, surname: String, password: String,
-      institution: String)  {
-    return this.http.post(`${environment.apiUsers}/register`, {
-      email: e_mail,
-      name: name,
-      surname: surname,
-      password: password,
-      institution: institution
-    });
-  }
+        const body = {
+            email,
+            password,
+        };
 
-  public isLogged(): boolean {
-    const token = localStorage.getItem('ACCESS_TOKEN');
-    if (token){
-      return true
+        this.api.httpPost(endpoint, body).subscribe(
+            (authUser: any) => {
+                subject.next(authUser);
+                AuthSession.saveAuthToken(JSON.stringify(authUser));
+            },
+            (error: any) => {
+                subject.error(error);
+                console.log(error);
+            },
+            () => {
+                subject.complete();
+            }
+        );
+
+        return subject.asObservable();
     }
-    return false;
-  }
 
-  private saveUser(user: JwtResponseI): void {
-    localStorage.setItem('USER', JSON.stringify(user));
-  }
+    register(userData: UserI) {
+        const subject = new Subject<any>();
+
+        const endpoint = environment.api.register;
+
+        this.api.httpPost(endpoint, userData).subscribe(
+            (newUser: UserI) => {
+                subject.next(newUser);
+            },
+            (error: any) => {
+                subject.error(error);
+            },
+            () => {
+                subject.next();
+            }
+        );
+
+        return subject.asObservable();
+    }
+
+    public isLogged(): boolean {
+        const token = localStorage.getItem("authUser");
+        if (token) {
+            return true;
+        }
+        return false;
+    }
 
 
-  logout(){
-    localStorage.removeItem('USER');
-  }
-
+    logout() {
+        AuthSession.logOut();
+    }
 }

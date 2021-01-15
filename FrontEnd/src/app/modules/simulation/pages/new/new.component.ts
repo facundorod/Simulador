@@ -1,3 +1,4 @@
+import { environment } from './../../../../../environments/environment';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
@@ -11,6 +12,7 @@ export class NewComponent implements OnInit {
   constructor(private router: Router) { }
 
   ngOnInit(): void {
+      window.open(environment.simulation, '_blank');
   }
 
   initiateSimulation() : void {
@@ -18,7 +20,7 @@ export class NewComponent implements OnInit {
       this.router.navigateByUrl('/panel');
     } else {
       // Pop UP con simulaciones de la base
-      console.log("Aa");
+
     }
 
   }
