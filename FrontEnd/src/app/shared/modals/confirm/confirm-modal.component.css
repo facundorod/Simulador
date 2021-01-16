@@ -2,3 +2,8 @@
     font-size: 1.1em;
     font-weight: bold;
 }
+
+.modal-body,
+.modal-footer {
+    background-color: #121212;
+}

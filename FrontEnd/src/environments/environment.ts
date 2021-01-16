@@ -3,19 +3,20 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  production: false,
-  api: {
-    baseUrl: 'http://localhost:8001/api',
-    animalSpecies: '/animalSpecies/',
-    arrhythmias: '/arrhythmia/',
-    medications: '/medication/',
-    pathologies: '/pathology/',
-    scenarios: '/scenario/',
-    login: '/auth/login',
-    register: '/auth/register'
-  },
-  apiUsers: "http://localhost:8001/api/auth",
-  simulation: "http://localhost:4200/simulation/simulator"
+    production: false,
+    api: {
+        baseUrl: "http://localhost:8001/api",
+        animalSpecies: "/animalSpecies/",
+        arrhythmias: "/arrhythmia/",
+        medications: "/medication/",
+        pathologies: "/pathology/",
+        scenarios: "/scenario/",
+        login: "/auth/login",
+        register: "/auth/register",
+        simulations: "/simulations/",
+    },
+    apiUsers: "http://localhost:8001/api/auth",
+    simulation: "http://localhost:4200/simulation/simulator",
 };
 
 /*

@@ -1,7 +1,7 @@
 .sidebar {
     min-width: 200px;
     text-align: center;
-    background: #0273D4;
+    background: #262424;
     color: #fff;
     height: 100%;
 }
@@ -53,7 +53,7 @@
 
 .sidebar .sidebar-header {
     padding: 20px;
-    background: #0273D4;
+    background: #262424;
 }
 
 .sidebar .sidebar-header h3 {

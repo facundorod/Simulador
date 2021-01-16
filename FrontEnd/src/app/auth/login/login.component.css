@@ -6,7 +6,6 @@
   align-items: stretch;
 } */
 
-
 /* ---------------------------------------------------
   CONTENT STYLE
 ----------------------------------------------------- */
@@ -16,4 +15,8 @@
   padding: 20px;
   min-height: 100vh;
   transition: all 0.3s;
+} */
+/*
+.wrapper {
+    background-color: #121212;
 } */

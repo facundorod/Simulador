@@ -13,6 +13,7 @@ export class LoginComponent implements OnInit {
 
   email:String;
   password:String;
+  submit: Boolean = false;
   constructor(private authService: AuthService, private toast: ToastrService, private router:Router) {
 
    }
@@ -26,6 +27,7 @@ export class LoginComponent implements OnInit {
 
       // Logueo exitoso
       this.router.navigateByUrl('/simulation/new');
+      this.submit = true;
       this.toast.success("Login successful");
       // En caso de error lo intercepta el servicio Interceptor.
     },

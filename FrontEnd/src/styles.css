@@ -7,19 +7,33 @@
     src: url('assets/fonts/Delivery/Latin_Greek_Cyrillic/Web/WOFF/Delivery_W_Rg.woff');
   } */
 
-html, body { height: 100%}
+html,
+body {
+    height: 100%;
+}
 /* body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; } */
 body {
-    background-color: #E3E8EE;
+    background-color: #121212;
     font-size: 0.9em !important;
 }
 .card {
-    padding-left: 50px;
+    padding-left: 20px;
+    width: 100%;
     padding-right: 20px;
-    padding: 0 !important;
-    min-height: 400px;
+    /* padding: 0 !important; */
+    /* min-height: 400px; */
+    background-color: #121212 !important;
 }
 
 .form-control .readonly {
-        font-size: 1em;
+    font-size: 1em;
+}
+
+p,
+h1,
+h3,
+h2,
+label,
+td {
+    color: #e2e2e2;
 }

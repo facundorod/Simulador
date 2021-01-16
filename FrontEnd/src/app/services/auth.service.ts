@@ -61,13 +61,12 @@ export class AuthService {
     }
 
     public isLogged(): boolean {
-        const token = localStorage.getItem("authUser");
+        const token = localStorage.getItem("authToken");
         if (token) {
             return true;
         }
         return false;
     }
-
 
     logout() {
         AuthSession.logOut();
