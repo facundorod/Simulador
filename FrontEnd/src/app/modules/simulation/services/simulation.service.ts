@@ -14,7 +14,6 @@ export class SimulationService {
 
         this.api.httpGet(endpoint).subscribe(
             (simulations) => {
-                console.log(simulations);
                 subject.next(simulations);
             },
             (error: any) => {

@@ -21,7 +21,7 @@ export class NewComponent implements OnInit {
     ) {}
 
     ngOnInit(): void {
-        window.open(environment.simulation, "_blank");
+        // window.open(environment.simulation, "_blank");
     }
 
     initiateSimulation(): void {
@@ -31,16 +31,14 @@ export class NewComponent implements OnInit {
             // Pop UP con simulaciones de la base
             const modal = this.modal.open(SimulationsComponent);
             this.simulationService.list().subscribe(
-                (simulations: []) => {
-                    this.simulations = simulations;
+                (simulations: any) => {
+                    this.simulations = simulations.data;
+                    modal.componentInstance.setSimulations(simulations.data);
                 },
                 (error: any) => {
                     console.log(error);
                 }
             );
-
-            if (this.simulations)
-                modal.componentInstance.setSimulations(this.simulations);
 
             modal.result.then((simulation: any) => {
                 console.log(simulation);

@@ -13,10 +13,10 @@ export const environment = {
         scenarios: "/scenario/",
         login: "/auth/login",
         register: "/auth/register",
-        simulations: "/simulations/",
+        simulations: "/simulation/",
     },
     apiUsers: "http://localhost:8001/api/auth",
-    simulation: "http://localhost:4200/simulation/simulator",
+    simulation: "http://localhost:4200/simulation",
 };
 
 /*

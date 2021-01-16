@@ -8,7 +8,6 @@ import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
     styleUrls: ["./simulations.component.css"],
 })
 export class SimulationsComponent extends BaseComponent implements OnInit {
-    public simulation: any;
     public simulations: any[];
 
     constructor(private fb: FormBuilder, private activeModal: NgbActiveModal) {
@@ -19,24 +18,17 @@ export class SimulationsComponent extends BaseComponent implements OnInit {
         this.initFormGroup();
     }
 
-    private initFormGroup() {
-        this.formGroup = this.fb.group({
-            simulation: [
-                this.simulation ? this.simulation : "",
-                Validators.required,
-            ],
-        });
+    initFormGroup() {
+        this.formGroup = this.fb.group({});
     }
 
     public setSimulations(simulations: any[]) {
         this.simulations = simulations;
     }
 
-    onSubmit() {
+    onSubmit(index: number) {
         this.setSubmitForm(true);
-        if (this.formGroup.valid) {
-            this.activeModal.close(this.formGroup.value);
-        }
+        this.activeModal.close(this.simulations[index]);
     }
 
     onCancel() {
