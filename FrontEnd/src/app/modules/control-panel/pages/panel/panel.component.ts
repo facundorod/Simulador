@@ -1,3 +1,5 @@
+import { ScenariosComponent } from "./../../modals/scenarios/scenarios.component";
+import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import { Component, OnInit } from "@angular/core";
 
 // Service
@@ -14,7 +16,7 @@ import { ArrhythmiaI } from "@models/arrhythmiaI";
 import { AnimalSpeciesI } from "@models/animal-speciesI";
 import { ScenarioI } from "@models/scenarioI";
 import { BaseComponent } from "@app/shared/components/base.component";
-import { FormBuilder } from "@angular/forms";
+import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 
 @Component({
     selector: "app-panel",
@@ -27,6 +29,10 @@ export class PanelComponent extends BaseComponent implements OnInit {
     medications: MedicationI[];
     pathologies: PathologyI[];
     scenarios: ScenarioI[];
+    scenariosSelected: any[] = [];
+
+    scenarioSelect: Boolean = false;
+
     public order = {
         orderBy: "name",
         order: "asc",
@@ -38,7 +44,8 @@ export class PanelComponent extends BaseComponent implements OnInit {
         private arrhythmiasService: ArrhythmiasService,
         private pathologiesService: PathologiesService,
         private animalSpeciesService: AnimalSpeciesService,
-        private fb: FormBuilder
+        private fb: FormBuilder,
+        private modal: NgbModal
     ) {
         super();
     }
@@ -49,8 +56,10 @@ export class PanelComponent extends BaseComponent implements OnInit {
     }
 
     private loadData() {
+        this.setLoading(true);
         this.scenarioService.list(null, null).subscribe(
             (scenarios) => {
+                this.setLoading(false);
                 this.scenarios = scenarios.data;
             },
             (error: any) => {
@@ -96,14 +105,40 @@ export class PanelComponent extends BaseComponent implements OnInit {
     }
 
     private initFormGroup() {
-        this.formGroup = this.fb.group({});
+        this.formGroup = this.fb.group({
+            simulationName: ["", Validators.required],
+            scenarioName: [""],
+            scenarioDescription: [""],
+            scenarioId: ["", Validators.required],
+            arrhythmias: ["", Validators.required],
+            pathologies: ["", Validators.required],
+            select: [false, Validators.required],
+        });
     }
 
-    /*
-  TrackByFn: Define como rastrear los cambios en los ítems utilizados en el *ngFor.
-  Aumenta el rendimiento, ya que solo se vuelven a representar en el DOM los nodos
-  que han sido actualizados.
-*/
+    public onSelectScenario(index: number) {
+        const scenario: any = this.scenarios[index];
+        if (scenario && !this.formGroup.value.select)
+            this.scenariosSelected.push(scenario);
+    }
+
+    public onDeleteScenario(index: number) {
+        this.scenarios.splice(index, 1);
+    }
+
+    public onSearchScenario() {}
+
+    public onClearSearchScenario() {}
+
+    public onAddScenario() {}
+
+    public onSubmit() {}
+
+    /**
+     *  TrackByFn: Define como rastrear los cambios en los ítems utilizados en el *ngFor.
+     *  Aumenta el rendimiento, ya que solo se vuelven a representar en el DOM los nodos
+     *  que han sido actualizados.
+     */
     trackByFnAnimalSpecies(index: number, name: AnimalSpeciesI): number {
         return name.id_as;
     }

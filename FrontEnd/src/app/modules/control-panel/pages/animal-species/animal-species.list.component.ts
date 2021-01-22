@@ -7,7 +7,7 @@ import { BaseComponent } from "@app/shared/components/base.component";
 import { AnimalSpeciesService } from "../../services/animalSpecies.service";
 import { FormBuilder } from "@angular/forms";
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
-import { AnimalSpeciesEditComponent } from "../../modals/animal-specie-edit.component";
+import { AnimalSpeciesEditComponent } from "../../modals/animal-specie-edit/animal-specie-edit.component";
 @Component({
     selector: "app-animal-species",
     templateUrl: "./animal-species.list.component.html",
@@ -16,7 +16,6 @@ import { AnimalSpeciesEditComponent } from "../../modals/animal-specie-edit.comp
 export class AnimalSpeciesListComponent
     extends BaseComponent
     implements OnInit {
-
     public animal: AnimalSpeciesI;
     public animalSpecies: AnimalSpeciesI[];
     public count: number;

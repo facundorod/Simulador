@@ -1,4 +1,4 @@
-import { ArrhythmiaI } from './../../../../shared/models/arrhythmiaI';
+import { ArrhythmiaI } from "./../../../../shared/models/arrhythmiaI";
 import { ConfirmModalComponent } from "../../../../shared/modals/confirm/confirm-modal.component";
 import { AnimalSpeciesI } from "../../../../shared/models/animal-speciesI";
 import { Component, OnInit } from "@angular/core";
@@ -7,8 +7,8 @@ import { ActivatedRoute, Router } from "@angular/router";
 import { BaseComponent } from "@app/shared/components/base.component";
 import { FormBuilder } from "@angular/forms";
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
-import { AnimalSpeciesEditComponent } from "../../modals/animal-specie-edit.component";
-import { ArrhythmiasService } from '../../services/arrhythmias.service';
+import { AnimalSpeciesEditComponent } from "../../modals/animal-specie-edit/animal-specie-edit.component";
+import { ArrhythmiasService } from "../../services/arrhythmias.service";
 @Component({
     selector: "app-arrhythmias",
     templateUrl: "./arrhythmias.component.html",

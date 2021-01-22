@@ -11,7 +11,8 @@ import { SimulationService } from "../../services/simulation.service";
     styleUrls: ["./new.component.css"],
 })
 export class NewComponent implements OnInit {
-    blank: boolean;
+    blank: boolean = false;
+    previous: boolean = false;
     simulations: any[];
 
     constructor(
@@ -25,10 +26,10 @@ export class NewComponent implements OnInit {
     }
 
     initiateSimulation(): void {
+        // TODO: Change this logic to reactive forms.
         if (this.blank) {
             this.router.navigateByUrl("/panel");
         } else {
-            // Pop UP con simulaciones de la base
             const modal = this.modal.open(SimulationsComponent);
             this.simulationService.list().subscribe(
                 (simulations: any) => {
@@ -40,9 +41,18 @@ export class NewComponent implements OnInit {
                 }
             );
 
-            modal.result.then((simulation: any) => {
-                console.log(simulation);
-            });
+            modal.result.then(
+                (simulation: any) => {
+                    if (simulation)
+                        localStorage.setItem(
+                            "Simulation",
+                            JSON.stringify(simulation)
+                        );
+                },
+                (error: any) => {
+                    console.log(error);
+                }
+            );
         }
     }
 }

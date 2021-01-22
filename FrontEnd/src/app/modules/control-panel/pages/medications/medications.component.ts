@@ -6,7 +6,7 @@ import { ActivatedRoute, Router } from "@angular/router";
 import { BaseComponent } from "@app/shared/components/base.component";
 import { FormBuilder } from "@angular/forms";
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
-import { AnimalSpeciesEditComponent } from "../../modals/animal-specie-edit.component";
+import { AnimalSpeciesEditComponent } from "../../modals/animal-specie-edit/animal-specie-edit.component";
 import { MedicationsService } from "../../services/medications.service";
 @Component({
     selector: "app-medications",

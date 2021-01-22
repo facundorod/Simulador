@@ -1,56 +1,62 @@
-
 h3 {
-  color: #ffffff;
+    color: #ffffff;
 }
 
 a {
-  color: #BFBFBF;
+    color: #bfbfbf;
 }
 
-
 .filaForm {
-  width: 20%;
-  margin: 40px 40px 0px 0px;
+    width: 20%;
+    margin: 40px 40px 0px 0px;
 }
 
 #fila1 div {
-  margin-top: 0px !important;
+    margin-top: 0px !important;
 }
 
 .filaForm input {
-  font-size: 15px;
+    font-size: 15px;
 }
 
 .divForm {
-  margin-top: 20px;
-  margin-left: 180px;
-  float: right;
+    margin-top: 20px;
+    margin-left: 180px;
+    float: right;
 }
 
-.choose{
-  font-size: 15px;
+.title {
+    margin-left: 0.2rem !important;
+}
+
+.select {
+    margin-left: 1rem !important;
+}
+
+.choose {
+    font-size: 15px;
 }
 
 #row3 div {
-  margin-top: 0px;
+    margin-top: 0px;
 }
 
 .lineVert {
-  border-left: 1px solid black;
-  height: 80%;
-  position: absolute;
-  left: 265px;
+    border-left: 1px solid black;
+    height: 80%;
+    position: absolute;
+    left: 265px;
 }
 
-#scenarioId, #scenarioId:hover, #scenarioId:focus, #scenarioId:active {
-  border: none;
+#scenarioId,
+#scenarioId:hover,
+#scenarioId:focus,
+#scenarioId:active {
+    border: none;
 }
 
 .btnSave {
-  margin : 10px 0px 0px 60px;
-  height: 60px;
-  border-radius: 15px;
+    margin: 10px 0px 0px 60px;
+    height: 60px;
+    border-radius: 15px;
 }
-
-
-
