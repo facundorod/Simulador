@@ -47,6 +47,7 @@ const routes: Routes = [
     {
         path: "simulation",
         component: PanelLayoutComponent,
+        canActivate: [AuthGuard],
         children: [
             {
                 path: "",

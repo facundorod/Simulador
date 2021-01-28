@@ -15,7 +15,7 @@ import { AnimalSpeciesEditComponent } from "../../modals/animal-specie-edit/anim
 })
 export class PathologiesComponent extends BaseComponent implements OnInit {
     public pathology: PathologyI;
-    public pathologies: PathologyI[];
+    public pathologies: any[];
     public count: number;
     public page: number;
     public totalPages: number;

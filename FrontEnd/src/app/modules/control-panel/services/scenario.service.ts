@@ -127,4 +127,24 @@ export class ScenarioService {
 
         return subject.asObservable();
     }
+
+    // public findById(scenarioId: number) {
+    //     const subject = new Subject<any>();
+
+    //     let endpoint = environment.api.scenarios + scenarioId;
+
+    //     this.api.httpGet(endpoint).subscribe(
+    //         (data: any) => {
+    //             subject.next(data);
+    //         },
+    //         (err: any) => {
+    //             subject.error(err);
+    //         },
+    //         () => {
+    //             subject.complete();
+    //         }
+    //     );
+
+    //     return subject.asObservable();
+    // }
 }

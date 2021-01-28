@@ -1,6 +1,6 @@
-import { ScenariosComponent } from "./../../modals/scenarios/scenarios.component";
+import { ToastrService } from "ngx-toastr";
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
-import { Component, OnInit } from "@angular/core";
+import { Component, Input, OnInit } from "@angular/core";
 
 // Service
 import { AnimalSpeciesService } from "./../../services/animalSpecies.service";
@@ -24,14 +24,13 @@ import { FormBuilder, FormGroup, Validators } from "@angular/forms";
     styleUrls: ["./panel.component.css"],
 })
 export class PanelComponent extends BaseComponent implements OnInit {
-    animalSpecies: AnimalSpeciesI[];
-    arrhythmias: ArrhythmiaI[];
-    medications: MedicationI[];
-    pathologies: PathologyI[];
-    scenarios: ScenarioI[];
-    scenariosSelected: any[] = [];
-
+    scenario: any = {};
+    scenarios: any = [];
     scenarioSelect: Boolean = false;
+    animalSpecies: any = [];
+    arrhythmias: ArrhythmiaI[] = [];
+    pathologies: PathologyI[] = [];
+    medications: any = [];
 
     public order = {
         orderBy: "name",
@@ -40,26 +39,32 @@ export class PanelComponent extends BaseComponent implements OnInit {
 
     constructor(
         private scenarioService: ScenarioService,
-        private medicationsService: MedicationsService,
-        private arrhythmiasService: ArrhythmiasService,
-        private pathologiesService: PathologiesService,
-        private animalSpeciesService: AnimalSpeciesService,
+        private animalSpecieService: AnimalSpeciesService,
         private fb: FormBuilder,
-        private modal: NgbModal
+        private modal: NgbModal,
+        private toast: ToastrService
     ) {
         super();
     }
 
     ngOnInit(): void {
-        this.initFormGroup();
         this.loadData();
+        this.initFormGroup();
     }
 
     private loadData() {
         this.setLoading(true);
+        this.scenario = JSON.parse(localStorage.getItem("Scenario"));
+
+        if (this.scenario) {
+            this.animalSpecies = this.scenario.animalSpecies;
+            this.arrhythmias = this.scenario.arrhythmias;
+            this.medications = this.scenario.mPerScenario;
+            this.pathologies = this.scenario.pathologies;
+        }
+
         this.scenarioService.list(null, null).subscribe(
             (scenarios) => {
-                this.setLoading(false);
                 this.scenarios = scenarios.data;
             },
             (error: any) => {
@@ -67,35 +72,9 @@ export class PanelComponent extends BaseComponent implements OnInit {
             }
         );
 
-        this.arrhythmiasService.list(null, null).subscribe(
-            (arrhythmias) => {
-                this.arrhythmias = arrhythmias.data;
-            },
-            (error: any) => {
-                console.log(error);
-            }
-        );
-
-        this.medicationsService.list(null, null).subscribe(
-            (medications) => {
-                this.medications = medications.data;
-            },
-            (error: any) => {
-                console.log(error);
-            }
-        );
-
-        this.pathologiesService.list(null, null).subscribe(
-            (pathologies) => {
-                this.pathologies = pathologies.data;
-            },
-            (error: any) => {
-                console.log(error);
-            }
-        );
-
-        this.animalSpeciesService.list(null, null).subscribe(
+        this.animalSpecieService.list(null, null).subscribe(
             (animalSpecies) => {
+                this.setLoading(false);
                 this.animalSpecies = animalSpecies.data;
             },
             (error: any) => {
@@ -107,32 +86,43 @@ export class PanelComponent extends BaseComponent implements OnInit {
     private initFormGroup() {
         this.formGroup = this.fb.group({
             simulationName: ["", Validators.required],
-            scenarioName: [""],
-            scenarioDescription: [""],
-            scenarioId: ["", Validators.required],
-            arrhythmias: ["", Validators.required],
-            pathologies: ["", Validators.required],
-            select: [false, Validators.required],
+            simulationDescription: ["", Validators.required],
+            scenarioName: [
+                this.scenario ? this.scenario.name : "",
+                Validators.required,
+            ],
+            scenarioDescription: [
+                this.scenario ? this.scenario.description : "",
+                Validators.required,
+            ],
+            scenarioId: [
+                this.scenario ? this.scenario.id_scenario : "",
+                Validators.required,
+            ],
+            animalSpecie: [""],
+            dose: ["", Validators.required],
+            unit: ["", Validators.required],
+            temp: ["", Validators.required],
+            cardiacCycle: ["", Validators.required],
+            respirationRate: ["", Validators.required],
+            arrhythmia: ["", Validators.required],
+            pathology: ["", Validators.required],
+            medication: ["", Validators.required],
         });
     }
 
-    public onSelectScenario(index: number) {
-        const scenario: any = this.scenarios[index];
-        if (scenario && !this.formGroup.value.select)
-            this.scenariosSelected.push(scenario);
+    public onSelectScenario() {}
+
+    public onSaveChanges() {
+        this.setSubmitForm(true);
+
+        if (this.formGroup.valid) {
+            // Save data on simulation table
+            this.toast.toastrConfig.timeOut = 1000;
+            this.toast.toastrConfig.positionClass = "toast-bottom-full-width";
+            this.toast.success("Simulation saved sucessfully!");
+        }
     }
-
-    public onDeleteScenario(index: number) {
-        this.scenarios.splice(index, 1);
-    }
-
-    public onSearchScenario() {}
-
-    public onClearSearchScenario() {}
-
-    public onAddScenario() {}
-
-    public onSubmit() {}
 
     /**
      *  TrackByFn: Define como rastrear los cambios en los ítems utilizados en el *ngFor.

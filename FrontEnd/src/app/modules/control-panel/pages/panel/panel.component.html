@@ -1,292 +1,166 @@
-<!-- Formulario con todas las entradas -->
-
-<div class="row">
-    <div class="col">
-        <!-- <app-main-title [title]="'Animals'"></app-main-title> -->
-        <h3 class="title mt-4 ml-3">Control Panel</h3>
-        <h4 class="title mt-4 ml-3">First, select the scenario to manage the simulation</h4>
-    </div>
-
-    <div class="col text-right">
-        <div class="mt-4 mr-3">
-            <button class="btn btn-primary" (click)="onAddScenario()"> + Scenario </button>
-        </div>
-    </div>
-</div>
-
-
-<div class="search-form row">
-    <div class="col-10">
-        <form class="form mt-3" [formGroup]="formGroup" (ngSubmit)="onSearchScenario()">
-            <div class="form-row">
-                <div class="form-group col-md-auto">
-                    <label for="name">Name</label>
-                    <input type="text" id="name" class="form-control mr-1" formControlName="scenarioName">
-                </div>
-
-                <div class="form-group col-md-auto">
-                    <label for="description">Description</label>
-                    <input type="text" id="description" class="form-control mr-1" formControlName="scenarioDescription">
-                </div>
-                <div class="form-group col-md-4 d-flex align-items-end">
-                    <button type="submit" class="btn btn-primary btn-large">Search</button>
-                    <button class="btn btn-link btn-clear" (click)="onClearSearchScenario()"><i class="fa fa-times"
-                            aria-hidden="true"></i></button>
-                </div>
-            </div>
-        </form>
-    </div>
-
-</div>
-
-<div class="search-form row" *ngIf="formGroup.value.select">
-    <div class="form-group col-md-auto">
-        <button type="submit" class="btn btn-primary btn-large">Select</button>
-        <button class="btn btn-link btn-clear" (click)="onClearSearchScenario()"><i class="fa fa-times"
-                aria-hidden="true"></i></button>
-    </div>
-
-
-</div>
-
-<form [formGroup]="formGroup" (ngSubmit)="onSubmit()">
-    <div class="row mt-3">
-        <div class="col table-bg">
-            <table class="table table-hover">
-                <thead class="thead-dark">
-                    <tr>
-                        <th scope="col">
-
-                        </th>
-                        <th scope="col">
-                            ID
-                        </th>
-                        <th scope="col">
-                            Name
-                        </th>
-                        <th scope="col">
-                            Description
-                        </th>
-                        <th scope="col">
-                            Last update
-                        </th>
-                        <th scope="col">
-                            <!-- For edit -->
-                        </th>
-                        <!-- <th scope="col">
-                             For delete -->
-                        <!-- </th> -->
-
-                    </tr>
-                </thead>
-
-                <!-- Loading -->
-                <tbody *ngIf="isLoading()">
-                    <tr>
-                        <td colspan="7">
-                            Loading...
-                        </td>
-                    </tr>
-                </tbody>
-                <!-- / Loading -->
-
-                <!-- Listing -->
-                <tbody *ngIf="!isLoading() && scenarios">
-                    <tr *ngFor="let scenario of scenarios; let i = index">
-                        <td scope="row">
-                            <input class="select form-check-input" (click)="onSelectScenario(i)" type="checkbox"
-                                id="flexCheckDefault" formControlName="select">
-                        </td>
-                        <td scope="row">
-                            {{scenario.id_scenario}}
-                        </td>
-                        <td scope="row">
-                            {{scenario.name}}
-                        </td>
-                        <td scope="row">
-                            {{scenario.description}}
-                        </td>
-                        <td scope="row">
-                            <!-- {{scenario.latest_update}} -->
-                        </td>
-                        <td scope="row" class="text-right">
-
-                            <span>
-                                <button class="btn btn-trash btn-light" (click)="onDeleteScenario(i)">
-                                    <i class="fas fa-trash"></i>
-                                </button>
-                            </span>
-                        </td>
-
-                    </tr>
-                </tbody>
-                <!-- / Listing -->
-
-                <!-- No items found -->
-                <tbody *ngIf="!isLoading() && (!scenarios || scenarios.length === 0)">
-                    <tr>
-                        <td colspan="7">
-                            Nothing to show you.
-                        </td>
-                    </tr>
-                </tbody>
-                <!-- / No items found -->
-
-            </table>
-
-        </div>
-
-
-
-    </div>
-    <!-- <ngb-pagination class="paginator" *ngIf="!isLoading() && (count > queryOptions.pageSize)" [collectionSize]="count"
-        [(page)]="queryOptions.page" [maxSize]="15" [ellipses]="true" [pageSize]="queryOptions.pageSize"
-        (pageChange)="onPageChange()">
-    </ngb-pagination> -->
-
-
-
-    <!--
 <div class="container divForm">
-    <div class="lineVert">
+    <!-- <div class="lineVert"> -->
 
-  </div>
+    <!-- </div> -->
 
-    <form>
+    <form [formGroup]="formGroup" (ngSubmit)="onSaveChanges()">
 
 
-        <div class="form-row filaForm" id="row4" style="padding-bottom: 10px">
+        <div class="form-row" id="fila1">
+            <div class="form-group filaForm">
+                <label for="simulationName"> Simulation Name </label>
+                <input type="text" class="form-control" id="simulationName" formControlName="simulationName">
+                <app-message *ngIf="isSubmitForm()" [errors]="getErrors()" [key]="'simulationName'"></app-message>
+            </div>
 
-            <label for="scenarios"> Choose the scenario </label>
-            <button type="submit" class="btn btn-primary" (click)="onSelectScenario()">Select Scenario</button>
-          <select id="medicationList" class="form-control choose" >
-            <option> Choose the Scenarios </option>
-            <option *ngFor="let scenario of scenarios; trackBy: trackByFnScenarios">
-              {{scenario.name}}
-            </option>
-          </select>
+            <div class="form-group filaForm">
+                <label for="scenarioName"> Scenario Name </label>
+                <input type="text" class="form-control" id="scenarioName" formControlName="scenarioName">
+                <app-message *ngIf="isSubmitForm()" [errors]="getErrors()" [key]="'scenarioName'"></app-message>
+
+            </div>
+
+            <div class="form-group filaForm">
+                <label for="scenarioId"> Scenario Id </label>
+                <input type="text" class="form-control" id="scenarioId" formControlName="scenarioId" readonly>
+                <app-message *ngIf="isSubmitForm()" [errors]="getErrors()" [key]="'scenarioId'"></app-message>
+
+            </div>
+
+            <button type="submit" class="btn btn-primary btnSave col-sm-1"> Save changes</button>
 
         </div>
 
-        <ng-template [ngIf]="scenarioSelect">
-            <div class="form-row" id="fila1">
-                <div class="form-group filaForm">
-                    <label for="simulationName"> Simulation Name </label>
-                    <input type="text" class="form-control" id="simulationName">
-                </div>
 
-                <div class="form-group filaForm">
-                    <label for="scenarioName"> Scenario Name </label>
-                    <input type="text" class="form-control" id="scenarioName">
-                </div>
 
-                <div class="form-group filaForm">
-                    <label for="scenarioId"> Scenario Id </label>
-                    <input type="text" class="form-control" id="scenarioId" readonly>
-                </div>
+        <div class="form-row">
+            <div class="form-group filaForm">
+                <label for="animalSpecieSelected"> Animal Species </label>
+                <select id="animalSpecieSelected" class="form-control choose" formControlName="animalSpecie">
+                    <option> Choose the animal specie </option>
+                    <option *ngFor="let animalS of animalSpecies; trackBy: trackByFnAnimalSpecies">
+                        {{ animalS.name }}
+                    </option>
 
-                <button type="submit" class="btn btn-primary btnSave col-sm-1"> Save changes</button>
-                 Fin Fila 1
+
+                </select>
+                <app-message *ngIf="isSubmitForm()" [errors]="getErrors()" [key]="'animalSpecie'"></app-message>
             </div>
 
+            <div class="form-group filaForm">
+                <label for="medication"> Medications list </label>
+                <table class="table tableMedication">
+                    <thead>
+                        <tr>
+                            <th scope="col"> Medication </th>
+                            <th scope="col"> Doses </th>
+                            <th scope="col"> [units] </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <select id="medicationList" class="form-control choose" formControlName="medication">
+                                    <option> Choose the medication </option>
+                                    <option *ngFor="let medication of medications; trackByFnMedications">
+                                        {{medication.medication.name}}
+                                    </option>
+                                </select>
+                                <app-message *ngIf="isSubmitForm()" [errors]="getErrors()" [key]="'medication'">
+                                </app-message>
+                            </td>
+                            <td>
+                                <input type="text" class="form-control" id="dose" placeholder="Dose"
+                                    formControlName="dose">
+                            </td>
+                            <td>
+                                <input type="text" class="form-control" id="unit" placeholder="Unit"
+                                    formControlName="unit">
+                            </td>
+                        </tr>
 
-             Inicio Fila 2
-            <div class="form-row">
-                <div class="form-group filaForm">
-                    <label for="animalSpecieSelected"> Animal Species </label>
-                    <select id="animalSpecieSelected" class="form-control choose">
-                        <option> Choose the animal specie </option>
-                        <option *ngFor="let animalS of animalSpecies; trackBy: trackByFnAnimalSpecies">
-                            {{ animalS.name }}
-                        </option>
-                    </select>
-                </div>
-
-                <div class="form-group filaForm">
-                    <label for="medication"> Medications list </label>
-                    <table class="table tableMedication">
-                        <thead>
-                            <tr>
-                                <th scope="col"> Medication </th>
-                                <th scope="col"> Doses </th>
-                                <th scope="col"> [units] </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>
-                                    <select id="medicationList" class="form-control choose">
-                                        <option> Choose the medication </option>
-                                        <option *ngFor="let medication of medications; trackByFnMedications">
-                                            {{medication.name}}
-                                        </option>
-                                    </select>
-                                </td>
-                                <td>
-                                    <input type="text" class="form-control" id="dose" placeholder="Dose">
-                                </td>
-                                <td>
-                                    <input type="text" class="form-control" id="unit" placeholder="Unit">
-                                </td>
-                            </tr>
-
-                        </tbody>
-                    </table>
-
-                </div>
-
-                <div class="form-group filaForm pathology">
-                    <label for="pathology"> Pathology list </label>
-                    <select id="pathologyList" class="form-control choose">
-                        <option> Choose the pathology </option>
-                        <option *ngFor="let pat of pathologies; trackBy: trackByFnPathologies">
-                            {{pat.name}}
-                        </option>
-                    </select>
-                </div>
-
-                <div class="form-group filaForm arrhythmia">
-                    <label for="arrhythmia"> Arrhythmia list </label>
-                    <select id="arrhythmia" class="form-control choose">
-                        <option> Choose the arrhythmia </option>
-                        <option *ngFor="let arrhythmia of arrhythmias; trackBy: trackByFnArrhythmias">
-                            {{arrhythmia.name}}
-                        </option>
-                    </select>
-                </div>
-            </div>
-
-
-            <div class="form-row" id="row3">
-                <div class="form-group filaForm">
-                    <label for="simDescription"> Simulation description </label>
-                    <textarea name="simDescription" id="simDescription" class="form-control"
-                        placeholder="Put here the description of the simulation"></textarea>
-                </div>
-
-                <div class="form-group filaForm">
-                    <label for="cycleC"> Cardiac cycle [rpm] </label>
-                    <input type="text" class="form-control">
-                </div>
-
-                <div class="form-group filaForm">
-                    <label for="temp"> TEMP [°C] </label>
-                    <input type="text" class="form-control">
-                </div>
-
-                <div class="form-group filaForm">
-                    <label for="respirationRate"> Respiration rate [rpm] </label>
-                    <input type="text" class="form-control">
-                </div>
+                    </tbody>
+                </table>
 
             </div>
 
-        </ng-template>
+            <div class="form-group filaForm pathology">
+                <label for="pathology"> Pathology list </label>
+                <select id="pathologyList" class="form-control choose" formControlName="pathology">
+                    <option> Choose the pathology </option>
+                    <option *ngFor="let pat of pathologies; trackBy: trackByFnPathologies">
+                        {{pat.name}}
+                    </option>
+                </select>
+                <app-message *ngIf="isSubmitForm()" [errors]="getErrors()" [key]="'pathology'"></app-message>
+            </div>
+
+            <div class="form-group filaForm arrhythmia">
+                <label for="arrhythmia"> Arrhythmia list </label>
+                <select id="arrhythmia" class="form-control choose" formControlName="arrhythmia">
+                    <option> Choose the arrhythmia </option>
+                    <option *ngFor="let arrhythmia of arrhythmias; trackBy: trackByFnArrhythmias">
+                        {{arrhythmia.name}}
+                    </option>
+                </select>
+                <app-message *ngIf="isSubmitForm()" [errors]="getErrors()" [key]="'arrythmia'"></app-message>
+            </div>
+        </div>
+
+
+        <div class="form-row" id="row3">
+            <div class="form-group filaForm">
+                <label for="simDescription"> Simulation description </label>
+                <textarea name="simDescription" id="simDescription" class="form-control"
+                    placeholder="Put here the description of the simulation"
+                    formControlName="simulationDescription"></textarea>
+                <app-message *ngIf="isSubmitForm()" [errors]="getErrors()" [key]="'simulationDescription'">
+                </app-message>
+            </div>
+
+            <div class="form-group filaForm">
+                <label for="cycleC"> Cardiac cycle [rpm] </label>
+                <input type="text" class="form-control" formControlName="cardiacCycle">
+                <app-message *ngIf="isSubmitForm()" [errors]="getErrors()" [key]="'cardiacCycle'"></app-message>
+            </div>
+
+            <div class="form-group filaForm">
+                <label for="temp"> TEMP [°C] </label>
+                <input type="text" class="form-control" formControlName="temp">
+                <app-message *ngIf="isSubmitForm()" [errors]="getErrors()" [key]="'temp'"></app-message>
+
+            </div>
+
+            <div class="form-group filaForm">
+                <label for="respirationRate"> Respiration rate [rpm] </label>
+                <input type="text" class="form-control" formControlName="respirationRate">
+                <app-message *ngIf="isSubmitForm()" [errors]="getErrors()" [key]="'respirationRate'"></app-message>
+
+            </div>
+
+        </div>
+
+        <div class="form-row" id="row4">
+
+            <!-- <div class="form-group">
+                <select id="medicationList" class="form-control choose">
+                    <option> Choose the Scenarios </option>
+                    <option *ngFor="let scenario of scenarios; trackBy: trackByFnScenarios">
+                        {{scenario.name}}
+                    </option>
+                </select>
+            </div>
+
+
+            <div class="form-group">
+                <label for="ECG" class="form-control">ECG</label>
+                <input type="text" class="form-control">
+            </div> -->
+        </div>
+
+
 
 
 
     </form>
 </div>
--->
-
-</form>

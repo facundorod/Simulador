@@ -41,6 +41,11 @@ a {
     margin-top: 0px;
 }
 
+#row4 {
+    /* margin: 40px 0px 0px 0px; */
+    padding-left: 0;
+}
+
 .lineVert {
     border-left: 1px solid black;
     height: 80%;

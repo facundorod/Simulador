@@ -102,10 +102,7 @@ export abstract class BaseComponent implements OnInit {
                     const item = {};
                     item[key] = "Error (TBD)";
                     if (this.formGroup.controls[key].errors.required) {
-                        item[key] = "Este campo es requerido";
-                        errors.push(item);
-                    } else if (this.formGroup.controls[key].errors.url) {
-                        item[key] = "No es una URL válida";
+                        item[key] = "This field is required";
                         errors.push(item);
                     } else {
                         errors.push(item);

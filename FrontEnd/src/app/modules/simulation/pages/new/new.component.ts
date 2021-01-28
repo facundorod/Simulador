@@ -1,3 +1,5 @@
+import { ScenarioService } from "./../../../control-panel/services/scenario.service";
+import { ScenariosComponent } from "../../modals/scenarios/scenarios.component";
 import { SimulationsComponent } from "./../../modals/simulations/simulations.component";
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import { environment } from "./../../../../../environments/environment";
@@ -11,14 +13,14 @@ import { SimulationService } from "../../services/simulation.service";
     styleUrls: ["./new.component.css"],
 })
 export class NewComponent implements OnInit {
-    blank: boolean = false;
-    previous: boolean = false;
+    option: any;
     simulations: any[];
 
     constructor(
         private router: Router,
         private modal: NgbModal,
-        private simulationService: SimulationService
+        private simulationService: SimulationService,
+        private scenarioService: ScenarioService
     ) {}
 
     ngOnInit(): void {
@@ -27,32 +29,65 @@ export class NewComponent implements OnInit {
 
     initiateSimulation(): void {
         // TODO: Change this logic to reactive forms.
-        if (this.blank) {
+        const simulation = localStorage.getItem("Simulation");
+        const scenario = localStorage.getItem("Scenario");
+        if (this.option === "blank") {
             this.router.navigateByUrl("/panel");
-        } else {
-            const modal = this.modal.open(SimulationsComponent);
-            this.simulationService.list().subscribe(
-                (simulations: any) => {
-                    this.simulations = simulations.data;
-                    modal.componentInstance.setSimulations(simulations.data);
-                },
-                (error: any) => {
-                    console.log(error);
-                }
-            );
 
-            modal.result.then(
-                (simulation: any) => {
-                    if (simulation)
-                        localStorage.setItem(
-                            "Simulation",
-                            JSON.stringify(simulation)
+            if (simulation) localStorage.removeItem("Simulation");
+            if (scenario) localStorage.removeItem("Scenario");
+        } else {
+            if (this.option === "previous") {
+                if (scenario) localStorage.removeItem("Scenario");
+                const modal = this.modal.open(SimulationsComponent);
+                this.simulationService.list().subscribe(
+                    (simulations: any) => {
+                        this.simulations = simulations.data;
+                        modal.componentInstance.setSimulations(
+                            simulations.data
                         );
-                },
-                (error: any) => {
-                    console.log(error);
-                }
-            );
+                    },
+                    (error: any) => {
+                        console.log(error);
+                    }
+                );
+
+                modal.result.then(
+                    (simulation: any) => {
+                        if (simulation)
+                            localStorage.setItem(
+                                "Simulation",
+                                JSON.stringify(simulation)
+                            );
+                    },
+                    (error: any) => {
+                        console.log(error);
+                    }
+                );
+            }
+
+            if (this.option === "previousScenario") {
+                const modal = this.modal.open(ScenariosComponent);
+                this.scenarioService.list(null, null).subscribe(
+                    (scenarios: any) => {
+                        modal.componentInstance.setScenarios(scenarios.data);
+                    },
+                    (error: any) => {
+                        console.log(error);
+                    }
+                );
+                if (simulation) localStorage.removeItem("Simulation");
+
+                modal.result.then((scenario: any) => {
+                    if (scenario) {
+                        localStorage.setItem(
+                            "Scenario",
+                            JSON.stringify(scenario)
+                        );
+                        this.router.navigateByUrl("/panel");
+                    }
+                });
+            }
         }
     }
 }

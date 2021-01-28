@@ -17,7 +17,7 @@ export class AnimalSpeciesListComponent
     extends BaseComponent
     implements OnInit {
     public animal: AnimalSpeciesI;
-    public animalSpecies: AnimalSpeciesI[];
+    public animalSpecies: any;
     public count: number;
     public page: number;
     public totalPages: number;
