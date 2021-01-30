@@ -1,164 +1,267 @@
-<div class="container divForm">
-    <!-- <div class="lineVert"> -->
+<div class="panel-header">
+    <div class="visualizationHeader">
+        <p class="textSimulation"><em>Visualization Area and Simulation Edition</em></p>
+        <p class="textScenario"><em>Visualization Area and Scenario Edition</em></p>
+    </div>
 
-    <!-- </div> -->
+</div>
+
+<div class="container">
+
 
     <form [formGroup]="formGroup" (ngSubmit)="onSaveChanges()">
+        <!-- Start Row 1-->
+        <div class="row">
 
 
-        <div class="form-row" id="fila1">
-            <div class="form-group filaForm">
-                <label for="simulationName"> Simulation Name </label>
-                <input type="text" class="form-control" id="simulationName" formControlName="simulationName">
-                <app-message *ngIf="isSubmitForm()" [errors]="getErrors()" [key]="'simulationName'"></app-message>
-            </div>
-
-            <div class="form-group filaForm">
-                <label for="scenarioName"> Scenario Name </label>
-                <input type="text" class="form-control" id="scenarioName" formControlName="scenarioName">
-                <app-message *ngIf="isSubmitForm()" [errors]="getErrors()" [key]="'scenarioName'"></app-message>
+            <div class="col-md-3">
+                <label for="simulationName" class="form-label">Simulation Name</label>
+                <input class="form-control" formControlName="simulationName">
 
             </div>
 
-            <div class="form-group filaForm">
-                <label for="scenarioId"> Scenario Id </label>
-                <input type="text" class="form-control" id="scenarioId" formControlName="scenarioId" readonly>
-                <app-message *ngIf="isSubmitForm()" [errors]="getErrors()" [key]="'scenarioId'"></app-message>
 
+            <!-- </div> -->
+            <div class="col-md-3">
+                <label for="scenarioName" class="form-label">Scenario Name</label>
+                <input class="form-control" formControlName="scenarioName">
             </div>
 
-            <button type="submit" class="btn btn-primary btnSave col-sm-1"> Save changes</button>
+            <div class="col-md-3">
+                <label for="scenarioId" class="form-label"> Scenario ID</label>
+                <input class="form-control" placeholder="{{scenario.id_scenario}}" disabled readonly>
+            </div>
+
+            <div class="col-md-3">
+                <button type="submit" class="btn btn-primary btn-sm saveChanges">Save changes</button>
+            </div>
+
+
 
         </div>
 
+        <!-- End Row 1 -->
 
+        <!-- Start Row 2 -->
+        <div class="row mt-3">
 
-        <div class="form-row">
-            <div class="form-group filaForm">
-                <label for="animalSpecieSelected"> Animal Species </label>
-                <select id="animalSpecieSelected" class="form-control choose" formControlName="animalSpecie">
-                    <option> Choose the animal specie </option>
-                    <option *ngFor="let animalS of animalSpecies; trackBy: trackByFnAnimalSpecies">
-                        {{ animalS.name }}
-                    </option>
-
-
+            <div class="col-md-3">
+                <label for="animalSpecies" class="form-label">Animal Specie</label>
+                <select class="form-select form-control" formControlName="animalSpecie">
+                    <option selected>Choose Animal Specie</option>
+                    <ng-template [ngIf]="animalSpecies.length > 0">
+                        <option *ngFor="let animalS of animalSpecies; trackBy: trackByFnAnimalSpecies">
+                            {{ animalS.name }}
+                        </option>
+                    </ng-template>
                 </select>
-                <app-message *ngIf="isSubmitForm()" [errors]="getErrors()" [key]="'animalSpecie'"></app-message>
             </div>
 
-            <div class="form-group filaForm">
-                <label for="medication"> Medications list </label>
-                <table class="table tableMedication">
-                    <thead>
-                        <tr>
-                            <th scope="col"> Medication </th>
-                            <th scope="col"> Doses </th>
-                            <th scope="col"> [units] </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>
-                                <select id="medicationList" class="form-control choose" formControlName="medication">
-                                    <option> Choose the medication </option>
-                                    <option *ngFor="let medication of medications; trackByFnMedications">
-                                        {{medication.medication.name}}
-                                    </option>
-                                </select>
-                                <app-message *ngIf="isSubmitForm()" [errors]="getErrors()" [key]="'medication'">
-                                </app-message>
-                            </td>
-                            <td>
-                                <input type="text" class="form-control" id="dose" placeholder="Dose"
-                                    formControlName="dose">
-                            </td>
-                            <td>
-                                <input type="text" class="form-control" id="unit" placeholder="Unit"
-                                    formControlName="unit">
-                            </td>
-                        </tr>
-
-                    </tbody>
-                </table>
-
+            <div class="col-md-3">
+                <label class="form-label">Medications list</label>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label for="medications" class="form-label">Medications</label>
+                        <select class="form-control" formControlName="medication">
+                            <option selected value="">Choose</option>
+                            <ng-template [ngIf]="medications.length > 0">
+                                <option *ngFor="let medication of medications; trackByFnMedications">
+                                    {{medication?.medication?.name}}
+                                </option>
+                            </ng-template>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label for="doses" class="form-label">Doses</label>
+                        <input class="form-control" formControlName="dose">
+                    </div>
+                    <div class="col-md-3">
+                        <label for="units" class="form-label">[units]</label>
+                        <input class="form-control" formControlName="units">
+                    </div>
+                </div>
             </div>
 
-            <div class="form-group filaForm pathology">
-                <label for="pathology"> Pathology list </label>
-                <select id="pathologyList" class="form-control choose" formControlName="pathology">
-                    <option> Choose the pathology </option>
-                    <option *ngFor="let pat of pathologies; trackBy: trackByFnPathologies">
-                        {{pat.name}}
-                    </option>
-                </select>
-                <app-message *ngIf="isSubmitForm()" [errors]="getErrors()" [key]="'pathology'"></app-message>
+            <div class="col-md-3">
+                <label class="form-label">Pathology list</label>
+                <div class="row">
+                    <div class="col-md-12">
+                        <label class="form-label">Pathology </label>
+                        <select class="form-control" formControlName="pathology">
+                            <option selected value="">Choose</option>
+                            <ng-template [ngIf]="pathologies.length > 0">
+                                <option *ngFor="let pat of pathologies; trackByFnPathologies">
+                                    {{pat.name}}
+                                </option>
+                            </ng-template>
+                        </select>
+                    </div>
+                </div>
             </div>
 
-            <div class="form-group filaForm arrhythmia">
-                <label for="arrhythmia"> Arrhythmia list </label>
-                <select id="arrhythmia" class="form-control choose" formControlName="arrhythmia">
-                    <option> Choose the arrhythmia </option>
-                    <option *ngFor="let arrhythmia of arrhythmias; trackBy: trackByFnArrhythmias">
-                        {{arrhythmia.name}}
-                    </option>
-                </select>
-                <app-message *ngIf="isSubmitForm()" [errors]="getErrors()" [key]="'arrythmia'"></app-message>
-            </div>
-        </div>
-
-
-        <div class="form-row" id="row3">
-            <div class="form-group filaForm">
-                <label for="simDescription"> Simulation description </label>
-                <textarea name="simDescription" id="simDescription" class="form-control"
-                    placeholder="Put here the description of the simulation"
-                    formControlName="simulationDescription"></textarea>
-                <app-message *ngIf="isSubmitForm()" [errors]="getErrors()" [key]="'simulationDescription'">
-                </app-message>
+            <div class="col-md-3">
+                <label class="form-label">Arrhythmia list</label>
+                <div class="row">
+                    <div class="col-md-12">
+                        <label class="form-label">Arrhythmia </label>
+                        <select class="form-control" formControlName="arrhythmia">
+                            <option selected value="">Choose</option>
+                            <ng-template [ngIf]="arrhythmias.length > 0">
+                                <option *ngFor="let arr of arrhythmias; trackByFnArrhythmias">
+                                    {{arr.name}}
+                                </option>
+                            </ng-template>
+                        </select>
+                    </div>
+                </div>
             </div>
 
-            <div class="form-group filaForm">
-                <label for="cycleC"> Cardiac cycle [rpm] </label>
-                <input type="text" class="form-control" formControlName="cardiacCycle">
-                <app-message *ngIf="isSubmitForm()" [errors]="getErrors()" [key]="'cardiacCycle'"></app-message>
-            </div>
-
-            <div class="form-group filaForm">
-                <label for="temp"> TEMP [°C] </label>
-                <input type="text" class="form-control" formControlName="temp">
-                <app-message *ngIf="isSubmitForm()" [errors]="getErrors()" [key]="'temp'"></app-message>
-
-            </div>
-
-            <div class="form-group filaForm">
-                <label for="respirationRate"> Respiration rate [rpm] </label>
-                <input type="text" class="form-control" formControlName="respirationRate">
-                <app-message *ngIf="isSubmitForm()" [errors]="getErrors()" [key]="'respirationRate'"></app-message>
-
-            </div>
 
         </div>
+        <!-- End Row 2-->
 
-        <div class="form-row" id="row4">
+        <div class="row mt-3">
 
-            <!-- <div class="form-group">
-                <select id="medicationList" class="form-control choose">
-                    <option> Choose the Scenarios </option>
-                    <option *ngFor="let scenario of scenarios; trackBy: trackByFnScenarios">
-                        {{scenario.name}}
-                    </option>
-                </select>
+            <div class="col-md-3">
+                <label class="form-label">Simulation description</label>
+                <textarea class="form-control" rows="5"></textarea>
+                <div class="row mt-3">
+                    <div class="col scenarios">
+
+                        <label for="scenarios"> Scenarios </label>
+                        <table class="table table-hover">
+                            <thead class="thead-dark">
+                                <tr>
+                                    <th scope="col">Name</th>
+                                    <th scope="col">Description</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let sc of scenarios; let i = index">
+                                    <td scope="col">
+                                        {{sc.name}}
+                                    </td>
+                                    <td scope="col">
+                                        {{sc.description}}
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                    </div>
+                </div>
             </div>
 
+            <div class="col-md-9 parameters" >
+                <hr class="separatorLine">
+                <div class="row">
+                    <div class="col-sm-4">
+                        <label for="cyclec" class="form-label">Cardiac Rate [rpm]</label>
+                        <input class="form-control" formControlName="cardiacCycle">
+                    </div>
 
-            <div class="form-group">
-                <label for="ECG" class="form-control">ECG</label>
-                <input type="text" class="form-control">
-            </div> -->
+                    <div class="col-sm-4">
+                        <label for="temp" class="form-label">TEMP [°C]</label>
+                        <input class="form-control" formControlName="temp">
+                    </div>
+
+                    <div class="col-sm-4">
+                        <label for="resp" class="form-label">RESP [rpm]</label>
+                        <input class="form-control" formControlName="respirationRate">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-5 mt-3">
+                        <label class="form-label">ECG</label>
+                        <div class="card">
+                            <div class="card-title">
+                                <p> ECG</p>
+                            </div>
+                            <div class="card-body">
+                                <p> Curve configuration </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-7 mt-3 imgs">
+                        <img src="/assets/images/egc_curve.png" class="rounded float-start ">
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-5 mt-3">
+
+                        <label class="form-label">SPO2</label>
+                        <div class="card">
+                            <div class="card-title">
+                                <p>SPO2</p>
+                            </div>
+                            <div class="card-body">
+                                <p>Curve configuration</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-7 mt-3 imgs">
+                        <img src="" class="rounded float-start" alt="spo2 curve">
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-5 mt-3">
+                        <label class="form-label">ETC02</label>
+                        <div class="card">
+                            <div class="card-title">
+                                <p>ETCO2</p>
+                            </div>
+                            <div class="card-body">
+                                <p>Curve configuration</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-7 mt-3 imgs">
+                        <img src="" class="rounded float-start" alt="ETC02 curve">
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-5 mt-3">
+                        <label class="form-label">IBP</label>
+                        <div class="card">
+                            <div class="card-title">
+                                <p>IBP</p>
+                            </div>
+                            <div class="card-body">
+                                <p>Curve configuration</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-7 mt-3 imgs">
+                        <img src="" class="rounded float-start" alt="IBP curve">
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-5 mt-3">
+                        <label class="form-label">NIBP</label>
+                        <div class="card">
+                            <div class="card-title">
+                                <p>NIBP</p>
+                            </div>
+                            <div class="card-body">
+                                <p>Curve configuration</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-7 mt-3 imgs">
+                        <img src="" class="rounded float-start" alt="NIBP curve">
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- End row 3-->
+
+
         </div>
-
-
 
 
 

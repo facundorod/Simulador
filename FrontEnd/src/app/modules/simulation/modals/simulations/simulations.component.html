@@ -44,6 +44,9 @@
                             Animal
                         </th>
                         <th scope="col">
+                            Latest update
+                        </th>
+                        <th scope="col">
                             <!-- Select -->
                         </th>
 
@@ -67,12 +70,13 @@
                             {{simulation.animalSpecie.name}}
                         </td>
                         <td scope="row">
+                            {{simulation.updated_at}}
+                        </td>
+                        <td scope="row">
                             <button type="submit" class="btn btn-primary" (click)="onSubmit(i)"> Select </button>
                         </td>
 
-                        <!-- <td scope="row">
-                        {{simulation.latest_update}}
-                    </td> -->
+
                     </tr>
                 </tbody>
                 <!-- / Listing -->

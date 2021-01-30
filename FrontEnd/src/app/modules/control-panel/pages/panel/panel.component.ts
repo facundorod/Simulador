@@ -27,10 +27,10 @@ export class PanelComponent extends BaseComponent implements OnInit {
     scenario: any = {};
     scenarios: any = [];
     scenarioSelect: Boolean = false;
-    animalSpecies: any = [];
-    arrhythmias: ArrhythmiaI[] = [];
-    pathologies: PathologyI[] = [];
-    medications: any = [];
+    animalSpecies: any[] = [];
+    arrhythmias: any[] = [];
+    pathologies: any[] = [];
+    medications: any[] = [];
 
     public order = {
         orderBy: "name",
@@ -57,11 +57,14 @@ export class PanelComponent extends BaseComponent implements OnInit {
         this.scenario = JSON.parse(localStorage.getItem("Scenario"));
 
         if (this.scenario) {
-            this.animalSpecies = this.scenario.animalSpecies;
+            if (this.scenario.animalSpecies)
+                this.animalSpecies = this.scenario.animalSpecies;
             this.arrhythmias = this.scenario.arrhythmias;
             this.medications = this.scenario.mPerScenario;
             this.pathologies = this.scenario.pathologies;
         }
+
+        console.log(this.medications);
 
         this.scenarioService.list(null, null).subscribe(
             (scenarios) => {
@@ -101,7 +104,7 @@ export class PanelComponent extends BaseComponent implements OnInit {
             ],
             animalSpecie: [""],
             dose: ["", Validators.required],
-            unit: ["", Validators.required],
+            units: ["", Validators.required],
             temp: ["", Validators.required],
             cardiacCycle: ["", Validators.required],
             respirationRate: ["", Validators.required],

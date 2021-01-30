@@ -48,7 +48,7 @@
                             {{scenario.description}}
                         </td>
                         <td scope="row">
-                            <!-- {{simulation.latest_update}} -->
+                            {{scenario.updated_at | date}}
                         </td>
                         <td scope="row">
                             <button type="submit" class="btn btn-primary" (click)="onSelect(i)"> Select </button>
