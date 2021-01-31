@@ -5,7 +5,7 @@
     <div class="form-check">
     <input class="form-check-input" type="radio" value="blank"  name="blank" [(ngModel)]="option" checked>
     <label class="form-check-label" for="exampleRadios1">
-      Blank simulation without previous scenario
+      Blank simulation
     </label>
   </div>
   <div class="form-check">
@@ -14,12 +14,7 @@
       Initiate with previous simulation
     </label>
   </div>
-  <div class="form-check">
-      <input class="form-check-input" type="radio" name="previousScenario" value="previousScenario" [(ngModel)]="option">
-    <label class="form-check-label" for="exampleRadios2">
-        Blank simulation with previous scenario
-    </label>
-  </div>
+
   <br>
   <button type="submit" class= "btn btn-primary btn-block" (click)="initiateSimulation()" [disabled]="!form.form.valid" > INITIATE SIMULATION </button>
   </form>

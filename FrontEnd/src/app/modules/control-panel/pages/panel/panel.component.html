@@ -29,7 +29,7 @@
 
             <div class="col-md-3">
                 <label for="scenarioId" class="form-label"> Scenario ID</label>
-                <input class="form-control" placeholder="{{scenario.id_scenario}}" disabled readonly>
+                <input class="form-control" placeholder="{{activeScenario?.id_scenario}}" disabled readonly>
             </div>
 
             <div class="col-md-3">
@@ -48,7 +48,7 @@
             <div class="col-md-3">
                 <label for="animalSpecies" class="form-label">Animal Specie</label>
                 <select class="form-select form-control" formControlName="animalSpecie">
-                    <option selected>Choose Animal Specie</option>
+                    <option value="" selected>Choose Animal Specie</option>
                     <ng-template [ngIf]="animalSpecies.length > 0">
                         <option *ngFor="let animalS of animalSpecies; trackBy: trackByFnAnimalSpecies">
                             {{ animalS.name }}
@@ -127,32 +127,50 @@
                 <textarea class="form-control" rows="5"></textarea>
                 <div class="row mt-3">
                     <div class="col scenarios">
-
                         <label for="scenarios"> Scenarios </label>
-                        <table class="table table-hover">
-                            <thead class="thead-dark">
-                                <tr>
-                                    <th scope="col">Name</th>
-                                    <th scope="col">Description</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr *ngFor="let sc of scenarios; let i = index">
-                                    <td scope="col">
-                                        {{sc.name}}
-                                    </td>
-                                    <td scope="col">
-                                        {{sc.description}}
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
+                        <ng-template [ngIf]="scenariosSimulation && scenariosSimulation.length > 0">
+
+                                <button class="ml-3 btn btn-link align-end" (click)="onLoadScenario()">Load </button>
+                                <button class="ml-1 btn btn-link align-end" *ngIf="containsTrue()" (click)="onDeleteScenario()">Delete</button>
+
+                            <table class="table table-hover">
+                                <thead class="thead-dark">
+                                    <tr>
+
+                                        <th scope="col">Name</th>
+                                        <th scope="col">Description</th>
+                                        <th scope="col"></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr formArrayName="scenarioSelected" *ngFor="let sc of scenariosSimulation; let i = index">
+
+                                        <td scope="col">
+                                            {{sc.name}}
+                                        </td>
+                                        <td scope="col">
+                                            {{sc.description}}
+                                        </td>
+                                        <div [formGroupName]="i">
+                                            <td scope="col">
+
+                                                <input class="form-check-input" type="checkbox" value="{{i}}"
+                                                    formControlName="value">
+                                            </td>
+                                        </div>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </ng-template>
+                        <div *ngIf="scenariosSimulation.length == 0">
+                            <button type="submit" class="btn btn-primary" (click)="onLoadScenario()">Load Scenarios</button>
+                        </div>
 
                     </div>
                 </div>
             </div>
 
-            <div class="col-md-9 parameters" >
+            <div class="col-md-9 parameters">
                 <hr class="separatorLine">
                 <div class="row">
                     <div class="col-sm-4">

@@ -30,15 +30,13 @@ export class NewComponent implements OnInit {
     initiateSimulation(): void {
         // TODO: Change this logic to reactive forms.
         const simulation = localStorage.getItem("Simulation");
-        const scenario = localStorage.getItem("Scenario");
+
         if (this.option === "blank") {
             this.router.navigateByUrl("/panel");
 
             if (simulation) localStorage.removeItem("Simulation");
-            if (scenario) localStorage.removeItem("Scenario");
         } else {
             if (this.option === "previous") {
-                if (scenario) localStorage.removeItem("Scenario");
                 const modal = this.modal.open(SimulationsComponent);
                 this.simulationService.list().subscribe(
                     (simulations: any) => {
@@ -64,29 +62,6 @@ export class NewComponent implements OnInit {
                         console.log(error);
                     }
                 );
-            }
-
-            if (this.option === "previousScenario") {
-                const modal = this.modal.open(ScenariosComponent);
-                this.scenarioService.list(null, null).subscribe(
-                    (scenarios: any) => {
-                        modal.componentInstance.setScenarios(scenarios.data);
-                    },
-                    (error: any) => {
-                        console.log(error);
-                    }
-                );
-                if (simulation) localStorage.removeItem("Simulation");
-
-                modal.result.then((scenario: any) => {
-                    if (scenario) {
-                        localStorage.setItem(
-                            "Scenario",
-                            JSON.stringify(scenario)
-                        );
-                        this.router.navigateByUrl("/panel");
-                    }
-                });
             }
         }
     }

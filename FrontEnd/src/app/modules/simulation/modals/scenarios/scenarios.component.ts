@@ -2,7 +2,7 @@ import { ScenarioI } from "@models/scenarioI";
 import { ScenarioService } from "../../../control-panel/services/scenario.service";
 import { AnimalSpeciesI } from "../../../../shared/models/animal-speciesI";
 import { Component, OnInit } from "@angular/core";
-import { FormBuilder, Validators } from "@angular/forms";
+import { FormArray, FormBuilder, Validators } from "@angular/forms";
 import { BaseComponent } from "@app/shared/components/base.component";
 import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
 
@@ -13,11 +13,13 @@ import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
 export class ScenariosComponent extends BaseComponent implements OnInit {
     scenarios: any[];
 
-    constructor(private activeModal: NgbActiveModal) {
+    constructor(private activeModal: NgbActiveModal, private fb: FormBuilder) {
         super();
     }
 
-    ngOnInit() {}
+    ngOnInit() {
+        this.initFormGroup();
+    }
 
     public setScenarios(scenarios: any[]) {
         this.scenarios = scenarios;
@@ -27,8 +29,39 @@ export class ScenariosComponent extends BaseComponent implements OnInit {
         this.activeModal.close();
     }
 
-    onSelect(index: number) {
+    onSelect() {
         this.setSubmitForm(true);
-        this.activeModal.close(this.scenarios[index]);
+        const scenarios: any[] = [];
+        for (
+            let i = 0;
+            i < this.formGroup.value.scenarioSelected.length;
+            i += 1
+        ) {
+            if (this.formGroup.value.scenarioSelected[i].value)
+                scenarios.push(this.scenarios[i]);
+        }
+        this.activeModal.close(scenarios);
+    }
+
+    initFormGroup() {
+        this.formGroup = this.fb.group({
+            scenarioSelected: this.fb.array([]),
+        });
+
+        if (this.scenarios) {
+            this.scenarios.forEach(() => {
+                (<FormArray>this.formGroup.get("scenarioSelected")).push(
+                    this.fb.group({
+                        value: [false],
+                    })
+                );
+            });
+        }
+    }
+
+    public containsTrue(): boolean {
+        return this.formGroup.value.scenarioSelected.some(
+            (check: any) => check.value == true
+        );
     }
 }

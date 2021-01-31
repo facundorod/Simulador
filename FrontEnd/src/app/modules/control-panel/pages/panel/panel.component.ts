@@ -1,3 +1,4 @@
+import { ScenariosComponent } from "./../../../simulation/modals/scenarios/scenarios.component";
 import { ToastrService } from "ngx-toastr";
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import { Component, Input, OnInit } from "@angular/core";
@@ -16,7 +17,7 @@ import { ArrhythmiaI } from "@models/arrhythmiaI";
 import { AnimalSpeciesI } from "@models/animal-speciesI";
 import { ScenarioI } from "@models/scenarioI";
 import { BaseComponent } from "@app/shared/components/base.component";
-import { FormBuilder, FormGroup, Validators } from "@angular/forms";
+import { FormArray, FormBuilder, FormGroup, Validators } from "@angular/forms";
 
 @Component({
     selector: "app-panel",
@@ -24,13 +25,14 @@ import { FormBuilder, FormGroup, Validators } from "@angular/forms";
     styleUrls: ["./panel.component.css"],
 })
 export class PanelComponent extends BaseComponent implements OnInit {
-    scenario: any = {};
-    scenarios: any = [];
-    scenarioSelect: Boolean = false;
+    activeScenario: any = {};
+    scenarios: any[] = [];
+    scenariosSimulation: any[] = [];
     animalSpecies: any[] = [];
     arrhythmias: any[] = [];
     pathologies: any[] = [];
     medications: any[] = [];
+    simulation: any = {};
 
     public order = {
         orderBy: "name",
@@ -54,26 +56,6 @@ export class PanelComponent extends BaseComponent implements OnInit {
 
     private loadData() {
         this.setLoading(true);
-        this.scenario = JSON.parse(localStorage.getItem("Scenario"));
-
-        if (this.scenario) {
-            if (this.scenario.animalSpecies)
-                this.animalSpecies = this.scenario.animalSpecies;
-            this.arrhythmias = this.scenario.arrhythmias;
-            this.medications = this.scenario.mPerScenario;
-            this.pathologies = this.scenario.pathologies;
-        }
-
-        console.log(this.medications);
-
-        this.scenarioService.list(null, null).subscribe(
-            (scenarios) => {
-                this.scenarios = scenarios.data;
-            },
-            (error: any) => {
-                console.log(error);
-            }
-        );
 
         this.animalSpecieService.list(null, null).subscribe(
             (animalSpecies) => {
@@ -84,6 +66,31 @@ export class PanelComponent extends BaseComponent implements OnInit {
                 console.log(error);
             }
         );
+
+        if (this.simulation.scenarios)
+            this.scenariosSimulation = this.simulation.scenarios;
+
+        this.scenarioService.list(null, null).subscribe(
+            (scenarios) => {
+                this.scenarios = scenarios.data;
+                this.activeScenario = this.scenariosSimulation[0];
+                this.initFormGroup();
+            },
+            (error: any) => {
+                console.log(error);
+            }
+        );
+
+        if (this.activeScenario) {
+            if (this.activeScenario.animalSpecies)
+                this.animalSpecies = this.activeScenario.animalSpecies;
+            if (this.activeScenario.arrhythmias)
+                this.arrhythmias = this.activeScenario?.arrhythmias;
+            if (this.activeScenario.medications)
+                this.medications = this.activeScenario?.mPerScenario;
+            if (this.activeScenario.pathologies)
+                this.pathologies = this.activeScenario?.pathologies;
+        }
     }
 
     private initFormGroup() {
@@ -91,15 +98,15 @@ export class PanelComponent extends BaseComponent implements OnInit {
             simulationName: ["", Validators.required],
             simulationDescription: ["", Validators.required],
             scenarioName: [
-                this.scenario ? this.scenario.name : "",
+                this.activeScenario ? this.activeScenario.name : "",
                 Validators.required,
             ],
             scenarioDescription: [
-                this.scenario ? this.scenario.description : "",
+                this.activeScenario ? this.activeScenario.description : "",
                 Validators.required,
             ],
             scenarioId: [
-                this.scenario ? this.scenario.id_scenario : "",
+                this.activeScenario ? this.activeScenario.id_scenario : "",
                 Validators.required,
             ],
             animalSpecie: [""],
@@ -111,7 +118,18 @@ export class PanelComponent extends BaseComponent implements OnInit {
             arrhythmia: ["", Validators.required],
             pathology: ["", Validators.required],
             medication: ["", Validators.required],
+            scenarioSelected: this.fb.array([]),
         });
+
+        if (this.scenariosSimulation) {
+            this.scenariosSimulation.forEach(() => {
+                (<FormArray>this.formGroup.get("scenarioSelected")).push(
+                    this.fb.group({
+                        value: [false],
+                    })
+                );
+            });
+        }
     }
 
     public onSelectScenario() {}
@@ -125,6 +143,43 @@ export class PanelComponent extends BaseComponent implements OnInit {
             this.toast.toastrConfig.positionClass = "toast-bottom-full-width";
             this.toast.success("Simulation saved sucessfully!");
         }
+    }
+
+    public onDeleteScenario() {
+        for (
+            let i = 0;
+            i < this.formGroup.value.scenarioSelected.length;
+            i += 1
+        ) {
+            if (this.formGroup.value.scenarioSelected[i].value) {
+                this.scenariosSimulation.splice(i, 1);
+                this.formGroup.value.scenarioSelected.splice(i, 1);
+            }
+        }
+        this.activeScenario = this.scenariosSimulation[0];
+    }
+
+    public containsTrue(): boolean {
+        return this.formGroup.value.scenarioSelected.some(
+            (check: any) => check.value == true
+        );
+    }
+
+    public onLoadScenario() {
+        const modal = this.modal.open(ScenariosComponent);
+
+        modal.componentInstance.setScenarios(this.scenarios);
+
+        modal.result.then((scenario: any[]) => {
+            scenario.forEach((sc: any) => {
+                this.scenariosSimulation.push(sc);
+                (<FormArray>this.formGroup.get("scenarioSelected")).push(
+                    this.fb.group({
+                        value: [false],
+                    })
+                );
+            });
+        });
     }
 
     /**
