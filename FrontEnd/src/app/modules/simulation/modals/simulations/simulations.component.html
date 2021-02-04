@@ -70,7 +70,7 @@
                             {{simulation.animalSpecie.name}}
                         </td>
                         <td scope="row">
-                            {{simulation.updated_at}}
+                            {{simulation.updated_at | date }}
                         </td>
                         <td scope="row">
                             <button type="submit" class="btn btn-primary" (click)="onSubmit(i)"> Select </button>

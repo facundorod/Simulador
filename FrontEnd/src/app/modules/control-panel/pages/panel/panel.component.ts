@@ -1,3 +1,4 @@
+import { SimulationService } from "./../../../simulation/services/simulation.service";
 import { ScenariosComponent } from "./../../../simulation/modals/scenarios/scenarios.component";
 import { ToastrService } from "ngx-toastr";
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
@@ -44,7 +45,8 @@ export class PanelComponent extends BaseComponent implements OnInit {
         private animalSpecieService: AnimalSpeciesService,
         private fb: FormBuilder,
         private modal: NgbModal,
-        private toast: ToastrService
+        private toast: ToastrService,
+        private simulationService: SimulationService
     ) {
         super();
     }
@@ -56,7 +58,7 @@ export class PanelComponent extends BaseComponent implements OnInit {
 
     private loadData() {
         this.setLoading(true);
-
+        this.submitForm = false;
         this.animalSpecieService.list(null, null).subscribe(
             (animalSpecies) => {
                 this.setLoading(false);
@@ -74,6 +76,7 @@ export class PanelComponent extends BaseComponent implements OnInit {
             (scenarios) => {
                 this.scenarios = scenarios.data;
                 this.activeScenario = this.scenariosSimulation[0];
+                console.log(this.activeScenario);
                 this.initFormGroup();
             },
             (error: any) => {
@@ -82,8 +85,7 @@ export class PanelComponent extends BaseComponent implements OnInit {
         );
 
         if (this.activeScenario) {
-            if (this.activeScenario.animalSpecies)
-                this.animalSpecies = this.activeScenario.animalSpecies;
+            console.log(this.activeScenario);
             if (this.activeScenario.arrhythmias)
                 this.arrhythmias = this.activeScenario?.arrhythmias;
             if (this.activeScenario.medications)
@@ -134,14 +136,28 @@ export class PanelComponent extends BaseComponent implements OnInit {
 
     public onSelectScenario() {}
 
-    public onSaveChanges() {
+    public async onSaveChanges() {
         this.setSubmitForm(true);
 
         if (this.formGroup.valid) {
             // Save data on simulation table
-            this.toast.toastrConfig.timeOut = 1000;
-            this.toast.toastrConfig.positionClass = "toast-bottom-full-width";
-            this.toast.success("Simulation saved sucessfully!");
+
+            this.scenarioService.saveArrhythmias(this.arrhythmias);
+            this.scenarioService.savePathologies(this.pathologies);
+            this.scenarioService.saveMedications(this.medications);
+            this.simulationService.create(this.simulation).subscribe(
+                (data) => {
+                    if (data) {
+                        this.toast.toastrConfig.timeOut = 1000;
+                        this.toast.toastrConfig.positionClass =
+                            "toast-bottom-full-width";
+                        this.toast.success("Simulation saved sucessfully!");
+                    }
+                },
+                (error: any) => {
+                    console.log(error);
+                }
+            );
         }
     }
 
@@ -170,15 +186,19 @@ export class PanelComponent extends BaseComponent implements OnInit {
 
         modal.componentInstance.setScenarios(this.scenarios);
 
-        modal.result.then((scenario: any[]) => {
-            scenario.forEach((sc: any) => {
-                this.scenariosSimulation.push(sc);
-                (<FormArray>this.formGroup.get("scenarioSelected")).push(
-                    this.fb.group({
-                        value: [false],
-                    })
-                );
-            });
+        modal.result.then((scenarios: any[]) => {
+            if (scenarios) {
+                this.activeScenario = scenarios[0];
+                // this.loadData();
+                scenarios.forEach((sc: any) => {
+                    this.scenariosSimulation.push(sc);
+                    (<FormArray>this.formGroup.get("scenarioSelected")).push(
+                        this.fb.group({
+                            value: [false],
+                        })
+                    );
+                });
+            }
         });
     }
 

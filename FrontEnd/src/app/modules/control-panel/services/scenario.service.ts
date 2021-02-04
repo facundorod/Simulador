@@ -128,23 +128,63 @@ export class ScenarioService {
         return subject.asObservable();
     }
 
-    // public findById(scenarioId: number) {
-    //     const subject = new Subject<any>();
+    public savePathologies(pathologies: any[]) {
+        const subject = new Subject<any>();
 
-    //     let endpoint = environment.api.scenarios + scenarioId;
+        let endpoint = environment.api.scenarios + `pathologies`;
 
-    //     this.api.httpGet(endpoint).subscribe(
-    //         (data: any) => {
-    //             subject.next(data);
-    //         },
-    //         (err: any) => {
-    //             subject.error(err);
-    //         },
-    //         () => {
-    //             subject.complete();
-    //         }
-    //     );
+        this.api.httpPost(endpoint, pathologies).subscribe(
+            (data: any) => {
+                subject.next(data);
+            },
+            (error: any) => {
+                subject.error(error);
+            },
+            () => {
+                subject.complete();
+            }
+        );
 
-    //     return subject.asObservable();
-    // }
+        return subject.asObservable();
+    }
+
+    public saveMedications(medications: any[]) {
+        const subject = new Subject<any>();
+
+        let endpoint = environment.api.scenarios + `medications`;
+
+        this.api.httpPost(endpoint, medications).subscribe(
+            (data: any) => {
+                subject.next(data);
+            },
+            (error: any) => {
+                subject.error(error);
+            },
+            () => {
+                subject.complete();
+            }
+        );
+
+        return subject.asObservable();
+    }
+
+    public saveArrhythmias(arrhythmias: any[]) {
+        const subject = new Subject<any>();
+
+        let endpoint = environment.api.scenarios + `arrhythmias`;
+
+        this.api.httpPost(endpoint, arrhythmias).subscribe(
+            (data: any) => {
+                subject.next(data);
+            },
+            (error: any) => {
+                subject.error(error);
+            },
+            () => {
+                subject.complete();
+            }
+        );
+
+        return subject.asObservable();
+    }
 }

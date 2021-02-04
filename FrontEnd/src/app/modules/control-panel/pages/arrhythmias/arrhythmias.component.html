@@ -84,7 +84,7 @@
                         {{arrhythmia.description}}
                     </td>
                     <td scope="row">
-                        {{arrhythmia.updated_at}}
+                        {{arrhythmia.updated_at | date}}
                     </td>
                     <td scope="row" class="text-right">
                         <button class="btn btn-light" (click)="onEdit(i)">Edit

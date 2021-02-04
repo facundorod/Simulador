@@ -84,7 +84,7 @@
                         {{medication.description}}
                     </td>
                     <td scope="row">
-                        {{medication.updated_at}}
+                        {{medication.updated_at | date}}
                     </td>
                     <td scope="row" class="text-right">
                         <button class="btn btn-light" (click)="onEdit(i)">Edit

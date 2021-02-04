@@ -52,11 +52,13 @@ export class NewComponent implements OnInit {
 
                 modal.result.then(
                     (simulation: any) => {
-                        if (simulation)
+                        if (simulation) {
                             localStorage.setItem(
                                 "Simulation",
                                 JSON.stringify(simulation)
                             );
+                            this.router.navigateByUrl("/panel");
+                        }
                     },
                     (error: any) => {
                         console.log(error);

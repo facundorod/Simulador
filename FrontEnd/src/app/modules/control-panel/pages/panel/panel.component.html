@@ -17,14 +17,15 @@
             <div class="col-md-3">
                 <label for="simulationName" class="form-label">Simulation Name</label>
                 <input class="form-control" formControlName="simulationName">
-
+                <app-message *ngIf="isSubmitForm()" [errors]="getErrors()" [key]="'simulationName'"></app-message>
             </div>
 
 
             <!-- </div> -->
             <div class="col-md-3">
                 <label for="scenarioName" class="form-label">Scenario Name</label>
-                <input class="form-control" formControlName="scenarioName">
+                <input class="form-control" formControlName="scenarioName" placeholder="{{activeScenario?.name}}">
+                <app-message *ngIf="isSubmitForm()" [errors]="getErrors()" [key]="'scenarioName'"></app-message>
             </div>
 
             <div class="col-md-3">
@@ -55,6 +56,7 @@
                         </option>
                     </ng-template>
                 </select>
+                <app-message *ngIf="isSubmitForm()" [errors]="getErrors()" [key]="'animalSpecie'"></app-message>
             </div>
 
             <div class="col-md-3">
@@ -69,15 +71,17 @@
                                     {{medication?.medication?.name}}
                                 </option>
                             </ng-template>
-                        </select>
+                        </select><app-message *ngIf="isSubmitForm()" [errors]="getErrors()" [key]="'medication'"></app-message>
                     </div>
                     <div class="col-md-3">
                         <label for="doses" class="form-label">Doses</label>
                         <input class="form-control" formControlName="dose">
+                        <app-message *ngIf="isSubmitForm()" [errors]="getErrors()" [key]="'dose'"></app-message>
                     </div>
                     <div class="col-md-3">
                         <label for="units" class="form-label">[units]</label>
                         <input class="form-control" formControlName="units">
+                        <app-message *ngIf="isSubmitForm()" [errors]="getErrors()" [key]="'units'"></app-message>
                     </div>
                 </div>
             </div>
@@ -95,6 +99,7 @@
                                 </option>
                             </ng-template>
                         </select>
+                        <app-message *ngIf="isSubmitForm()" [errors]="getErrors()" [key]="'pathology'"></app-message>
                     </div>
                 </div>
             </div>
@@ -112,6 +117,7 @@
                                 </option>
                             </ng-template>
                         </select>
+                        <app-message *ngIf="isSubmitForm()" [errors]="getErrors()" [key]="'arrhythmia'"></app-message>
                     </div>
                 </div>
             </div>

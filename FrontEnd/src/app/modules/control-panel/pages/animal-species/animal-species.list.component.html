@@ -85,7 +85,7 @@
                         {{animalSpecie.description}}
                     </td>
                     <td scope="row">
-                        {{animalSpecie.updated_at}}
+                        {{animalSpecie.updated_at | date}}
                     </td>
                     <td scope="row" class="text-right">
                         <button class="btn btn-light" (click)="onEdit(i)">Edit
