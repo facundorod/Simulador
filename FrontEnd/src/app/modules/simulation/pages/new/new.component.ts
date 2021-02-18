@@ -1,5 +1,4 @@
 import { ScenarioService } from "./../../../control-panel/services/scenario.service";
-import { ScenariosComponent } from "../../modals/scenarios/scenarios.component";
 import { SimulationsComponent } from "./../../modals/simulations/simulations.component";
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import { environment } from "./../../../../../environments/environment";

@@ -1,23 +1,20 @@
-import { ArrhythmiaI } from './../../../shared/models/arrhythmiaI';
+import { ArrhythmiaI } from "./../../../shared/models/arrhythmiaI";
 import { Injectable } from "@angular/core";
 import { ApiService } from "@app/shared/services/api.service";
 import { HelperService } from "@app/shared/services/helper.service";
 import { environment } from "@environments/environment";
 import { Subject } from "rxjs";
 
-
 @Injectable()
 export class ArrhythmiasService {
-
     constructor(private api: ApiService) {}
-
 
     /**
      * Return a list of arrhythmias
      * @param query
      * @param order
      */
-    public list(query: any, order: any) {
+    public list(query: any = null, order: any = null) {
         const subject = new Subject<any>();
 
         let endpoint = environment.api.arrhythmias;

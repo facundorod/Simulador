@@ -1,14 +1,12 @@
-import { MedicationI } from '@models/medicationI';
+import { MedicationI } from "@models/medicationI";
 import { Injectable } from "@angular/core";
 import { ApiService } from "@app/shared/services/api.service";
 import { HelperService } from "@app/shared/services/helper.service";
 import { environment } from "@environments/environment";
 import { Subject } from "rxjs";
 
-
 @Injectable()
 export class MedicationsService {
-
     constructor(private api: ApiService) {}
 
     /**
@@ -16,7 +14,7 @@ export class MedicationsService {
      * @param query
      * @param order
      */
-    public list(query: any, order: any) {
+    public list(query: any = null, order: any = null) {
         const subject = new Subject<any>();
 
         let endpoint = environment.api.medications;
@@ -27,7 +25,6 @@ export class MedicationsService {
             if (endpoint.indexOf("?") >= 0) endpoint += `&${queryParams}`;
             else endpoint += `?${queryParams}`;
         }
-
 
         this.api.httpGet(endpoint).subscribe(
             (data: any) => {

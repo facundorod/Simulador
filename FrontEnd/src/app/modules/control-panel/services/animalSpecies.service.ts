@@ -14,7 +14,7 @@ export class AnimalSpeciesService {
      * @param query
      * @param order
      */
-    public list(query: any, order: any) {
+    public list(query: any = null, order: any = null) {
         const subject = new Subject<any>();
 
         let endpoint = environment.api.animalSpecies;
@@ -25,7 +25,6 @@ export class AnimalSpeciesService {
             if (endpoint.indexOf("?") >= 0) endpoint += `&${queryParams}`;
             else endpoint += `?${queryParams}`;
         }
-
 
         this.api.httpGet(endpoint).subscribe(
             (data: any) => {

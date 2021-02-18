@@ -35,6 +35,7 @@
 .btn-trash {
     margin-left: 5px;
     padding-left: 10px;
+    border: none;
 }
 
 ngb-pagination .pagination {

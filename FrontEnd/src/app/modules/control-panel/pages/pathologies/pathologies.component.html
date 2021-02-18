@@ -80,11 +80,11 @@
                     <td scope="row">
                         {{pathology.name}}
                     </td>
-                    <td scope="row">
+                    <td scope="row" style="max-width: 200px; overflow: auto">
                         {{pathology.description}}
                     </td>
                     <td scope="row">
-                        {{pathology.updated_at}}
+                        {{pathology.updated_at | date}}
                     </td>
                     <td scope="row" class="text-right">
                         <button class="btn btn-light" (click)="onEdit(i)">Edit

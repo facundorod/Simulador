@@ -1,3 +1,4 @@
+import { ScenariosComponent } from "./pages/scenarios/scenarios.component";
 import { ScenarioService } from "./services/scenario.service";
 import { PathologiesService } from "./services/pathologies.service";
 import { MedicationsService } from "./services/medications.service";
@@ -26,6 +27,7 @@ import { AnimalSpeciesEditComponent } from "./modals/animal-specie-edit/animal-s
         MedicationsComponent,
         ArrhythmiasComponent,
         AnimalSpeciesEditComponent,
+        ScenariosComponent,
     ],
     imports: [
         CommonModule,

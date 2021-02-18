@@ -14,7 +14,7 @@ export class ScenarioService {
      * @param query
      * @param order
      */
-    public list(query: any = null, order: any) {
+    public list(query: any = null, order: any = null) {
         const subject = new Subject<any>();
 
         let endpoint = environment.api.scenarios;
@@ -128,12 +128,12 @@ export class ScenarioService {
         return subject.asObservable();
     }
 
-    public savePathologies(pathologies: any[]) {
+    public savePathologies(pathologies: any[], id_scenario: number) {
         const subject = new Subject<any>();
 
         let endpoint = environment.api.scenarios + `pathologies`;
 
-        this.api.httpPost(endpoint, pathologies).subscribe(
+        this.api.httpPost(endpoint, { id_scenario, pathologies }).subscribe(
             (data: any) => {
                 subject.next(data);
             },
@@ -148,12 +148,12 @@ export class ScenarioService {
         return subject.asObservable();
     }
 
-    public saveMedications(medications: any[]) {
+    public saveMedications(medications: any[], id_scenario: number) {
         const subject = new Subject<any>();
 
         let endpoint = environment.api.scenarios + `medications`;
 
-        this.api.httpPost(endpoint, medications).subscribe(
+        this.api.httpPost(endpoint, { id_scenario, medications }).subscribe(
             (data: any) => {
                 subject.next(data);
             },
@@ -168,22 +168,27 @@ export class ScenarioService {
         return subject.asObservable();
     }
 
-    public saveArrhythmias(arrhythmias: any[]) {
+    public saveArrhythmias(arrhythmias: any[], id_scenario: number) {
         const subject = new Subject<any>();
 
         let endpoint = environment.api.scenarios + `arrhythmias`;
 
-        this.api.httpPost(endpoint, arrhythmias).subscribe(
-            (data: any) => {
-                subject.next(data);
-            },
-            (error: any) => {
-                subject.error(error);
-            },
-            () => {
-                subject.complete();
-            }
-        );
+        this.api
+            .httpPost(endpoint, {
+                id_scenario,
+                arrhythmias,
+            })
+            .subscribe(
+                (data: any) => {
+                    subject.next(data);
+                },
+                (error: any) => {
+                    subject.error(error);
+                },
+                () => {
+                    subject.complete();
+                }
+            );
 
         return subject.asObservable();
     }

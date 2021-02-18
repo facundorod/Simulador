@@ -7,10 +7,10 @@ import { BaseComponent } from "@app/shared/components/base.component";
 import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
 
 @Component({
-    templateUrl: "./scenarios.component.html",
-    styleUrls: ["./scenarios.component.css"],
+    templateUrl: "./scenarios-modal.component.html",
+    styleUrls: ["./scenarios-modal.component.css"],
 })
-export class ScenariosComponent extends BaseComponent implements OnInit {
+export class ScenariosModalComponent extends BaseComponent implements OnInit {
     scenarios: any[];
 
     constructor(private activeModal: NgbActiveModal, private fb: FormBuilder) {
