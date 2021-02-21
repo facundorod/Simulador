@@ -1,3 +1,4 @@
+import { ScenariosCreateComponent } from "./modals/scenarios-create/scenarios-create.component";
 import { ScenariosComponent } from "./pages/scenarios/scenarios.component";
 import { ScenarioService } from "./services/scenario.service";
 import { PathologiesService } from "./services/pathologies.service";
@@ -22,6 +23,7 @@ import { AnimalSpeciesEditComponent } from "./modals/animal-specie-edit/animal-s
 @NgModule({
     declarations: [
         PanelComponent,
+        ScenariosCreateComponent,
         AnimalSpeciesListComponent,
         PathologiesComponent,
         MedicationsComponent,

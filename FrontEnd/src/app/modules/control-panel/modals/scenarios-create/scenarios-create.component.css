@@ -1,0 +1,10 @@
+.modal-header,
+.modal-body {
+    background-color: #121212;
+}
+
+.modal-header {
+    font-size: 1.1em;
+    font-weight: bold;
+    color: #fff;
+}

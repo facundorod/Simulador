@@ -4,6 +4,8 @@
     </div>
     <div class="col text-right">
         <div class="mr-3">
+            <button class="btn btn-link" (click)="onAddScenario()"> New Scenario </button>
+
             <button class="btn btn-link" (click)="onLoadScenarios()"> Load Scenarios </button>
         </div>
     </div>
@@ -12,6 +14,9 @@
 <table class="table table-hover">
     <thead class="thead-dark">
         <tr>
+            <th scope="col">
+
+            </th>
             <th scope="col">
                 Id
             </th>
@@ -30,38 +35,66 @@
             <th scope="col">
                 Medications
             </th>
+            <th scope="col">
+
+            </th>
+            <!-- <th scope="col">
+
+            </th> -->
         </tr>
     </thead>
 
-    <tbody>
+    <tbody *ngIf="scenariosSelected && scenariosSelected.length > 0">
         <tr *ngFor="let scenario of scenariosSelected; let i = index">
-            <td scope="row">
-                {{scenario.id_scenario}}
+            <td scope="row" style="max-width: 100px" >
+                <ng-template [ngIf]="isActiveScenario(i)">
+                    <i class="fas fa-lightbulb ml-2" style="font-size: large; color: orange"></i>
+                </ng-template>
+                <ng-template [ngIf]="!isActiveScenario(i)">
+                    <i class="fas fa-lightbulb ml-2" (click)="onActiveScenario(i)" style="font-size: large; color: #fff"></i>
+                </ng-template>
+                <ng-template [ngIf]="isScenarioEdit(i)">
+                    <i class="fas fa-pencil-alt ml-2" style="color: orange; font-size: large;"></i>
+                </ng-template>
+                <ng-template [ngIf]="!isScenarioEdit(i)">
+                    <i class="fas fa-pencil-alt ml-2" (click)="onEditScenario(i)" style="font-size: large; color: #fff"></i>
+                </ng-template>
             </td>
             <td scope="row">
-                {{scenario.name}}
+                {{scenario?.id_scenario}}
+            </td>
+            <td scope="row" style="max-width: 175px;  white-space: initial;">
+                {{scenario?.name}}
+            </td>
+            <td scope="row" style="max-width: 175px;  white-space: initial;" >
+                {{scenario?.description}}
+            </td>
+            <td scope="row" style="max-width: 175px;  white-space: initial;">
+                {{scenario?.arrhythmias | arrayJson}}
+            </td>
+            <td scope="row" style="max-width: 175px;  white-space: initial;">
+                {{scenario?.pathologies | arrayJson}}
             </td>
             <td scope="row">
-                {{scenario.description}}
+                {{scenario?.medications | arrayJson: 'medications'}}
             </td>
-            <td scope="row">
-                {{scenario?.arrhythmias}}
+            <td scope="row" >
+                <!-- <span> -->
+                    <button class="btn btn-trash btn-light" (click)="onDelete(i)">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                <!-- </span> -->
             </td>
-            <td scope="row">
-                {{scenario?.pathologies}}
-            </td>
-            <td scope="row">
-                {{scenario?.medications}}
-            </td>
+
         </tr>
 
 
     </tbody>
 
     <!-- No items found -->
-    <tbody *ngIf="(!scenariosSelected || scenariosSelected.length === 0)">
+    <tbody *ngIf="!scenariosSelected || scenariosSelected.length === 0">
         <tr>
-            <td colspan="7">
+            <td colspan="12">
                 No scenarios available.
             </td>
         </tr>

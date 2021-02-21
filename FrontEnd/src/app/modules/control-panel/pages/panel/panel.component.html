@@ -30,7 +30,8 @@
 
             <div class="col-md-3">
                 <label for="animalSpecies" class="form-label">Animal Specie</label>
-                <select class="form-select form-control" formControlName="animalSpecie" (change)="changeAnimalSpecie($event)">
+                <select class="form-select form-control" formControlName="animalSpecie"
+                    (change)="changeAnimalSpecie($event)">
                     <option value="" selected disabled>Choose Animal Specie</option>
                     <ng-template [ngIf]="animalSpecies.length > 0">
                         <option *ngFor="let animalS of animalSpecies; trackBy: trackByFnAnimalSpecies">
@@ -54,7 +55,8 @@
         <!-- Start Row 2 -->
         <div class="row mt-4">
             <div class="col-md-12">
-                <app-scenarios [scenariosSelected]="scenariosSimulation"></app-scenarios>
+                <app-scenarios [scenariosSelected]="scenariosSimulation" (posScenarios)="getPosScenarios($event)" (returnScenarios)="getScenarios($event)">
+                </app-scenarios>
 
             </div>
             <!-- Scenarios -->
@@ -84,20 +86,24 @@
                     </thead>
 
                     <tbody>
-                        <!-- <ng-template [ngIf]=" !medicationsScenario || !(medicationsScenario.length > 0)">
+                        <!-- <ng-template [ngIf]="!getFormControlsMedication.controls">
                             <tr>
                                 <td colspan="12">
                                     No medications available
                                 </td>
                             </tr>
-
                         </ng-template> -->
                         <ng-container formArrayName="medications"
                             *ngFor="let group of getFormControlsMedication.controls; let i = index">
+
                             <tr [formGroupName]="i">
+
                                 <td scope="row">
                                     <select class="form-select form-control" formControlName="medication">
-                                        <option value="" selected>Choose Medication</option>
+                                        <option *ngIf="! group.value.medication" value="" selected>Choose Medication
+                                        </option>
+                                        <option *ngIf=" group.value.medication " selected> {{group.value.medication}}
+                                        </option>
                                         <option *ngFor="let medication of medications">
                                             {{ medication.name }}
                                         </option>
@@ -121,7 +127,7 @@
                         </ng-container>
 
 
-                        <button class="btn btn-light mt-3 ml-2" (click)="addRowMedication()">
+                        <button class="btn btn-light mt-2 ml-1" (click)="addRowMedication()">
                             Add medication
                         </button>
                     </tbody>
@@ -155,7 +161,10 @@
                             <tr [formGroupName]="i">
                                 <td scope="row">
                                     <select class="form-select form-control" formControlName="pathology">
-                                        <option value="" selected>Choose Pathology</option>
+                                        <option *ngIf="! group.value.pathology" value="" selected>Choose Pathology
+                                        </option>
+                                        <option *ngIf="group.value.pathology" selected> {{group.value.pathology}}
+                                        </option>
                                         <option *ngFor="let pat of pathologies">
                                             {{ pat.name }}
                                         </option>
@@ -173,11 +182,12 @@
 
                         </ng-container>
 
-
                         <button class="btn btn-light mt-2 ml-1" (click)="addRowPathology()">
                             Add Pathology
                         </button>
+
                     </tbody>
+
                 </table>
             </div>
 
@@ -204,7 +214,10 @@
                             <tr [formGroupName]="i">
                                 <td scope="row">
                                     <select class="form-select form-control" formControlName="arrhythmia">
-                                        <option value="" selected>Choose Arrhythmia</option>
+                                        <option *ngIf="! group.value.arrhythmia" value="" selected>Choose Arrhythmia
+                                        </option>
+                                        <option *ngIf="group.value.arrhythmia" selected> {{group.value.arrhythmia}}
+                                        </option>
                                         <option *ngFor="let arr of arrhythmias">
                                             {{ arr.name }}
                                         </option>
@@ -232,137 +245,8 @@
 
         </div>
 
-        <!-- <div class="row mt-3"> -->
 
-        <!-- <div class="col-md-3">
-                <label for="animalSpecies" class="form-label">Animal Specie</label>
-                <select class="form-select form-control" formControlName="animalSpecie">
-                    <option value="" selected>Choose Animal Specie</option>
-                    <ng-template [ngIf]="animalSpecies.length > 0">
-                        <option *ngFor="let animalS of animalSpecies; trackBy: trackByFnAnimalSpecies">
-                            {{ animalS.name }}
-                        </option>
-                    </ng-template>
-                </select>
-                <app-message *ngIf="isSubmitForm() && form" [errors]="getErrors()" [key]="'animalSpecie'"></app-message>
-            </div>
-
-            <div class="col-md-3">
-                <label class="form-label">Medications list</label>
-                <div class="row">
-                    <div class="col-md-6">
-                        <label for="medications" class="form-label">Medications</label>
-                        <select class="form-control" formControlName="medication">
-                            <option selected value="">Choose</option>
-                            <ng-template [ngIf]="medications.length > 0">
-                                <option *ngFor="let medication of medications; trackByFnMedications">
-                                    {{medication?.name}}
-                                </option>
-                            </ng-template>
-                        </select><app-message *ngIf="isSubmitForm() && form" [errors]="getErrors()" [key]="'medication'"></app-message>
-                    </div>
-                    <div class="col-md-3">
-                        <label for="doses" class="form-label">Doses</label>
-                        <input class="form-control" formControlName="dose">
-                        <app-message *ngIf="isSubmitForm() && form" [errors]="getErrors()" [key]="'dose'"></app-message>
-                    </div>
-                    <div class="col-md-3">
-                        <label for="units" class="form-label">[units]</label>
-                        <input class="form-control" formControlName="units">
-                        <app-message *ngIf="isSubmitForm() && form" [errors]="getErrors()" [key]="'units'"></app-message>
-                    </div>
-                </div>
-            </div> -->
-
-        <!-- <div class="col-md-3">
-                <label class="form-label">Pathology list</label>
-                <div class="row">
-                    <div class="col-md-12">
-                        <label class="form-label">Pathology </label>
-                        <select class="form-control" formControlName="pathology">
-                            <option selected value="">Choose</option>
-                            <ng-template [ngIf]="pathologies.length > 0">
-                                <option *ngFor="let pat of pathologies; trackByFnPathologies">
-                                    {{pat.name}}
-                                </option>
-                            </ng-template>
-                        </select>
-                        <app-message *ngIf="isSubmitForm() && form" [errors]="getErrors()" [key]="'pathology'"></app-message>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-md-3">
-                <label class="form-label">Arrhythmia list</label>
-                <div class="row">
-                    <div class="col-md-12">
-                        <label class="form-label">Arrhythmia </label>
-                        <select class="form-control" formControlName="arrhythmia">
-                            <option selected value="">Choose</option>
-                            <ng-template [ngIf]="arrhythmias.length > 0">
-                                <option *ngFor="let arr of arrhythmias; trackByFnArrhythmias">
-                                    {{arr.name}}
-                                </option>
-                            </ng-template>
-                        </select>
-                        <app-message *ngIf="isSubmitForm() && form " [errors]="getErrors()" [key]="'arrhythmia'"></app-message>
-                    </div>
-                </div>
-            </div>
- -->
-
-        <!-- </div> -->
-        <!-- End Row 2-->
-
-        <!-- <div class="row mt-3">
-
-            <div class="col-md-3">
-                <label class="form-label">Simulation description</label>
-                <textarea class="form-control" rows="5" formControlName="simulationDescription"></textarea>
-                <div class="row mt-3">
-                    <div class="col scenarios">
-                        <label for="scenarios"> Scenarios </label>
-                        <ng-template [ngIf]="scenariosSimulation && scenariosSimulation.length > 0">
-
-                                <button class="ml-3 btn btn-link align-end" (click)="onLoadScenario()">Load </button>
-                                <button class="ml-1 btn btn-link align-end" *ngIf="containsTrue()" (click)="onDeleteScenario()">Delete</button>
-
-                            <table class="table table-hover">
-                                <thead class="thead-dark">
-                                    <tr>
-
-                                        <th scope="col">Name</th>
-                                        <th scope="col">Description</th>
-                                        <th scope="col"></th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr formArrayName="scenarioSelected" *ngFor="let sc of scenariosSimulation; let i = index">
-
-                                        <td scope="col">
-                                            {{sc.name}}
-                                        </td>
-                                        <td scope="col">
-                                            {{sc.description}}
-                                        </td>
-                                        <div [formGroupName]="i">
-                                            <td scope="col">
-
-                                                <input class="form-check-input" type="checkbox" value="{{i}}"
-                                                    formControlName="value">
-                                            </td>
-                                        </div>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </ng-template>
-                        <div *ngIf="scenariosSimulation.length == 0">
-                            <button class="btn btn-primary" (click)="onLoadScenario()">Load Scenarios</button>
-                        </div>
-
-                    </div>
-                </div>
-            </div>
+        <!--
 
             <div class="col-md-9 parameters">
                 <hr class="separatorLine">

@@ -26,8 +26,6 @@ export class ArrhythmiasService {
             else endpoint += `?${queryParams}`;
         }
 
-        console.log(endpoint);
-
         this.api.httpGet(endpoint).subscribe(
             (data: any) => {
                 subject.next(data);
