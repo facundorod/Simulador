@@ -30,16 +30,16 @@
 
             <div class="col-md-3">
                 <label for="animalSpecies" class="form-label">Animal Specie</label>
-                <select class="form-select form-control" formControlName="animalSpecie"
-                    (change)="changeAnimalSpecie($event)">
-                    <option value="" selected disabled>Choose Animal Specie</option>
+                <select class="form-select form-control" id="animalSpecie" formControlName="animalSpecie">
+                    <option selected value="">Choose Animal Specie</option>
                     <ng-template [ngIf]="animalSpecies.length > 0">
-                        <option *ngFor="let animalS of animalSpecies; trackBy: trackByFnAnimalSpecies">
+                        <option [ngValue]="animalS" *ngFor="let animalS of animalSpecies" >
                             {{ animalS.name }}
                         </option>
                     </ng-template>
                 </select>
-                <app-message *ngIf="isSubmitForm() && form" [errors]="getErrors()" [key]="'animalSpecie'"></app-message>
+
+                <app-message *ngIf="isSubmitForm() " [errors]="getErrors()" [key]="'animalSpecie'"></app-message>
             </div>
 
             <div class="col-md-6">
@@ -55,7 +55,8 @@
         <!-- Start Row 2 -->
         <div class="row mt-4">
             <div class="col-md-12">
-                <app-scenarios [scenariosSelected]="scenariosSimulation" (posScenarios)="getPosScenarios($event)" (returnScenarios)="getScenarios($event)">
+                <app-scenarios [scenariosSelected]="scenariosSimulation" (posScenarios)="getPosScenarios($event)"
+                    (returnScenarios)="getScenarios($event)">
                 </app-scenarios>
 
             </div>
@@ -102,15 +103,15 @@
                                     <select class="form-select form-control" formControlName="medication">
                                         <option *ngIf="! group.value.medication" value="" selected>Choose Medication
                                         </option>
-                                        <option *ngIf=" group.value.medication " selected> {{group.value.medication}}
+                                        <option *ngIf=" group.value.medication " [ngValue]="group.value.medication" selected> {{group.value.medication}}
                                         </option>
-                                        <option *ngFor="let medication of medications">
+                                        <option *ngFor="let medication of medications" [ngValue]="medication">
                                             {{ medication.name }}
                                         </option>
                                     </select>
                                 </td>
                                 <td scope="row">
-                                    <input type="number" class="form-control" formControlName="doses">
+                                    <input type="text" class="form-control" formControlName="doses" >
                                 </td>
                                 <td scope="row">
                                     <input type="text" class="form-control" formControlName="unit">
@@ -163,9 +164,9 @@
                                     <select class="form-select form-control" formControlName="pathology">
                                         <option *ngIf="! group.value.pathology" value="" selected>Choose Pathology
                                         </option>
-                                        <option *ngIf="group.value.pathology" selected> {{group.value.pathology}}
+                                        <option *ngIf="group.value.pathology" [ngValue]="group.value.pathology" selected> {{group.value.pathology}}
                                         </option>
-                                        <option *ngFor="let pat of pathologies">
+                                        <option *ngFor="let pat of pathologies" [ngValue]="pat">
                                             {{ pat.name }}
                                         </option>
                                     </select>
@@ -216,9 +217,9 @@
                                     <select class="form-select form-control" formControlName="arrhythmia">
                                         <option *ngIf="! group.value.arrhythmia" value="" selected>Choose Arrhythmia
                                         </option>
-                                        <option *ngIf="group.value.arrhythmia" selected> {{group.value.arrhythmia}}
+                                        <option *ngIf="group.value.arrhythmia" [ngValue]="group.value.arrhythmia.name" selected> {{group.value.arrhythmia.name}}
                                         </option>
-                                        <option *ngFor="let arr of arrhythmias">
+                                        <option *ngFor="let arr of arrhythmias" [ngValue]="arr">
                                             {{ arr.name }}
                                         </option>
                                     </select>
@@ -245,120 +246,29 @@
 
         </div>
 
+        <hr class="separatorLine mt-3">
+        <div class="row mt-4 ml-5">
 
-        <!--
+            <!-- <div class="col-sm-4"> -->
 
-            <div class="col-md-9 parameters">
-                <hr class="separatorLine">
-                <div class="row">
-                    <div class="col-sm-4">
-                        <label for="cyclec" class="form-label">Cardiac Rate [rpm]</label>
-                        <input class="form-control" formControlName="cardiacCycle">
-                    </div>
+            <label for="cycleC" class="ml-3 col-form-label">Cycle C.</label>
+            <div class="col-md-2">
+                <input type="text" class="form-control" formControlName="cardiacCycle">
+            </div>
+            <!-- </div> -->
 
-                    <div class="col-sm-4">
-                        <label for="temp" class="form-label">TEMP [°C]</label>
-                        <input class="form-control" formControlName="temp">
-                    </div>
+            <!-- <div class="col-sm-4"> -->
+            <label for="temp" class="ml-3 col-form-label">TEMP</label>
+            <div class="col-md-2">
+                <input type="text" class="form-control" formControlName="temp">
+            </div>
 
-                    <div class="col-sm-4">
-                        <label for="resp" class="form-label">RESP [rpm]</label>
-                        <input class="form-control" formControlName="respirationRate">
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-5 mt-3">
-                        <label class="form-label">ECG</label>
-                        <div class="card">
-                            <div class="card-title">
-                                <p> ECG</p>
-                            </div>
-                            <div class="card-body">
-                                <p> Curve configuration </p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-7 mt-3 imgs">
-                        <img src="/assets/images/egc_curve.png" class="rounded float-start ">
-                    </div>
-                </div>
+            <label for="resp" class="ml-3 col-form-label">RESP</label>
+            <div class="col-md-2">
+                <input type="text" class="form-control" formControlName="respirationRate">
+            </div>
 
-                <div class="row">
-                    <div class="col-md-5 mt-3">
-
-                        <label class="form-label">SPO2</label>
-                        <div class="card">
-                            <div class="card-title">
-                                <p>SPO2</p>
-                            </div>
-                            <div class="card-body">
-                                <p>Curve configuration</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-7 mt-3 imgs">
-                        <img src="" class="rounded float-start" alt="spo2 curve">
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="col-md-5 mt-3">
-                        <label class="form-label">ETC02</label>
-                        <div class="card">
-                            <div class="card-title">
-                                <p>ETCO2</p>
-                            </div>
-                            <div class="card-body">
-                                <p>Curve configuration</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-7 mt-3 imgs">
-                        <img src="" class="rounded float-start" alt="ETC02 curve">
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="col-md-5 mt-3">
-                        <label class="form-label">IBP</label>
-                        <div class="card">
-                            <div class="card-title">
-                                <p>IBP</p>
-                            </div>
-                            <div class="card-body">
-                                <p>Curve configuration</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-7 mt-3 imgs">
-                        <img src="" class="rounded float-start" alt="IBP curve">
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="col-md-5 mt-3">
-                        <label class="form-label">NIBP</label>
-                        <div class="card">
-                            <div class="card-title">
-                                <p>NIBP</p>
-                            </div>
-                            <div class="card-body">
-                                <p>Curve configuration</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-7 mt-3 imgs">
-                        <img src="" class="rounded float-start" alt="NIBP curve">
-                    </div>
-                </div>
-
-            </div> -->
-
-        <!-- End row 3-->
-
-
-        <!-- </div> -->
-
+        </div>
 
 
     </form>

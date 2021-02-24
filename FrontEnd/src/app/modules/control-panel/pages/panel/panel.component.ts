@@ -21,6 +21,7 @@ import {
     AbstractControl,
     FormArray,
     FormBuilder,
+    FormControl,
     Validators,
 } from "@angular/forms";
 
@@ -42,7 +43,6 @@ export class PanelComponent extends BaseComponent implements OnInit {
     medications: any[] = [];
     medicationsScenario: any[] = [];
     simulation: any = {};
-    form: boolean = false;
     indexActive: number = 0;
     indexSimulationActive: number = 0;
 
@@ -66,8 +66,6 @@ export class PanelComponent extends BaseComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.form = false;
-
         this.setSubmitForm(false);
         this.setLoading(true);
         this.loadData();
@@ -80,7 +78,6 @@ export class PanelComponent extends BaseComponent implements OnInit {
         this.scenarioService.list(null, null).subscribe(
             (scenarios) => {
                 this.scenarios = scenarios.data;
-                // this.initFormGroup();
             },
             (error: any) => {
                 console.log(error);
@@ -165,10 +162,7 @@ export class PanelComponent extends BaseComponent implements OnInit {
             scenarioId: [
                 this.activeScenario ? this.activeScenario.id_scenario : "",
             ],
-            animalSpecie: [
-                this.animalSpecie ? this.animalSpecie.name : "",
-                Validators.required,
-            ],
+            animalSpecie: [this.animalSpecie ? this.animalSpecie : null],
             temp: ["", Validators.required],
             cardiacCycle: ["", Validators.required],
             respirationRate: ["", Validators.required],
@@ -185,37 +179,47 @@ export class PanelComponent extends BaseComponent implements OnInit {
     }
 
     public async onSaveChanges() {
-        this.setSubmitForm(true);
-        this.form = true;
+        // this.setSubmitForm(true);
+        let simulationData = this.simulation;
+        console.log(this.formGroup);
         if (this.formGroup.valid) {
-            // Save data on simulation table
-
-            this.scenarioService.saveArrhythmias(
-                this.arrhythmias,
-                this.formGroup.value.scenarioId
-            );
-            this.scenarioService.savePathologies(
-                this.pathologies,
-                this.formGroup.value.scenarioId
-            );
-            this.scenarioService.saveMedications(
-                this.medications,
-                this.formGroup.value.scenarioId
-            );
-            this.simulationService.create(this.simulation).subscribe(
-                (data) => {
-                    if (data) {
-                        this.toast.toastrConfig.timeOut = 1000;
-                        this.toast.toastrConfig.positionClass =
-                            "toast-bottom-full-width";
-                        this.toast.success("Simulation saved sucessfully!");
-                    }
-                },
-                (error: any) => {
-                    console.log(error);
-                }
-            );
+            if (!simulationData) {
+                simulationData = {
+                    name: this.formGroup.value.simulationName,
+                    description: this.formGroup.value.simulationDescription,
+                };
+            }
+            // this.simulationService.create(this.si)
         }
+        // if (this.formGroup.valid) {
+        //     // Save data on simulation table
+
+        //     this.scenarioService.saveArrhythmias(
+        //         this.arrhythmias,
+        //         this.formGroup.value.scenarioId
+        //     );
+        //     this.scenarioService.savePathologies(
+        //         this.pathologies,
+        //         this.formGroup.value.scenarioId
+        //     );
+        //     this.scenarioService.saveMedications(
+        //         this.medications,
+        //         this.formGroup.value.scenarioId
+        //     );
+        //     this.simulationService.create(this.simulation).subscribe(
+        //         (data) => {
+        //             if (data) {
+        //                 this.toast.toastrConfig.timeOut = 1000;
+        //                 this.toast.toastrConfig.positionClass =
+        //                     "toast-bottom-full-width";
+        //                 this.toast.success("Simulation saved sucessfully!");
+        //             }
+        //         },
+        //         (error: any) => {
+        //             console.log(error);
+        //         }
+        //     );
+        // }
     }
 
     addRowMedication(medication: any = null): void {
@@ -347,8 +351,9 @@ export class PanelComponent extends BaseComponent implements OnInit {
         }
     }
 
-    changeAnimalSpecie(e: any) {
-        this.formGroup.value.animalSpecie = e.target.value;
+    changeAnimalSpecie(e: any = "null") {
+        console.log(e.target.value);
+        // this.formGroup.value.animalSpecie = e.target.value;
     }
 
     getScenarios(scenarios: any): void {

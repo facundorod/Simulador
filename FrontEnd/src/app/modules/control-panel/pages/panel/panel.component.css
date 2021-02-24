@@ -47,7 +47,10 @@
     background-color: #616161 !important;
 }
 
+.parametersContainer {
+    text-align: center;
+}
+
 .parameters {
-    max-height: 500px !important;
-    overflow: auto;
+    display: inline-block;
 }

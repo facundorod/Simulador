@@ -1,3 +1,4 @@
+import { SimulationService } from "./../simulation/services/simulation.service";
 import { ScenariosCreateComponent } from "./modals/scenarios-create/scenarios-create.component";
 import { ScenariosComponent } from "./pages/scenarios/scenarios.component";
 import { ScenarioService } from "./services/scenario.service";
@@ -48,6 +49,7 @@ import { AnimalSpeciesEditComponent } from "./modals/animal-specie-edit/animal-s
         MedicationsService,
         PathologiesService,
         ScenarioService,
+        SimulationService,
     ],
 })
 export class ControlPanelModule {}

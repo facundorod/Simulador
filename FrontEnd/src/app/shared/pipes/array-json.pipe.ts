@@ -15,6 +15,9 @@ export class ArrayJsonPipe implements PipeTransform {
                 if (index !== values.length - 1)
                     valueString = valueString.concat(",");
             });
+        else {
+            valueString = "-";
+        }
         return valueString;
     }
 }
