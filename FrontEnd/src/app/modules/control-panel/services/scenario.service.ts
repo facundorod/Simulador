@@ -89,7 +89,7 @@ export class ScenarioService {
         return subject.asObservable();
     }
 
-    public updateById(scenarioId: number, scenario: ScenarioI) {
+    public updateById(scenarioId: number, scenario: any) {
         const subject = new Subject<any>();
 
         let endpoint = environment.api.scenarios + scenarioId;

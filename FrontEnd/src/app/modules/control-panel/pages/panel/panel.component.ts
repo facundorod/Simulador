@@ -169,10 +169,8 @@ export class PanelComponent extends BaseComponent implements OnInit {
             arrhythmias: this.fb.array([]),
             pathologies: this.fb.array([]),
             medications: this.fb.array([]),
-            scenarioSelected: this.fb.array([]),
         });
 
-        this.addScenarioSelected();
         this.setArrhythmias();
         this.setMedications();
         this.setPathologies();
@@ -181,31 +179,51 @@ export class PanelComponent extends BaseComponent implements OnInit {
     public async onSaveChanges() {
         // this.setSubmitForm(true);
         let simulationData = this.simulation;
-        console.log(this.formGroup);
-        if (this.formGroup.valid) {
-            if (!simulationData) {
-                simulationData = {
-                    name: this.formGroup.value.simulationName,
-                    description: this.formGroup.value.simulationDescription,
-                };
-            }
-            // this.simulationService.create(this.si)
+        console.log(this.formGroup.value.animalSpecie);
+        // if (this.formGroup.valid) {
+        if (!simulationData) {
+            simulationData = {
+                name: this.formGroup.value.simulationName,
+                description: this.formGroup.value.simulationDescription,
+                animalSpecie: {
+                    id_as: this.formGroup.value.animalSpecie.id_as,
+                    name: this.formGroup.value.animalSpecie.name,
+                    description: this.formGroup.value.animalSpecie.description,
+                },
+            };
         }
+
+        const arrhythmias: any[] = [];
+        this.formGroup.value.arrhythmias.forEach((arr: any) => {
+            arrhythmias.push(arr.arrhythmia);
+        });
+        const pathologies: any[] = [];
+        this.formGroup.value.pathologies.forEach((pat: any) => {
+            pathologies.push(pat.pathology);
+        });
+        this.scenarioService
+            .updateById(this.activeScenario.id_scenario, {
+                name: this.activeScenario.name,
+                description: this.activeScenario.description,
+                arrhythmias: arrhythmias,
+                medications: this.formGroup.value.medications,
+                pathologies: pathologies,
+            })
+            .subscribe(
+                (data) => {
+                    console.log(data);
+                },
+                (error: any) => {
+                    console.log(error);
+                }
+            );
+        // console.log("Simulation data", simulationData);
+        // console.log("Scenarios data", this.scenariosSimulation);
+        // this.simulationService.create(this.si)
+        // }
         // if (this.formGroup.valid) {
         //     // Save data on simulation table
 
-        //     this.scenarioService.saveArrhythmias(
-        //         this.arrhythmias,
-        //         this.formGroup.value.scenarioId
-        //     );
-        //     this.scenarioService.savePathologies(
-        //         this.pathologies,
-        //         this.formGroup.value.scenarioId
-        //     );
-        //     this.scenarioService.saveMedications(
-        //         this.medications,
-        //         this.formGroup.value.scenarioId
-        //     );
         //     this.simulationService.create(this.simulation).subscribe(
         //         (data) => {
         //             if (data) {
@@ -271,7 +289,7 @@ export class PanelComponent extends BaseComponent implements OnInit {
     private initiateMedicationForm(medication: any = null): AbstractControl {
         return this.fb.group({
             medication: [medication ? medication.medication : ""],
-            doses: [medication ? medication.dose : ""],
+            dose: [medication ? medication.dose : ""],
             unit: [medication ? medication.unit : ""],
         });
     }
@@ -286,18 +304,6 @@ export class PanelComponent extends BaseComponent implements OnInit {
         return this.fb.group({
             arrhythmia: [arrhythmia ? arrhythmia.name : ""],
         });
-    }
-
-    private addScenarioSelected(): void {
-        if (this.scenariosSimulation) {
-            this.scenariosSimulation.forEach(() => {
-                (<FormArray>this.formGroup.get("scenarioSelected")).push(
-                    this.fb.group({
-                        value: [false],
-                    })
-                );
-            });
-        }
     }
 
     private loadInfoScenario(scenarios: any[]): void {
@@ -349,11 +355,6 @@ export class PanelComponent extends BaseComponent implements OnInit {
                 this.addRowPathology(pat);
             });
         }
-    }
-
-    changeAnimalSpecie(e: any = "null") {
-        console.log(e.target.value);
-        // this.formGroup.value.animalSpecie = e.target.value;
     }
 
     getScenarios(scenarios: any): void {
