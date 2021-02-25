@@ -52,7 +52,14 @@ export class ScenariosComponent extends BaseComponent implements OnInit {
                         this.scenariosSelected = this.scenariosSelected.concat(
                             data
                         );
-                    else this.scenariosSelected = data;
+                    else {
+                        this.scenariosSelected = data;
+                    }
+
+                    this.posScenarios.emit({
+                        indexEdit: this.indexScenarioEdit,
+                        indexActive: this.indexScenarioActive,
+                    });
                     this.returnScenarios.emit(this.scenariosSelected);
                 }
             },
@@ -64,6 +71,7 @@ export class ScenariosComponent extends BaseComponent implements OnInit {
 
     onLoadScenarios(): void {
         const modal = this.modal.open(ScenariosModalComponent);
+        this.loadData();
         modal.componentInstance.setScenarios(this.scenarios);
         modal.result.then(
             (data: any) => {

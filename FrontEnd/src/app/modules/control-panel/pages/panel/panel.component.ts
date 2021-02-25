@@ -179,7 +179,6 @@ export class PanelComponent extends BaseComponent implements OnInit {
     public async onSaveChanges() {
         // this.setSubmitForm(true);
         let simulationData = this.simulation;
-        console.log(this.formGroup.value.animalSpecie);
         // if (this.formGroup.valid) {
         if (!simulationData) {
             simulationData = {
@@ -201,24 +200,26 @@ export class PanelComponent extends BaseComponent implements OnInit {
         this.formGroup.value.pathologies.forEach((pat: any) => {
             pathologies.push(pat.pathology);
         });
-        this.scenarioService
-            .updateById(this.activeScenario.id_scenario, {
-                name: this.activeScenario.name,
-                description: this.activeScenario.description,
-                arrhythmias: arrhythmias,
-                medications: this.formGroup.value.medications,
-                pathologies: pathologies,
-            })
-            .subscribe(
-                (data) => {
-                    console.log(data);
-                },
-                (error: any) => {
-                    console.log(error);
-                }
-            );
-        // console.log("Simulation data", simulationData);
-        // console.log("Scenarios data", this.scenariosSimulation);
+
+        if (this.activeScenario) {
+            this.scenarioService
+                .updateById(this.activeScenario.id_scenario, {
+                    name: this.activeScenario.name,
+                    description: this.activeScenario.description,
+                    arrhythmias: arrhythmias,
+                    medications: this.formGroup.value.medications,
+                    pathologies: pathologies,
+                })
+                .subscribe(
+                    (data) => {
+                        console.log("Scenario Saved", data);
+                    },
+                    (error: any) => {
+                        console.log(error);
+                    }
+                );
+        }
+
         // this.simulationService.create(this.si)
         // }
         // if (this.formGroup.valid) {
@@ -310,21 +311,22 @@ export class PanelComponent extends BaseComponent implements OnInit {
         this.scenariosSimulation = scenarios;
         this.activeScenario = this.scenariosSimulation[this.indexActive];
 
-        if (!this.activeScenario) {
-            this.arrhythmiasScenario = [];
-            this.medicationsScenario = [];
-            this.pathologiesScenario = [];
-        }
         if (this.activeScenario && this.activeScenario.arrhythmias) {
             this.arrhythmiasScenario = this.activeScenario.arrhythmias;
+        } else {
+            this.arrhythmiasScenario = [];
         }
 
         if (this.activeScenario && this.activeScenario.medications) {
             this.medicationsScenario = this.activeScenario.medications;
+        } else {
+            this.medicationsScenario = [];
         }
 
         if (this.activeScenario && this.activeScenario.pathologies) {
             this.pathologiesScenario = this.activeScenario.pathologies;
+        } else {
+            this.pathologiesScenario = [];
         }
     }
 

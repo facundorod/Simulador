@@ -75,8 +75,8 @@ export class ScenarioService {
         let endpoint = environment.api.scenarios;
 
         this.api.httpPost(endpoint, scenario).subscribe(
-            (scenario: ScenarioI) => {
-                subject.next(scenario);
+            (scenario) => {
+                subject.next([scenario]);
             },
             (err: any) => {
                 subject.error(err);

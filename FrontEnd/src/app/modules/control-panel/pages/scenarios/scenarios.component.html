@@ -70,13 +70,29 @@
                 {{scenario?.description}}
             </td>
             <td scope="row" style="max-width: 175px;  white-space: initial;">
-                {{scenario?.arrhythmias | arrayJson}}
+                <ng-template [ngIf]="scenario.arrhythmias">
+                    {{scenario.arrhythmias | arrayJson}}
+                </ng-template>
+                <ng-template [ngIf]="!scenario.arrhythmias">
+                    -
+                </ng-template>
+
             </td>
             <td scope="row" style="max-width: 175px;  white-space: initial;">
-                {{scenario?.pathologies | arrayJson}}
+                <ng-template [ngIf]="scenario.pathologies">
+                    {{scenario.pathologies | arrayJson}}
+                </ng-template>
+                <ng-template [ngIf]="!scenario.pathologies">
+                    -
+                </ng-template>
             </td>
             <td scope="row">
-                {{scenario?.medications | arrayJson: 'medications'}}
+                <ng-template [ngIf]="scenario.medications">
+                    {{scenario.medications | arrayJson: 'medications'}}
+                </ng-template>
+                <ng-template [ngIf]="!scenario.medications">
+                    -
+                </ng-template>
             </td>
             <td scope="row" >
                 <!-- <span> -->
@@ -92,7 +108,7 @@
     </tbody>
 
     <!-- No items found -->
-    <tbody *ngIf="!scenariosSelected || scenariosSelected.length === 0">
+    <tbody *ngIf="!scenariosSelected || scenariosSelected.length == 0">
         <tr>
             <td colspan="12">
                 No scenarios available.

@@ -217,7 +217,7 @@
                                     <select class="form-select form-control" formControlName="arrhythmia">
                                         <option *ngIf="! group.value.arrhythmia" value="" selected>Choose Arrhythmia
                                         </option>
-                                        <option *ngIf="group.value.arrhythmia" [ngValue]="group.value.arrhythmia.name" selected> {{group.value.arrhythmia.name}}
+                                        <option *ngIf="group.value.arrhythmia" [ngValue]="group.value.arrhythmia" selected> {{group.value.arrhythmia}}
                                         </option>
                                         <option *ngFor="let arr of arrhythmias" [ngValue]="arr">
                                             {{ arr.name }}
