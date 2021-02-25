@@ -15,7 +15,6 @@ import { PathologyI } from "@models/pathologyI";
 import { MedicationI } from "@models/medicationI";
 import { ArrhythmiaI } from "@models/arrhythmiaI";
 import { AnimalSpeciesI } from "@models/animal-speciesI";
-import { ScenarioI } from "@models/scenarioI";
 import { BaseComponent } from "@app/shared/components/base.component";
 import {
     AbstractControl,
@@ -178,9 +177,15 @@ export class PanelComponent extends BaseComponent implements OnInit {
 
     public async onSaveChanges() {
         // this.setSubmitForm(true);
-        let simulationData = this.simulation;
+
         // if (this.formGroup.valid) {
+
+        let simulationData = this.simulation;
+
+        // this.saveScenarioInfo();
+        // this.saveSimulation();
         if (!simulationData) {
+            console.log(this.scenariosSimulation);
             simulationData = {
                 name: this.formGroup.value.simulationName,
                 description: this.formGroup.value.simulationDescription,
@@ -189,9 +194,23 @@ export class PanelComponent extends BaseComponent implements OnInit {
                     name: this.formGroup.value.animalSpecie.name,
                     description: this.formGroup.value.animalSpecie.description,
                 },
+                scenarios: this.scenariosSimulation,
             };
-        }
 
+            this.simulationService.create(simulationData).subscribe(
+                (data: any) => {
+                    console.log(data);
+                },
+                (error: any) => {
+                    console.log(error);
+                }
+            );
+        }
+    }
+
+    private saveSimulation(): void {}
+
+    private saveScenarioInfo(): void {
         const arrhythmias: any[] = [];
         this.formGroup.value.arrhythmias.forEach((arr: any) => {
             arrhythmias.push(arr.arrhythmia);
@@ -202,6 +221,10 @@ export class PanelComponent extends BaseComponent implements OnInit {
         });
 
         if (this.activeScenario) {
+            this.activeScenario.pathologies = pathologies;
+            this.activeScenario.arrhythmias = arrhythmias;
+            this.activeScenario.medications = this.formGroup.value.medications;
+
             this.scenarioService
                 .updateById(this.activeScenario.id_scenario, {
                     name: this.activeScenario.name,
@@ -219,26 +242,6 @@ export class PanelComponent extends BaseComponent implements OnInit {
                     }
                 );
         }
-
-        // this.simulationService.create(this.si)
-        // }
-        // if (this.formGroup.valid) {
-        //     // Save data on simulation table
-
-        //     this.simulationService.create(this.simulation).subscribe(
-        //         (data) => {
-        //             if (data) {
-        //                 this.toast.toastrConfig.timeOut = 1000;
-        //                 this.toast.toastrConfig.positionClass =
-        //                     "toast-bottom-full-width";
-        //                 this.toast.success("Simulation saved sucessfully!");
-        //             }
-        //         },
-        //         (error: any) => {
-        //             console.log(error);
-        //         }
-        //     );
-        // }
     }
 
     addRowMedication(medication: any = null): void {
@@ -388,9 +391,5 @@ export class PanelComponent extends BaseComponent implements OnInit {
 
     trackByFnPathologies(index: number, name: PathologyI): number {
         return name.id_pat;
-    }
-
-    trackByFnScenarios(index: number, name: ScenarioI): number {
-        return name.id_scenario;
     }
 }
