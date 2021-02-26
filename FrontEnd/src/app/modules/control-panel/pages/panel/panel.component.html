@@ -31,8 +31,9 @@
             <div class="col-md-3">
                 <label for="animalSpecies" class="form-label">Animal Specie</label>
                 <select class="form-select form-control" id="animalSpecie" formControlName="animalSpecie">
-                    <option selected value="">Choose Animal Specie</option>
+                    <option *ngIf="!formGroup.value.animalSpecie" value="" disabled selected >Choose Animal Specie</option>
                     <ng-template [ngIf]="animalSpecies.length > 0">
+                        <option *ngIf="formGroup.value.animalSpecie" [ngValue]="formGroup.value.animalSpecie">{{formGroup.value.animalSpecie.name}}</option>
                         <option [ngValue]="animalS" *ngFor="let animalS of animalSpecies" >
                             {{ animalS.name }}
                         </option>
@@ -103,7 +104,7 @@
                                     <select class="form-select form-control" formControlName="medication">
                                         <option *ngIf="! group.value.medication" value="" selected>Choose Medication
                                         </option>
-                                        <option *ngIf=" group.value.medication " [ngValue]="group.value.medication" selected> {{group.value.medication}}
+                                        <option *ngIf=" group.value.medication " [ngValue]="group.value.medication" selected> {{group.value.medication.name}}
                                         </option>
                                         <option *ngFor="let medication of medications" [ngValue]="medication">
                                             {{ medication.name }}

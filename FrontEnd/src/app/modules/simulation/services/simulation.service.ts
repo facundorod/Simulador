@@ -46,4 +46,24 @@ export class SimulationService {
 
         return subject.asObservable();
     }
+
+    public updateById(id: number, simulationData: any) {
+        const subject = new Subject<any>();
+
+        const endpoint = environment.api.simulations + id;
+
+        this.api.httpPost(endpoint, simulationData).subscribe(
+            (simulation) => {
+                subject.next(simulation);
+            },
+            (error: any) => {
+                subject.error(error);
+            },
+            () => {
+                subject.complete();
+            }
+        );
+
+        return subject.asObservable();
+    }
 }

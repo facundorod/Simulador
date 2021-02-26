@@ -162,9 +162,9 @@ export class PanelComponent extends BaseComponent implements OnInit {
                 this.activeScenario ? this.activeScenario.id_scenario : "",
             ],
             animalSpecie: [this.animalSpecie ? this.animalSpecie : null],
-            temp: ["", Validators.required],
-            cardiacCycle: ["", Validators.required],
-            respirationRate: ["", Validators.required],
+            temp: [""], //Validators.required],
+            cardiacCycle: [""], //Validators.required],
+            respirationRate: [""], //Validators.required],
             arrhythmias: this.fb.array([]),
             pathologies: this.fb.array([]),
             medications: this.fb.array([]),
@@ -176,39 +176,39 @@ export class PanelComponent extends BaseComponent implements OnInit {
     }
 
     public async onSaveChanges() {
-        // this.setSubmitForm(true);
-
-        // if (this.formGroup.valid) {
-
-        let simulationData = this.simulation;
-
-        // this.saveScenarioInfo();
-        // this.saveSimulation();
-        if (!simulationData) {
-            console.log(this.scenariosSimulation);
-            simulationData = {
-                name: this.formGroup.value.simulationName,
-                description: this.formGroup.value.simulationDescription,
-                animalSpecie: {
-                    id_as: this.formGroup.value.animalSpecie.id_as,
-                    name: this.formGroup.value.animalSpecie.name,
-                    description: this.formGroup.value.animalSpecie.description,
-                },
-                scenarios: this.scenariosSimulation,
-            };
-
-            this.simulationService.create(simulationData).subscribe(
-                (data: any) => {
-                    console.log(data);
-                },
-                (error: any) => {
-                    console.log(error);
-                }
-            );
+        this.submitForm = true;
+        if (this.formGroup.valid) {
+            this.saveScenarioInfo();
         }
     }
 
-    private saveSimulation(): void {}
+    private saveSimulation(): void {
+        const simulationData = {
+            name: this.formGroup.value.simulationName,
+            description: this.formGroup.value.simulationDescription,
+            animalSpecie: {
+                id_as: this.formGroup.value.animalSpecie.id_as,
+                name: this.formGroup.value.animalSpecie.name,
+                description: this.formGroup.value.animalSpecie.description,
+            },
+            scenarios: this.scenariosSimulation,
+        };
+
+        this.simulationService.create(simulationData).subscribe(
+            (data: any) => {
+                this.toast.toastrConfig.timeOut = 1000;
+                this.toast.toastrConfig.positionClass = "toast-bottom-left";
+                this.toast.toastrConfig.closeButton = true;
+                this.toast.success("Simulation saved!");
+            },
+            (error: any) => {
+                this.toast.toastrConfig.timeOut = 1000;
+                this.toast.toastrConfig.positionClass = "toast-bottom-left";
+                this.toast.toastrConfig.closeButton = true;
+                this.toast.error("Error saving scenarios");
+            }
+        );
+    }
 
     private saveScenarioInfo(): void {
         const arrhythmias: any[] = [];
@@ -219,7 +219,7 @@ export class PanelComponent extends BaseComponent implements OnInit {
         this.formGroup.value.pathologies.forEach((pat: any) => {
             pathologies.push(pat.pathology);
         });
-
+        console.log("Values", this.formGroup.value);
         if (this.activeScenario) {
             this.activeScenario.pathologies = pathologies;
             this.activeScenario.arrhythmias = arrhythmias;
@@ -234,11 +234,15 @@ export class PanelComponent extends BaseComponent implements OnInit {
                     pathologies: pathologies,
                 })
                 .subscribe(
-                    (data) => {
-                        console.log("Scenario Saved", data);
+                    () => {
+                        this.saveSimulation();
                     },
                     (error: any) => {
-                        console.log(error);
+                        this.toast.toastrConfig.timeOut = 1000;
+                        this.toast.toastrConfig.positionClass =
+                            "toast-bottom-left";
+                        this.toast.toastrConfig.closeButton = true;
+                        this.toast.error("Error saving scenarios");
                     }
                 );
         }
@@ -348,7 +352,7 @@ export class PanelComponent extends BaseComponent implements OnInit {
                     this.addRowMedication({
                         dose: med.dose,
                         unit: med.unit,
-                        medication: med.medication ? med.medication.name : null,
+                        medication: med.medication ? med.medication : null,
                     });
             });
         }
