@@ -32,16 +32,7 @@ export class ScenariosComponent extends BaseComponent implements OnInit {
         this.loadData();
     }
 
-    loadData() {
-        this.scenariosService.list().subscribe(
-            (data: any) => {
-                this.scenarios = data.data;
-            },
-            (error: any) => {
-                console.log(error);
-            }
-        );
-    }
+    loadData() {}
 
     onAddScenario(): void {
         const modal = this.modal.open(ScenariosCreateComponent);
@@ -71,8 +62,7 @@ export class ScenariosComponent extends BaseComponent implements OnInit {
 
     onLoadScenarios(): void {
         const modal = this.modal.open(ScenariosModalComponent);
-        this.loadData();
-        modal.componentInstance.setScenarios(this.scenarios);
+
         modal.result.then(
             (data: any) => {
                 if (data) {

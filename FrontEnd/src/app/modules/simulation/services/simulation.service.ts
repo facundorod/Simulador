@@ -52,9 +52,29 @@ export class SimulationService {
 
         const endpoint = environment.api.simulations + id;
 
-        this.api.httpPost(endpoint, simulationData).subscribe(
+        this.api.httpPut(endpoint, simulationData).subscribe(
             (simulation) => {
                 subject.next(simulation);
+            },
+            (error: any) => {
+                subject.error(error);
+            },
+            () => {
+                subject.complete();
+            }
+        );
+
+        return subject.asObservable();
+    }
+
+    public getSimulationsByScenario(id: number) {
+        const subject = new Subject<any>();
+
+        const endpoint = environment.api.simulations + `/scenarios/` + id;
+
+        this.api.httpGet(endpoint).subscribe(
+            (simulations: any) => {
+                subject.next(simulations);
             },
             (error: any) => {
                 subject.error(error);

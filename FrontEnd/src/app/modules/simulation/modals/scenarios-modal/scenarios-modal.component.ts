@@ -11,9 +11,13 @@ import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
     styleUrls: ["./scenarios-modal.component.css"],
 })
 export class ScenariosModalComponent extends BaseComponent implements OnInit {
-    scenarios: any[];
+    scenarios: any[] = [];
 
-    constructor(private activeModal: NgbActiveModal, private fb: FormBuilder) {
+    constructor(
+        private activeModal: NgbActiveModal,
+        private fb: FormBuilder,
+        private scenariosService: ScenarioService
+    ) {
         super();
     }
 
@@ -21,8 +25,17 @@ export class ScenariosModalComponent extends BaseComponent implements OnInit {
         this.initFormGroup();
     }
 
-    public setScenarios(scenarios: any[]) {
-        this.scenarios = scenarios;
+    async loadData(): Promise<any> {
+        return new Promise((resolve, reject) => {
+            this.scenariosService.list().subscribe(
+                (data: any) => {
+                    resolve(data);
+                },
+                (error: any) => {
+                    reject(error);
+                }
+            );
+        });
     }
 
     onCancel() {
@@ -47,16 +60,26 @@ export class ScenariosModalComponent extends BaseComponent implements OnInit {
         this.formGroup = this.fb.group({
             scenarioSelected: this.fb.array([]),
         });
-
-        if (this.scenarios) {
-            this.scenarios.forEach(() => {
-                (<FormArray>this.formGroup.get("scenarioSelected")).push(
-                    this.fb.group({
-                        value: [false],
-                    })
-                );
+        this.loadData()
+            .then((data) => {
+                if (data) {
+                    this.scenarios = data.data;
+                    if (this.scenarios) {
+                        this.scenarios.forEach(() => {
+                            (<FormArray>(
+                                this.formGroup.get("scenarioSelected")
+                            )).push(
+                                this.fb.group({
+                                    value: [false],
+                                })
+                            );
+                        });
+                    }
+                }
+            })
+            .catch((error: any) => {
+                console.log(error);
             });
-        }
     }
 
     public containsTrue(): boolean {

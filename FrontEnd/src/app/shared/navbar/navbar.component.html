@@ -82,14 +82,22 @@
                 <a class="nav-link" [routerLink]="['/panel/arrhythmias']">  <img
                     src="https://img.icons8.com/color/28/000000/pulse.png" /> Arrhythmias </a>
             </li>
-            <section class="container">
 
-                <a class="nav-link" [routerLink]="['/panel']">
-                    <h4 class="font-weight-bold text-align-center"> My Profile </h4>
-                </a>
+            <li class="nav-item">
 
-            </section>
+                <a class="nav-linl" [routerLink]="['/auth/logout']"> Logout</a>
+            </li>
+
         </ul>
+
+        <section class="container sub-header">
+
+            <a class="nav-link" [routerLink]="['/panel']">
+                <h4 class="font-weight-bold text-align-center"> My Profile </h4>
+            </a>
+
+        </section>
+
 
         <br>
 

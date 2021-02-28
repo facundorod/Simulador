@@ -31,6 +31,7 @@ import {
 })
 export class PanelComponent extends BaseComponent implements OnInit {
     activeScenario: any = {};
+    simulationsNumber: number = 0; // Number of simulations that the scenario has.
     scenarios: any[] = [];
     scenariosSimulation: any[] = [];
     animalSpecies: any[] = []; // Animal Species to populate the dropdown
@@ -161,7 +162,7 @@ export class PanelComponent extends BaseComponent implements OnInit {
             scenarioId: [
                 this.activeScenario ? this.activeScenario.id_scenario : "",
             ],
-            animalSpecie: [this.animalSpecie ? this.animalSpecie : null],
+            animalSpecie: [this.animalSpecie ? this.animalSpecie : ""],
             temp: [""], //Validators.required],
             cardiacCycle: [""], //Validators.required],
             respirationRate: [""], //Validators.required],
@@ -178,7 +179,11 @@ export class PanelComponent extends BaseComponent implements OnInit {
     public async onSaveChanges() {
         this.submitForm = true;
         if (this.formGroup.valid) {
-            this.saveScenarioInfo();
+            if (this.simulationsNumber > 1) {
+                console.log("Override");
+            } else {
+                this.saveScenarioInfo();
+            }
         }
     }
 
@@ -194,20 +199,45 @@ export class PanelComponent extends BaseComponent implements OnInit {
             scenarios: this.scenariosSimulation,
         };
 
-        this.simulationService.create(simulationData).subscribe(
-            (data: any) => {
-                this.toast.toastrConfig.timeOut = 1000;
-                this.toast.toastrConfig.positionClass = "toast-bottom-left";
-                this.toast.toastrConfig.closeButton = true;
-                this.toast.success("Simulation saved!");
-            },
-            (error: any) => {
-                this.toast.toastrConfig.timeOut = 1000;
-                this.toast.toastrConfig.positionClass = "toast-bottom-left";
-                this.toast.toastrConfig.closeButton = true;
-                this.toast.error("Error saving scenarios");
-            }
-        );
+        // Create simulation
+        if (!this.simulation) {
+            this.simulationService.create(simulationData).subscribe(
+                (data: any) => {
+                    this.toast.toastrConfig.timeOut = 1000;
+                    this.toast.toastrConfig.positionClass = "toast-bottom-left";
+                    this.toast.toastrConfig.closeButton = true;
+                    this.toast.success("Simulation saved!");
+                    this.simulation = simulationData;
+                    this.simulation.id_simulation = data.id_simulation;
+                },
+                (error: any) => {
+                    this.toast.toastrConfig.timeOut = 1000;
+                    this.toast.toastrConfig.positionClass = "toast-bottom-left";
+                    this.toast.toastrConfig.closeButton = true;
+                    this.toast.error("Error saving simulation");
+                }
+            );
+        } else {
+            // Edit simulation
+            this.simulationService
+                .updateById(this.simulation.id_simulation, simulationData)
+                .subscribe(
+                    () => {
+                        this.toast.toastrConfig.timeOut = 1000;
+                        this.toast.toastrConfig.positionClass =
+                            "toast-bottom-left";
+                        this.toast.toastrConfig.closeButton = true;
+                        this.toast.success("Simulation saved!");
+                    },
+                    (error: any) => {
+                        this.toast.toastrConfig.timeOut = 1000;
+                        this.toast.toastrConfig.positionClass =
+                            "toast-bottom-left";
+                        this.toast.toastrConfig.closeButton = true;
+                        this.toast.error("Error saving simulation");
+                    }
+                );
+        }
     }
 
     private saveScenarioInfo(): void {
@@ -215,16 +245,16 @@ export class PanelComponent extends BaseComponent implements OnInit {
         this.formGroup.value.arrhythmias.forEach((arr: any) => {
             arrhythmias.push(arr.arrhythmia);
         });
+
         const pathologies: any[] = [];
         this.formGroup.value.pathologies.forEach((pat: any) => {
             pathologies.push(pat.pathology);
         });
-        console.log("Values", this.formGroup.value);
+
         if (this.activeScenario) {
             this.activeScenario.pathologies = pathologies;
             this.activeScenario.arrhythmias = arrhythmias;
             this.activeScenario.medications = this.formGroup.value.medications;
-
             this.scenarioService
                 .updateById(this.activeScenario.id_scenario, {
                     name: this.activeScenario.name,
@@ -304,20 +334,19 @@ export class PanelComponent extends BaseComponent implements OnInit {
 
     private initiatePathologyForm(pathology: any = null): AbstractControl {
         return this.fb.group({
-            pathology: [pathology ? pathology.name : ""],
+            pathology: [pathology ? pathology : ""],
         });
     }
 
     private initiateArrhythmiaForm(arrhythmia: any = null): AbstractControl {
         return this.fb.group({
-            arrhythmia: [arrhythmia ? arrhythmia.name : ""],
+            arrhythmia: [arrhythmia ? arrhythmia : ""],
         });
     }
 
     private loadInfoScenario(scenarios: any[]): void {
         this.scenariosSimulation = scenarios;
         this.activeScenario = this.scenariosSimulation[this.indexActive];
-
         if (this.activeScenario && this.activeScenario.arrhythmias) {
             this.arrhythmiasScenario = this.activeScenario.arrhythmias;
         } else {
@@ -335,6 +364,17 @@ export class PanelComponent extends BaseComponent implements OnInit {
         } else {
             this.pathologiesScenario = [];
         }
+
+        this.simulationService
+            .getSimulationsByScenario(this.indexActive)
+            .subscribe(
+                (data) => {
+                    this.simulationsNumber = data.total;
+                },
+                (error: any) => {
+                    console.log(error);
+                }
+            );
     }
 
     private setArrhythmias(): void {

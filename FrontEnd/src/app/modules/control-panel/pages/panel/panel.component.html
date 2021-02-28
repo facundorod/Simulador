@@ -31,9 +31,10 @@
             <div class="col-md-3">
                 <label for="animalSpecies" class="form-label">Animal Specie</label>
                 <select class="form-select form-control" id="animalSpecie" formControlName="animalSpecie">
-                    <option *ngIf="!formGroup.value.animalSpecie" value="" disabled selected >Choose Animal Specie</option>
+
                     <ng-template [ngIf]="animalSpecies.length > 0">
-                        <option *ngIf="formGroup.value.animalSpecie" [ngValue]="formGroup.value.animalSpecie">{{formGroup.value.animalSpecie.name}}</option>
+                        <option *ngIf="!formGroup.value.animalSpecie?.name" value="" selected>Choose Animal Specie</option>
+                        <option *ngIf="formGroup.value.animalSpecie?.name" [ngValue]="formGroup.value.animalSpecie">{{formGroup.value.animalSpecie.name}}</option>
                         <option [ngValue]="animalS" *ngFor="let animalS of animalSpecies" >
                             {{ animalS.name }}
                         </option>
@@ -165,7 +166,7 @@
                                     <select class="form-select form-control" formControlName="pathology">
                                         <option *ngIf="! group.value.pathology" value="" selected>Choose Pathology
                                         </option>
-                                        <option *ngIf="group.value.pathology" [ngValue]="group.value.pathology" selected> {{group.value.pathology}}
+                                        <option *ngIf="group.value.pathology" [ngValue]="group.value.pathology" selected> {{group.value.pathology.name}}
                                         </option>
                                         <option *ngFor="let pat of pathologies" [ngValue]="pat">
                                             {{ pat.name }}
@@ -218,7 +219,7 @@
                                     <select class="form-select form-control" formControlName="arrhythmia">
                                         <option *ngIf="! group.value.arrhythmia" value="" selected>Choose Arrhythmia
                                         </option>
-                                        <option *ngIf="group.value.arrhythmia" [ngValue]="group.value.arrhythmia" selected> {{group.value.arrhythmia}}
+                                        <option *ngIf="group.value.arrhythmia" [ngValue]="group.value.arrhythmia" selected> {{group.value.arrhythmia.name}}
                                         </option>
                                         <option *ngFor="let arr of arrhythmias" [ngValue]="arr">
                                             {{ arr.name }}
