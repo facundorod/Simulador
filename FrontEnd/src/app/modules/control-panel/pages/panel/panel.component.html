@@ -6,7 +6,10 @@
 <div class="panel-header">
     <div class="visualizationHeader">
         <h3 class="textSimulation"><em>Visualization Area and Simulation Edition</em></h3>
-        <button type="submit" class="btn btn-primary col-md-3 saveChanges" (click)="onSaveChanges()">Save
+        <button type="submit" *ngIf="formGroup.valid" class="btn btn-primary col-md-3 saveChanges" (click)="onSaveChanges()">Save
+            changes</button>
+        <button type="submit" *ngIf="!formGroup.valid" class="btn btn-primary col-md-3 saveChanges"
+            (click)="onSaveChanges()" disabled>Save
             changes</button>
         <!-- <p class="textScenario"><em>Visualization Area and Scenario Edition</em></p> -->
     </div>

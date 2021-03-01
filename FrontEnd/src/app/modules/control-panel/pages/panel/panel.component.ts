@@ -23,6 +23,7 @@ import {
     FormControl,
     Validators,
 } from "@angular/forms";
+import { ConfirmModalComponent } from "@app/shared/modals/confirm/confirm-modal.component";
 
 @Component({
     selector: "app-panel",
@@ -45,7 +46,10 @@ export class PanelComponent extends BaseComponent implements OnInit {
     simulation: any = {};
     indexActive: number = 0;
     indexSimulationActive: number = 0;
-
+    private physiologicalParameters: any = {};
+    private tempValue: number;
+    private cardiacCycleValue: number;
+    private repRateValue: number;
     public order = {
         orderBy: "name",
         order: "asc",
@@ -163,9 +167,15 @@ export class PanelComponent extends BaseComponent implements OnInit {
                 this.activeScenario ? this.activeScenario.id_scenario : "",
             ],
             animalSpecie: [this.animalSpecie ? this.animalSpecie : ""],
-            temp: [""], //Validators.required],
-            cardiacCycle: [""], //Validators.required],
-            respirationRate: [""], //Validators.required],
+            temp: [this.tempValue ? this.tempValue : 0, Validators.required],
+            cardiacCycle: [
+                this.cardiacCycleValue ? this.cardiacCycleValue : 0,
+                Validators.required,
+            ],
+            respirationRate: [
+                this.repRateValue ? this.repRateValue : 0,
+                Validators.required,
+            ],
             arrhythmias: this.fb.array([]),
             pathologies: this.fb.array([]),
             medications: this.fb.array([]),
@@ -180,7 +190,22 @@ export class PanelComponent extends BaseComponent implements OnInit {
         this.submitForm = true;
         if (this.formGroup.valid) {
             if (this.simulationsNumber > 1) {
-                console.log("Override");
+                const modal = this.modal.open(ConfirmModalComponent);
+                modal.componentInstance.setTitle(
+                    `The scenario ${this.activeScenario.name} is involved in another simulation.`
+                );
+                modal.componentInstance.setContent("Do you want to overwrite?");
+
+                modal.result.then(
+                    (result) => {
+                        if (result) {
+                            this.saveScenarioInfo();
+                        }
+                    },
+                    (error: any) => {
+                        console.log(error);
+                    }
+                );
             } else {
                 this.saveScenarioInfo();
             }
@@ -347,6 +372,7 @@ export class PanelComponent extends BaseComponent implements OnInit {
     private loadInfoScenario(scenarios: any[]): void {
         this.scenariosSimulation = scenarios;
         this.activeScenario = this.scenariosSimulation[this.indexActive];
+
         if (this.activeScenario && this.activeScenario.arrhythmias) {
             this.arrhythmiasScenario = this.activeScenario.arrhythmias;
         } else {
