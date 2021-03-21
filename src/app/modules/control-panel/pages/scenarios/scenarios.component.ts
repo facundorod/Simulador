@@ -5,6 +5,9 @@ import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import { ScenariosModalComponent } from "@app/modules/simulation/modals/scenarios-modal/scenarios-modal.component";
 import { ArrayJsonPipe } from "../../../../shared/pipes/array-json.pipe";
 import { ScenariosCreateComponent } from "../../modals/scenarios-create/scenarios-create.component";
+import { MedicationsService } from "../../services/medications.service";
+import { PathologiesService } from "../../services/pathologies.service";
+import { ArrhythmiasService } from "../../services/arrhythmias.service";
 @Component({
     selector: "app-scenarios",
     templateUrl: "./scenarios.component.html",
@@ -18,10 +21,19 @@ export class ScenariosComponent extends BaseComponent implements OnInit {
     protected scenarios: any[];
     protected indexScenarioActive: number;
     protected indexScenarioEdit: number;
+    protected arrhythmias: any[] = []; // Arrhythmias to populate the dropdown
+    protected arrhythmiasScenario: any[] = []; // Arrhythmias from scenario
+    protected pathologies: any[] = [];
+    protected pathologiesScenario: any[] = []; // Pathologies from scenario
+    protected medications: any[] = [];
+    protected medicationsScenario: any[] = [];
 
     constructor(
         private scenariosService: ScenarioService,
-        private modal: NgbModal
+        private modal: NgbModal,
+        private medicationService: MedicationsService,
+        private pathologyService: PathologiesService,
+        private arrhythmiasService: ArrhythmiasService,
     ) {
         super();
         this.indexScenarioActive = 0;
@@ -32,7 +44,35 @@ export class ScenariosComponent extends BaseComponent implements OnInit {
         this.loadData();
     }
 
-    loadData() {}
+    loadData() {
+
+         this.arrhythmiasService.list().subscribe(
+            (arrhythmias: any) => {
+                this.arrhythmias = arrhythmias.data;
+            },
+            (error: any) => {
+                console.log(error);
+            }
+        );
+
+        this.pathologyService.list().subscribe(
+            (pathologies: any) => {
+                this.pathologies = pathologies.data;
+            },
+            (error: any) => {
+                console.log(error);
+            }
+        );
+
+        this.medicationService.list().subscribe(
+            (medications: any) => {
+                this.medications = medications.data;
+            },
+            (error: any) => {
+                console.log(error);
+            }
+        );
+    }
 
     onAddScenario(): void {
         const modal = this.modal.open(ScenariosCreateComponent);
