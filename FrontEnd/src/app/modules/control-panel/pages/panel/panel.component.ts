@@ -32,7 +32,7 @@ import { ConfirmModalComponent } from "@app/shared/modals/confirm/confirm-modal.
 })
 export class PanelComponent extends BaseComponent implements OnInit {
     activeScenario: any = {};
-    simulationsNumber: number = 0; // Number of simulations that the scenario has.
+    simulationsNumber: number = 0; // Number of simulation's scenario.
     scenarios: any[] = [];
     scenariosSimulation: any[] = [];
     animalSpecies: any[] = []; // Animal Species to populate the dropdown
@@ -76,6 +76,9 @@ export class PanelComponent extends BaseComponent implements OnInit {
         this.initFormGroup();
     }
 
+    /**
+     * Load all data necesary for forms
+     */
     private loadData() {
         this.simulation = JSON.parse(localStorage.getItem("Simulation"));
 
@@ -148,6 +151,9 @@ export class PanelComponent extends BaseComponent implements OnInit {
         this.setLoading(false);
     }
 
+    /**
+     * Initialize the reactive form
+     */
     private initFormGroup() {
         this.setSubmitForm(false);
         this.formGroup = this.fb.group({
@@ -186,6 +192,9 @@ export class PanelComponent extends BaseComponent implements OnInit {
         this.setPathologies();
     }
 
+    /**
+     * Save scenario and simulations according to form data
+     */
     public async onSaveChanges() {
         this.submitForm = true;
         if (this.formGroup.valid) {
@@ -212,6 +221,9 @@ export class PanelComponent extends BaseComponent implements OnInit {
         }
     }
 
+    /**
+     * Save simulation
+     */
     private saveSimulation(): void {
         const simulationData = {
             name: this.formGroup.value.simulationName,
@@ -369,6 +381,10 @@ export class PanelComponent extends BaseComponent implements OnInit {
         });
     }
 
+    /**
+     * Load information from scenarios selected.
+     * @param scenarios - Scenarios selected
+     */
     private loadInfoScenario(scenarios: any[]): void {
         this.scenariosSimulation = scenarios;
         this.activeScenario = this.scenariosSimulation[this.indexActive];
@@ -390,9 +406,10 @@ export class PanelComponent extends BaseComponent implements OnInit {
         } else {
             this.pathologiesScenario = [];
         }
-
         this.simulationService
-            .getSimulationsByScenario(this.indexActive)
+            .getSimulationsByScenario(
+                this.scenariosSimulation[this.indexActive].id_scenario
+            )
             .subscribe(
                 (data) => {
                     this.simulationsNumber = data.total;

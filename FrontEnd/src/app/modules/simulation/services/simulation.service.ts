@@ -70,7 +70,7 @@ export class SimulationService {
     public getSimulationsByScenario(id: number) {
         const subject = new Subject<any>();
 
-        const endpoint = environment.api.simulations + `/scenarios/` + id;
+        const endpoint = environment.api.simulations + `scenarios/` + id;
 
         this.api.httpGet(endpoint).subscribe(
             (simulations: any) => {
