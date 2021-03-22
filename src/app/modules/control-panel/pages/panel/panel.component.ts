@@ -61,9 +61,6 @@ export class PanelComponent extends BaseComponent implements OnInit {
         private fb: FormBuilder,
         private modal: NgbModal,
         private toast: ToastrService,
-        private medicationService: MedicationsService,
-        private pathologyService: PathologiesService,
-        private arrhythmiasService: ArrhythmiasService,
         private simulationService: SimulationService
     ) {
         super();
@@ -85,33 +82,6 @@ export class PanelComponent extends BaseComponent implements OnInit {
         this.scenarioService.list(null, null).subscribe(
             (scenarios) => {
                 this.scenarios = scenarios.data;
-            },
-            (error: any) => {
-                console.log(error);
-            }
-        );
-
-        this.arrhythmiasService.list().subscribe(
-            (arrhythmias: any) => {
-                this.arrhythmias = arrhythmias.data;
-            },
-            (error: any) => {
-                console.log(error);
-            }
-        );
-
-        this.pathologyService.list().subscribe(
-            (pathologies: any) => {
-                this.pathologies = pathologies.data;
-            },
-            (error: any) => {
-                console.log(error);
-            }
-        );
-
-        this.medicationService.list().subscribe(
-            (medications: any) => {
-                this.medications = medications.data;
             },
             (error: any) => {
                 console.log(error);
@@ -142,7 +112,7 @@ export class PanelComponent extends BaseComponent implements OnInit {
         // Edit simulation
         else {
             if (this.simulation.scenarios) {
-                this.loadInfoScenario(this.simulation.scenarios);
+                this.scenariosSimulation = this.simulation.scenarios;
             }
             if (this.simulation.animalSpecie)
                 this.animalSpecie = this.simulation.animalSpecie;
@@ -165,31 +135,8 @@ export class PanelComponent extends BaseComponent implements OnInit {
                 this.simulation ? this.simulation.description : "",
                 Validators.required,
             ],
-            scenarioName: [
-                this.activeScenario ? this.activeScenario.name : "",
-                Validators.required,
-            ],
-            scenarioId: [
-                this.activeScenario ? this.activeScenario.id_scenario : "",
-            ],
             animalSpecie: [this.animalSpecie ? this.animalSpecie : ""],
-            temp: [this.tempValue ? this.tempValue : 0, Validators.required],
-            cardiacCycle: [
-                this.cardiacCycleValue ? this.cardiacCycleValue : 0,
-                Validators.required,
-            ],
-            respirationRate: [
-                this.repRateValue ? this.repRateValue : 0,
-                Validators.required,
-            ],
-            arrhythmias: this.fb.array([]),
-            pathologies: this.fb.array([]),
-            medications: this.fb.array([]),
         });
-
-        this.setArrhythmias();
-        this.setMedications();
-        this.setPathologies();
     }
 
     /**
@@ -197,28 +144,7 @@ export class PanelComponent extends BaseComponent implements OnInit {
      */
     public async onSaveChanges() {
         this.submitForm = true;
-        if (this.formGroup.valid) {
-            if (this.simulationsNumber > 1) {
-                const modal = this.modal.open(ConfirmModalComponent);
-                modal.componentInstance.setTitle(
-                    `The scenario ${this.activeScenario.name} is involved in another simulation.`
-                );
-                modal.componentInstance.setContent("Do you want to overwrite?");
-
-                modal.result.then(
-                    (result) => {
-                        if (result) {
-                            this.saveScenarioInfo();
-                        }
-                    },
-                    (error: any) => {
-                        console.log(error);
-                    }
-                );
-            } else {
-                this.saveScenarioInfo();
-            }
-        }
+        this.saveSimulation();
     }
 
     /**
@@ -277,181 +203,9 @@ export class PanelComponent extends BaseComponent implements OnInit {
         }
     }
 
-    private saveScenarioInfo(): void {
-        const arrhythmias: any[] = [];
-        this.formGroup.value.arrhythmias.forEach((arr: any) => {
-            arrhythmias.push(arr.arrhythmia);
-        });
-
-        const pathologies: any[] = [];
-        this.formGroup.value.pathologies.forEach((pat: any) => {
-            pathologies.push(pat.pathology);
-        });
-
-        if (this.activeScenario) {
-            this.activeScenario.pathologies = pathologies;
-            this.activeScenario.arrhythmias = arrhythmias;
-            this.activeScenario.medications = this.formGroup.value.medications;
-            this.scenarioService
-                .updateById(this.activeScenario.id_scenario, {
-                    name: this.activeScenario.name,
-                    description: this.activeScenario.description,
-                    arrhythmias: arrhythmias,
-                    medications: this.formGroup.value.medications,
-                    pathologies: pathologies,
-                })
-                .subscribe(
-                    () => {
-                        this.saveSimulation();
-                    },
-                    (error: any) => {
-                        this.toast.toastrConfig.timeOut = 1000;
-                        this.toast.toastrConfig.positionClass =
-                            "toast-bottom-left";
-                        this.toast.toastrConfig.closeButton = true;
-                        this.toast.error("Error saving scenarios");
-                    }
-                );
-        }
-    }
-
-    addRowMedication(medication: any = null): void {
-        const control = this.formGroup.get("medications") as FormArray;
-        if (medication) control.push(this.initiateMedicationForm(medication));
-        else control.push(this.initiateMedicationForm());
-    }
-
-    addRowPathology(pathology: any = null): void {
-        const control = this.formGroup.get("pathologies") as FormArray;
-        if (pathology) control.push(this.initiatePathologyForm(pathology));
-        else control.push(this.initiatePathologyForm());
-    }
-
-    addRowArrhythmia(arrhythmia: any = null): void {
-        const control = this.formGroup.get("arrhythmias") as FormArray;
-        if (arrhythmia) {
-            control.push(this.initiateArrhythmiaForm(arrhythmia));
-        } else control.push(this.initiateArrhythmiaForm());
-    }
-
-    deleteRowMedication(index: number): void {
-        const control = this.formGroup.get("medications") as FormArray;
-        control.removeAt(index);
-    }
-
-    deleteRowPathology(index: number): void {
-        const control = this.formGroup.get("pathologies") as FormArray;
-        control.removeAt(index);
-    }
-
-    deleteRowArrhythmia(index: number): void {
-        const control = this.formGroup.get("arrhythmias") as FormArray;
-        control.removeAt(index);
-    }
-
-    get getFormControlsMedication() {
-        return this.formGroup.get("medications") as FormArray;
-    }
-
-    get getFormControlsPathologies() {
-        return this.formGroup.get("pathologies") as FormArray;
-    }
-
-    get getFormControlsArrhythmias() {
-        return this.formGroup.get("arrhythmias") as FormArray;
-    }
-
-    private initiateMedicationForm(medication: any = null): AbstractControl {
-        return this.fb.group({
-            medication: [medication ? medication.medication : ""],
-            dose: [medication ? medication.dose : ""],
-            unit: [medication ? medication.unit : ""],
-        });
-    }
-
-    private initiatePathologyForm(pathology: any = null): AbstractControl {
-        return this.fb.group({
-            pathology: [pathology ? pathology : ""],
-        });
-    }
-
-    private initiateArrhythmiaForm(arrhythmia: any = null): AbstractControl {
-        return this.fb.group({
-            arrhythmia: [arrhythmia ? arrhythmia : ""],
-        });
-    }
-
-    /**
-     * Load information from scenarios selected.
-     * @param scenarios - Scenarios selected
-     */
-    private loadInfoScenario(scenarios: any[]): void {
+    getScenarios(scenarios: any): void {
         this.scenariosSimulation = scenarios;
         this.activeScenario = this.scenariosSimulation[this.indexActive];
-
-        if (this.activeScenario && this.activeScenario.arrhythmias) {
-            this.arrhythmiasScenario = this.activeScenario.arrhythmias;
-        } else {
-            this.arrhythmiasScenario = [];
-        }
-
-        if (this.activeScenario && this.activeScenario.medications) {
-            this.medicationsScenario = this.activeScenario.medications;
-        } else {
-            this.medicationsScenario = [];
-        }
-
-        if (this.activeScenario && this.activeScenario.pathologies) {
-            this.pathologiesScenario = this.activeScenario.pathologies;
-        } else {
-            this.pathologiesScenario = [];
-        }
-        this.simulationService
-            .getSimulationsByScenario(
-                this.scenariosSimulation[this.indexActive].id_scenario
-            )
-            .subscribe(
-                (data) => {
-                    this.simulationsNumber = data.total;
-                },
-                (error: any) => {
-                    console.log(error);
-                }
-            );
-    }
-
-    private setArrhythmias(): void {
-        if (this.arrhythmiasScenario.length > 0) {
-            this.arrhythmiasScenario.forEach((arr) => {
-                this.addRowArrhythmia(arr);
-            });
-        }
-    }
-
-    private setMedications(): void {
-        if (this.medicationsScenario.length > 0) {
-            this.medicationsScenario.forEach((med) => {
-                if (med.medication !== null)
-                    this.addRowMedication({
-                        dose: med.dose,
-                        unit: med.unit,
-                        medication: med.medication ? med.medication : null,
-                    });
-            });
-        }
-    }
-
-    private setPathologies(): void {
-        if (this.pathologiesScenario.length > 0) {
-            this.pathologiesScenario.forEach((pat) => {
-                this.addRowPathology(pat);
-            });
-        }
-    }
-
-    getScenarios(scenarios: any): void {
-        this.loadInfoScenario(scenarios);
-        this.initFormGroup();
     }
 
     getPosScenarios(pos: any): void {

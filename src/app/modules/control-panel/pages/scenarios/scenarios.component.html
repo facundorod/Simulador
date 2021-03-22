@@ -7,6 +7,12 @@
             <button class="btn btn-link" (click)="onAddScenario()"> New Scenario </button>
 
             <button class="btn btn-link" (click)="onLoadScenarios()"> Load Scenarios </button>
+            <button type="submit" *ngIf="formGroup.valid" class="btn btn-primary col-lg-3 saveChanges"
+                (click)="onSaveChanges()">Save
+                changes</button>
+            <button type="submit" *ngIf="!formGroup.valid" class="btn btn-primary col-lg-3 saveChanges" (click)="onSaveChanges()"
+                disabled>Save
+                changes</button>
         </div>
     </div>
 </div>
@@ -46,18 +52,20 @@
 
     <tbody *ngIf="scenariosSelected && scenariosSelected.length > 0">
         <tr *ngFor="let scenario of scenariosSelected; let i = index">
-            <td scope="row" style="max-width: 100px" >
+            <td scope="row" style="max-width: 100px">
                 <ng-template [ngIf]="isActiveScenario(i)">
                     <i class="fas fa-lightbulb ml-2" style="font-size: large; color: orange"></i>
                 </ng-template>
                 <ng-template [ngIf]="!isActiveScenario(i)">
-                    <i class="fas fa-lightbulb ml-2" (click)="onActiveScenario(i)" style="font-size: large; color: #fff"></i>
+                    <i class="fas fa-lightbulb ml-2" (click)="onActiveScenario(i)"
+                        style="font-size: large; color: #fff"></i>
                 </ng-template>
                 <ng-template [ngIf]="isScenarioEdit(i)">
                     <i class="fas fa-pencil-alt ml-2" style="color: orange; font-size: large;"></i>
                 </ng-template>
                 <ng-template [ngIf]="!isScenarioEdit(i)">
-                    <i class="fas fa-pencil-alt ml-2" (click)="onEditScenario(i)" style="font-size: large; color: #fff"></i>
+                    <i class="fas fa-pencil-alt ml-2" (click)="onEditScenario(i)"
+                        style="font-size: large; color: #fff"></i>
                 </ng-template>
             </td>
             <td scope="row">
@@ -66,7 +74,7 @@
             <td scope="row" style="max-width: 175px;  white-space: initial;">
                 {{scenario?.name}}
             </td>
-            <td scope="row" style="max-width: 175px;  white-space: initial;" >
+            <td scope="row" style="max-width: 175px;  white-space: initial;">
                 {{scenario?.description}}
             </td>
             <td scope="row" style="max-width: 175px;  white-space: initial;">
@@ -94,11 +102,11 @@
                     -
                 </ng-template>
             </td>
-            <td scope="row" >
+            <td scope="row">
                 <!-- <span> -->
-                    <button class="btn btn-trash btn-light" (click)="onDelete(i)">
-                        <i class="fas fa-trash"></i>
-                    </button>
+                <button class="btn btn-trash btn-light" (click)="onDelete(i)">
+                    <i class="fas fa-trash"></i>
+                </button>
                 <!-- </span> -->
             </td>
 
@@ -117,3 +125,200 @@
     </tbody>
     <!-- / No items found -->
 </table>
+
+<form [formGroup]="formGroup">
+
+
+    <!-- Start row -->
+    <div class="row mt-4">
+
+        <!-- Start medications form-->
+        <div class="col-lg-4">
+            <label for="medications" class="form-label">Medications</label>
+            <table class="table table-hover">
+                <thead class="thead-dark">
+                    <tr>
+                        <th scope="col">
+                            Medication
+                        </th>
+                        <th scope="col">
+                            dose
+                        </th>
+                        <th scope="col">
+                            [unit]
+                        </th>
+                        <th scope="col-sm">
+                            <!-- Delete -->
+                        </th>
+                    </tr>
+
+
+                </thead>
+
+                <tbody>
+                    <!-- <ng-template [ngIf]="!getFormControlsMedication.controls">
+                            <tr>
+                                <td colspan="12">
+                                    No medications available
+                                </td>
+                            </tr>
+                        </ng-template> -->
+                    <ng-container formArrayName="medications"
+                        *ngFor="let group of getFormControlsMedication.controls; let i = index">
+
+                        <tr [formGroupName]="i">
+
+                            <td scope="row">
+                                <select class="form-select form-control" formControlName="medication">
+                                    <option *ngIf="! group.value.medication" value="" selected>Choose Medication
+                                    </option>
+                                    <option *ngIf=" group.value.medication " [ngValue]="group.value.medication"
+                                        selected>
+                                        {{group.value.medication.name}}
+                                    </option>
+                                    <option *ngFor="let medication of medications" [ngValue]="medication">
+                                        {{ medication.name }}
+                                    </option>
+                                </select>
+                            </td>
+                            <td scope="row">
+                                <input type="text" class="form-control" formControlName="dose">
+                            </td>
+                            <td scope="row">
+                                <input type="text" class="form-control" formControlName="unit">
+                            </td>
+                            <td scope="row">
+                                <button class="btn btn-trash btn-light" (click)="deleteRowMedication(i)">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+
+                            </td>
+
+                        </tr>
+
+                    </ng-container>
+
+
+                    <button class="btn btn-light mt-2 ml-1" (click)="addRowMedication()">
+                        Add medication
+                    </button>
+                </tbody>
+
+
+            </table>
+        </div>
+        <!-- End medication Form-->
+
+        <!-- Start pathologies form-->
+        <div class="col-lg-4">
+            <label for="pathologies" class="form-label">Pathologies</label>
+            <table class="table table-hover">
+                <thead class="thead-dark">
+                    <tr>
+                        <th scope="col">
+                            Pathology
+                        </th>
+                        <th scope="col-sm">
+                            <!-- Delete -->
+                        </th>
+                    </tr>
+
+
+                </thead>
+
+                <tbody>
+
+                    <ng-container formArrayName="pathologies"
+                        *ngFor="let group of getFormControlsPathologies.controls; let i = index">
+                        <tr [formGroupName]="i">
+                            <td scope="row">
+                                <select class="form-select form-control" formControlName="pathology">
+                                    <option *ngIf="! group.value.pathology" value="" selected>Choose Pathology
+                                    </option>
+                                    <option *ngIf="group.value.pathology" [ngValue]="group.value.pathology" selected>
+                                        {{group.value.pathology.name}}
+                                    </option>
+                                    <option *ngFor="let pat of pathologies" [ngValue]="pat">
+                                        {{ pat.name }}
+                                    </option>
+                                </select>
+                            </td>
+
+                            <td scope="row">
+                                <button class="btn btn-trash btn-light" (click)="deleteRowPathology(i)">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+
+                            </td>
+
+                        </tr>
+
+                    </ng-container>
+
+                    <button class="btn btn-light mt-2 ml-1" (click)="addRowPathology()">
+                        Add Pathology
+                    </button>
+
+                </tbody>
+
+            </table>
+        </div>
+        <!-- End pathologies form-->
+
+        <!-- Start arrhythmias form-->
+        <div class="col-lg-4">
+            <label for="arrhythmias" class="form-label">Arrhythmias</label>
+            <table class="table table-hover">
+                <thead class="thead-dark">
+                    <tr>
+                        <th scope="col">
+                            Arrhythmia
+                        </th>
+                        <th scope="col-sm">
+                            <!-- Delete -->
+                        </th>
+                    </tr>
+
+
+                </thead>
+
+                <tbody>
+
+                    <ng-container formArrayName="arrhythmias"
+                        *ngFor="let group of getFormControlsArrhythmias.controls; let i = index">
+                        <tr [formGroupName]="i">
+                            <td scope="row">
+                                <select class="form-select form-control" formControlName="arrhythmia">
+                                    <option *ngIf="! group.value.arrhythmia" value="" selected>Choose Arrhythmia
+                                    </option>
+                                    <option *ngIf="group.value.arrhythmia" [ngValue]="group.value.arrhythmia" selected>
+                                        {{group.value.arrhythmia.name}}
+                                    </option>
+                                    <option *ngFor="let arr of arrhythmias" [ngValue]="arr">
+                                        {{ arr.name }}
+                                    </option>
+                                </select>
+                            </td>
+
+                            <td scope="row">
+                                <button class="btn btn-trash btn-light" (click)="deleteRowArrhythmia(i)">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+
+                            </td>
+
+                        </tr>
+
+                    </ng-container>
+
+
+                    <button class="btn btn-light mt-2 ml-1" (click)="addRowArrhythmia()">
+                        Add Arrhythmia
+                    </button>
+                </tbody>
+            </table>
+        </div>
+        <!-- End arrhythmias form-->
+
+    </div>
+</form>
