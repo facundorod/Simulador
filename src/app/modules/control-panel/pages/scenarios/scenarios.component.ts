@@ -17,6 +17,7 @@ import {
 import { SimulationService } from "@app/modules/simulation/services/simulation.service";
 import { ToastrService } from "ngx-toastr";
 import { ConfirmModalComponent } from "@app/shared/modals/confirm/confirm-modal.component";
+import { Router } from "@angular/router";
 @Component({
     selector: "app-scenarios",
     templateUrl: "./scenarios.component.html",
@@ -42,7 +43,7 @@ export class ScenariosComponent extends BaseComponent implements OnInit {
     scenariosSimulation: any[];
     activeScenario: any;
     simulationsNumber: number = 0;
-
+    private isScenariosPanelRoute: boolean = false;
     constructor(
         private scenariosService: ScenarioService,
         private modal: NgbModal,
@@ -51,11 +52,15 @@ export class ScenariosComponent extends BaseComponent implements OnInit {
         private medicationService: MedicationsService,
         private pathologyService: PathologiesService,
         private arrhythmiasService: ArrhythmiasService,
-        private simulationService: SimulationService
+        private simulationService: SimulationService,
+        private router: Router
     ) {
         super();
+
         this.indexScenarioActive = 0;
         this.indexScenarioEdit = 0;
+        this.isScenariosPanelRoute =
+            this.router.url === "/panel" ? true : false;
     }
 
     ngOnInit(): void {
@@ -91,7 +96,7 @@ export class ScenariosComponent extends BaseComponent implements OnInit {
             }
         );
 
-        if (this.scenariosSelected.length > 0)
+        if (this.scenariosSelected?.length > 0)
             this.loadInfoScenario(this.scenariosSelected);
     }
 
@@ -107,11 +112,13 @@ export class ScenariosComponent extends BaseComponent implements OnInit {
                     else {
                         this.scenariosSelected = data;
                     }
-                    this.posScenarios.emit({
-                        indexEdit: this.indexScenarioEdit,
-                        indexActive: this.indexScenarioActive,
-                    });
-                    this.returnScenarios.emit(this.scenariosSelected);
+                    if (this.isScenariosPanelRoute) {
+                        this.posScenarios.emit({
+                            indexEdit: this.indexScenarioEdit,
+                            indexActive: this.indexScenarioActive,
+                        });
+                        this.returnScenarios.emit(this.scenariosSelected);
+                    }
                 }
             },
             (error: any) => {
@@ -129,14 +136,16 @@ export class ScenariosComponent extends BaseComponent implements OnInit {
         modal.result.then(
             (data: any) => {
                 if (data) {
-                    if (this.scenariosSelected.length > 0)
+                    if (this.scenariosSelected?.length > 0)
                         this.scenariosSelected = this.scenariosSelected.concat(
                             data
                         );
                     else this.scenariosSelected = data;
                     this.loadInfoScenario();
                     this.initFormGroup();
-                    this.returnScenarios.emit(this.scenariosSelected);
+                    if (this.isScenariosPanelRoute) {
+                        this.returnScenarios.emit(this.scenariosSelected);
+                    }
                 }
             },
             (error: any) => {
@@ -161,13 +170,17 @@ export class ScenariosComponent extends BaseComponent implements OnInit {
      */
     onActiveScenario(index: number): void {
         this.indexScenarioActive = index;
-        this.posScenarios.emit({
-            indexEdit: this.indexScenarioEdit,
-            indexActive: this.indexScenarioActive,
-        });
+        if (this.isScenariosPanelRoute) {
+            this.posScenarios.emit({
+                indexEdit: this.indexScenarioEdit,
+                indexActive: this.indexScenarioActive,
+            });
+        }
         this.loadInfoScenario();
         this.initFormGroup();
-        this.returnScenarios.emit(this.scenariosSelected);
+        if (this.isScenariosPanelRoute) {
+            this.returnScenarios.emit(this.scenariosSelected);
+        }
     }
 
     /**
@@ -176,13 +189,17 @@ export class ScenariosComponent extends BaseComponent implements OnInit {
      */
     onEditScenario(index: number): void {
         this.indexScenarioEdit = index;
-        this.posScenarios.emit({
-            indexEdit: this.indexScenarioEdit,
-            indexActive: this.indexScenarioActive,
-        });
+        if (this.isScenariosPanelRoute) {
+            this.posScenarios.emit({
+                indexEdit: this.indexScenarioEdit,
+                indexActive: this.indexScenarioActive,
+            });
+        }
         this.loadInfoScenario();
         this.initFormGroup();
-        this.returnScenarios.emit(this.scenariosSelected);
+        if (this.isScenariosPanelRoute) {
+            this.returnScenarios.emit(this.scenariosSelected);
+        }
     }
 
     /**
@@ -191,14 +208,18 @@ export class ScenariosComponent extends BaseComponent implements OnInit {
      */
     onDelete(index: number): void {
         this.scenariosSelected.splice(index, 1);
-        this.posScenarios.emit({
-            indexEdit: this.indexScenarioEdit,
-            indexActive: this.indexScenarioActive,
-        });
+        if (this.isScenariosPanelRoute) {
+            this.posScenarios.emit({
+                indexEdit: this.indexScenarioEdit,
+                indexActive: this.indexScenarioActive,
+            });
+        }
 
         this.loadInfoScenario();
         this.initFormGroup();
-        this.returnScenarios.emit(this.scenariosSelected);
+        if (this.isScenariosPanelRoute) {
+            this.returnScenarios.emit(this.scenariosSelected);
+        }
     }
 
     /**
