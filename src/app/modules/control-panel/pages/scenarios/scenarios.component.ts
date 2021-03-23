@@ -134,7 +134,8 @@ export class ScenariosComponent extends BaseComponent implements OnInit {
                             data
                         );
                     else this.scenariosSelected = data;
-                    this.loadInfoScenario(data);
+                    this.loadInfoScenario();
+                    this.initFormGroup();
                     this.returnScenarios.emit(this.scenariosSelected);
                 }
             },
@@ -165,6 +166,7 @@ export class ScenariosComponent extends BaseComponent implements OnInit {
             indexActive: this.indexScenarioActive,
         });
         this.loadInfoScenario();
+        this.initFormGroup();
         this.returnScenarios.emit(this.scenariosSelected);
     }
 
@@ -179,6 +181,7 @@ export class ScenariosComponent extends BaseComponent implements OnInit {
             indexActive: this.indexScenarioActive,
         });
         this.loadInfoScenario();
+        this.initFormGroup();
         this.returnScenarios.emit(this.scenariosSelected);
     }
 
@@ -192,7 +195,9 @@ export class ScenariosComponent extends BaseComponent implements OnInit {
             indexEdit: this.indexScenarioEdit,
             indexActive: this.indexScenarioActive,
         });
+
         this.loadInfoScenario();
+        this.initFormGroup();
         this.returnScenarios.emit(this.scenariosSelected);
     }
 
@@ -201,8 +206,9 @@ export class ScenariosComponent extends BaseComponent implements OnInit {
      * @param scenarios - Scenarios selected
      */
     private loadInfoScenario(scenarios: any[] = null): void {
-        if (scenarios) this.scenariosSimulation = scenarios;
-        this.activeScenario = this.scenariosSimulation[this.indexScenarioEdit];
+        if (scenarios) this.scenariosSelected = scenarios;
+
+        this.activeScenario = this.scenariosSelected[this.indexScenarioEdit];
 
         if (this.activeScenario && this.activeScenario.arrhythmias) {
             this.arrhythmiasScenario = this.activeScenario.arrhythmias;
@@ -221,18 +227,18 @@ export class ScenariosComponent extends BaseComponent implements OnInit {
         } else {
             this.pathologiesScenario = [];
         }
-        this.simulationService
-            .getSimulationsByScenario(
-                this.scenariosSimulation[this.indexScenarioEdit].id_scenario
-            )
-            .subscribe(
-                (data) => {
-                    this.simulationsNumber = data.total;
-                },
-                (error: any) => {
-                    console.log(error);
-                }
-            );
+
+        if (this.activeScenario)
+            this.simulationService
+                .getSimulationsByScenario(this.activeScenario.id_scenario)
+                .subscribe(
+                    (data) => {
+                        this.simulationsNumber = data.total;
+                    },
+                    (error: any) => {
+                        console.log(error);
+                    }
+                );
     }
 
     /**
@@ -286,6 +292,7 @@ export class ScenariosComponent extends BaseComponent implements OnInit {
 
     deleteRowPathology(index: number): void {
         const control = this.formGroup.get("pathologies") as FormArray;
+
         control.removeAt(index);
     }
 
@@ -336,8 +343,6 @@ export class ScenariosComponent extends BaseComponent implements OnInit {
     }
 
     onSaveChanges() {
-        console.log(this.formGroup);
-
         if (this.formGroup.valid) {
             if (this.simulationsNumber > 1) {
                 const modal = this.modal.open(ConfirmModalComponent);
@@ -372,7 +377,6 @@ export class ScenariosComponent extends BaseComponent implements OnInit {
         this.formGroup.value.pathologies.forEach((pat: any) => {
             pathologies.push(pat.pathology);
         });
-        console.log("ACTIVE sCENARIO", this.activeScenario);
         if (this.activeScenario) {
             this.activeScenario.pathologies = pathologies;
             this.activeScenario.arrhythmias = arrhythmias;

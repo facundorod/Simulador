@@ -6,7 +6,8 @@
 <div class="panel-header">
     <div class="visualizationHeader">
         <h3 class="textSimulation"><em>Visualization Area and Simulation Edition</em></h3>
-        <button type="submit" *ngIf="formGroup.valid" class="btn btn-primary col-md-3 saveChanges" (click)="onSaveChanges()">Save
+        <button type="submit" *ngIf="formGroup.valid" class="btn btn-primary col-md-3 saveChanges"
+            (click)="onSaveChanges()">Save
             changes</button>
         <button type="submit" *ngIf="!formGroup.valid" class="btn btn-primary col-md-3 saveChanges"
             (click)="onSaveChanges()" disabled>Save
@@ -34,13 +35,19 @@
             <div class="col-md-3">
                 <label for="animalSpecies" class="form-label">Animal Specie</label>
                 <select class="form-select form-control" id="animalSpecie" formControlName="animalSpecie">
-
+                    <option value="">Choose Animal Specie</option>
                     <ng-template [ngIf]="animalSpecies.length > 0">
-                        <option *ngIf="!formGroup.value.animalSpecie?.name" value="" selected>Choose Animal Specie</option>
-                        <option *ngIf="formGroup.value.animalSpecie?.name" [ngValue]="formGroup.value.animalSpecie">{{formGroup.value.animalSpecie.name}}</option>
-                        <option [ngValue]="animalS" *ngFor="let animalS of animalSpecies" >
-                            {{ animalS.name }}
-                        </option>
+
+                        <option *ngIf="formGroup.value.animalSpecie?.name" [ngValue]="formGroup.value.animalSpecie">
+                            {{formGroup.value.animalSpecie.name}}</option>
+                        <ng-template ngFor let-animalS [ngForOf]="animalSpecies">
+                            <option
+                                *ngIf="formGroup.value.animalSpecie && animalS.name !== formGroup.value.animalSpecie.name"
+                                [ngValue]="animalS">
+                                {{ animalS.name }}
+                            </option>
+                        </ng-template>
+
                     </ng-template>
                 </select>
 
@@ -67,32 +74,6 @@
             </div>
             <!-- Scenarios -->
         </div>
-
-
-        <hr class="separatorLine mt-3">
-        <div class="row mt-4 ml-5">
-
-            <!-- <div class="col-sm-4"> -->
-
-            <label for="cycleC" class="ml-3 col-form-label">Cycle C.</label>
-            <div class="col-md-2">
-                <input type="text" class="form-control" formControlName="cardiacCycle">
-            </div>
-            <!-- </div> -->
-
-            <!-- <div class="col-sm-4"> -->
-            <label for="temp" class="ml-3 col-form-label">TEMP</label>
-            <div class="col-md-2">
-                <input type="text" class="form-control" formControlName="temp">
-            </div>
-
-            <label for="resp" class="ml-3 col-form-label">RESP</label>
-            <div class="col-md-2">
-                <input type="text" class="form-control" formControlName="respirationRate">
-            </div>
-
-        </div>
-
 
     </form>
 </div>

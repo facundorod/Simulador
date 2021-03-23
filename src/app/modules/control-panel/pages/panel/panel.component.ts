@@ -46,10 +46,7 @@ export class PanelComponent extends BaseComponent implements OnInit {
     simulation: any = {};
     indexActive: number = 0;
     indexSimulationActive: number = 0;
-    private physiologicalParameters: any = {};
-    private tempValue: number;
-    private cardiacCycleValue: number;
-    private repRateValue: number;
+
     public order = {
         orderBy: "name",
         order: "asc",
