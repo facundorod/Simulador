@@ -18,7 +18,8 @@ export class LogoutComponent implements OnInit {
     ngOnInit(): void {
         this.authSvc.logout();
         this.toast.toastrConfig.timeOut = 1000;
-        this.toast.toastrConfig.positionClass = "toast-bottom-full-width";
+        this.toast.toastrConfig.positionClass = "toast-bottom-left";
+        this.toast.toastrConfig.closeButton = true;
         this.router.navigateByUrl("/auth/login");
         this.toast.info("Goodbye!");
     }
