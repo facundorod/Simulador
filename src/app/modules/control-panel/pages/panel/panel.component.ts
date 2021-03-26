@@ -17,8 +17,11 @@ import { CurvesI } from "@app/shared/models/curvesI";
 import { PhysiologicalParamaterI } from "@app/shared/models/PhysiologicalParamaterI";
 
 enum PhysiologicalParamaters {
-    SP02 = 'SP02',
-
+    SPO2 = "SPO2",
+    ETC02 = "ETCO2",
+    ECG = "ECG",
+    NIBP = "NIBP",
+    IBP = "IBP",
 }
 @Component({
     selector: "app-panel",
@@ -26,9 +29,6 @@ enum PhysiologicalParamaters {
     styleUrls: ["./panel.component.css"],
 })
 export class PanelComponent extends BaseComponent implements OnInit {
-
-
-
     editScenario: any = {}; // Scenario active for edit
     activeScenario: any; // Scenario active for simulation
     simulationsNumber: number = 0; // Number of simulation's scenario.
@@ -43,9 +43,14 @@ export class PanelComponent extends BaseComponent implements OnInit {
 
     // CURVES //
     capnographyCurve: CurvesI[]; // Curve to model capnography
+    capnographySeries: number[];
+    capnographyX: number[];
     plethCurve: CurvesI[]; // Curve to model plethysmography
+    plethCurvesX: number[];
+    plethCurvesSeries: number[];
     ecgCurve: CurvesI[]; // Curve to model ecgCurve
-    bloodPressureCurve: CurvesI[]; // Curve to model blood Pressure
+    ibpCurve: CurvesI[]; // Curve to model blood Pressure invasive
+    nibpCurve: CurvesI[]; // Curve to model blood Pressure no invasive
 
     constructor(
         private animalSpecieService: AnimalSpeciesService,
@@ -164,8 +169,59 @@ export class PanelComponent extends BaseComponent implements OnInit {
         this.curves.forEach((cv: any) => {
             const physiologicalParameter: PhysiologicalParamaterI =
                 cv.ppPerAs.physiologicalParameter;
-
-            if (physiologicalParameter.label.toLowerCase() === )
+            switch (physiologicalParameter.label.toLowerCase()) {
+                case PhysiologicalParamaters.SPO2: {
+                    this.plethCurve.push({
+                        t: cv.t,
+                        label: cv.ppPerAs.physiologicalParameter.label,
+                        unit: cv.ppPerAs.physiologicalParameter.unit,
+                        value: cv.value,
+                    });
+                    this.plethCurvesX.push(cv.t);
+                    this.plethCurvesSeries.push(cv.value);
+                    break;
+                }
+                case PhysiologicalParamaters.ETC02: {
+                    this.capnographyCurve.push({
+                        t: cv.t,
+                        label: cv.ppPerAs.physiologicalParameter.label,
+                        unit: cv.ppPerAs.physiologicalParameter.unit,
+                        value: cv.value,
+                    });
+                    this.capnographyX.push(cv.t);
+                    this.capnographySeries.push(cv.value);
+                    break;
+                }
+                case PhysiologicalParamaters.ECG: {
+                    this.ecgCurve.push({
+                        t: cv.t,
+                        label: cv.ppPerAs.physiologicalParameter.label,
+                        unit: cv.ppPerAs.physiologicalParameter.unit,
+                        value: cv.value,
+                    });
+                    break;
+                }
+                case PhysiologicalParamaters.IBP: {
+                    this.ibpCurve.push({
+                        t: cv.t,
+                        label: cv.ppPerAs.physiologicalParameter.label,
+                        unit: cv.ppPerAs.physiologicalParameter.unit,
+                        value: cv.value,
+                    });
+                    break;
+                }
+                case PhysiologicalParamaters.NIBP: {
+                    this.nibpCurve.push({
+                        t: cv.t,
+                        label: cv.ppPerAs.physiologicalParameter.label,
+                        unit: cv.ppPerAs.physiologicalParameter.unit,
+                        value: cv.value,
+                    });
+                    break;
+                }
+                default:
+                    break;
+            }
         });
     }
 

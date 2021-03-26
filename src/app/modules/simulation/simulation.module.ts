@@ -27,6 +27,7 @@ import { CurvesComponent } from "./components/curves/curves.component";
             echarts,
         }),
     ],
+    exports: [CurvesComponent],
     providers: [SimulationService, ScenarioService],
 })
 export class SimulationModule {}

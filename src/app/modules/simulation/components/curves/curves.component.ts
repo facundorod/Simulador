@@ -15,11 +15,14 @@ export class CurvesComponent implements OnInit {
     constructor() {}
 
     ngOnInit(): void {
+        console.log("HERE");
         const chartConfigurer = new ChartConfigurer(
             this.series,
             this.labelX,
             this.colorLine
         );
+
+        console.log(chartConfigurer);
         this.chartOption = chartConfigurer.getChart();
     }
 }
