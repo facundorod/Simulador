@@ -14,6 +14,7 @@ export const environment = {
         login: "/auth/login",
         register: "/auth/register",
         simulations: "/simulation/",
+        curves: "/curves/",
     },
     apiUsers: "http://localhost:8001/api/auth",
     simulation: "http://localhost:4200/simulation",

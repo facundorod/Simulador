@@ -8,11 +8,18 @@ import { ChartConfigurer } from "../../helpers/chartConfigurer";
     styleUrls: ["./curves.component.css"],
 })
 export class CurvesComponent implements OnInit {
-    @Input() curves: any[];
+    @Input() series: number[];
+    @Input() labelX: number[];
+    @Input() colorLine: string;
     chartOption: EChartsOption;
-    constructor() {
-        // this.chartOption = new ChartConfigurer(curves);
-    }
+    constructor() {}
 
-    ngOnInit(): void {}
+    ngOnInit(): void {
+        const chartConfigurer = new ChartConfigurer(
+            this.series,
+            this.labelX,
+            this.colorLine
+        );
+        this.chartOption = chartConfigurer.getChart();
+    }
 }

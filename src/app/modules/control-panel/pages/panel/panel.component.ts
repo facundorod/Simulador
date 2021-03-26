@@ -1,14 +1,9 @@
 import { SimulationService } from "./../../../simulation/services/simulation.service";
 import { ToastrService } from "ngx-toastr";
-import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import { Component, Input, OnInit } from "@angular/core";
 
 // Service
 import { AnimalSpeciesService } from "./../../services/animalSpecies.service";
-import { MedicationsService } from "./../../services/medications.service";
-import { ScenarioService } from "./../../services/scenario.service";
-import { ArrhythmiasService } from "./../../services/arrhythmias.service";
-import { PathologiesService } from "./../../services/pathologies.service";
 
 // Models
 import { PathologyI } from "@models/pathologyI";
@@ -16,49 +11,48 @@ import { MedicationI } from "@models/medicationI";
 import { ArrhythmiaI } from "@models/arrhythmiaI";
 import { AnimalSpeciesI } from "@models/animal-speciesI";
 import { BaseComponent } from "@app/shared/components/base.component";
-import {
-    AbstractControl,
-    FormArray,
-    FormBuilder,
-    FormControl,
-    Validators,
-} from "@angular/forms";
-import { ConfirmModalComponent } from "@app/shared/modals/confirm/confirm-modal.component";
+import { FormBuilder, Validators } from "@angular/forms";
+import { CurvesService } from "../../services/curves.service";
+import { CurvesI } from "@app/shared/models/curvesI";
+import { PhysiologicalParamaterI } from "@app/shared/models/PhysiologicalParamaterI";
 
+enum PhysiologicalParamaters {
+    SP02 = 'SP02',
+
+}
 @Component({
     selector: "app-panel",
     templateUrl: "./panel.component.html",
     styleUrls: ["./panel.component.css"],
 })
 export class PanelComponent extends BaseComponent implements OnInit {
-    activeScenario: any = {};
+
+
+
+    editScenario: any = {}; // Scenario active for edit
+    activeScenario: any; // Scenario active for simulation
     simulationsNumber: number = 0; // Number of simulation's scenario.
-    scenarios: any[] = [];
+
     scenariosSimulation: any[] = [];
     animalSpecies: any[] = []; // Animal Species to populate the dropdown
     animalSpecie: any = {}; // Animal Specie from simulation
-    arrhythmias: any[] = []; // Arrhythmias to populate the dropdown
-    arrhythmiasScenario: any[] = []; // Arrhythmias from scenario
-    pathologies: any[] = [];
-    pathologiesScenario: any[] = []; // Pathologies from scenario
-    medications: any[] = [];
-    medicationsScenario: any[] = [];
-    simulation: any = {};
-    indexActive: number = 0;
-    indexSimulationActive: number = 0;
+    simulation: any = {}; // Simulation from localStorage
+    indexActive: number = 0; // Index for scenario edit Active
+    indexSimulationActive: number = 0; // Index for scenario simulation Active
+    private curves: any[]; // Curves for scenario and animalSpecie selected
 
-    public order = {
-        orderBy: "name",
-        order: "asc",
-    };
+    // CURVES //
+    capnographyCurve: CurvesI[]; // Curve to model capnography
+    plethCurve: CurvesI[]; // Curve to model plethysmography
+    ecgCurve: CurvesI[]; // Curve to model ecgCurve
+    bloodPressureCurve: CurvesI[]; // Curve to model blood Pressure
 
     constructor(
-        private scenarioService: ScenarioService,
         private animalSpecieService: AnimalSpeciesService,
         private fb: FormBuilder,
-        private modal: NgbModal,
         private toast: ToastrService,
-        private simulationService: SimulationService
+        private simulationService: SimulationService,
+        private curvesService: CurvesService
     ) {
         super();
     }
@@ -68,6 +62,7 @@ export class PanelComponent extends BaseComponent implements OnInit {
         this.setLoading(true);
         this.loadData();
         this.initFormGroup();
+        this.onLoadCurves();
     }
 
     /**
@@ -75,15 +70,6 @@ export class PanelComponent extends BaseComponent implements OnInit {
      */
     private loadData() {
         this.simulation = JSON.parse(localStorage.getItem("Simulation"));
-
-        this.scenarioService.list(null, null).subscribe(
-            (scenarios) => {
-                this.scenarios = scenarios.data;
-            },
-            (error: any) => {
-                console.log(error);
-            }
-        );
 
         this.animalSpecieService.list().subscribe(
             (animalSpecies: any) => {
@@ -110,7 +96,10 @@ export class PanelComponent extends BaseComponent implements OnInit {
         else {
             if (this.simulation.scenarios) {
                 this.scenariosSimulation = this.simulation.scenarios;
+                // If the simulation has scenarios, the first will be the active for simulation
+                this.activeScenario = this.scenariosSimulation[0];
             }
+
             if (this.simulation.animalSpecie)
                 this.animalSpecie = this.simulation.animalSpecie;
         }
@@ -142,6 +131,42 @@ export class PanelComponent extends BaseComponent implements OnInit {
     public async onSaveChanges() {
         this.submitForm = true;
         this.saveSimulation();
+    }
+
+    /**
+     * Load curves for scenario active for simulation and for animalSpecie selected
+     */
+    public onLoadCurves() {
+        if (this.activeScenario && this.formGroup.value.animalSpecie != null) {
+            this.curvesService
+                .findAll({
+                    animalSpecie: this.formGroup.value.animalSpecie.id_as,
+                    scenario: this.activeScenario.id_scenario,
+                })
+                .subscribe(
+                    (curves: any) => {
+                        if (curves.data.length > 0) {
+                            this.curves = curves.data;
+                            this.setCurves();
+                        }
+                    },
+                    (error: any) => {
+                        console.log(error);
+                    }
+                );
+        } else this.curves = [];
+    }
+
+    /**
+     * Loop through array of curves and set each one
+     */
+    private setCurves() {
+        this.curves.forEach((cv: any) => {
+            const physiologicalParameter: PhysiologicalParamaterI =
+                cv.ppPerAs.physiologicalParameter;
+
+            if (physiologicalParameter.label.toLowerCase() === )
+        });
     }
 
     /**
@@ -201,8 +226,13 @@ export class PanelComponent extends BaseComponent implements OnInit {
     }
 
     getScenarios(scenarios: any): void {
+        // debugger;
         this.scenariosSimulation = scenarios;
-        this.activeScenario = this.scenariosSimulation[this.indexActive];
+        this.editScenario = this.scenariosSimulation[this.indexActive];
+        this.activeScenario = this.scenariosSimulation[
+            this.indexSimulationActive
+        ];
+        this.onLoadCurves();
     }
 
     getPosScenarios(pos: any): void {

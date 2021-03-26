@@ -20,6 +20,7 @@ import { ArrhythmiasComponent } from "./pages/arrhythmias/arrhythmias.component"
 import { SharedModule } from "@app/shared/shared.module";
 import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
 import { AnimalSpeciesEditComponent } from "./modals/animal-specie-edit/animal-specie-edit.component";
+import { CurvesService } from "./services/curves.service";
 
 @NgModule({
     declarations: [
@@ -50,6 +51,7 @@ import { AnimalSpeciesEditComponent } from "./modals/animal-specie-edit/animal-s
         PathologiesService,
         ScenarioService,
         SimulationService,
+        CurvesService,
     ],
 })
 export class ControlPanelModule {}

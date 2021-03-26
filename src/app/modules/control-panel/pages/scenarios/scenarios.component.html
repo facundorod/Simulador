@@ -10,8 +10,8 @@
             <button type="submit" *ngIf="formGroup.valid" class="btn btn-primary col-lg-3 saveChanges"
                 (click)="onSaveChanges()">Save
                 changes</button>
-            <button type="submit" *ngIf="!formGroup.valid" class="btn btn-primary col-lg-3 saveChanges" (click)="onSaveChanges()"
-                disabled>Save
+            <button type="submit" *ngIf="!formGroup.valid" class="btn btn-primary col-lg-3 saveChanges"
+                (click)="onSaveChanges()" disabled>Save
                 changes</button>
         </div>
     </div>
@@ -319,6 +319,8 @@
             </table>
         </div>
         <!-- End arrhythmias form-->
+
+
 
     </div>
 </form>
