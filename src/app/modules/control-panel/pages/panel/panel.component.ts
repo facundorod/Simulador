@@ -18,7 +18,7 @@ import { PhysiologicalParamaterI } from "@app/shared/models/PhysiologicalParamat
 
 enum PhysiologicalParamaters {
     SPO2 = "SPO2",
-    ETC02 = "ETCO2",
+    ETCO2 = "ETCO2",
     ECG = "ECG",
     NIBP = "NIBP",
     IBP = "IBP",
@@ -42,15 +42,22 @@ export class PanelComponent extends BaseComponent implements OnInit {
     private curves: any[]; // Curves for scenario and animalSpecie selected
 
     // CURVES //
-    capnographyCurve: CurvesI[]; // Curve to model capnography
-    capnographySeries: number[];
-    capnographyX: number[];
-    plethCurve: CurvesI[]; // Curve to model plethysmography
-    plethCurvesX: number[];
-    plethCurvesSeries: number[];
-    ecgCurve: CurvesI[]; // Curve to model ecgCurve
-    ibpCurve: CurvesI[]; // Curve to model blood Pressure invasive
-    nibpCurve: CurvesI[]; // Curve to model blood Pressure no invasive
+    capnographyCurve: CurvesI[] = []; // Curve to model capnography
+    capnographySeries: number[] = [];
+    capnographyX: number[] = [];
+    capnographyData: number[][] = new Array(new Array());
+    capnographyData2: number[][] = new Array(new Array());
+    plethCurve: CurvesI[] = []; // Curve to model plethysmography
+    plethCurvesX: number[] = [];
+    plethCurvesSeries: number[] = [];
+    ecgCurve: CurvesI[] = []; // Curve to model ecgCurve
+    ibpCurve: CurvesI[] = []; // Curve to model blood Pressure invasive
+    nibpCurve: CurvesI[] = []; // Curve to model blood Pressure no invasive
+
+    // Paramaters Physiological without curves
+    cardiacFrequency: number = 200;
+    respFrequency: number = 200; // In RPM
+    temperature: number = 35; // In RPM
 
     constructor(
         private animalSpecieService: AnimalSpeciesService,
@@ -169,7 +176,7 @@ export class PanelComponent extends BaseComponent implements OnInit {
         this.curves.forEach((cv: any) => {
             const physiologicalParameter: PhysiologicalParamaterI =
                 cv.ppPerAs.physiologicalParameter;
-            switch (physiologicalParameter.label.toLowerCase()) {
+            switch (physiologicalParameter.label.toUpperCase()) {
                 case PhysiologicalParamaters.SPO2: {
                     this.plethCurve.push({
                         t: cv.t,
@@ -181,15 +188,17 @@ export class PanelComponent extends BaseComponent implements OnInit {
                     this.plethCurvesSeries.push(cv.value);
                     break;
                 }
-                case PhysiologicalParamaters.ETC02: {
+                case PhysiologicalParamaters.ETCO2: {
                     this.capnographyCurve.push({
-                        t: cv.t,
+                        t: +cv.t,
                         label: cv.ppPerAs.physiologicalParameter.label,
                         unit: cv.ppPerAs.physiologicalParameter.unit,
-                        value: cv.value,
+                        value: +cv.value,
                     });
-                    this.capnographyX.push(cv.t);
-                    this.capnographySeries.push(cv.value);
+
+                    this.capnographyX.push(+cv.t);
+                    this.capnographySeries.push(+cv.value);
+                    this.capnographyData.push([+cv.t, +cv.value]);
                     break;
                 }
                 case PhysiologicalParamaters.ECG: {
@@ -223,6 +232,33 @@ export class PanelComponent extends BaseComponent implements OnInit {
                     break;
             }
         });
+
+        this.scaleCurves();
+    }
+
+    /**
+     * Scale curves according to physiological paramaters (Cardiac Freq and Resp Freq)
+     */
+    private scaleCurves(): void {
+        let aux: number[][] = new Array(new Array());
+
+        let auxiliar: number;
+        this.capnographyData = this.capnographyData.map((cap: number[]) => {
+            auxiliar = this.respFrequency / 60;
+            cap[0] = cap[0] / auxiliar;
+            cap[1] = cap[1] / auxiliar;
+            return cap;
+        });
+        let aux2: number;
+
+        this.capnographyData.forEach((value: number[]) => {
+            if (value[0]) {
+                aux2 = value[0] + 0.4;
+                aux.push([aux2, value[1]]);
+            }
+        });
+
+        this.capnographyData2 = aux;
     }
 
     /**

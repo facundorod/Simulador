@@ -82,6 +82,8 @@
         </button>
 
         <!-- Curve 1-->
-        <app-curves [colorLine] = "'red'" [labelX]="capnographyX" [series]="capnographySeries"></app-curves>
+        <ng-template [ngIf]="capnographySeries && capnographySeries.length > 0">
+            <app-curves [colorLine]="'lightblue'" [series]="capnographyData"  [series2]="capnographyData2" class="curves"></app-curves>
+        </ng-template>
     </form>
 </div>
