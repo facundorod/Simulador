@@ -82,8 +82,150 @@
         </button>
 
         <!-- Curve 1-->
-        <ng-template [ngIf]="capnographySeries && capnographySeries.length > 0">
-            <app-curves [colorLine]="'lightblue'" [series]="capnographyData"  [series2]="capnographyData2" class="curves"></app-curves>
-        </ng-template>
+
+        <div class="mt-4">
+            <div class="row" *ngIf="nibpCurveData && nibpCurveData[0].length > 0">
+                <div class="col-md-3" style="border: 2px solid red">
+                    <h4> ECG Configuration</h4>
+
+
+                    <div class="container mt-3">
+                        <div class="row">
+                            <label class="form-label mr-4"> Altitude </label>
+                            <input type="number" class="form-control col-md-3">
+                        </div>
+
+                        <div class="row mt-3">
+                            <label class="form-label mr-2"> Amplitude </label>
+                            <input type="number" class="form-control col-md-3">
+                        </div>
+
+                        <div class="container row mt-3">
+                            <button class="btn btn-primary" (click)="onAddNoiseNIBP()">Add Gaussean Noise</button>
+
+                        </div>
+
+                    </div>
+                </div>
+                <div class="col-md-9" style="border: 2px solid red">
+                    <app-curves [colorLine]="'#718E70'" [series]="nibpCurveData" [minX]="-40" [maxX]="40" [minY]="-100"
+                        [maxY]="100" class="curves"></app-curves>
+                </div>
+
+
+            </div>
+            <div class="row mt-4" *ngIf="capnographyData[1] && capnographyData[1].length > 0">
+
+                <div class="col-md-3" style="border: 2px solid red">
+                    <h4> ETCO2 Configuration </h4>
+
+                    <div class="container mt-3">
+                        <div class="row">
+                            <label class="form-label mr-4"> Altitude </label>
+                            <input type="number" class="form-control col-md-3">
+                        </div>
+
+                        <div class="row mt-3">
+                            <label class="form-label mr-2"> Amplitude </label>
+                            <input type="number" class="form-control col-md-3">
+                        </div>
+
+                        <div class="container row mt-3">
+                            <button class="btn btn-primary" (click)="onAddNoiseNIBP()">Add Gaussean Noise</button>
+
+                        </div>
+
+                    </div>
+
+
+                </div>
+
+                <div class="col-md-9" style="border: 2px solid red">
+                    <app-curves [colorLine]="'#6EC1ED'" [series]="capnographyData" [minX]="0" [maxX]="1"
+                        [minY]="-2.53164556962025" [maxY]="36.0759493670886" class="curves"></app-curves>
+                </div>
+            </div>
+
+            <div class="row mt-4" *ngIf="ecgCurveData[1] && ecgCurveData[1].length > 0">
+                <div class="col-md-3" style="border: 2px solid red">
+                    <h4> ART1 Configuration </h4>
+
+                    <div class="container mt-3">
+                        <div class="row">
+                            <label class="form-label mr-4"> Altitude </label>
+                            <input type="number" class="form-control col-md-3">
+                        </div>
+
+                        <div class="row mt-3">
+                            <label class="form-label mr-2"> Amplitude </label>
+                            <input type="number" class="form-control col-md-3">
+                        </div>
+
+                        <div class="container row mt-3">
+                            <button class="btn btn-primary" (click)="onAddNoiseNIBP()">Add Gaussean Noise</button>
+
+                        </div>
+
+                    </div>
+
+
+                </div>
+                <div class="col-md-9" style="border: 2px solid red">
+                    <app-curves [colorLine]="'#4D4260'" [series]="ecgCurveData" [minX]="-80" [maxX]="80" [minY]="-200"
+                        [maxY]="300">
+                    </app-curves>
+                </div>
+            </div>
+
+
+            <div class="row mt-4" *ngIf="plethCurveData[1] && plethCurveData[1].length > 0">
+                <div class="col-md-3" style="border: 2px solid red">
+                    <h4> SPO2 Configuration </h4>
+
+                    <div class="container mt-3">
+                        <div class="row">
+                            <label class="form-label mr-4"> Altitude </label>
+                            <input type="number" class="form-control col-md-3">
+                        </div>
+
+                        <div class="row mt-3">
+                            <label class="form-label mr-2"> Amplitude </label>
+                            <input type="number" class="form-control col-md-3">
+                        </div>
+
+                        <div class="container row mt-3">
+                            <button class="btn btn-primary" (click)="onAddNoiseNIBP()">Add Gaussean Noise</button>
+
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="col-md-9" style="border: 2px solid red">
+                    <app-curves [colorLine]="'#B9957B'" [series]="plethCurveData" [minX]="0" [maxX]="0.997823721436344"
+                        [minY]="34.4829219764082" [maxY]="84.9282296650718"></app-curves>
+                </div>
+            </div>
+
+
+
+        </div>
+
+        <!-- </div> -->
+
+
+
     </form>
+
+
 </div>
+
+
+
+<footer class="footer">
+    <div class="container footerBtn" style="border: 2px solid blue;">
+        <button class="btn"> <i class="fas fa-play" style="color: white"></i></button>
+        <button class="btn"> <i class="fas fa-pause" style="color: white"></i></button>
+        <button class="btn"> <i class="fas fa-stop" style="color: white"></i></button>
+    </div>
+</footer>

@@ -4,33 +4,41 @@ export class ChartConfigurer {
     protected chartOption: EChartsOption;
     protected chartDataSeries: number[][];
     protected colorLine: string;
-    protected chartDataSeries2: number[][];
+    protected minX: number;
+    protected maxX: number;
+    protected minY: number;
+    protected maxY: number;
+
     constructor(
         series: number[][],
-        chartDataSeries2: number[][],
-        colorLine: string = "blue"
+        colorLine: string = "blue",
+        minX: number,
+        maxX: number,
+        minY: number,
+        maxY: number
     ) {
-        this.loadData(series, colorLine, chartDataSeries2);
+        this.loadData(series, colorLine, minX, maxX, minY, maxY);
         this.chartOption = {
             xAxis: {
-                type: "time",
-                // data: this.chartLabelX,
-                // show: true,
-                // scale: true,
-                min: 0,
-                max: 2,
-                // minInterval: 0,
-                // maxInterval: 5,
-                // splitNumber: 2,
-                interval: 0.1,
+                type: "value",
+                min: minX,
+                max: maxX,
+                show: false,
+                // interval: 0.1,
+                axisLine: {
+                    show: false,
+                    onZero: false,
+                    lineStyle: {
+                        width: 5,
+                    },
+                },
             },
             yAxis: {
                 type: "value",
-                // scale: true,
-                interval: 0.001,
-                min: -1.26,
-                max: 36.0759493670886,
-                show: true,
+                // interval: 5,
+                min: minY,
+                max: maxY,
+                show: false,
             },
             series: [
                 {
@@ -39,25 +47,13 @@ export class ChartConfigurer {
                     data: this.chartDataSeries,
                     type: "line",
                     color: this.colorLine,
-                    areaStyle: {
-                        color: this.colorLine,
-                    },
-                    emphasis: {
-                        focus: "series",
-                    },
-                },
-                {
-                    smooth: true,
-                    showSymbol: false,
-                    data: this.chartDataSeries2,
-                    type: "line",
-                    color: this.colorLine,
-                    areaStyle: {
-                        color: this.colorLine,
-                    },
-                    emphasis: {
-                        focus: "series",
-                    },
+                    // lineStyle: {
+                    //     width: 0,
+                    // },
+                    // areaStyle: {
+                    //     color: this.colorLine,
+                    //     origin: "start",
+                    // },
                 },
             ],
         };
@@ -66,11 +62,16 @@ export class ChartConfigurer {
     public loadData(
         series: number[][],
         colorLine: string = "blue",
-        chartDataSeries2: number[][]
+        minX: number,
+        maxX: number,
+        minY: number,
+        maxY: number
     ): void {
         this.chartDataSeries = series;
         this.colorLine = colorLine;
-        this.chartDataSeries2 = chartDataSeries2;
+        this.minX = minX;
+        this.maxX = maxX;
+        (this.minY = minY), (this.maxY = maxY);
     }
 
     public getChart(): EChartsOption {

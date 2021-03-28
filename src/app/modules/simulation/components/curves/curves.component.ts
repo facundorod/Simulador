@@ -12,8 +12,12 @@ export class CurvesComponent implements OnInit {
         [0, 1],
         [2, 3],
     ];
-    @Input() series2: number[][];
     @Input() colorLine: string;
+    @Input() minX: number;
+    @Input() maxX: number;
+    @Input() minY: number;
+    @Input() maxY: number;
+
     chartOption: EChartsOption;
     private echartsInstance: ECharts;
 
@@ -22,12 +26,14 @@ export class CurvesComponent implements OnInit {
     ngOnInit(): void {
         const chartConfigurer = new ChartConfigurer(
             this.series,
-            this.series2,
-            this.colorLine
+            this.colorLine,
+            this.minX,
+            this.maxX,
+            this.minY,
+            this.maxY
         );
 
         this.chartOption = chartConfigurer.getChart();
-
         // setInterval(() => {
         //     this.chartOption.series[0].data = this.series2;
         //     this.chartOption.series[1].data = this.series;
