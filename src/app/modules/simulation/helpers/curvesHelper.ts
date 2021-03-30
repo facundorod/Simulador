@@ -4,6 +4,9 @@ export enum PhysiologicalParamaters {
     ECG = "ECG",
     NIBP = "NIBP",
     IBP = "IBP",
+    TEMP = "TEMP",
+    RESP = "RESP",
+    CARDIAC_FREQ = "CAR",
 }
 
 export class CurvesHelper {
@@ -38,7 +41,7 @@ export class CurvesHelper {
         //     return cap;
         // });
 
-        // this.plethCurveData = this.plethCurveData.map((cap: number[]) => {
+        // this.plethCurve = this.plethCurve.map((cap: number[]) => {
         //     auxiliar = this.respFrequency / 60;
         //     // cap[0] = cap[0] / auxiliar;
         //     cap[1] = cap[1] / auxiliar;

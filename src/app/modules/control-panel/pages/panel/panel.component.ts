@@ -33,24 +33,27 @@ export class PanelComponent extends BaseComponent implements OnInit {
     simulation: any = {}; // Simulation from localStorage
     indexActive: number = 0; // Index for scenario edit Active
     indexSimulationActive: number = 0; // Index for scenario simulation Active
-    private curves: any[]; // Curves for scenario and animalSpecie selected
-
-    // CURVES //
-    capnographyCurve: CurvesI[] = []; // Curve to model capnography
-    capnographyData: number[][] = new Array(new Array());
-    plethCurve: CurvesI[] = []; // Curve to model plethysmography
-    plethCurveData: number[][] = new Array(new Array());
-    ecgCurve: CurvesI[] = []; // Curve to model ecgCurve
-    ecgCurveData: number[][] = new Array(new Array());
-    ibpCurve: CurvesI[] = []; // Curve to model blood Pressure invasive
-    nibpCurve: CurvesI[] = []; // Curve to model blood Pressure no invasive
-    nibpCurveData: number[][] = new Array(new Array());
+    public curves: any[]; // Curves for scenario and animalSpecie selected
     CurvesHelper = new CurvesHelper.CurvesHelper();
 
+    // CURVES DATA //
+    ecgCurve: number[][] = new Array(new Array()); // Curve to model ECG
+    ibpCurve: number[][] = new Array(new Array()); // Curve to model blood Pressure invasive
+    capnographyCurve: number[][] = new Array(new Array()); // Curve to model capnography
+    nibpCurve: number[][] = new Array(new Array()); // Curve to model blood Pressure no invasive
+    plethCurve: number[][] = new Array(new Array()); // Curve to model plethysmography
+
+    // Configuration Curves //
+    capnographyConfiguration: CurvesI; // Capnography configurations
+    plethConfiguration: CurvesI; // Plethismography configurations
+    ecgCurveConfiguration: CurvesI; // ECG configurations
+    ibpConfiguration: CurvesI; // IBP Configuration
+    nibpConfiguration: CurvesI; // NIBP Configurations
+
     // Paramaters Physiological without curves
-    cardiacFrequency: number = 200;
-    respFrequency: number = 200; // In RPM
-    temperature: number = 35; // In RPM
+    cardiacFrequency: CurvesI;
+    respFrequency: CurvesI;
+    temperature: CurvesI;
 
     constructor(
         private animalSpecieService: AnimalSpeciesService,
@@ -126,7 +129,16 @@ export class PanelComponent extends BaseComponent implements OnInit {
                 this.simulation ? this.simulation.description : "",
                 Validators.required,
             ],
-            animalSpecie: [this.animalSpecie ? this.animalSpecie : ""],
+            animalSpecie: [
+                this.animalSpecie ? this.animalSpecie : "",
+                Validators.required,
+            ],
+
+            cardiacFrequency: [
+                this.cardiacFrequency ? this.cardiacFrequency : 0,
+            ],
+            respFrequency: [this.respFrequency ? this.respFrequency : 0],
+            temperature: [this.temperature ? this.temperature : 0],
         });
     }
 
@@ -142,6 +154,7 @@ export class PanelComponent extends BaseComponent implements OnInit {
      * Load curves for scenario active for simulation and for animalSpecie selected
      */
     public onLoadCurves() {
+        console.log(this.activeScenario);
         if (this.activeScenario && this.formGroup.value.animalSpecie != null) {
             this.curvesService
                 .findAll({
@@ -166,73 +179,130 @@ export class PanelComponent extends BaseComponent implements OnInit {
      * Loop through array of curves and set each one
      */
     private setCurves() {
-        this.curves.forEach((cv: any) => {
-            const physiologicalParameter: PhysiologicalParamaterI =
-                cv.ppPerAs.physiologicalParameter;
-            switch (physiologicalParameter.label.toUpperCase()) {
-                case CurvesHelper.PhysiologicalParamaters.SPO2: {
-                    this.plethCurve.push({
-                        t: cv.t,
-                        label: cv.ppPerAs.physiologicalParameter.label,
-                        unit: cv.ppPerAs.physiologicalParameter.unit,
-                        value: cv.value,
-                    });
-
-                    this.plethCurveData.push([+cv.t, +cv.value]);
-                    break;
+        if (this.curves.length == 0) {
+            this.plethCurve = [[]];
+            this.respFrequency = null;
+            this.respFrequency = null;
+            this.capnographyCurve = [[]];
+            this.ecgCurve = [[]];
+            this.ecgCurveConfiguration = null;
+            this.nibpCurve = [[]];
+            this.ibpConfiguration = null;
+            this.ibpCurve = null;
+            this.capnographyConfiguration = null;
+            this.nibpConfiguration = null;
+        } else {
+            this.curves.forEach((cv: any) => {
+                const physiologicalParameter: PhysiologicalParamaterI =
+                    cv.ppPerAs.physiologicalParameter;
+                switch (physiologicalParameter.label.toUpperCase()) {
+                    case CurvesHelper.PhysiologicalParamaters.SPO2: {
+                        if (!this.plethConfiguration) {
+                            this.plethConfiguration = {
+                                label: cv.ppPerAs.physiologicalParameter.label,
+                                unit: cv.ppPerAs.physiologicalParameter.unit,
+                                alert_high: cv.ppPerAs.alert_high,
+                                alert_low: cv.ppPerAs.alert_low,
+                            };
+                        }
+                        this.plethCurve.push([+cv.t, +cv.value]);
+                        break;
+                    }
+                    case CurvesHelper.PhysiologicalParamaters.ETCO2: {
+                        if (!this.capnographyConfiguration) {
+                            this.capnographyConfiguration = {
+                                label: cv.ppPerAs.physiologicalParameter.label,
+                                unit: cv.ppPerAs.physiologicalParameter.unit,
+                                alert_high: cv.ppPerAs.alert_high,
+                                alert_low: cv.ppPerAs.alert_low,
+                            };
+                        }
+                        this.capnographyCurve.push([+cv.t, +cv.value]);
+                        break;
+                    }
+                    case CurvesHelper.PhysiologicalParamaters.ECG: {
+                        if (!this.ecgCurveConfiguration) {
+                            this.ecgCurveConfiguration = {
+                                label: cv.ppPerAs.physiologicalParameter.label,
+                                unit: cv.ppPerAs.physiologicalParameter.unit,
+                                alert_high: cv.ppPerAs.alert_high,
+                                alert_low: cv.ppPerAs.alert_low,
+                            };
+                        }
+                        this.ecgCurve.push([+cv.t, +cv.value]);
+                        break;
+                    }
+                    case CurvesHelper.PhysiologicalParamaters.IBP: {
+                        if (!this.ibpConfiguration) {
+                            this.ibpConfiguration = {
+                                label: cv.ppPerAs.physiologicalParameter.label,
+                                unit: cv.ppPerAs.physiologicalParameter.unit,
+                                alert_high: cv.ppPerAs.alert_high,
+                                alert_low: cv.ppPerAs.alert_low,
+                            };
+                        }
+                        this.ibpCurve.push([+cv.t, +cv.value]);
+                        break;
+                    }
+                    case CurvesHelper.PhysiologicalParamaters.NIBP: {
+                        if (!this.nibpConfiguration) {
+                            this.nibpConfiguration = {
+                                label: cv.ppPerAs.physiologicalParameter.label,
+                                unit: cv.ppPerAs.physiologicalParameter.unit,
+                                alert_high: cv.ppPerAs.alert_high,
+                                alert_low: cv.ppPerAs.alert_low,
+                            };
+                        }
+                        this.nibpCurve.push([+cv.t, +cv.value]);
+                        break;
+                    }
+                    case CurvesHelper.PhysiologicalParamaters.TEMP: {
+                        this.temperature = {
+                            value: +cv.value,
+                            label: cv.ppPerAs.physiologicalParameter.label,
+                            unit: cv.ppPerAs.physiologicalParameter.unit,
+                            alert_high: cv.ppPerAs.alert_high,
+                            alert_low: cv.ppPerAs.alert_low,
+                        };
+                        break;
+                    }
+                    case CurvesHelper.PhysiologicalParamaters.RESP: {
+                        this.respFrequency = {
+                            value: +cv.value,
+                            label: cv.ppPerAs.physiologicalParameter.label,
+                            unit: cv.ppPerAs.physiologicalParameter.unit,
+                            alert_high: cv.ppPerAs.alert_high,
+                            alert_low: cv.ppPerAs.alert_low,
+                        };
+                        break;
+                    }
+                    case CurvesHelper.PhysiologicalParamaters.CARDIAC_FREQ: {
+                        this.cardiacFrequency = {
+                            value: +cv.value,
+                            label: cv.ppPerAs.physiologicalParameter.label,
+                            unit: cv.ppPerAs.physiologicalParameter.unit,
+                            alert_high: cv.ppPerAs.alert_high,
+                            alert_low: cv.ppPerAs.alert_low,
+                        };
+                        break;
+                    }
+                    default:
+                        break;
                 }
-                case CurvesHelper.PhysiologicalParamaters.ETCO2: {
-                    this.capnographyCurve.push({
-                        t: +cv.t,
-                        label: cv.ppPerAs.physiologicalParameter.label,
-                        unit: cv.ppPerAs.physiologicalParameter.unit,
-                        value: +cv.value,
-                    });
-
-                    this.capnographyData.push([+cv.t, +cv.value]);
-                    break;
-                }
-                case CurvesHelper.PhysiologicalParamaters.ECG: {
-                    this.ecgCurve.push({
-                        t: cv.t,
-                        label: cv.ppPerAs.physiologicalParameter.label,
-                        unit: cv.ppPerAs.physiologicalParameter.unit,
-                        value: cv.value,
-                    });
-                    break;
-                }
-                case CurvesHelper.PhysiologicalParamaters.IBP: {
-                    this.ibpCurve.push({
-                        t: cv.t,
-                        label: cv.ppPerAs.physiologicalParameter.label,
-                        unit: cv.ppPerAs.physiologicalParameter.unit,
-                        value: cv.value,
-                    });
-                    break;
-                }
-                case CurvesHelper.PhysiologicalParamaters.NIBP: {
-                    this.nibpCurve.push({
-                        t: cv.t,
-                        label: cv.ppPerAs.physiologicalParameter.label,
-                        unit: cv.ppPerAs.physiologicalParameter.unit,
-                        value: cv.value,
-                    });
-                    break;
-                }
-                default:
-                    break;
-            }
-        });
-        this.loadCuve();
-        this.scaleCurves();
+            });
+            this.loadCuve();
+            this.scaleCurves();
+        }
+        console.log(this.capnographyConfiguration);
+        console.log(this.plethConfiguration);
     }
 
     /**
      * Scale curves according to physiological paramaters (Cardiac Freq and Resp Freq)
      */
     private scaleCurves(): void {
-        // this.capnographyData = this.CurvesHelper.scaleCurve(
-        //     this.capnographyData
+        // this.capnographyCurve = this.CurvesHelper.scaleCurve(
+        //     this.capnographyCurve
         // );
     }
 
@@ -241,7 +311,7 @@ export class PanelComponent extends BaseComponent implements OnInit {
      * @todo delete it
      */
     private loadCuve() {
-        this.nibpCurveData = [
+        this.nibpCurve = [
             [-100, -7.28568859177975],
             [-99.5, -10.308641686442629],
             [-99, -12.413148293738898],
@@ -645,9 +715,8 @@ export class PanelComponent extends BaseComponent implements OnInit {
             [100, 8.215603575381051],
         ];
         let rand = Math.floor(Math.random() * 10);
-        this.nibpCurveData.forEach((data: number[]) => {
-            if (data[0])
-                this.ecgCurveData.push([data[0] * rand, data[1] * rand]);
+        this.nibpCurve.forEach((data: number[]) => {
+            if (data[0]) this.ecgCurve.push([data[0] * rand, data[1] * rand]);
         });
     }
 
@@ -655,8 +724,8 @@ export class PanelComponent extends BaseComponent implements OnInit {
      * Add noise on capnography Curve
      */
     onAddNoiseCapnography() {
-        this.capnographyData = this.capnographyData.concat(
-            this.CurvesHelper.editX(this.capnographyData)
+        this.capnographyCurve = this.capnographyCurve.concat(
+            this.CurvesHelper.editX(this.capnographyCurve)
         );
     }
 
@@ -664,8 +733,8 @@ export class PanelComponent extends BaseComponent implements OnInit {
      * Add noise on NIBP curve
      */
     onAddNoiseNIBP() {
-        this.nibpCurveData = this.nibpCurveData.concat(
-            this.CurvesHelper.editX(this.nibpCurveData)
+        this.nibpCurve = this.nibpCurve.concat(
+            this.CurvesHelper.editX(this.nibpCurve)
         );
     }
 
@@ -726,7 +795,6 @@ export class PanelComponent extends BaseComponent implements OnInit {
     }
 
     getScenarios(scenarios: any): void {
-        // debugger;
         this.scenariosSimulation = scenarios;
         this.editScenario = this.scenariosSimulation[this.indexActive];
         this.activeScenario = this.scenariosSimulation[
