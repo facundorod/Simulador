@@ -180,17 +180,7 @@ export class PanelComponent extends BaseComponent implements OnInit {
      */
     private setCurves() {
         if (this.curves.length == 0) {
-            this.plethCurve = [[]];
-            this.respFrequency = null;
-            this.respFrequency = null;
-            this.capnographyCurve = [[]];
-            this.ecgCurve = [[]];
-            this.ecgCurveConfiguration = null;
-            this.nibpCurve = [[]];
-            this.ibpConfiguration = null;
-            this.ibpCurve = null;
-            this.capnographyConfiguration = null;
-            this.nibpConfiguration = null;
+            this.initCurves();
         } else {
             this.curves.forEach((cv: any) => {
                 const physiologicalParameter: PhysiologicalParamaterI =
@@ -293,8 +283,6 @@ export class PanelComponent extends BaseComponent implements OnInit {
             this.loadCuve();
             this.scaleCurves();
         }
-        console.log(this.capnographyConfiguration);
-        console.log(this.plethConfiguration);
     }
 
     /**
@@ -304,6 +292,23 @@ export class PanelComponent extends BaseComponent implements OnInit {
         // this.capnographyCurve = this.CurvesHelper.scaleCurve(
         //     this.capnographyCurve
         // );
+    }
+
+    /**
+     * Initialize curves
+     */
+    private initCurves() {
+        this.plethCurve = [[]];
+        this.respFrequency = null;
+        this.respFrequency = null;
+        this.capnographyCurve = [[]];
+        this.ecgCurve = [[]];
+        this.ecgCurveConfiguration = null;
+        this.nibpCurve = [[]];
+        this.ibpConfiguration = null;
+        this.ibpCurve = null;
+        this.capnographyConfiguration = null;
+        this.nibpConfiguration = null;
     }
 
     /**
@@ -800,6 +805,8 @@ export class PanelComponent extends BaseComponent implements OnInit {
         this.activeScenario = this.scenariosSimulation[
             this.indexSimulationActive
         ];
+        this.curves = [];
+        this.initCurves();
         this.onLoadCurves();
     }
 
