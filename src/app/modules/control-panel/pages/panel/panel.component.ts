@@ -135,10 +135,10 @@ export class PanelComponent extends BaseComponent implements OnInit {
             ],
 
             cardiacFrequency: [
-                this.cardiacFrequency ? this.cardiacFrequency : 0,
+                this.cardiacFrequency ? this.cardiacFrequency.value : 0,
             ],
-            respFrequency: [this.respFrequency ? this.respFrequency : 0],
-            temperature: [this.temperature ? this.temperature : 0],
+            respFrequency: [this.respFrequency ? this.respFrequency.value : 0],
+            temperature: [this.temperature ? this.temperature.value : 0],
         });
     }
 
@@ -254,6 +254,9 @@ export class PanelComponent extends BaseComponent implements OnInit {
                             alert_high: cv.ppPerAs.alert_high,
                             alert_low: cv.ppPerAs.alert_low,
                         };
+                        this.formGroup.controls["temperature"].setValue(
+                            this.temperature.value
+                        );
                         break;
                     }
                     case CurvesHelper.PhysiologicalParamaters.RESP: {
@@ -264,6 +267,9 @@ export class PanelComponent extends BaseComponent implements OnInit {
                             alert_high: cv.ppPerAs.alert_high,
                             alert_low: cv.ppPerAs.alert_low,
                         };
+                        this.formGroup.controls["respFrequency"].setValue(
+                            this.respFrequency.value
+                        );
                         break;
                     }
                     case CurvesHelper.PhysiologicalParamaters.CARDIAC_FREQ: {
@@ -274,6 +280,9 @@ export class PanelComponent extends BaseComponent implements OnInit {
                             alert_high: cv.ppPerAs.alert_high,
                             alert_low: cv.ppPerAs.alert_low,
                         };
+                        this.formGroup.controls["cardiacFrequency"].setValue(
+                            this.cardiacFrequency.value
+                        );
                         break;
                     }
                     default:
