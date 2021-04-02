@@ -97,6 +97,7 @@
                 <label class="col-md-6 control-label">Respiration Frequency</label>
                 <div class="col-md-6">
                     <input class="form-control" formControlName="respFrequency">
+
                 </div>
             </div>
 
@@ -142,7 +143,7 @@
                 </div>
                 <div class="col-md-9" style="border: 2px solid red">
                     <app-curves [colorLine]="'#718E70'" [series]="nibpCurve" [minX]="-40" [maxX]="40" [minY]="-100"
-                        [maxY]="100" class="curves"></app-curves>
+                        [maxY]="100" class="curves" [simulation]="false" [loadOptions]="chartOptions"></app-curves>
                 </div>
 
 
@@ -179,7 +180,7 @@
 
                 <div class="col-md-9" style="border: 2px solid red">
                     <app-curves [colorLine]="'#6EC1ED'" [series]="capnographyCurve" [minX]="0" [maxX]="1"
-                        [minY]="-2.53164556962025" [maxY]="36.0759493670886" class="curves"></app-curves>
+                        [minY]="-2.53164556962025" [simulation]="false" [maxY]="36.0759493670886" class="curves" [loadOptions]="chartOptions"></app-curves>
                 </div>
             </div>
 
@@ -215,7 +216,7 @@
                 </div>
                 <div class="col-md-9" style="border: 2px solid red">
                     <app-curves [colorLine]="'#4D4260'" [series]="ecgCurve" [minX]="-80" [maxX]="80" [minY]="-200"
-                        [maxY]="300">
+                        [maxY]="300" [simulation]="false" [loadOptions]="chartOptions">
                     </app-curves>
                 </div>
             </div>
@@ -251,7 +252,7 @@
 
                 <div class="col-md-9" style="border: 2px solid red">
                     <app-curves [colorLine]="'#B9957B'" [series]="plethCurve" [minX]="0" [maxX]="0.997823721436344"
-                        [minY]="34.4829219764082" [maxY]="84.9282296650718"></app-curves>
+                        [minY]="34.4829219764082" [maxY]="84.9282296650718" [simulation]="false" [loadOptions]="chartOptions"></app-curves>
                 </div>
             </div>
 

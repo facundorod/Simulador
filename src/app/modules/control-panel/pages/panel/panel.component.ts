@@ -54,6 +54,9 @@ export class PanelComponent extends BaseComponent implements OnInit {
     cardiacFrequency: CurvesI;
     respFrequency: CurvesI;
     temperature: CurvesI;
+    chartOptions: any = {
+        height: 400,
+    };
 
     constructor(
         private animalSpecieService: AnimalSpeciesService,
@@ -154,7 +157,6 @@ export class PanelComponent extends BaseComponent implements OnInit {
      * Load curves for scenario active for simulation and for animalSpecie selected
      */
     public onLoadCurves() {
-        console.log(this.activeScenario);
         if (this.activeScenario && this.formGroup.value.animalSpecie != null) {
             this.curvesService
                 .findAll({

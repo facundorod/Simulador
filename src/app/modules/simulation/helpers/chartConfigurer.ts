@@ -8,6 +8,7 @@ export class ChartConfigurer {
     protected maxX: number;
     protected minY: number;
     protected maxY: number;
+    protected xAxisShow: boolean = true;
 
     constructor(
         series: number[][],
@@ -15,22 +16,31 @@ export class ChartConfigurer {
         minX: number,
         maxX: number,
         minY: number,
-        maxY: number
+        maxY: number,
+        xAxisShow: boolean = true
     ) {
-        this.loadData(series, colorLine, minX, maxX, minY, maxY);
+        this.loadData(series, colorLine, minX, maxX, minY, maxY, xAxisShow);
         this.chartOption = {
             xAxis: {
                 type: "value",
                 min: minX,
                 max: maxX,
-                show: false,
-                // interval: 0.1,
+                show: this.xAxisShow ? this.xAxisShow : false,
                 axisLine: {
-                    show: false,
-                    onZero: false,
+                    show: this.xAxisShow ? this.xAxisShow : false,
+                    onZero: this.xAxisShow ? this.xAxisShow : false,
                     lineStyle: {
                         width: 5,
                     },
+                },
+                axisTick: {
+                    show: false,
+                },
+                axisLabel: {
+                    show: false,
+                },
+                splitLine: {
+                    show: false,
                 },
             },
             yAxis: {
@@ -65,13 +75,15 @@ export class ChartConfigurer {
         minX: number,
         maxX: number,
         minY: number,
-        maxY: number
+        maxY: number,
+        xAxisShow: boolean
     ): void {
         this.chartDataSeries = series;
         this.colorLine = colorLine;
         this.minX = minX;
         this.maxX = maxX;
         (this.minY = minY), (this.maxY = maxY);
+        this.xAxisShow = xAxisShow;
     }
 
     public getChart(): EChartsOption {

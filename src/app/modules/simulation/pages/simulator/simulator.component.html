@@ -1,0 +1,126 @@
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-lg-9">
+            <p class="text-left" style="margin-left: 44px;">{{today | date: 'medium'}} <span
+                    style="margin-left: 20px">DOG</span> </p>
+        </div>
+        <div class="col-lg-3">
+            <p> ANIMAL CLINIC </p>
+        </div>
+    </div>
+    <div class="row ecg">
+        <div class="col-lg-8">
+            <app-curves [colorLine]="'#718E70'" [series]="ecgCurve" [minX]="0" [maxX]="50" [minY]="0" [maxY]="100"
+                class="ecgCurve"> </app-curves>
+        </div>
+        <div class="col-lg-3 ecgConfig">
+            <div class="row">
+                <div class="col-lg-5">
+                    <p style="color: '#7dc97a'; font-size: 1.3em; margin-left: -10px;">* <span>
+                            <p style="color: '#7dc97a'; font-size: 1em;">HR: SPO2
+                        </span></p>
+                </div>
+                <div class="col-lg-5">
+                    <p style="color: '#23d358'; font-size: 5.0em; margin-top: -20px; margin-left: -20px">{{heartRate}}
+                    </p>
+                </div>
+                <div class="col-lg-2">
+                    <p style="color: '#7dc97a'; font-size: 1em;">160 <span> OFF </span> <span>HR</span> <span> bpm
+                        </span></p>
+                </div>
+            </div>
+
+        </div>
+        <div class="col-lg-1 col-labels ecgLabel">
+            <p class="textLabel ecgLabelText">ECG</p>
+        </div>
+    </div>
+    <div class="row curves">
+        <div class="col-lg-8">
+            <app-curves [colorLine]="'#6EC1ED'" [series]="capnographyCurve" [minX]="0" [maxX]="4" [minY]="0"
+                [maxY]="100">
+            </app-curves>
+        </div>
+        <div class="col-lg-3 capnographyConfig">
+            <div class="row">
+                <div class="col-lg-4">
+                    <p style="color: '#6EC1ED'; font-size: 2.5em; margin-left: 30px;">37</p>
+                    <p style="color: '#6EC1ED'; font-size: 2.5em; margin-left: 30px">1</p>
+                </div>
+                <div class="col-lg-2">
+                    <p style="color: '#6EC1ED'; font-size: 1.0em;">60 <span> 20 </span> <span> ETCO2 </span> <span> mmHg
+                        </span> <span> 8 </span><span> INCO2 </span></p>
+                </div>
+                <div class="col-lg-4">
+                    <p style="color: '#6EC1ED'; font-size: 2.5em; margin-left: 10px">12</p>
+                </div>
+                <div class="col-lg-2">
+                    <p style="color: '#6EC1ED'; font-size: 1.0;">40 <span> 8 </span> <span> RR </span> <span> RPM
+                        </span></p>
+                </div>
+            </div>
+
+        </div>
+        <div class="col-lg-1 col-labels capLabel">
+            <p class="textLabel capLabelText">CO2</p>
+        </div>
+
+    </div>
+    <div class="row curves2">
+        <div class="col-lg-8">
+            <app-curves [colorLine]="'#B9957B'" [series]="plethysmographyCurve" [minX]="0" [maxX]="4"
+                [minY]="34.4829219764082" [maxY]="104.9282296650718"></app-curves>
+        </div>
+        <div class="col-lg-3 art1-config">
+            <div class="row">
+                <div class="col-lg-6">
+                    <p style="color: #7032db; font-size: 2em" class="text-center">118 &nbsp; /<span>
+                            <p style="color: #7032db; font-size: 0.9em" class="text-left"> HR 60</p>
+                        </span></p>
+                </div>
+                <div class="col-lg-4">
+                    <p style="color: #7032db; font-size: 2em" class="text-center">80
+                        <br> 92
+                    </p>
+                </div>
+                <div class="col-lg-2">
+                    <p style="color: #7032db; font-size: 0.9em; margin-left: -10px">160 <br> 70 <br> SYS <br> mmHg</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-1 col-labels art1-label">
+            <p class="textLabel art1-labelText">ART1</p>
+        </div>
+
+
+    </div>
+
+    <div class="row curves3">
+        <div class="col-lg-8">
+            <app-curves [colorLine]="'#B9957B'" [series]="plethysmographyCurve" [minX]="0" [maxX]="6"
+                [minY]="34.4829219764082" [maxY]="104.9282296650718"></app-curves>
+        </div>
+        <div class="col-lg-3 pa2-config">
+            <div class="row">
+                <div class="col-lg-6">
+                    <p style="color: #7032db; font-size: 2em" class="text-center">15 &nbsp; /</p>
+                </div>
+                <div class="col-lg-4">
+                    <p style="color: #7032db; font-size: 2em" class="text-center">10
+                        <br> 12
+                    </p>
+                </div>
+                <div class="col-lg-2">
+                    <p style="color: #7032db; font-size: 0.9em; margin-left: -10px">40 <br> 0 <br> SYS <br> mmHg</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-1 col-labels pa2-label">
+            <p class="textLabel pa2-labelText">PA2</p>
+        </div>
+
+    </div>
+
+
+
+</div>
