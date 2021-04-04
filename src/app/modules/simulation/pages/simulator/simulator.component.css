@@ -98,3 +98,47 @@
     margin-top: 0.2px;
     color: #7032db;
 }
+
+.spo2-config {
+    margin-top: -4px;
+    width: 279px;
+    /* max-height: 200px !important; */
+}
+
+.spo2-labelText {
+    color: #b9957b;
+    border-radius: 10px;
+    border: 2px solid #fff;
+    height: 108px;
+    width: 33px;
+}
+
+.nibp-config {
+    border-radius: 10px;
+    border: 2px solid #fff;
+    width: 279px;
+}
+
+.nibp-labelText {
+    color: #fff;
+    border-radius: 10px;
+    border: 2px solid #fff;
+    margin-top: -18px;
+    height: 108px;
+    width: 33px;
+}
+
+.tempConfig {
+    border-radius: 10px;
+    border: 2px solid #fff;
+    width: 279px;
+}
+
+.temp-labelText {
+    color: #22a504;
+    border-radius: 10px;
+    border: 2px solid #fff;
+    margin-top: -18px;
+    height: 108px;
+    width: 33px;
+}
