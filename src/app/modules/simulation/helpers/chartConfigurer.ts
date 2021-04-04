@@ -9,7 +9,8 @@ export class ChartConfigurer {
     protected minY: number;
     protected maxY: number;
     protected xAxisShow: boolean = true;
-
+    protected lineStyle: Object;
+    protected areaStyle: Object;
     constructor(
         series: number[][],
         colorLine: string = "blue",
@@ -17,9 +18,19 @@ export class ChartConfigurer {
         maxX: number,
         minY: number,
         maxY: number,
-        xAxisShow: boolean = true
+        xAxisShow: boolean = true,
+        type: string = null
     ) {
-        this.loadData(series, colorLine, minX, maxX, minY, maxY, xAxisShow);
+        this.loadData(
+            series,
+            type,
+            colorLine,
+            minX,
+            maxX,
+            minY,
+            maxY,
+            xAxisShow
+        );
         this.chartOption = {
             xAxis: {
                 type: "value",
@@ -55,15 +66,26 @@ export class ChartConfigurer {
                     smooth: true,
                     showSymbol: false,
                     data: this.chartDataSeries,
+                    emphasis: {
+                        focus: "none",
+                        scale: false,
+                    },
+                    // animation: true,
+                    // animationEasing: "circularInOut",
+                    // animationDurationUpdate: function (idx) {
+                    //     // delay for later data is larger
+                    //     return idx * 100;
+                    // },
+                    // animationDuration: 300,
                     type: "line",
+                    // animationEasingUpdate: "cubicOut",
                     color: this.colorLine,
-                    // lineStyle: {
-                    //     width: 0,
-                    // },
-                    // areaStyle: {
-                    //     color: this.colorLine,
-                    //     origin: "start",
-                    // },
+                    lineStyle: this.lineStyle
+                        ? this.lineStyle
+                        : {
+                              width: 2,
+                          },
+                    areaStyle: this.areaStyle ? this.areaStyle : null,
                 },
             ],
         };
@@ -71,6 +93,7 @@ export class ChartConfigurer {
 
     public loadData(
         series: number[][],
+        type: string = null,
         colorLine: string = "blue",
         minX: number,
         maxX: number,
@@ -84,6 +107,15 @@ export class ChartConfigurer {
         this.maxX = maxX;
         (this.minY = minY), (this.maxY = maxY);
         this.xAxisShow = xAxisShow;
+        if (type === "etco2") {
+            this.lineStyle = {
+                width: 0,
+            };
+            this.areaStyle = {
+                color: this.colorLine,
+                origin: "start",
+            };
+        }
     }
 
     public getChart(): EChartsOption {

@@ -101,7 +101,7 @@
 
 .spo2-config {
     margin-top: -4px;
-    width: 279px;
+    width: 470px;
     /* max-height: 200px !important; */
 }
 
@@ -116,7 +116,7 @@
 .nibp-config {
     border-radius: 10px;
     border: 2px solid #fff;
-    width: 279px;
+    width: 470px;
 }
 
 .nibp-labelText {
@@ -131,7 +131,7 @@
 .tempConfig {
     border-radius: 10px;
     border: 2px solid #fff;
-    width: 279px;
+    width: 470px;
 }
 
 .temp-labelText {

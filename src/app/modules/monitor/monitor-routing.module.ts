@@ -1,16 +1,13 @@
 import { NgModule } from "@angular/core";
 import { Routes, RouterModule } from "@angular/router";
 import { CurvesService } from "../control-panel/services/curves.service";
-import { NewComponent } from "./pages/new/new.component";
+import { SimulatorComponent } from "./pages/simulator/simulator.component";
 
-const routes: Routes = [
-    { path: "new", component: NewComponent },
-    // { path: "curves", component: CurvesComponent },
-];
+const routes: Routes = [{ path: "", component: SimulatorComponent }];
 
 @NgModule({
     imports: [RouterModule.forChild(routes)],
     exports: [RouterModule],
     providers: [CurvesService],
 })
-export class SimulationRoutingModule {}
+export class MonitorRoutingModule {}

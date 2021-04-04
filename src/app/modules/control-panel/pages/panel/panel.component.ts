@@ -73,7 +73,7 @@ export class PanelComponent extends BaseComponent implements OnInit {
         this.setLoading(true);
         this.loadData();
         this.initFormGroup();
-        this.onLoadCurves();
+        this.onLoadCurves(this.formGroup.value.animalSpecie);
     }
 
     /**
@@ -143,6 +143,7 @@ export class PanelComponent extends BaseComponent implements OnInit {
             respFrequency: [this.respFrequency ? this.respFrequency.value : 0],
             temperature: [this.temperature ? this.temperature.value : 0],
         });
+        this.onValueChanges();
     }
 
     /**
@@ -153,14 +154,21 @@ export class PanelComponent extends BaseComponent implements OnInit {
         this.saveSimulation();
     }
 
+    private onValueChanges(): void {
+        this.formGroup.get("animalSpecie").valueChanges.subscribe((val) => {
+            this.initCurves();
+            this.onLoadCurves(val);
+        });
+    }
+
     /**
      * Load curves for scenario active for simulation and for animalSpecie selected
      */
-    public onLoadCurves() {
-        if (this.activeScenario && this.formGroup.value.animalSpecie != null) {
+    public onLoadCurves(as: any) {
+        if (this.activeScenario && as != null) {
             this.curvesService
                 .findAll({
-                    animalSpecie: this.formGroup.value.animalSpecie.id_as,
+                    animalSpecie: as.id_as,
                     scenario: this.activeScenario.id_scenario,
                 })
                 .subscribe(
@@ -818,7 +826,7 @@ export class PanelComponent extends BaseComponent implements OnInit {
         ];
         this.curves = [];
         this.initCurves();
-        this.onLoadCurves();
+        this.onLoadCurves(this.formGroup.value.animalSpecie);
     }
 
     getPosScenarios(pos: any): void {

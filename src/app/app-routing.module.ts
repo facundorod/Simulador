@@ -3,6 +3,7 @@ import { MainComponent } from "./shared/layouts/main/main.component";
 import { NgModule } from "@angular/core";
 import { Routes, RouterModule } from "@angular/router";
 import { AuthGuard } from "@guards/auth.guard";
+import { SimulationLayoutComponent } from "./shared/layouts/simulationLayout/simulation-layout.component";
 
 const routes: Routes = [
     { path: "", redirectTo: "/home", pathMatch: "full" },
@@ -54,6 +55,19 @@ const routes: Routes = [
                 loadChildren: () =>
                     import("./modules/simulation/simulation.module").then(
                         (m) => m.SimulationModule
+                    ),
+            },
+        ],
+    },
+    {
+        path: "monitor",
+        component: SimulationLayoutComponent,
+        children: [
+            {
+                path: "",
+                loadChildren: () =>
+                    import("./modules/monitor/monitor.module").then(
+                        (m) => m.MonitorModule
                     ),
             },
         ],

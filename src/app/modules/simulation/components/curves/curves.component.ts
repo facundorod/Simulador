@@ -19,6 +19,7 @@ export class CurvesComponent implements OnInit {
     @Input() maxX: number;
     @Input() minY: number;
     @Input() maxY: number;
+    @Input() type: string = null;
     num: number = 0;
     chartOption: EChartsOption;
     private echartsInstance: ECharts;
@@ -33,11 +34,12 @@ export class CurvesComponent implements OnInit {
             this.maxX,
             this.minY,
             this.maxY,
-            this.simulation
+            this.simulation,
+            this.type
         );
 
         this.chartOption = chartConfigurer.getChart();
-        if (this.simulation)
+        if (this.simulation) {
             setInterval(() => {
                 if (this.num > 4) {
                     clearInterval();
@@ -50,6 +52,7 @@ export class CurvesComponent implements OnInit {
                 this.echartsInstance.setOption(this.chartOption);
                 this.num += 1;
             }, 3000);
+        }
     }
 
     onChartInit(e: any) {

@@ -10,7 +10,7 @@
     </div>
     <div class="row ecg">
         <div class="col-lg-8">
-            <app-curves [colorLine]="'#718E70'" [series]="ecgCurve" [minX]="0" [maxX]="50" [minY]="0" [maxY]="100"
+            <app-curves [colorLine]="'#718E70'" [series]="ecgCurve" [minX]="0" [maxX]="4" [minY]="-20" [maxY]="50"
                 class="ecgCurve"> </app-curves>
         </div>
         <div class="col-lg-3 ecgConfig">
@@ -37,8 +37,8 @@
     </div>
     <div class="row curves">
         <div class="col-lg-8">
-            <app-curves [colorLine]="'#6EC1ED'" [series]="capnographyCurve" [minX]="0" [maxX]="4" [minY]="0"
-                [maxY]="100">
+            <app-curves [colorLine]="'#6EC1ED'" [series]="capnographyCurve"  [type]="'etco2'" [minX]="0" [maxX]="4" [minY]="0"
+                [maxY]="80">
             </app-curves>
         </div>
         <div class="col-lg-3 capnographyConfig">
@@ -68,8 +68,8 @@
     </div>
     <div class="row curves2">
         <div class="col-lg-8">
-            <app-curves [colorLine]="'#B9957B'" [series]="plethysmographyCurve" [minX]="0" [maxX]="4"
-                [minY]="34.4829219764082" [maxY]="104.9282296650718"></app-curves>
+            <app-curves [colorLine]="'#4D4260'" [series]="nibpCurve" [minX]="0" [maxX]="4" [minY]="-100" [maxY]="190"
+               ></app-curves>
         </div>
         <div class="col-lg-3 art1-config">
             <div class="row">
@@ -97,7 +97,7 @@
 
     <div class="row curves3">
         <div class="col-lg-8">
-            <app-curves [colorLine]="'#B9957B'" [series]="plethysmographyCurve" [minX]="0" [maxX]="6"
+            <app-curves [colorLine]="'#B9957B'" [series]="plethysmographyCurve" [minX]="0" [maxX]="4"
                 [minY]="34.4829219764082" [maxY]="104.9282296650718"></app-curves>
         </div>
         <div class="col-lg-3 pa2-config">
@@ -163,7 +163,7 @@
                     <p class="text-center" style="color: #22a504; font-size: 2em"> 37.0 <br> 37.6</p>
                 </div>
                 <div class="col-lg-4">
-                    <p class="text-end" style="color: #22a504; font-size: 0.9em; margin-left: 40px;"> 39.2 <br> OFF <br> T1 <br> °C </p>
+                    <p class="text-end" style="color: #22a504; font-size: 0.9em; margin-left: 80px;"> 39.2 <br> OFF <br> T1 <br> °C </p>
                 </div>
             </div>
 

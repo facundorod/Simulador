@@ -10,7 +10,6 @@ import { SimulationRoutingModule } from "./simulation-routing.module";
 import { NewComponent } from "./pages/new/new.component";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { CurvesComponent } from "./components/curves/curves.component";
-import { SimulatorComponent } from './pages/simulator/simulator.component';
 
 @NgModule({
     declarations: [
@@ -18,7 +17,6 @@ import { SimulatorComponent } from './pages/simulator/simulator.component';
         SimulationsComponent,
         ScenariosModalComponent,
         CurvesComponent,
-        SimulatorComponent,
     ],
     imports: [
         CommonModule,
