@@ -11,11 +11,11 @@ import { FormBuilder } from "@angular/forms";
     styleUrls: ["./simulator.component.css"],
 })
 export class SimulatorComponent extends BaseComponent implements OnInit {
-    public capnographyCurve: number[][] = new Array(new Array());
-    public ecgCurve: number[][] = new Array(new Array());
-    public plethysmographyCurve: number[][] = new Array(new Array());
-    public nibpCurve: number[][] = new Array(new Array());
-    public ibpCurve: number[][] = new Array(new Array());
+    public capnographyCurve: number[][] = [];
+    public ecgCurve: number[][] = new Array();
+    public plethysmographyCurve: number[][] = new Array();
+    public nibpCurve: number[][] = new Array();
+    public ibpCurve: number[][] = new Array();
     public heartRate: number = 60;
     public curves: any[];
     public dummyCurve: number[][] = [
@@ -25,31 +25,16 @@ export class SimulatorComponent extends BaseComponent implements OnInit {
     public today: Date = new Date();
     public CurvesHelper = new CurvesHelper.CurvesHelper();
 
+    public samples: number = 4;
+    public curvePeriod: number = 1;
+
     constructor(private curvesService: CurvesService, private fb: FormBuilder) {
         super();
-
-        this.curvesService
-            .findAll({
-                animalSpecie: 1,
-                scenario: 1,
-            })
-            .subscribe(
-                (curves: any) => {
-                    if (curves.data.length > 0) {
-                        this.curves = curves.data;
-                        this.setCurves();
-                        this.loadECGCurve();
-                        this.loadNibpCurve();
-                    }
-                },
-                (error: any) => {
-                    console.log(error);
-                }
-            );
     }
 
     ngOnInit(): void {
         this.initFormGroup();
+        this.loadData();
     }
 
     setCurves() {
@@ -59,6 +44,7 @@ export class SimulatorComponent extends BaseComponent implements OnInit {
             switch (physiologicalParameter.label.toUpperCase()) {
                 case CurvesHelper.PhysiologicalParamaters.SPO2: {
                     this.plethysmographyCurve.push([+cv.t, +cv.value]);
+
                     break;
                 }
                 case CurvesHelper.PhysiologicalParamaters.ETCO2: {
@@ -82,6 +68,28 @@ export class SimulatorComponent extends BaseComponent implements OnInit {
                     break;
             }
         });
+        this.scaleCurves();
+    }
+
+    private loadData() {
+        this.curvesService
+            .findAll({
+                animalSpecie: 1,
+                scenario: 1,
+            })
+            .subscribe(
+                (curves: any) => {
+                    if (curves.data.length > 0) {
+                        this.curves = curves.data;
+                        this.setCurves();
+                        this.loadECGCurve();
+                        this.loadNibpCurve();
+                    }
+                },
+                (error: any) => {
+                    console.log(error);
+                }
+            );
     }
 
     /**
@@ -97,6 +105,29 @@ export class SimulatorComponent extends BaseComponent implements OnInit {
         this.ecgCurve.forEach((data: number[]) => {
             if (data[0]) this.nibpCurve.push([data[0], data[1] * rand]);
         });
+    }
+
+    private scaleCurves() {
+        this.reSampleCurve(this.ecgCurve);
+        this.reSampleCurve(this.capnographyCurve);
+        this.reSampleCurve(this.plethysmographyCurve);
+        this.reSampleCurve(this.nibpCurve);
+    }
+
+    private reSampleCurve(curve: number[][]) {
+        let min: number = 0;
+        let max: number = curve.length;
+        for (let i = 0; i < this.samples; i++) {
+            for (let index = min; index < max; index++) {
+                if (curve[index][0] != 0)
+                    curve.push([
+                        curve[index][0] + this.curvePeriod,
+                        curve[index][1],
+                    ]);
+            }
+            min = max;
+            max = curve.length;
+        }
     }
 
     private loadECGCurve() {

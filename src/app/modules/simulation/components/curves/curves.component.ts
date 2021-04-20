@@ -8,10 +8,7 @@ import { ChartConfigurer } from "../../helpers/chartConfigurer";
     styleUrls: ["./curves.component.css"],
 })
 export class CurvesComponent implements OnInit {
-    @Input() series: number[][] = [
-        [0, 1],
-        [2, 3],
-    ];
+    @Input() series: number[][] = null;
     @Input() colorLine: string;
     @Input() loadOptions: any = { height: 300 };
     @Input() simulation: boolean = true;
@@ -20,6 +17,8 @@ export class CurvesComponent implements OnInit {
     @Input() minY: number;
     @Input() maxY: number;
     @Input() type: string = null;
+    @Input() maxSamples: number = 4;
+    @Input() sampleFrequency: number = 0.1;
     num: number = 0;
     chartOption: EChartsOption;
     private echartsInstance: ECharts;
@@ -37,21 +36,14 @@ export class CurvesComponent implements OnInit {
             this.simulation,
             this.type
         );
-
         this.chartOption = chartConfigurer.getChart();
         if (this.simulation) {
             setInterval(() => {
-                if (this.num > 4) {
-                    clearInterval();
-                    return;
-                }
-                // this.chartOption.series[0].data = [];
-                // this.echartsInstance.setOption(this.chartOption);
                 this.scaleCurve();
                 this.chartOption.series[0].data = this.series;
                 this.echartsInstance.setOption(this.chartOption);
                 this.num += 1;
-            }, 3000);
+            }, 50);
         }
     }
 
@@ -61,12 +53,13 @@ export class CurvesComponent implements OnInit {
     }
 
     scaleCurve() {
-        let aux: number[][] = [[]];
-
-        this.series.forEach((data: number[]) => {
-            aux.push([data[0] + 1.0, data[1]]);
-        });
-
-        this.series = this.series.concat(aux);
+        if (this.series.length > 0) {
+            const firstData = this.series[0];
+            this.series.push([
+                firstData[0] + this.sampleFrequency,
+                firstData[1],
+            ]);
+            this.series.splice(0, 1);
+        }
     }
 }

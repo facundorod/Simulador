@@ -70,6 +70,7 @@ export class ChartConfigurer {
                         focus: "none",
                         scale: false,
                     },
+
                     // animation: true,
                     // animationEasing: "circularInOut",
                     // animationDurationUpdate: function (idx) {

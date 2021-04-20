@@ -1,4 +1,4 @@
-<div class="container-fluid">
+<div class="container-fluid" *ngIf="curves && curves.length > 0">
     <div class="row">
         <div class="col-lg-9">
             <p class="text-left" style="margin-left: 44px;">{{today | date: 'medium'}} <span
@@ -37,7 +37,7 @@
     </div>
     <div class="row curves">
         <div class="col-lg-8">
-            <app-curves [colorLine]="'#6EC1ED'" [series]="capnographyCurve"  [type]="'etco2'" [minX]="0" [maxX]="4" [minY]="0"
+            <app-curves [colorLine]="'#6EC1ED'" [series]="capnographyCurve" [type]="'etco2'" [minX]="0"   [minY]="0"
                 [maxY]="80">
             </app-curves>
         </div>
@@ -68,7 +68,7 @@
     </div>
     <div class="row curves2">
         <div class="col-lg-8">
-            <app-curves [colorLine]="'#4D4260'" [series]="nibpCurve" [minX]="0" [maxX]="4" [minY]="-100" [maxY]="190"
+            <app-curves [colorLine]="'#4D4260'" [series]="nibpCurve" [minX]="0"  [minY]="-100" [maxY]="190"
                ></app-curves>
         </div>
         <div class="col-lg-3 art1-config">
@@ -97,7 +97,7 @@
 
     <div class="row curves3">
         <div class="col-lg-8">
-            <app-curves [colorLine]="'#B9957B'" [series]="plethysmographyCurve" [minX]="0" [maxX]="4"
+            <app-curves [colorLine]="'#B9957B'" [series]="plethysmographyCurve" [minX]="0"
                 [minY]="34.4829219764082" [maxY]="104.9282296650718"></app-curves>
         </div>
         <div class="col-lg-3 pa2-config">
