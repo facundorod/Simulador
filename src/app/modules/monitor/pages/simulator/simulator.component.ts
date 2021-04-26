@@ -1,6 +1,5 @@
 import { Component, OnInit } from "@angular/core";
 import { CurvesService } from "@app/modules/control-panel/services/curves.service";
-import { PhysiologicalParamaterI } from "@app/shared/models/PhysiologicalParamaterI";
 import * as CurvesHelper from "../../../simulation/helpers/curvesHelper";
 import { BaseComponent } from "@app/shared/components/base.component";
 import { FormBuilder } from "@angular/forms";
@@ -38,36 +37,7 @@ export class SimulatorComponent extends BaseComponent implements OnInit {
     }
 
     setCurves() {
-        this.curves.forEach((cv: any) => {
-            const physiologicalParameter: PhysiologicalParamaterI =
-                cv.ppPerAs.physiologicalParameter;
-            switch (physiologicalParameter.label.toUpperCase()) {
-                case CurvesHelper.PhysiologicalParamaters.SPO2: {
-                    this.plethysmographyCurve.push([+cv.t, +cv.value]);
 
-                    break;
-                }
-                case CurvesHelper.PhysiologicalParamaters.ETCO2: {
-                    this.capnographyCurve.push([+cv.t, +cv.value]);
-                    break;
-                }
-                case CurvesHelper.PhysiologicalParamaters.ECG: {
-                    this.ecgCurve.push([+cv.t, +cv.value]);
-                    break;
-                }
-                case CurvesHelper.PhysiologicalParamaters.IBP: {
-                    this.ibpCurve.push([+cv.t, +cv.value]);
-                    break;
-                }
-                case CurvesHelper.PhysiologicalParamaters.NIBP: {
-                    this.nibpCurve.push([+cv.t, +cv.value]);
-                    break;
-                }
-
-                default:
-                    break;
-            }
-        });
         this.scaleCurves();
     }
 

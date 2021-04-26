@@ -1,8 +1,10 @@
+import { AnimalSpeciesI } from "./animal-speciesI";
+import { CurvesConfigurationI } from "./curvesConfigurationI";
+
+
 export interface CurvesI {
-    t?: number;
-    value?: number;
-    label: string;
-    unit: string;
-    alert_low?: number;
-    alert_high?: number;
+    curveConfiguration: CurvesConfigurationI;
+    animalSpecie: AnimalSpeciesI;
+    curveValues: number[][];
+
 }

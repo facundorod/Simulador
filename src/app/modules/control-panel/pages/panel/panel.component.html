@@ -72,24 +72,32 @@
                 </app-scenarios>
 
             </div>
-            <!-- Scenarios -->
         </div>
-
-
-        <!-- Curves -->
-        <!-- <button class="btn btn-primary" (click)="onLoadCurves()">
-            Load Curves
-        </button> -->
 
         <div class="mt-4 progress">
-            <div class="progress-bar bg-info" role="progressbar" style="width: 100%" aria-valuenow="50" aria-valuemin="0"
+            <div class="bar-separator progress-bar bg-info" role="progressbar" aria-valuenow="50" aria-valuemin="0"
                 aria-valuemax="100"></div>
         </div>
-        <div class="mt-4 form-row ml-5">
+
+        <div class="container" *ngIf="curves.length > 0">
+
+            <div class="row" *ngFor="let curve of curves">
+                <div class="col-md-4 param-configuration">
+                    <p> Some parameters configuration </p>
+                </div>
+                <div class="col-md-8 curves-configuration">
+                    <app-curves [colorLine]="curve.curveConfiguration.colorLine" [series]="curve.curveValues" [simulation]="false"
+                        [loadOptions]="chartOptions"></app-curves>
+                </div>
+            </div>
+
+
+        </div>
+        <!-- <div class="mt-4 form-row ml-5">
             <div class="form-group col-md-4">
                 <label class="col-md-6 control-label">Cardiac Frequency</label>
                 <div class="col-md-6">
-                    <input class="form-control" formControlName="cardiacFrequency" >
+                    <input class="form-control" formControlName="cardiacFrequency">
                 </div>
             </div>
 
@@ -108,157 +116,7 @@
                 </div>
             </div>
 
-        </div>
-
-        <!-- Curve 1-->
-
-        <div class="mt-4" *ngIf="curves && curves.length > 0">
-            <div class="row" *ngIf="nibpCurve && nibpCurve[0].length > 0">
-                <div class="col-md-3 configParamaters">
-                    <h4> ECG Configuration</h4>
-
-
-                    <div class="container mt-3">
-                        <div class="row">
-                            <label class="form-label mr-4"> Altitude </label>
-                            <input type="number" class="form-control col-md-3">
-                        </div>
-
-                        <div class="row mt-3">
-                            <label class="form-label mr-2"> Amplitude </label>
-                            <input type="number" class="form-control col-md-3">
-                        </div>
-
-
-                        <div class="row mt-3" *ngIf="nibpConfiguration">
-                            <p class="col-md-12"> Label: {{nibpConfiguration.label}}</p>
-                            <p class="col-md-12"> Unit: {{nibpConfiguration.unit }}</p>
-                        </div>
-                        <div class="container row mt-3">
-                            <button class="btn btn-primary" (click)="onAddNoiseNIBP()">Add Gaussean Noise</button>
-
-                        </div>
-
-                    </div>
-                </div>
-                <div class="col-md-9 configParamaters">
-                    <app-curves [colorLine]="'#718E70'" [series]="nibpCurve" [minX]="-40" [maxX]="40" [minY]="-100"
-                        [maxY]="100" class="curves" [simulation]="false" [loadOptions]="chartOptions"></app-curves>
-                </div>
-
-
-            </div>
-            <div class="row mt-4" *ngIf="capnographyCurve[1] && capnographyCurve[1].length > 0">
-
-                <div class="col-md-3 configParamaters">
-                    <h4> ETCO2 Configuration </h4>
-
-                    <div class="container mt-3">
-                        <div class="row">
-                            <label class="form-label mr-4"> Altitude </label>
-                            <input type="number" class="form-control col-md-3">
-                        </div>
-
-                        <div class="row mt-3">
-                            <label class="form-label mr-2"> Amplitude </label>
-                            <input type="number" class="form-control col-md-3">
-                        </div>
-                        <div class="row mt-3" *ngIf="capnographyConfiguration">
-
-                            <p class="col-md-12">Label: {{capnographyConfiguration.label}}</p>
-                            <p class="col-md-12">Unit: {{capnographyConfiguration.unit }}</p>
-                        </div>
-                        <div class="container row mt-3">
-                            <button class="btn btn-primary" (click)="onAddNoiseNIBP()">Add Gaussean Noise</button>
-
-                        </div>
-
-                    </div>
-
-
-                </div>
-
-                <div class="col-md-9 configParamaters">
-                    <app-curves [colorLine]="'#6EC1ED'" [series]="capnographyCurve" [minX]="0" [maxX]="1"
-                        [minY]="-2.53164556962025" [simulation]="false" [type]="'etco2'" [maxY]="36.0759493670886" class="curves" [loadOptions]="chartOptions"></app-curves>
-                </div>
-            </div>
-
-            <div class="row mt-4" *ngIf="ecgCurve[1] && ecgCurve[1].length > 0">
-                <div class="col-md-3 configParamaters">
-                    <h4> ART1 Configuration </h4>
-
-                    <div class="container mt-3">
-                        <div class="row">
-                            <label class="form-label mr-4"> Altitude </label>
-                            <input type="number" class="form-control col-md-3">
-                        </div>
-
-                        <div class="row mt-3">
-                            <label class="form-label mr-2"> Amplitude </label>
-                            <input type="number" class="form-control col-md-3">
-                        </div>
-
-                        <div class="row mt-3" *ngIf="ecgCurveConfiguration">
-
-                            <p class="col-md-12">Label: {{ecgCurveConfiguration.label}}</p>
-                            <p class="col-md-12">Unit: {{ecgCurveConfiguration.unit }}</p>
-                        </div>
-
-                        <div class="container row mt-3">
-                            <button class="btn btn-primary" (click)="onAddNoiseNIBP()">Add Gaussean Noise</button>
-
-                        </div>
-
-                    </div>
-
-
-                </div>
-                <div class="col-md-9 configParamaters">
-                    <app-curves [colorLine]="'#4D4260'" [series]="ecgCurve" [minX]="-80" [maxX]="80" [minY]="-200"
-                        [maxY]="300" [simulation]="false" [loadOptions]="chartOptions">
-                    </app-curves>
-                </div>
-            </div>
-
-
-            <div class="row mt-4" *ngIf="plethCurve[1] && plethCurve[1].length > 0">
-                <div class="col-md-3 configParamaters">
-                    <h4> SPO2 Configuration </h4>
-
-                    <div class="container mt-3">
-                        <div class="row">
-                            <label class="form-label mr-4"> Altitude </label>
-                            <input type="number" class="form-control col-md-3">
-                        </div>
-
-                        <div class="row mt-3">
-                            <label class="form-label mr-2"> Amplitude </label>
-                            <input type="number" class="form-control col-md-3">
-                        </div>
-
-                        <div class="row mt-3" *ngIf="plethConfiguration">
-                            <p class="col-md-12">Label: {{plethConfiguration.label}}</p>
-                            <p class="col-md-12">Unit: {{plethConfiguration.unit }}</p>
-
-                        </div>
-                        <div class="container row mt-3">
-                            <button class="btn btn-primary" (click)="onAddNoiseNIBP()">Add Gaussean Noise</button>
-
-                        </div>
-
-                    </div>
-                </div>
-
-                <div class="col-md-9 configParamaters">
-                    <app-curves [colorLine]="'#B9957B'" [series]="plethCurve" [minX]="0" [maxX]="0.997823721436344"
-                        [minY]="34.4829219764082" [maxY]="84.9282296650718" [simulation]="false" [loadOptions]="chartOptions"></app-curves>
-                </div>
-            </div>
-
-
-
-        </div>
+        </div> -->
 
         <!-- </div> -->
 

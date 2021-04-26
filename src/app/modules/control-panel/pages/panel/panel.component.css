@@ -8,6 +8,10 @@
     text-align: center;
 }
 
+.bar-separator {
+    width: 100%;
+}
+
 .textScenario {
     width: 50%;
     float: right;
@@ -24,15 +28,6 @@
     width: 10%;
 }
 
-.separatorLine {
-    width: 75%;
-    background-color: #fff;
-}
-
-.card {
-    border: 2px solid #fff;
-}
-
 .scenarios {
     border: none !important;
     max-height: 300px;
@@ -43,27 +38,21 @@
     border: 2px solid #fff;
 }
 
-.table-hover tbody tr:hover {
-    background-color: #616161 !important;
-}
-
-.parametersContainer {
-    text-align: center;
-}
-
-.parameters {
-    display: inline-block;
-}
-/*
-.curves {
-    /* max-height: 20px !important; */
-
-.footerBtn {
+.footer {
     width: 100%;
+    bottom: 0%;
+    background-color: #000;
+    margin-top: 50px;
+    position: sticky;
+}
+.footerBtn {
     text-align: center;
 }
 
-.configParamaters {
+.param-configuration,
+.curves-configuration {
     border-radius: 10px;
     border: 2px solid #fff;
+    max-height: 300px;
+    margin-top: 20px;
 }
