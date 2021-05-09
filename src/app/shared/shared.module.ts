@@ -10,6 +10,7 @@ import { NgModule } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { SidebarModule } from "ng-sidebar";
 import { ArrayJsonPipe } from "./pipes/array-json.pipe";
+import { LocalStorageService } from "./services/localStorage.service";
 
 @NgModule({
     declarations: [
@@ -27,6 +28,6 @@ import { ArrayJsonPipe } from "./pipes/array-json.pipe";
         ConfirmModalComponent,
         ArrayJsonPipe,
     ],
-    providers: [ApiService, AuthSession],
+    providers: [ApiService, AuthSession, LocalStorageService],
 })
-export class SharedModule {}
+export class SharedModule { }

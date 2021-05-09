@@ -1,314 +1,81 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnDestroy, OnInit, TrackByFunction } from "@angular/core";
 import { CurvesService } from "@app/modules/control-panel/services/curves.service";
-import * as CurvesHelper from "../../../simulation/helpers/curvesHelper";
 import { BaseComponent } from "@app/shared/components/base.component";
 import { FormBuilder } from "@angular/forms";
+import { AnimalSpeciesI } from "@app/shared/models/animal-speciesI";
+import { MonitorService } from "../../services/monitor.service";
+import { Subscription } from "rxjs";
+import { CurvesI } from "@app/shared/models/curvesI";
+import { StatesI } from "@app/shared/models/stateI";
 
 @Component({
     selector: "app-simulator",
     templateUrl: "./simulator.component.html",
     styleUrls: ["./simulator.component.css"],
 })
-export class SimulatorComponent extends BaseComponent implements OnInit {
-    public capnographyCurve: number[][] = [];
-    public ecgCurve: number[][] = new Array();
-    public plethysmographyCurve: number[][] = new Array();
-    public nibpCurve: number[][] = new Array();
-    public ibpCurve: number[][] = new Array();
-    public heartRate: number = 60;
-    public curves: any[];
-    public dummyCurve: number[][] = [
-        [0, 1],
-        [2, 3],
-    ];
+export class SimulatorComponent
+    extends BaseComponent
+    implements OnInit, OnDestroy {
+    public curves: CurvesI[];
+    public animalSpecie: AnimalSpeciesI;
     public today: Date = new Date();
-    public CurvesHelper = new CurvesHelper.CurvesHelper();
-
+    private subscription: Subscription;
+    private firstState: StatesI;
     public samples: number = 4;
+    chartOptions: any = {
+        height: 200,
+        width: 1000,
+    };
     public curvePeriod: number = 1;
-
-    constructor(private curvesService: CurvesService, private fb: FormBuilder) {
+    public trackByFn: TrackByFunction<CurvesI> = (_, curve: CurvesI) => curve.curveConfiguration.id_pp;
+    constructor(
+        private curvesService: CurvesService,
+        private monitorService: MonitorService
+    ) {
         super();
+        this.checkLocalStorage();
     }
 
     ngOnInit(): void {
-        this.initFormGroup();
-        this.loadData();
     }
 
-    setCurves() {
-
-        this.scaleCurves();
-    }
-
-    private loadData() {
-        this.curvesService
-            .findAll({
-                animalSpecie: 1,
-                scenario: 1,
-            })
-            .subscribe(
-                (curves: any) => {
-                    if (curves.data.length > 0) {
-                        this.curves = curves.data;
-                        this.setCurves();
-                        this.loadECGCurve();
-                        this.loadNibpCurve();
-                    }
-                },
-                (error: any) => {
-                    console.log(error);
-                }
-            );
+    ngOnDestroy(): void {
+        this.subscription.unsubscribe();
     }
 
     /**
-     * Initialize the reactive form
+     * Subscribe to simulation info.
      */
-    private initFormGroup() {
-        this.setSubmitForm(false);
-        this.formGroup = this.fb.group({});
-    }
-
-    private loadNibpCurve() {
-        let rand = Math.floor(Math.random() * 10);
-        this.ecgCurve.forEach((data: number[]) => {
-            if (data[0]) this.nibpCurve.push([data[0], data[1] * rand]);
-        });
-    }
-
-    private scaleCurves() {
-        this.reSampleCurve(this.ecgCurve);
-        this.reSampleCurve(this.capnographyCurve);
-        this.reSampleCurve(this.plethysmographyCurve);
-        this.reSampleCurve(this.nibpCurve);
-    }
-
-    private reSampleCurve(curve: number[][]) {
-        let min: number = 0;
-        let max: number = curve.length;
-        for (let i = 0; i < this.samples; i++) {
-            for (let index = min; index < max; index++) {
-                if (curve[index][0] != 0)
-                    curve.push([
-                        curve[index][0] + this.curvePeriod,
-                        curve[index][1],
-                    ]);
+    private suscribeSimulationInfo() {
+        // Create the conection with the monitor service
+        this.subscription = this.monitorService.getInfo(this.firstState).subscribe(
+            (simulationState: StatesI) => {
+                if (simulationState) {
+                    this.curves = simulationState.curves;
+                    this.animalSpecie = simulationState.animalSpecie;
+                } else {
+                    this.curves = null;
+                    this.animalSpecie = null;
+                }
+            },
+            (error: any) => {
+                console.log(error);
+            },
+            () => {
+                console.log("Simulación Terminada");
             }
-            min = max;
-            max = curve.length;
-        }
+        );
     }
 
-    private loadECGCurve() {
-        this.ecgCurve = [
-            [0, 0],
-            [0.5, 0.9486397319584265],
-            [1, 1.3488096893269022],
-            [1.5, 1.2747170638693173],
-            [2, 0.870353404927271],
-            [2.5, 0.3339660345950574],
-            [3, -0.10322470763397162],
-            [3.5, -0.20204765659669835],
-            [4, 0.2582374710442245],
-            [4.5, 1.454725891649126],
-            [5, 3.4992630153517794],
-            [5.5, 6.422580567311993],
-            [6, 10.165796338844878],
-            [6.5, 14.580238819160703],
-            [7, 19.435802797730613],
-            [7.5, 24.437261127880166],
-            [8, 29.24722169622069],
-            [8.5, 33.513794004739815],
-            [9, 36.900573657650156],
-            [9.5, 39.11630758706193],
-            [10, 39.941591483707086],
-            [10.5, 39.25017620157846],
-            [11, 37.022903312892616],
-            [11.5, 33.35291338730777],
-            [12, 28.44151963796814],
-            [12.5, 22.58494859182894],
-            [13, 16.152947095922325],
-            [13.5, 9.560970707452038],
-            [14, 3.238238801433192],
-            [14.5, -2.4056842830906398],
-            [15, -7.012978673567718],
-            [15.5, -10.305624836117072],
-            [16, -12.107056254092159],
-            [16.5, -12.355580200073405],
-            [17, -11.10843817373304],
-            [17.5, -8.536176088592812],
-            [18, -4.90782121466318],
-            [18.5, -0.5681459110878003],
-            [19, 4.091031098382733],
-            [19.5, 8.663055207241856],
-            [20, 12.759421640647318],
-            [20.5, 16.040752592352533],
-            [21, 18.243176576243357],
-            [21.5, 19.197939288291717],
-            [22, 18.842679990982205],
-            [22.5, 17.223544347651067],
-            [23, 14.488108235548665],
-            [23.5, 10.86988618038699],
-            [24, 6.6659221812418945],
-            [24.5, 2.209546267783195],
-            [25, -2.1592238447013776],
-            [25.5, -6.122984088310804],
-            [26, -9.413361256758252],
-            [26.5, -11.832253816320339],
-            [27, -13.266101020473464],
-            [27.5, -13.692038393324927],
-            [28, -13.175547760361352],
-            [28.5, -11.859988828360883],
-            [29, -9.949136490320415],
-            [29.5, -7.684477199530865],
-            [30, -5.319482513871472],
-            [30.5, -3.0933368490897424],
-            [31, -1.2066268829646725],
-            [31.5, 0.1987000891124841],
-            [32, 1.0532133853370986],
-            [32.5, 1.3664018475405608],
-            [33, 1.2249981140652904],
-            [33.5, 0.7833810466567335],
-            [34, 0.24696017979113305],
-            [34.5, -0.1498891855695422],
-            [35, -0.16925007139800816],
-            [35.5, 0.4039734569218113],
-            [36, 1.737283984396856],
-            [36.5, 3.929813834125026],
-            [37, 6.997602267276391],
-            [37.5, 10.866447559164017],
-            [38, 15.37317300071458],
-            [38.5, 20.275381487984532],
-            [39, 25.268995081304684],
-            [39.5, 30.012154044519434],
-            [40, 34.153449933416525],
-            [40.5, 37.362044132215885],
-            [41, 39.35701605241099],
-            [41.5, 39.93331403791406],
-            [42, 38.98194585746568],
-            [42.5, 36.502522494982095],
-            [43, 32.606917653346514],
-            [43.5, 27.513569360946178],
-            [44, 21.532762221559814],
-            [44.5, 15.04401754771972],
-            [45, 8.467414060409247],
-            [45.5, 2.231202253174259],
-            [46, -3.2615873259646198],
-            [46.5, -7.664738112952494],
-            [47, -10.715980079127142],
-            [47.5, -12.257368751095374],
-            [48, -12.247190107477518],
-            [48.5, -10.762392147500078],
-            [49, -7.991352244733339],
-            [49.5, -4.217613972442744],
-            [50, 0.20400418462188566],
-            [50.5, 4.876880077839909],
-            [50.5, 4.876880077839909],
-            [51, 9.395124449081761],
-            [51.5, 13.376421273233174],
-            [52, 16.492404111543],
-            [52.5, 18.494034773760912],
-            [53, 19.22990353310072],
-            [53.5, 18.656001240762667],
-            [54, 16.836266627996974],
-            [54.5, 13.934019969891603],
-            [55, 10.195185607831574],
-            [55.5, 5.924910825028729],
-            [56, 1.4597454208423777],
-            [56.5, -2.8620933688495294],
-            [57, -6.729712922557857],
-            [57.5, -9.885241147398862],
-            [58, -12.144004442705404],
-            [58.5, -13.40749282195799],
-            [59, -13.668091400301305],
-            [59.5, -13.005317296528741],
-            [60, -11.574077708447874],
-            [60.5, -9.586188374077032],
-            [61, -7.28699674721417],
-            [61.5, -4.929386789541986],
-            [62, -2.747663831836344],
-            [62.5, -0.9338091588054483],
-            [63, 0.38164363608619517],
-            [63.5, 1.142302663092698],
-            [64, 1.3709841074751992],
-            [64.5, 1.1666726035062154],
-            [65, 0.6936609119957133],
-            [65.5, 0.16389208586664838],
-            [66, -0.18582804773230152],
-            [66.5, -0.11958792315217186],
-            [67, 0.5713580738956626],
-            [67.5, 2.0443276909305883],
-            [68, 4.385320374542261],
-            [68.5, 7.595478879431859],
-            [69, 11.585317583836206],
-            [69.5, 16.177432003975525],
-            [70, 21.117632346422035],
-            [70.5, 26.093670276933018],
-            [71, 30.760022354178012],
-            [71.5, 34.76661989385577],
-            [72, 37.78902591993554],
-            [72.5, 39.557391519206995],
-            [73, 39.88159291393935],
-            [73.5, 38.670252311997615],
-            [74, 35.94185467473224],
-            [74.5, 31.826844943066902],
-            [75, 26.56036723047081],
-            [75.5, 20.46612073928973],
-            [76, 13.932584913724465],
-            [76.5, 7.383539732774445],
-            [77, 1.2453162173977006],
-            [77.5, -4.086488316022926],
-            [78, -8.278033050158065],
-            [78.5, -11.083377630925245],
-            [79, -12.36353853437559],
-            [79.5, -12.096849635887272],
-            [80, -10.37975947481941],
-            [80.5, -7.418013821074427],
-            [81, -3.508992319114549],
-            [81.5, 0.983279497595262],
-            [82, 5.658302370713721],
-            [82.5, 10.111887309003258],
-            [83, 13.968771747749276],
-            [83.5, 16.91232297515734],
-            [84, 18.708856862379733],
-            [84.5, 19.224586162676218],
-            [85, 18.43386853040691],
-            [85.5, 16.41819147255127],
-            [86, 13.356141579952205],
-            [86.5, 9.505386930309934],
-            [87, 5.178385663170118],
-            [87.5, 0.7140604782586624],
-            [88, -3.5519974865612904],
-            [88.5, -7.316138713800894],
-            [89, -10.331566649107813],
-            [89.5, -12.427404556274425],
-            [90, -13.520327586597327],
-            [90.5, -13.617862853500739],
-            [91, -12.813227911493573],
-            [91.5, -11.272350638002058],
-            [92, -9.214421396127614],
-            [92.5, -6.887907876479652],
-            [93, -4.5443623106137405],
-            [93.5, -2.4125343613659083],
-            [94, -0.6752550400481316],
-            [94.5, 0.5487174411715527],
-            [95, 1.2161743368259692],
-            [95.5, 1.3631725739539164],
-            [96, 1.1006393533733236],
-            [96.5, 0.6022782227915058],
-            [97, 0.0859164667235129],
-            [97.5, -0.20994348985294733],
-            [98, -0.05214413451216387],
-            [98.5, 0.761018385811453],
-            [99, 2.3761100198305223],
-            [99.5, 4.865611281247671],
-            [100, 8.215603575381051],
-        ];
-
-        this.ecgCurve = this.ecgCurve.map((value: number[]) => {
-            value[0] = value[0] / 100;
-            return value;
-        });
+    private checkLocalStorage(): void {
+        this.firstState = this.monitorService.getFirstState();
+        this.animalSpecie = this.firstState?.animalSpecie;
+        this.curves = this.firstState?.curves;
+        setInterval(() => {
+            this.suscribeSimulationInfo();
+        }, 300);
     }
+
+
+
 }

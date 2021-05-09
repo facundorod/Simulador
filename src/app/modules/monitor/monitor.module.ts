@@ -5,6 +5,8 @@ import { SimulatorComponent } from "./pages/simulator/simulator.component";
 import { CurvesService } from "../control-panel/services/curves.service";
 import { MonitorRoutingModule } from "./monitor-routing.module";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { MonitorService } from "./services/monitor.service";
+import { SharedModule } from "@app/shared/shared.module";
 
 @NgModule({
     declarations: [SimulatorComponent],
@@ -13,8 +15,9 @@ import { FormsModule, ReactiveFormsModule } from "@angular/forms";
         SimulationModule,
         MonitorRoutingModule,
         FormsModule,
+        SharedModule,
         ReactiveFormsModule,
     ],
-    providers: [CurvesService],
+    providers: [CurvesService, MonitorService],
 })
-export class MonitorModule {}
+export class MonitorModule { }

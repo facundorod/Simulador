@@ -6,5 +6,7 @@ export interface CurvesConfigurationI {
     id_pp: number;
     name: string;
     description: string;
+    min?: number;
+    max?: number;
     colorLine?: string;
 }

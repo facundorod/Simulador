@@ -33,7 +33,6 @@ export class AuthSession {
      * @param authToken
      */
     static saveAuthToken(authToken) {
-        console.log(authToken);
         localStorage.setItem("authToken", authToken);
     }
 

@@ -22,6 +22,7 @@ import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
 import { AnimalSpeciesEditComponent } from "./modals/animal-specie-edit/animal-specie-edit.component";
 import { CurvesService } from "./services/curves.service";
 import { SimulationModule } from "../simulation/simulation.module";
+import { MonitorService } from "../monitor/services/monitor.service";
 
 @NgModule({
     declarations: [
@@ -54,6 +55,7 @@ import { SimulationModule } from "../simulation/simulation.module";
         ScenarioService,
         SimulationService,
         CurvesService,
+        MonitorService,
     ],
 })
-export class ControlPanelModule {}
+export class ControlPanelModule { }

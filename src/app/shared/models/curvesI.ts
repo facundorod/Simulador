@@ -6,5 +6,4 @@ export interface CurvesI {
     curveConfiguration: CurvesConfigurationI;
     animalSpecie: AnimalSpeciesI;
     curveValues: number[][];
-
 }

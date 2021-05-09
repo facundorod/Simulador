@@ -15,6 +15,9 @@ import { FormBuilder, Validators } from "@angular/forms";
 import { CurvesService } from "../../services/curves.service";
 import { CurvesI } from "@app/shared/models/curvesI";
 import { CurvesHelper } from "./../../../simulation/helpers/curvesHelper";
+import { LocalStorageService } from "@app/shared/services/localStorage.service";
+import { MonitorService } from "@app/modules/monitor/services/monitor.service";
+import { StatesI } from "@app/shared/models/stateI";
 
 @Component({
     selector: "app-panel",
@@ -32,8 +35,8 @@ export class PanelComponent extends BaseComponent implements OnInit {
     simulation: any = {}; // Simulation from localStorage
     indexActive: number = 0; // Index for scenario edit Active
     indexSimulationActive: number = 0; // Index for scenario simulation Active
-    public curves: CurvesI[]; // Curves for scenario and animalSpecie selected
-
+    private simulationState: StatesI; // Curves for scenario and animalSpecie selected
+    public curves: CurvesI[] = new Array<CurvesI>();
     CurvesHelper = new CurvesHelper();
     // Paramaters Physiological without curves
     cardiacFrequency: CurvesI;
@@ -48,10 +51,11 @@ export class PanelComponent extends BaseComponent implements OnInit {
         private fb: FormBuilder,
         private toast: ToastrService,
         private simulationService: SimulationService,
-        private curvesService: CurvesService
+        private curvesService: CurvesService,
+        private localStorageService: LocalStorageService,
+        private monitorService: MonitorService
     ) {
         super();
-
     }
 
     ngOnInit(): void {
@@ -100,8 +104,6 @@ export class PanelComponent extends BaseComponent implements OnInit {
             if (this.simulation.animalSpecie)
                 this.animalSpecie = this.simulation.animalSpecie;
         }
-
-        this.setLoading(false);
     }
 
     /**
@@ -148,24 +150,38 @@ export class PanelComponent extends BaseComponent implements OnInit {
     /**
      * Load curves for scenario active for simulation and for animalSpecie selected
      */
-    public onLoadCurves(as: any) {
-        if (this.activeScenario && as != null) {
+    public onLoadCurves(as: AnimalSpeciesI) {
+        if (
+            this.activeScenario &&
+            this.activeScenario?.id_scenario &&
+            as != null &&
+            as?.id_as
+        ) {
             this.curvesService
                 .findAll({
                     animalSpecie: as.id_as,
                     scenario: this.activeScenario.id_scenario,
                 })
                 .subscribe(
-                    (curves: any) => {
-                        if (curves.length > 0) {
-                            this.curves = curves;
+                    (state: StatesI) => {
+                        if (state) {
+                            this.simulationState = state;
+                            this.localStorageService.saveValue(
+                                "simulationState",
+                                JSON.stringify(state)
+                            );
+                            this.curves = state.curves;
                         }
                     },
                     (error: any) => {
                         console.log(error);
                     }
                 );
-        } else this.curves = [];
+        } else {
+            this.simulationState = null;
+            this.curves = [];
+            this.localStorageService.removeValue("simulationState");
+        }
     }
 
     /**
@@ -230,7 +246,7 @@ export class PanelComponent extends BaseComponent implements OnInit {
         this.activeScenario = this.scenariosSimulation[
             this.indexSimulationActive
         ];
-        this.curves = [];
+        this.simulationState = null;
         this.onLoadCurves(this.formGroup.value.animalSpecie);
     }
 

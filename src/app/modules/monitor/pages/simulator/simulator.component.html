@@ -1,191 +1,39 @@
-<div class="container-fluid" *ngIf="curves && curves.length > 0">
+<div class="container-fluid">
     <div class="row">
-        <div class="col-lg-9">
-            <p class="text-left" style="margin-left: 44px;">{{today | date: 'medium'}} <span
-                    style="margin-left: 20px">DOG</span> </p>
+        <div class="col-lg-6">
+            <p class="text-left">
+                {{ today | date: "medium" }}
+                <span *ngIf="animalSpecie" class="text-animal-specie">
+                    {{ animalSpecie.name }}
+                </span>
+            </p>
         </div>
-        <div class="col-lg-3">
-            <p> ANIMAL CLINIC </p>
+        <div class="col-lg-5">
+            <p class="text-right">ANIMAL CLINIC</p>
         </div>
     </div>
-    <div class="row ecg">
-        <div class="col-lg-8">
-            <app-curves [colorLine]="'#718E70'" [series]="ecgCurve" [minX]="0" [maxX]="4" [minY]="-20" [maxY]="50"
-                class="ecgCurve"> </app-curves>
-        </div>
-        <div class="col-lg-3 ecgConfig">
+
+    <div class="row" *ngIf="curves?.length > 0 else noSimulation">
+        <div *ngFor="let curve of curves; trackBy: trackByFn">
             <div class="row">
-                <div class="col-lg-5">
-                    <p style="color: '#7dc97a'; font-size: 1.3em; margin-left: -10px;">* <span>
-                            <p style="color: '#7dc97a'; font-size: 1em;">HR: SPO2
-                        </span></p>
+                <div class="col-9">
+                    <app-curves [colorLine]="curve.curveConfiguration?.colorLine" [series]="curve.curveValues"
+                        [simulation]="true" [loadOptions]="chartOptions" [minX]=0 [maxX]=4>
+                    </app-curves>
                 </div>
-                <div class="col-lg-5">
-                    <p style="color: '#23d358'; font-size: 5.0em; margin-top: -20px; margin-left: -20px">{{heartRate}}
-                    </p>
-                </div>
-                <div class="col-lg-2">
-                    <p style="color: '#7dc97a'; font-size: 1em;">160 <span> OFF </span> <span>HR</span> <span> bpm
-                        </span></p>
-                </div>
+                <!-- Curve Configuration -->
             </div>
-
-        </div>
-        <div class="col-lg-1 col-labels ecgLabel">
-            <p class="textLabel ecgLabelText">ECG</p>
         </div>
     </div>
-    <div class="row curves">
-        <div class="col-lg-8">
-            <app-curves [colorLine]="'#6EC1ED'" [series]="capnographyCurve" [type]="'etco2'" [minX]="0" [minY]="0"
-                [maxY]="80">
-            </app-curves>
-        </div>
-        <div class="col-lg-3 capnographyConfig">
-            <div class="row">
-                <div class="col-lg-4">
-                    <p style="color: '#6EC1ED'; font-size: 2.5em; margin-left: 30px;">37</p>
-                    <p style="color: '#6EC1ED'; font-size: 2.5em; margin-left: 30px">1</p>
-                </div>
-                <div class="col-lg-2">
-                    <p style="color: '#6EC1ED'; font-size: 1.0em;">60 <span> 20 </span> <span> ETCO2 </span> <span> mmHg
-                        </span> <span> 8 </span><span> INCO2 </span></p>
-                </div>
-                <div class="col-lg-4">
-                    <p style="color: '#6EC1ED'; font-size: 2.5em; margin-left: 10px">12</p>
-                </div>
-                <div class="col-lg-2">
-                    <p style="color: '#6EC1ED'; font-size: 1.0;">40 <span> 8 </span> <span> RR </span> <span> RPM
-                        </span></p>
-                </div>
+
+    <ng-template #noSimulation class="mt-4">
+        <div class="row">
+            <div class="spinner-border text-danger" role="status">
             </div>
-
-        </div>
-        <div class="col-lg-1 col-labels capLabel">
-            <p class="textLabel capLabelText">CO2</p>
-        </div>
-
-    </div>
-    <div class="row curves2">
-        <div class="col-lg-8">
-            <app-curves [colorLine]="'#4D4260'" [series]="nibpCurve" [minX]="0" [minY]="-100" [maxY]="190"></app-curves>
-        </div>
-        <div class="col-lg-3 art1-config">
-            <div class="row">
-                <div class="col-lg-6">
-                    <p style="color: #7032db; font-size: 2em" class="text-center">118 &nbsp; /<span>
-                            <p style="color: #7032db; font-size: 0.9em" class="text-left"> HR 60</p>
-                        </span></p>
-                </div>
-                <div class="col-lg-4">
-                    <p style="color: #7032db; font-size: 2em" class="text-center">80
-                        <br> 92
-                    </p>
-                </div>
-                <div class="col-lg-2">
-                    <p style="color: #7032db; font-size: 0.9em; margin-left: -10px">160 <br> 70 <br> SYS <br> mmHg</p>
-                </div>
+            <div class="ml-4">
+                <h3 class="text-center">Waiting for simulation</h3>
             </div>
         </div>
-        <div class="col-lg-1 col-labels art1-label">
-            <p class="textLabel art1-labelText">ART1</p>
-        </div>
 
-
-    </div>
-
-    <div class="row curves3">
-        <div class="col-lg-8">
-            <app-curves [colorLine]="'#B9957B'" [series]="plethysmographyCurve" [minX]="0" [minY]="34.4829219764082"
-                [maxY]="104.9282296650718"></app-curves>
-        </div>
-        <div class="col-lg-3 pa2-config">
-            <div class="row">
-                <div class="col-lg-6">
-                    <p style="color: #7032db; font-size: 2em" class="text-center">15 &nbsp; /</p>
-                </div>
-                <div class="col-lg-4">
-                    <p style="color: #7032db; font-size: 2em" class="text-center">10
-                        <br> 12
-                    </p>
-                </div>
-                <div class="col-lg-2">
-                    <p style="color: #7032db; font-size: 0.9em; margin-left: -10px">40 <br> 0 <br> SYS <br> mmHg</p>
-                </div>
-                <div class="row spo2-config" style="margin-left: 0px;">
-                    <!-- <div class="col-lg-12 spo2-config"> -->
-
-                    <div class="col-lg-2">
-
-                    </div>
-
-                    <div class="col-lg-4">
-                        <p style="color: #B9957B; font-size: 2em"> PPR <br> 60 </p>
-
-                    </div>
-
-                    <div class="col-lg-4">
-                        <p style="color: #B9957B; font-size: 2em"> &nbsp; 98 </p>
-                    </div>
-                    <div class="col-lg-2">
-                        <p style="color: #B9957B; font-size: 0.9em"> OFF <br> 90 <br> SPO2 <br> %</p>
-                    </div>
-
-                    <!-- </div> -->
-                </div>
-
-
-
-            </div>
-            <div class="row nibp-config">
-
-                <div class="col-lg-5">
-                    <p style="color: #FFF; font-size: 2em"> 121 &nbsp; / <br> <span>
-                            <p style="font-size: 0.5em"> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 10:28</p>
-                        </span></p>
-                </div>
-
-                <div class="col-sm-5">
-                    <p style="color: #FFF; font-size: 2em"> 77 <br> 95 </p>
-                </div>
-                <div class="col-sm-2">
-                    <p style="color: #FFF; font-size: 0.9em; margin-left: -10px"> 180 <br> 70 <br> SYS <br> mmHg</p>
-                </div>
-
-            </div>
-
-            <div class="row tempConfig">
-                <div class="col-lg-4">
-                    <p style="color: #22a504; font-size: 2em">T1 <br> T2</p>
-                </div>
-                <div class="col-lg-4">
-                    <p class="text-center" style="color: #22a504; font-size: 2em"> 37.0 <br> 37.6</p>
-                </div>
-                <div class="col-lg-4">
-                    <p class="text-end" style="color: #22a504; font-size: 0.9em; margin-left: 80px;"> 39.2 <br> OFF <br>
-                        T1 <br> °C </p>
-                </div>
-            </div>
-
-        </div>
-        <div class="col-lg-1 col-labels pa2-label">
-            <p class="textLabel pa2-labelText">PA2</p>
-            <p class="textLabel spo2-labelText">SPO2</p>
-            <p class="textLabel nibp-labelText">NIBP</p>
-            <p class="textLabel temp-labelText ">TEMP</p>
-        </div>
-
-    </div>
-
-    <!-- <div class="row">
-        <div class="col-lg-9 align-self-end">
-             <div class="row align-self-end" style="border: 2px solid red">
-
-            </div> -->
-    <!-- </div>
-        <div class="col-lg-3" style="border: 2px solid red">
-
-        </div> -->
-    <!-- </div> -->
-
+    </ng-template>
 </div>

@@ -23,7 +23,7 @@ export class CurvesComponent implements OnInit {
     chartOption: EChartsOption;
     private echartsInstance: ECharts;
 
-    constructor() {}
+    constructor() { }
 
     ngOnInit(): void {
         const chartConfigurer = new ChartConfigurer(
@@ -38,12 +38,12 @@ export class CurvesComponent implements OnInit {
         );
         this.chartOption = chartConfigurer.getChart();
         if (this.simulation) {
-            setInterval(() => {
-                this.scaleCurve();
-                this.chartOption.series[0].data = this.series;
-                this.echartsInstance.setOption(this.chartOption);
-                this.num += 1;
-            }, 50);
+            // setInterval(() => {
+            //     // this.scaleCurve();
+            //     // this.chartOption.series[0].data = this.series;
+            //     this.echartsInstance.setOption(this.chartOption);
+            //     // this.num += 1;
+            // }, 50);
         }
     }
 
