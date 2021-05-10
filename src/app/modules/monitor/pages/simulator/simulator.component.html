@@ -16,7 +16,7 @@
     <div class="row" *ngIf="curves?.length > 0 else noSimulation">
         <div *ngFor="let curve of curves; trackBy: trackByFn">
             <div class="row">
-                <div class="col-9">
+                <div class="col-9" style="max-height: 200px;">
                     <app-curves [colorLine]="curve.curveConfiguration?.colorLine" [series]="curve.curveValues"
                         [simulation]="true" [loadOptions]="chartOptions" [minX]=0 [maxX]=4>
                     </app-curves>

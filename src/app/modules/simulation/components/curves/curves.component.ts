@@ -10,7 +10,7 @@ import { ChartConfigurer } from "../../helpers/chartConfigurer";
 export class CurvesComponent implements OnInit {
     @Input() series: number[][] = null;
     @Input() colorLine: string;
-    @Input() loadOptions: any = { height: 300 };
+    @Input() loadOptions: any = { height: 100 };
     @Input() simulation: boolean = true;
     @Input() minX: number;
     @Input() maxX: number;
