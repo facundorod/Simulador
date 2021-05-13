@@ -9,25 +9,31 @@
             </p>
         </div>
         <div class="col-lg-5">
-            <p class="text-right">ANIMAL CLINIC</p>
+            <p class="text-right" *ngIf="animalSpecie">ANIMAL CLINIC</p>
         </div>
     </div>
 
     <div class="row" *ngIf="curves?.length > 0 else noSimulation">
-        <div *ngFor="let curve of curves; trackBy: trackByFn">
+        <div class="col-12" *ngFor="let curve of curves; trackBy: trackByFn">
             <div class="row">
-                <div class="col-9" style="max-height: 200px;">
+                <div class="col-9 curves">
                     <app-curves [colorLine]="curve.curveConfiguration?.colorLine" [series]="curve.curveValues"
                         [simulation]="true" [loadOptions]="chartOptions" [minX]=0 [maxX]=4>
                     </app-curves>
                 </div>
                 <!-- Curve Configuration -->
+                <div class="col-2 curve-configuration">
+
+                </div>
+                <div class="col-xs-1 curve-label">
+                    <p class="text-label">{{curve.curveConfiguration.label}}</p>
+                </div>
             </div>
         </div>
     </div>
 
     <ng-template #noSimulation class="mt-4">
-        <div class="row">
+        <div class="container row">
             <div class="spinner-border text-danger" role="status">
             </div>
             <div class="ml-4">
