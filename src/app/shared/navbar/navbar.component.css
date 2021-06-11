@@ -1,13 +1,13 @@
 .sidebar {
-    min-width: 200px;
     text-align: center;
     background: #262424;
     color: #fff;
-    height: 100%;
+    overflow-y: hidden;
 }
 
 .sidebar.sidebarCollapse {
     justify-content: center;
+    overflow-y: hidden;
 }
 .hidden {
     margin-top: 20px;
@@ -45,10 +45,11 @@
 .sidebar::after {
     top: auto;
     bottom: 10px;
-    /* right: 50%; */
+    right: 50%;
     -webkit-transform: translateX(50%);
     -ms-transform: translateX(50%);
     transform: translateX(50%);
+    overflow-y: hidden;
 }
 
 .sidebar .sidebar-header {

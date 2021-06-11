@@ -28,3 +28,10 @@
     font-size: 20px;
     margin-left: 10px;
 }
+
+.no-simulation {
+    max-height: 300px;
+    height: 300px;
+    overflow-x: hidden;
+    overflow-y: hidden;
+}

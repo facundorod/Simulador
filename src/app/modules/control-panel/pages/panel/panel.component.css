@@ -42,7 +42,7 @@
     width: 100%;
     bottom: 0%;
     background-color: #000;
-    margin-top: 50px;
+    margin-top: 2%;
     position: sticky;
 }
 .footerBtn {
@@ -55,4 +55,8 @@
     border: 2px solid #fff;
     max-height: 300px;
     margin-top: 20px;
+}
+
+.form-parameters {
+    margin-top: 3%;
 }

@@ -24,12 +24,11 @@ export class SimulatorComponent
     public samples: number = 4;
     chartOptions: any = {
         height: 200,
-        width: 1100,
+        width: 1170,
     };
     public curvePeriod: number = 1;
     public trackByFn: TrackByFunction<CurvesI> = (_, curve: CurvesI) => curve.curveConfiguration.id_pp;
     constructor(
-        private curvesService: CurvesService,
         private monitorService: MonitorService
     ) {
         super();

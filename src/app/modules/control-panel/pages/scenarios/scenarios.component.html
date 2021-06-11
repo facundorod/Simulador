@@ -156,13 +156,7 @@
                 </thead>
 
                 <tbody>
-                    <!-- <ng-template [ngIf]="!getFormControlsMedication.controls">
-                            <tr>
-                                <td colspan="12">
-                                    No medications available
-                                </td>
-                            </tr>
-                        </ng-template> -->
+
                     <ng-container formArrayName="medications"
                         *ngFor="let group of getFormControlsMedication.controls; let i = index">
 

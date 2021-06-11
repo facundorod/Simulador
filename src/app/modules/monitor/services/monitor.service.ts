@@ -28,7 +28,7 @@ export class MonitorService {
         const lastStatus: StatesI = JSON.parse(
             localStorage.getItem("simulationState")
         );
-        // console.log("LAST STATUS", lastStatus);
+
         if (simulationState) {
             if (!this.currentState) {
                 this.currentState = simulationState;

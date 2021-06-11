@@ -1,4 +1,4 @@
-<div class="container-fluid">
+<div class="container-fluid" *ngIf="curves?.length > 0 else noSimulation">
     <div class="row">
         <div class="col-lg-6">
             <p class="text-left">
@@ -13,7 +13,7 @@
         </div>
     </div>
 
-    <div class="row" *ngIf="curves?.length > 0 else noSimulation">
+    <div class="row">
         <div class="col-12" *ngFor="let curve of curves; trackBy: trackByFn">
             <div class="row">
                 <div class="col-9 curves">
@@ -31,15 +31,14 @@
             </div>
         </div>
     </div>
-
-    <ng-template #noSimulation class="mt-4">
-        <div class="container row">
-            <div class="spinner-border text-danger" role="status">
-            </div>
-            <div class="ml-4">
-                <h3 class="text-center">Waiting for simulation</h3>
-            </div>
-        </div>
-
-    </ng-template>
 </div>
+
+<ng-template #noSimulation class="mt-4 no-simulation">
+    <div class="container row no-simulation">
+        <div class="spinner-border text-danger" role="status">
+        </div>
+        <div class="ml-4">
+            <h3 class="text-center">Waiting for simulation</h3>
+        </div>
+    </div>
+</ng-template>

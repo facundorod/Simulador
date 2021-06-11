@@ -20,7 +20,7 @@ export class NewComponent implements OnInit {
         private modal: NgbModal,
         private simulationService: SimulationService,
         private scenarioService: ScenarioService
-    ) {}
+    ) { }
 
     ngOnInit(): void {
         // window.open(environment.simulation, "_blank");

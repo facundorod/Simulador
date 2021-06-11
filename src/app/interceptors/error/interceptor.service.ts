@@ -15,22 +15,29 @@ import { ToastrService } from "ngx-toastr";
     providedIn: "root",
 })
 export class InterceptorService implements HttpInterceptor {
-    constructor(private router: Router, private toast: ToastrService) {}
+    constructor(private router: Router, private toast: ToastrService) { }
 
     intercept(
         req: HttpRequest<any>,
         next: HttpHandler
     ): Observable<HttpEvent<any>> {
-        // Intercepta todos los errores posibles en peticiones Http
-        let message;
+        // Intercepta todos las peticiones Http
+        let message: string;
         let request = req;
         return next.handle(request).pipe(
             catchError((err: HttpErrorResponse) => {
-                console.log(err);
-                message = err.message;
+                if (err.status >= 400 && err.status < 500) {
+                    message = `User or password wrong`;
+                    this.router.navigateByUrl("/auth/login");
+                }
+                if (err.status >= 500) {
+                    message = `Something bad has happened!`;
+                    this.router.navigateByUrl("/home");
+                }
+
                 this.toast.toastrConfig.timeOut = 0;
                 this.toast.error("Retry again!", `${message}`);
-                this.router.navigateByUrl("/auth/login");
+
                 return throwError(message);
             })
         );
