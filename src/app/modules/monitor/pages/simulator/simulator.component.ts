@@ -1,7 +1,5 @@
 import { Component, OnDestroy, OnInit, TrackByFunction } from "@angular/core";
-import { CurvesService } from "@app/modules/control-panel/services/curves.service";
 import { BaseComponent } from "@app/shared/components/base.component";
-import { FormBuilder } from "@angular/forms";
 import { AnimalSpeciesI } from "@app/shared/models/animal-speciesI";
 import { MonitorService } from "../../services/monitor.service";
 import { Subscription } from "rxjs";
@@ -21,7 +19,8 @@ export class SimulatorComponent
     public today: Date = new Date();
     private subscription: Subscription;
     private firstState: StatesI;
-    public samples: number = 4;
+    public currentState: StatesI;
+    // public samples: number = 4;
     chartOptions: any = {
         height: 200,
         width: 1170,
@@ -51,21 +50,26 @@ export class SimulatorComponent
             (simulationState: StatesI) => {
                 if (simulationState) {
                     this.curves = simulationState.curves;
+                    this.currentState = simulationState;
                     this.animalSpecie = simulationState.animalSpecie;
                 } else {
                     this.curves = null;
+                    this.currentState = null;
                     this.animalSpecie = null;
                 }
             },
-            (error: any) => {
+            (error: Error) => {
                 console.log(error);
             },
             () => {
-                console.log("Simulación Terminada");
+                console.log("Simulation finished!");
             }
         );
     }
 
+    /**
+     * Check localstorage every 300 ms.
+     */
     private checkLocalStorage(): void {
         this.firstState = this.monitorService.getFirstState();
         this.animalSpecie = this.firstState?.animalSpecie;
@@ -74,7 +78,5 @@ export class SimulatorComponent
             this.suscribeSimulationInfo();
         }, 300);
     }
-
-
 
 }

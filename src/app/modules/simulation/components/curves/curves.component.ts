@@ -18,15 +18,15 @@ export class CurvesComponent implements OnInit {
     @Input() maxY: number;
     @Input() type: string = null;
     @Input() maxSamples: number = 4;
-    @Input() sampleFrequency: number = 0.1;
-    num: number = 0;
-    chartOption: EChartsOption;
+    @Input() sampleFrequency: number = 1;
+    private number: number = 0;
+    public chartOption: EChartsOption;
     private echartsInstance: ECharts;
 
     constructor() { }
 
     ngOnInit(): void {
-        const chartConfigurer = new ChartConfigurer(
+        const chartConfigurer: ChartConfigurer = new ChartConfigurer(
             this.series,
             this.colorLine,
             this.minX,
@@ -36,30 +36,42 @@ export class CurvesComponent implements OnInit {
             this.simulation,
             this.type
         );
+        if (this.colorLine === '#6DC0EC')
+            this.number++;
         this.chartOption = chartConfigurer.getChart();
         if (this.simulation) {
-            // setInterval(() => {
-            //     // this.scaleCurve();
-            //     // this.chartOption.series[0].data = this.series;
-            //     this.echartsInstance.setOption(this.chartOption);
-            //     // this.num += 1;
-            // }, 50);
+            setInterval(() => {
+                this.scaleCurve();
+                this.chartOption.series[0].data = this.series;
+                this.echartsInstance.setOption(this.chartOption);
+
+            }, this.sampleFrequency * 100);
+            // if (this.colorLine === '#6DC0EC')
+            //     console.log("AAAAAAAAA", this.series.length);
         }
     }
 
-    onChartInit(e: any) {
+    public onChartInit(e: ECharts): void {
         this.echartsInstance = e;
         this.echartsInstance.setOption(this.chartOption);
     }
 
-    scaleCurve() {
+    private scaleCurve(): void {
         if (this.series.length > 0) {
-            const firstData = this.series[0];
+            const firstData: number[] = this.series[0];
             this.series.push([
                 firstData[0] + this.sampleFrequency,
                 firstData[1],
             ]);
-            this.series.splice(0, 1);
+            if (this.colorLine === '#6DC0EC') {
+                console.log("Iteración", this.number);
+                console.log("longitud", this.series.length);
+            }
+            // this.series.splice(0, 1);
+            // Sort array
+            this.series.sort((a: number[], b: number[]) => {
+                return a[0] - b[0];
+            });
         }
     }
 }

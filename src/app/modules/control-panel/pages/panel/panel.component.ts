@@ -231,6 +231,10 @@ export class PanelComponent extends BaseComponent implements OnInit {
                 this.temperature = value.curveValues[0][0];
             }
         })
+        this.localStorageService.saveValue(
+            "simulationState",
+            JSON.stringify(this.currentState)
+        );
     }
 
     /**
@@ -306,15 +310,27 @@ export class PanelComponent extends BaseComponent implements OnInit {
 
 
     public onPlaySimulation(): void {
-
+        this.currentState.action = 'play';
+        this.localStorageService.saveValue(
+            "simulationState",
+            JSON.stringify(this.currentState)
+        );
     }
 
     public onPauseSimulation(): void {
-
+        this.currentState.action = 'pause';
+        this.localStorageService.saveValue(
+            "simulationState",
+            JSON.stringify(this.currentState)
+        );
     }
 
     public onStopSimulation(): void {
-
+        this.currentState.action = 'stop';
+        this.localStorageService.saveValue(
+            "simulationState",
+            JSON.stringify(this.currentState)
+        );
     }
 
     /**
@@ -322,7 +338,7 @@ export class PanelComponent extends BaseComponent implements OnInit {
      *  Aumenta el rendimiento, ya que solo se vuelven a representar en el DOM los nodos
      *  que han sido actualizados.
      */
-    trackByFnAnimalSpecies(index: number, name: AnimalSpeciesI): number {
+    public trackByFnAnimalSpecies(index: number, name: AnimalSpeciesI): number {
         return name.id_as;
     }
 }

@@ -32,6 +32,12 @@
 .no-simulation {
     max-height: 300px;
     height: 300px;
-    overflow-x: hidden;
-    overflow-y: hidden;
+}
+
+.icon-play {
+    color: white;
+}
+
+.icon-stopped {
+    color: white;
 }
