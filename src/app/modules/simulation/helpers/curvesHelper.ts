@@ -74,4 +74,27 @@ export class CurvesHelper {
         return curve;
     }
 
+    /**
+     * Resample curve according to period until max
+     * @param curve
+     * @param period
+     * @param maxSamples
+     */
+    public reSampleCurve(curve: number[][], period: number, maxSamples: number) {
+        if (curve) {
+            let iterator: number = 0;
+            let auxValue: number[] = curve[iterator];
+            iterator++;
+            while (auxValue[0] + period <= maxSamples) {
+                curve.push([auxValue[0] + period, auxValue[1]]);
+                curve.sort((a: number[], b: number[]) => {
+                    return a[0] - b[0];
+                });
+                auxValue = curve[iterator];
+                iterator++;
+            }
+
+        }
+    }
+
 }

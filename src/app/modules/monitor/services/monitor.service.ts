@@ -24,31 +24,41 @@ export class MonitorService {
      * @param simulationState
      * @returns
      */
-    private getCurvesLocalStorage(simulationState: StatesI) {
-        const lastStatus: StatesI = JSON.parse(
-            localStorage.getItem("simulationState")
-        );
-        if (simulationState) {
-            if (!this.currentState) {
-                this.currentState = simulationState;
+    private getCurvesLocalStorage(simulationState: StatesI): boolean {
+        try {
+            const lastStatus: StatesI = JSON.parse(
+                localStorage.getItem("simulationState")
+            );
+            if (simulationState) {
+                if (simulationState.state != lastStatus?.state) {
+                    this.currentState = lastStatus;
+                    return true;
+                } else return false;
+                // if (!this.currentState) {
+                //     this.currentState = simulationState;
+                // } else {
+                //     if (simulationState.state != this.currentState.state) {
+                //         this.currentState = simulationState;
+                //     }
+                // }
             } else {
-                if (simulationState.state != this.currentState.state) {
-                    this.currentState = simulationState;
-                }
+                this.currentState = lastStatus;
+                return true;
             }
-        } else {
-            this.currentState = lastStatus;
+        } catch (error) {
+            return false;
         }
+
     }
 
     /**
      * Get simulation info from subject (if the first state is different with the last state)
-     * @param firstState
+     * @param lastState
      * @returns
      */
-    public getInfo(firstState: StatesI): Observable<StatesI> {
-        this.getCurvesLocalStorage(firstState);
-        this.values.next(this.currentState);
+    public getInfo(lastState: StatesI): Observable<StatesI> {
+        if (this.getCurvesLocalStorage(lastState))
+            this.values.next(this.currentState);
         return this.values.asObservable();
     }
 }

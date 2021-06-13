@@ -19,7 +19,7 @@
             <div class="row">
                 <div class="col-9 curves">
                     <app-curves [colorLine]="curve.curveConfiguration?.colorLine" [series]="curve.curveValues"
-                        [simulation]="true" [loadOptions]="chartOptions" [minX]=0 [maxX]=4>
+                        [simulation]=true [loadOptions]="chartOptions" [maxSamples]=4 [minX]=0 [minY]=-1>
                     </app-curves>
                 </div>
                 <!-- Curve Configuration -->

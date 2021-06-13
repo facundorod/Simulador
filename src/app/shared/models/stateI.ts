@@ -2,7 +2,7 @@ import { AnimalSpeciesI } from "./animal-speciesI";
 import { CurvesI } from "./curvesI";
 
 export interface StatesI {
-    state: Number,
+    state: number,
     animalSpecie: AnimalSpeciesI;
     curves: CurvesI[];
     action?: string | undefined;

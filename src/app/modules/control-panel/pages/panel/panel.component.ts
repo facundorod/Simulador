@@ -152,28 +152,21 @@ export class PanelComponent extends BaseComponent implements OnInit {
         this.saveSimulation();
     }
 
+    /**
+     * Change detection for each input
+     */
     private onValueChanges(): void {
         this.formGroup.get("animalSpecie").valueChanges.subscribe((val) => {
             this.onLoadCurves(val);
-            this.localStorageService.saveValue(
-                "simulationState",
-                JSON.stringify(this.currentState)
-            );
+            this.updateState();
         });
         this.fromGroupParameters.get("heartRate").valueChanges.subscribe((val) => {
             this.curvesHelper.scaleCurves(this.curves, val);
-            this.localStorageService.saveValue(
-                "simulationState",
-                JSON.stringify(this.currentState)
-            );
-
+            this.updateState();
         });
         this.fromGroupParameters.get("breathRate").valueChanges.subscribe((val) => {
             this.curvesHelper.scaleCurves(this.curves, 0, val);
-            this.localStorageService.saveValue(
-                "simulationState",
-                JSON.stringify(this.currentState)
-            );
+            this.updateState();
         });
     }
 
@@ -335,6 +328,16 @@ export class PanelComponent extends BaseComponent implements OnInit {
             "simulationState",
             JSON.stringify(this.currentState)
         );
+    }
+
+    private updateState(): void {
+        if (this.currentState) {
+            this.currentState.state++;
+            this.localStorageService.saveValue(
+                "simulationState",
+                JSON.stringify(this.currentState)
+            );
+        }
     }
 
     /**
