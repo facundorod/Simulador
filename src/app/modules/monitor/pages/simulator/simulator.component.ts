@@ -20,6 +20,8 @@ export class SimulatorComponent
     private subscription: Subscription;
     private firstState: StatesI;
     public currentState: StatesI;
+    private audio: HTMLAudioElement;
+
     // public samples: number = 4;
     chartOptions: any = {
         height: 200,
@@ -27,11 +29,10 @@ export class SimulatorComponent
     };
     public curvePeriod: number = 1;
     public trackByFn: TrackByFunction<CurvesI> = (_, curve: CurvesI) => curve.curveConfiguration.id_pp;
-    constructor(
-        private monitorService: MonitorService
-    ) {
+    constructor(private monitorService: MonitorService) {
         super();
         this.checkLocalStorage();
+
     }
 
     ngOnInit(): void {
@@ -46,12 +47,14 @@ export class SimulatorComponent
      */
     private suscribeSimulationInfo() {
         // Create the conection with the monitor service
-        this.subscription = this.monitorService.getInfo(this.firstState).subscribe(
+        this.monitorService.getInfo(this.firstState).subscribe(
             (simulationState: StatesI) => {
                 if (simulationState) {
-                    this.curves = simulationState.curves;
-                    this.currentState = simulationState;
-                    this.animalSpecie = simulationState.animalSpecie;
+                    if (!this.isSameState(simulationState, this.currentState)) {
+                        this.curves = simulationState.curves;
+                        this.currentState = simulationState;
+                        this.animalSpecie = simulationState.animalSpecie;
+                    }
                 } else {
                     this.curves = null;
                     this.currentState = null;
@@ -79,4 +82,10 @@ export class SimulatorComponent
         }, 300);
     }
 
+    public isSameState(simulationState: StatesI, currentState: StatesI): boolean {
+        return (simulationState.state === currentState?.state) && (simulationState?.action === currentState?.action);
+    }
+
 }
+
+

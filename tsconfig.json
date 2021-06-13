@@ -13,8 +13,8 @@
       "@guards/*": ["src/app/guards/*"],
       "@controlPanel/*": ["src/app/modules/control-panel/*"],
       "@services/*": ["src/app/services/*"],
-      "@panel/*": ["src/app/modules/control-panel/*"]
-
+      "@panel/*": ["src/app/modules/control-panel/*"],
+      "@assets/*": ["src/assets/*"]
     },
     "outDir": "./dist/out-tsc",
     "sourceMap": true,

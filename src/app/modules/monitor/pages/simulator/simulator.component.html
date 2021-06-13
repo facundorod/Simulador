@@ -14,6 +14,7 @@
     </div>
 
     <div class="row" *ngIf="currentState?.action === 'play' else noPlay">
+        <app-audio [play]="true"></app-audio>
         <div class="col-12" *ngFor="let curve of curves; trackBy: trackByFn">
             <div class="row">
                 <div class="col-9 curves">
@@ -44,8 +45,8 @@
 </ng-template>
 
 <ng-template #noPlay>
-    <h4 class="text-center" *ngIf="currentState?.action === 'pause'"><i class="fas fa-pause"
-            class="icon-pause"></i>Simulation paused</h4>
-    <h4 class="text-center" *ngIf="currentState?.action === 'stop'"><i class="fas fa-stop"
-            class="icon-stopped"></i>Simulation stopped</h4>
+    <h4 class="text-center" *ngIf="currentState?.action === 'pause'"><i class="fas fa-pause icon-pause"></i>Simulation
+        paused</h4>
+    <h4 class="text-center" *ngIf="currentState?.action === 'stop'"><i class="fas fa-stop icon-stopped"></i>Simulation
+        stopped</h4>
 </ng-template>

@@ -169,7 +169,7 @@ export class PanelComponent extends BaseComponent implements OnInit {
 
         });
         this.fromGroupParameters.get("breathRate").valueChanges.subscribe((val) => {
-            this.curvesHelper.scaleCurves(this.curves, val);
+            this.curvesHelper.scaleCurves(this.curves, 0, val);
             this.localStorageService.saveValue(
                 "simulationState",
                 JSON.stringify(this.currentState)
@@ -231,6 +231,7 @@ export class PanelComponent extends BaseComponent implements OnInit {
                 this.temperature = value.curveValues[0][0];
             }
         })
+
         this.localStorageService.saveValue(
             "simulationState",
             JSON.stringify(this.currentState)
@@ -310,7 +311,8 @@ export class PanelComponent extends BaseComponent implements OnInit {
 
 
     public onPlaySimulation(): void {
-        this.currentState.action = 'play';
+        if (this.currentState)
+            this.currentState.action = 'play';
         this.localStorageService.saveValue(
             "simulationState",
             JSON.stringify(this.currentState)
@@ -318,7 +320,8 @@ export class PanelComponent extends BaseComponent implements OnInit {
     }
 
     public onPauseSimulation(): void {
-        this.currentState.action = 'pause';
+        if (this.currentState)
+            this.currentState.action = 'pause';
         this.localStorageService.saveValue(
             "simulationState",
             JSON.stringify(this.currentState)
@@ -326,7 +329,8 @@ export class PanelComponent extends BaseComponent implements OnInit {
     }
 
     public onStopSimulation(): void {
-        this.currentState.action = 'stop';
+        if (this.currentState)
+            this.currentState.action = 'stop';
         this.localStorageService.saveValue(
             "simulationState",
             JSON.stringify(this.currentState)

@@ -34,10 +34,12 @@
     height: 300px;
 }
 
-.icon-play {
+.icon-pause {
     color: white;
+    margin-right: 2%;
 }
 
 .icon-stopped {
     color: white;
+    margin-right: 2%;
 }

@@ -30,4 +30,4 @@ import { CurvesComponent } from "./components/curves/curves.component";
     exports: [CurvesComponent],
     providers: [SimulationService, ScenarioService],
 })
-export class SimulationModule {}
+export class SimulationModule { }

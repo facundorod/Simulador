@@ -24,26 +24,21 @@ export class MonitorService {
      * @param simulationState
      * @returns
      */
-    private getCurvesLocalStorage(simulationState: StatesI): boolean {
+    private getCurvesLocalStorage(simulationState: StatesI) {
         const lastStatus: StatesI = JSON.parse(
             localStorage.getItem("simulationState")
         );
-
         if (simulationState) {
             if (!this.currentState) {
                 this.currentState = simulationState;
-                return true;
             } else {
                 if (simulationState.state != this.currentState.state) {
                     this.currentState = simulationState;
-                    return true;
                 }
             }
         } else {
             this.currentState = lastStatus;
-            return true;
         }
-        return false;
     }
 
     /**
@@ -52,9 +47,8 @@ export class MonitorService {
      * @returns
      */
     public getInfo(firstState: StatesI): Observable<StatesI> {
-        if (this.getCurvesLocalStorage(firstState)) {
-            this.values.next(this.currentState);
-        }
+        this.getCurvesLocalStorage(firstState);
+        this.values.next(this.currentState);
         return this.values.asObservable();
     }
 }
