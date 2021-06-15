@@ -1,6 +1,6 @@
 import { SimulationService } from "./../../../simulation/services/simulation.service";
 import { ToastrService } from "ngx-toastr";
-import { Component, Input, OnInit } from "@angular/core";
+import { Component, Input, OnDestroy, OnInit } from "@angular/core";
 
 // Service
 import { AnimalSpeciesService } from "./../../services/animalSpecies.service";
@@ -26,7 +26,7 @@ import { PhysiologicalParamaterI } from "@app/shared/models/physiologicalParamat
     templateUrl: "./panel.component.html",
     styleUrls: ["./panel.component.css"],
 })
-export class PanelComponent extends BaseComponent implements OnInit {
+export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
     editScenario: any = {}; // Scenario active for edit
     activeScenario: any; // Scenario active for simulation
     simulationsNumber: number = 0; // Number of simulation's scenario.
@@ -69,6 +69,10 @@ export class PanelComponent extends BaseComponent implements OnInit {
         this.loadData();
         this.initFormGroup();
         this.onLoadCurves(this.formGroup.value.animalSpecie);
+    }
+
+    ngOnDestroy(): void {
+        this.localStorageService.removeValue("simulationState");
     }
 
     /**

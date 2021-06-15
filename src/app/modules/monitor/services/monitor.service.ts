@@ -30,17 +30,14 @@ export class MonitorService {
                 localStorage.getItem("simulationState")
             );
             if (simulationState) {
-                if (simulationState.state != lastStatus?.state) {
+                if (simulationState.state != lastStatus?.state || simulationState?.action != lastStatus?.action) {
                     this.currentState = lastStatus;
                     return true;
-                } else return false;
-                // if (!this.currentState) {
-                //     this.currentState = simulationState;
-                // } else {
-                //     if (simulationState.state != this.currentState.state) {
-                //         this.currentState = simulationState;
-                //     }
-                // }
+                } else {
+                    // console.log("last status", lastStatus);
+                    // console.log("simulation status", simulationState);
+                    return false;
+                }
             } else {
                 this.currentState = lastStatus;
                 return true;

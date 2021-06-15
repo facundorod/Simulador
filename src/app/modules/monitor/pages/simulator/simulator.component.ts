@@ -20,28 +20,29 @@ export class SimulatorComponent
     public animalSpecie: AnimalSpeciesI;
     public today: Date = new Date();
     private subscription: Subscription;
-    private firstState: StatesI;
+    private lastState: StatesI;
     public currentState: StatesI;
     private period: number = 1;
     public maxSamples: number = 4;
     private curvesHelper: CurvesHelper = new CurvesHelper();
     public chartOptions: NgxEchartsDirective["initOpts"] = {
-        height: 200,
+        height: 180,
         width: 1180,
     };
 
+    private simulationTimer: NodeJS.Timeout;
     public trackByFn: TrackByFunction<CurvesI> = (_, curve: CurvesI) => curve.curveConfiguration.id_pp;
     constructor(private monitorService: MonitorService) {
         super();
-        this.checkLocalStorage();
-
     }
 
     ngOnInit(): void {
+        this.checkLocalStorage();
     }
 
     ngOnDestroy(): void {
         this.subscription.unsubscribe();
+        clearInterval(this.simulationTimer);
     }
 
     /**
@@ -49,7 +50,7 @@ export class SimulatorComponent
      */
     private suscribeSimulationInfo() {
         // Create the conection with the monitor service
-        this.monitorService.getInfo(this.firstState).subscribe(
+        this.monitorService.getInfo(this.lastState).subscribe(
             (simulationState: StatesI) => {
                 if (simulationState) {
                     this.updateCurves(simulationState);
@@ -72,13 +73,13 @@ export class SimulatorComponent
      * Check localstorage every 300 ms.
      */
     private checkLocalStorage(): void {
-        this.firstState = this.monitorService.getFirstState();
-        this.animalSpecie = this.firstState?.animalSpecie;
-        if (this.firstState?.curves) {
-            this.curves = this.firstState.curves;
+        this.lastState = this.monitorService.getFirstState();
+        this.animalSpecie = this.lastState?.animalSpecie;
+        if (this.lastState?.curves) {
+            this.curves = this.lastState.curves;
             this.scaleCurves();
         }
-        setInterval(() => {
+        this.simulationTimer = setInterval(() => {
             this.suscribeSimulationInfo();
         }, 300);
     }
@@ -91,6 +92,7 @@ export class SimulatorComponent
      * @returns true or false
      */
     public isSameState(simulationState: StatesI, currentState: StatesI): boolean {
+        if (!currentState) return false;
         return (simulationState.state === currentState?.state) && (simulationState?.action === currentState?.action);
     }
 
@@ -100,6 +102,7 @@ export class SimulatorComponent
             this.curves = simulationState.curves;
             this.scaleCurves();
             this.currentState = simulationState;
+            this.lastState = simulationState;
             this.animalSpecie = simulationState.animalSpecie;
         }
     }
@@ -108,8 +111,46 @@ export class SimulatorComponent
         this.curves.forEach((value: CurvesI) => {
             this.curvesHelper.reSampleCurve(value.curveValues, this.period, this.maxSamples);
         })
+    }
 
-        console.log("THIS CURVES", this.curves);
+    /**
+     * Get the max value on y-axis
+     * @param curveValues
+     * @returns max value for curveValues
+     */
+    public getMaxY(curveValues: number[][]): number {
+        let maxY: number = curveValues[0][1];
+        for (let curve of curveValues) {
+            if (curve[1] > maxY)
+                maxY = curve[1];
+        }
+        return maxY;
+    }
+
+    /**
+     * Get the min value on y-axis
+     * @param curveValues
+     * @returns min value for curveValues
+     */
+    public getMinY(curveValues: number[][]): number {
+        let minY: number = curveValues[0][1];
+        for (let curve of curveValues) {
+            if (curve[1] < minY)
+                minY = curve[1];
+        }
+        return minY;
+    }
+
+    /**
+     * Create a constant curve when the simulation is stopped
+     * @returns Constant curve to show when the simulation is stopped
+     */
+    public onStopCurve(curveValues: number[][]): number[][] {
+        let curveAux: number[][] = [];
+        curveValues.forEach(() => {
+            curveAux.push([2, 2]);
+        });
+        return curveAux;
     }
 }
 

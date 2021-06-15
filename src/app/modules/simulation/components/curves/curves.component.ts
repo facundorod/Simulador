@@ -20,6 +20,7 @@ export class CurvesComponent implements OnInit {
     @Input() type: string = null;
     @Input() maxSamples: number = 4;
     @Input() sampleFrequency: number = 1;
+    @Input() stop: boolean;
     private iterator: number = 0;
     public chartOption: EChartsOption;
     private echartsInstance: ECharts;
@@ -41,12 +42,11 @@ export class CurvesComponent implements OnInit {
         if (this.series) {
             this.chartOption = chartConfigurer.getChart();
             this.chartOption.series[0].data = this.simulation ? this.seriesAux : this.series;
-            if (this.simulation) {
+            if (this.simulation && !this.stop) {
                 this.simulationTimer = setInterval(() => {
                     this.simulateCurve();
                     this.updateChart();
-                }, this.sampleFrequency * 50);
-
+                }, this.sampleFrequency * 75);
             }
         }
 
@@ -82,7 +82,6 @@ export class CurvesComponent implements OnInit {
 
     private updateChart(): void {
         if (this.echartsInstance) {
-
             this.chartOption.series[0].data = this.seriesAux;
             this.echartsInstance.setOption(this.chartOption);
         }

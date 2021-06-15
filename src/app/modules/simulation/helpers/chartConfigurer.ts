@@ -38,15 +38,17 @@ export class ChartConfigurer {
                 max: maxX,
                 show: this.xAxisShow ? this.xAxisShow : false,
                 axisLine: {
-                    show: this.xAxisShow ? this.xAxisShow : false,
-                    onZero: this.xAxisShow ? this.xAxisShow : false,
-                    lineStyle: {
-                        width: 5,
-                    },
+                    // show: this.xAxisShow ? this.xAxisShow : false,
+                    show: false,
+                    onZero: this.minY == 0 ? true : false,
+                    // lineStyle: {
+                    //     width: 5,
+                    // },
                 },
                 axisTick: {
                     show: false,
                 },
+
                 axisLabel: {
                     show: false,
                 },
@@ -70,22 +72,21 @@ export class ChartConfigurer {
                         focus: "none",
                         scale: false,
                     },
-
-                    // animation: true,
-                    // animationEasing: "circularInOut",
-                    // animationDurationUpdate: function (idx) {
-                    //     // delay for later data is larger
-                    //     return idx * 100;
-                    // },
-                    // animationDuration: 300,
+                    animation: true,
+                    animationEasing: "circularInOut",
+                    animationDurationUpdate: function (idx) {
+                        // delay for later data is larger
+                        return idx * 100;
+                    },
+                    animationDuration: 300,
                     type: "line",
                     // animationEasingUpdate: "cubicOut",
                     color: this.colorLine,
                     lineStyle: this.lineStyle
                         ? this.lineStyle
                         : {
-                              width: 2,
-                          },
+                            width: 2,
+                        },
                     areaStyle: this.areaStyle ? this.areaStyle : null,
                 },
             ],
