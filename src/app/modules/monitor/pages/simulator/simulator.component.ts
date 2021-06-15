@@ -20,8 +20,7 @@ export class SimulatorComponent
     public animalSpecie: AnimalSpeciesI;
     public today: Date = new Date();
     private subscription: Subscription;
-    private lastState: StatesI;
-    public currentState: StatesI;
+    public lastState: StatesI;
     private period: number = 1;
     public maxSamples: number = 4;
     private curvesHelper: CurvesHelper = new CurvesHelper();
@@ -48,7 +47,7 @@ export class SimulatorComponent
     /**
      * Subscribe to simulation info.
      */
-    private suscribeSimulationInfo() {
+    private suscribeSimulationInfo(): void {
         // Create the conection with the monitor service
         this.monitorService.getInfo(this.lastState).subscribe(
             (simulationState: StatesI) => {
@@ -56,7 +55,7 @@ export class SimulatorComponent
                     this.updateCurves(simulationState);
                 } else {
                     this.curves = null;
-                    this.currentState = null;
+                    this.lastState = null;
                     this.animalSpecie = null;
                 }
             },
@@ -73,12 +72,7 @@ export class SimulatorComponent
      * Check localstorage every 300 ms.
      */
     private checkLocalStorage(): void {
-        this.lastState = this.monitorService.getFirstState();
-        this.animalSpecie = this.lastState?.animalSpecie;
-        if (this.lastState?.curves) {
-            this.curves = this.lastState.curves;
-            this.scaleCurves();
-        }
+
         this.simulationTimer = setInterval(() => {
             this.suscribeSimulationInfo();
         }, 300);
@@ -98,10 +92,10 @@ export class SimulatorComponent
 
 
     private updateCurves(simulationState: StatesI): void {
-        if (!this.isSameState(simulationState, this.currentState)) {
+        if (!this.isSameState(simulationState, this.lastState)) {
             this.curves = simulationState.curves;
             this.scaleCurves();
-            this.currentState = simulationState;
+            // this.currentState = simulationState;
             this.lastState = simulationState;
             this.animalSpecie = simulationState.animalSpecie;
         }
@@ -148,7 +142,7 @@ export class SimulatorComponent
     public onStopCurve(curveValues: number[][]): number[][] {
         let curveAux: number[][] = [];
         curveValues.forEach(() => {
-            curveAux.push([2, 2]);
+            curveAux.push([1, 1]);
         });
         return curveAux;
     }

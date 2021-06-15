@@ -8,18 +8,6 @@ export class MonitorService {
     private currentState: StatesI;
 
     /**
-     * Get the last simulation status
-     * @returns the last status
-     */
-    public getFirstState(): StatesI {
-        const simulationState: StatesI = JSON.parse(
-            localStorage.getItem("simulationState")
-        );
-
-        return simulationState;
-    }
-
-    /**
      * Check if the status has been changed and update the current state with the last status
      * @param simulationState
      * @returns
@@ -34,8 +22,6 @@ export class MonitorService {
                     this.currentState = lastStatus;
                     return true;
                 } else {
-                    // console.log("last status", lastStatus);
-                    // console.log("simulation status", simulationState);
                     return false;
                 }
             } else {

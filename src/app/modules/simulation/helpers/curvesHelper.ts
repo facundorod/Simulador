@@ -51,27 +51,48 @@ export class CurvesHelper {
         if (curves) {
             curves.forEach((curve: CurvesI) => {
                 if (heartRate > 0)
-                    this.scaleCurve(curve.curveValues, heartRate);
+                    this.scaleCurveHeart(curve, heartRate);
                 if (breathRate > 0)
-                    this.scaleCurve(curve.curveValues, breathRate);
+                    this.scaleCurveBreath(curve, breathRate);
             })
         }
 
     }
 
     /**
-     * Scale curve according to period
+     * Scale curves associated with heart rate
      * @param curve
      * @param period
      * @returns
      */
-    private scaleCurve(curve: number[][], period: number = 1): number[][] {
-        if (period != 1)
-            curve.forEach((data: number[]) => {
-                data[0] *= period;
-            });
+    private scaleCurveHeart(curve: CurvesI, period: number = 1): number[][] {
+        if (period != 1) {
+            if (curve.curveConfiguration.rate === 'heart') {
+                curve.curveValues.forEach((data: number[]) => {
+                    data[0] *= period;
+                });
+            }
+        }
+        return curve.curveValues;
 
-        return curve;
+    }
+
+    /**
+     * Scale curves associated with breath rate
+     * @param curve
+     * @param period
+     * @returns
+     */
+    private scaleCurveBreath(curve: CurvesI, period: number = 1): number[][] {
+        if (period != 1) {
+            if (curve.curveConfiguration.rate === 'breath') {
+                curve.curveValues.forEach((data: number[]) => {
+                    data[0] *= period;
+                });
+            }
+        }
+        return curve.curveValues;
+
     }
 
     /**

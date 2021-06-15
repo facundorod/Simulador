@@ -58,7 +58,6 @@ export class ChartConfigurer {
             },
             yAxis: {
                 type: "value",
-                // interval: 5,
                 min: minY,
                 max: maxY,
                 show: false,
@@ -72,21 +71,10 @@ export class ChartConfigurer {
                         focus: "none",
                         scale: false,
                     },
-                    animation: true,
-                    animationEasing: "circularInOut",
-                    animationDurationUpdate: function (idx) {
-                        // delay for later data is larger
-                        return idx * 100;
-                    },
-                    animationDuration: 300,
                     type: "line",
-                    // animationEasingUpdate: "cubicOut",
                     color: this.colorLine,
-                    lineStyle: this.lineStyle
-                        ? this.lineStyle
-                        : {
-                            width: 2,
-                        },
+                    lineStyle: this.lineStyle ? this.lineStyle :
+                        { width: 2 },
                     areaStyle: this.areaStyle ? this.areaStyle : null,
                 },
             ],

@@ -40,13 +40,15 @@ export class CurvesComponent implements OnInit {
             this.type
         );
         if (this.series) {
+            // Delete first empty element
+            this.seriesAux.splice(0, 1);
             this.chartOption = chartConfigurer.getChart();
             this.chartOption.series[0].data = this.simulation ? this.seriesAux : this.series;
-            if (this.simulation && !this.stop) {
+            if (this.simulation) {
                 this.simulationTimer = setInterval(() => {
                     this.simulateCurve();
                     this.updateChart();
-                }, this.sampleFrequency * 75);
+                }, this.sampleFrequency * 50);
             }
         }
 

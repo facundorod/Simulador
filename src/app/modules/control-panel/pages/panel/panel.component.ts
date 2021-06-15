@@ -39,8 +39,7 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
     public indexSimulationActive: number = 0; // Index for scenario simulation Active
     private currentState: StatesI; // Curves for scenario and animalSpecie selected
     public curves: CurvesI[] = new Array<CurvesI>();
-    curvesHelper = new CurvesHelper();
-
+    private curvesHelper = new CurvesHelper();
     // Paramaters Physiological without curves
     public fromGroupParameters: FormGroup;
     public heartRate: number;
@@ -165,11 +164,11 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
             this.updateState();
         });
         this.fromGroupParameters.get("heartRate").valueChanges.subscribe((val) => {
-            this.curvesHelper.scaleCurves(this.curves, val);
+            this.curvesHelper.scaleCurves(this.currentState.curves, val, 0);
             this.updateState();
         });
         this.fromGroupParameters.get("breathRate").valueChanges.subscribe((val) => {
-            this.curvesHelper.scaleCurves(this.curves, 0, val);
+            this.curvesHelper.scaleCurves(this.currentState.curves, 0, val);
             this.updateState();
         });
     }
@@ -291,7 +290,7 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
         }
     }
 
-    getScenarios(scenarios: any): void {
+    public getScenarios(scenarios: any): void {
         this.scenariosSimulation = scenarios;
         this.editScenario = this.scenariosSimulation[this.indexActive];
         this.activeScenario = this.scenariosSimulation[
@@ -301,7 +300,7 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
         this.onLoadCurves(this.formGroup.value.animalSpecie);
     }
 
-    getPosScenarios(pos: any): void {
+    public getPosScenarios(pos: any): void {
         this.indexActive = pos.indexEdit;
         this.indexSimulationActive = pos.indexActive;
     }
