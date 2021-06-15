@@ -1,0 +1,75 @@
+<div class="container-fluid" *ngIf="curves?.length > 0 else noSimulation">
+    <div class="row">
+        <div class="col-lg-6">
+            <p class="text-left">
+                {{ today | date: "medium" }}
+                <span *ngIf="animalSpecie" class="text-animal-specie">
+                    {{ animalSpecie.name }}
+                </span>
+            </p>
+        </div>
+        <div class="col-lg-5">
+            <p class="text-right" *ngIf="animalSpecie">ANIMAL CLINIC</p>
+        </div>
+    </div>
+
+    <div class="row" *ngIf="lastState?.action === 'play' else noPlay">
+        <app-audio [play]="true"></app-audio>
+        <div class="col-12" *ngFor="let curve of curves; trackBy: trackByFn">
+            <div class="row curves">
+                <div class="col-9">
+                    <app-curves [colorLine]="curve.curveConfiguration?.colorLine" [series]="curve.curveValues"
+                        [simulation]=true [loadOptions]="chartOptions" [maxSamples]=4 [minX]=0
+                        [minY]=getMinY(curve.curveValues) [maxY]=getMaxY(curve.curveValues)>
+                    </app-curves>
+                </div>
+                <!-- Curve Configuration -->
+                <div class="col-2 curve-configuration">
+
+                </div>
+                <div class="col-xs-1 curve-label">
+                    <p class="text-label">{{curve.curveConfiguration.label}}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<ng-template #noSimulation class="mt-4 no-simulation">
+    <div class="container row no-simulation">
+        <div class="spinner-border text-danger" role="status">
+        </div>
+        <div class="ml-4">
+            <h3 class="text-center">Waiting for simulation</h3>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #noPlay>
+    <div *ngIf="lastState?.action === 'stop' else paused">
+        <h4 class="text-center" *ngIf="lastState?.action === 'stop'"><i class="fas fa-stop icon-stopped"></i>Simulation
+            stopped</h4>
+        <div class="col-12" *ngFor="let curve of curves; trackBy: trackByFn">
+            <div class="row curves">
+                <div class="col-9">
+                    <app-curves [colorLine]="curve.curveConfiguration?.colorLine"
+                        [series]="onStopCurve(curve.curveValues)" [simulation]=false [loadOptions]="chartOptions">
+                    </app-curves>
+                </div>
+                <!-- Curve Configuration -->
+                <div class="col-2 curve-configuration">
+
+                </div>
+                <div class="col-xs-1 curve-label">
+                    <p class="text-label">{{curve.curveConfiguration.label}}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</ng-template>
+
+
+<ng-template #paused>
+    <h4 class="text-center"><i class=" fas fa-pause icon-pause"></i>Simulation
+        paused</h4>
+</ng-template>

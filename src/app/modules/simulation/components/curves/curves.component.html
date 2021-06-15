@@ -1,0 +1,2 @@
+<div echarts [options]="chartOption" [initOpts]="loadOptions" (chartInit)="onChartInit($event)"
+    [ngClass]="{'simulation': simulation, 'panel': !simulation}" *ngIf="series"></div>

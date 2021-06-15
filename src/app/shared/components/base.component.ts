@@ -1,6 +1,6 @@
 import { ActivatedRoute, Router } from "@angular/router";
 import { FormGroup, AbstractControl } from "@angular/forms";
-import { OnInit } from "@angular/core";
+import { Component, OnInit } from "@angular/core";
 
 export abstract class BaseComponent implements OnInit {
     formGroup: FormGroup = null;

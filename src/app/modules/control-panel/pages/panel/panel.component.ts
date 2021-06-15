@@ -1,14 +1,9 @@
 import { SimulationService } from "./../../../simulation/services/simulation.service";
 import { ToastrService } from "ngx-toastr";
-import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
-import { Component, Input, OnInit } from "@angular/core";
+import { Component, Input, OnDestroy, OnInit } from "@angular/core";
 
 // Service
 import { AnimalSpeciesService } from "./../../services/animalSpecies.service";
-import { MedicationsService } from "./../../services/medications.service";
-import { ScenarioService } from "./../../services/scenario.service";
-import { ArrhythmiasService } from "./../../services/arrhythmias.service";
-import { PathologiesService } from "./../../services/pathologies.service";
 
 // Models
 import { PathologyI } from "@models/pathologyI";
@@ -16,51 +11,55 @@ import { MedicationI } from "@models/medicationI";
 import { ArrhythmiaI } from "@models/arrhythmiaI";
 import { AnimalSpeciesI } from "@models/animal-speciesI";
 import { BaseComponent } from "@app/shared/components/base.component";
-import {
-    AbstractControl,
-    FormArray,
-    FormBuilder,
-    FormControl,
-    Validators,
-} from "@angular/forms";
-import { ConfirmModalComponent } from "@app/shared/modals/confirm/confirm-modal.component";
+import { FormBuilder, FormGroup, Validators } from "@angular/forms";
+import { CurvesService } from "../../services/curves.service";
+import { CurvesI } from "@app/shared/models/curvesI";
+import { CurvesHelper } from "./../../../simulation/helpers/curvesHelper";
+import { LocalStorageService } from "@app/shared/services/localStorage.service";
+import { MonitorService } from "@app/modules/monitor/services/monitor.service";
+import { StatesI } from "@app/shared/models/stateI";
+import { environment } from "@environments/environment";
+import { PhysiologicalParamaterI } from "@app/shared/models/physiologicalParamaterI";
 
 @Component({
     selector: "app-panel",
     templateUrl: "./panel.component.html",
     styleUrls: ["./panel.component.css"],
 })
-export class PanelComponent extends BaseComponent implements OnInit {
-    activeScenario: any = {};
+export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
+    editScenario: any = {}; // Scenario active for edit
+    activeScenario: any; // Scenario active for simulation
     simulationsNumber: number = 0; // Number of simulation's scenario.
-    scenarios: any[] = [];
-    scenariosSimulation: any[] = [];
-    animalSpecies: any[] = []; // Animal Species to populate the dropdown
-    animalSpecie: any = {}; // Animal Specie from simulation
-    arrhythmias: any[] = []; // Arrhythmias to populate the dropdown
-    arrhythmiasScenario: any[] = []; // Arrhythmias from scenario
-    pathologies: any[] = [];
-    pathologiesScenario: any[] = []; // Pathologies from scenario
-    medications: any[] = [];
-    medicationsScenario: any[] = [];
-    simulation: any = {};
-    indexActive: number = 0;
-    indexSimulationActive: number = 0;
 
-    public order = {
-        orderBy: "name",
-        order: "asc",
+    public scenariosSimulation: any[] = [];
+    public animalSpecies: any[] = []; // Animal Species to populate the dropdown
+    public animalSpecie: any = {}; // Animal Specie from simulation
+    public simulation: any = {}; // Simulation from localStorage
+    public indexActive: number = 0; // Index for scenario edit Active
+    public indexSimulationActive: number = 0; // Index for scenario simulation Active
+    private currentState: StatesI; // Curves for scenario and animalSpecie selected
+    public curves: CurvesI[] = new Array<CurvesI>();
+    private curvesHelper = new CurvesHelper();
+    // Paramaters Physiological without curves
+    public fromGroupParameters: FormGroup;
+    public heartRate: number;
+    public breathRate: number;
+    public temperature: number;
+
+    chartOptions: any = {
+        height: 400,
     };
 
     constructor(
-        private scenarioService: ScenarioService,
         private animalSpecieService: AnimalSpeciesService,
         private fb: FormBuilder,
-        private modal: NgbModal,
         private toast: ToastrService,
-        private simulationService: SimulationService
+        private simulationService: SimulationService,
+        private curvesService: CurvesService,
+        private localStorageService: LocalStorageService,
     ) {
         super();
+        // window.open(environment.simulation, "_blank");
     }
 
     ngOnInit(): void {
@@ -68,6 +67,11 @@ export class PanelComponent extends BaseComponent implements OnInit {
         this.setLoading(true);
         this.loadData();
         this.initFormGroup();
+        this.onLoadCurves(this.formGroup.value.animalSpecie);
+    }
+
+    ngOnDestroy(): void {
+        this.localStorageService.removeValue("simulationState");
     }
 
     /**
@@ -75,15 +79,6 @@ export class PanelComponent extends BaseComponent implements OnInit {
      */
     private loadData() {
         this.simulation = JSON.parse(localStorage.getItem("Simulation"));
-
-        this.scenarioService.list(null, null).subscribe(
-            (scenarios) => {
-                this.scenarios = scenarios.data;
-            },
-            (error: any) => {
-                console.log(error);
-            }
-        );
 
         this.animalSpecieService.list().subscribe(
             (animalSpecies: any) => {
@@ -110,18 +105,19 @@ export class PanelComponent extends BaseComponent implements OnInit {
         else {
             if (this.simulation.scenarios) {
                 this.scenariosSimulation = this.simulation.scenarios;
+                // If the simulation has scenarios, the first will be the active for simulation
+                this.activeScenario = this.scenariosSimulation[0];
             }
+
             if (this.simulation.animalSpecie)
                 this.animalSpecie = this.simulation.animalSpecie;
         }
-
-        this.setLoading(false);
     }
 
     /**
      * Initialize the reactive form
      */
-    private initFormGroup() {
+    private initFormGroup(): void {
         this.setSubmitForm(false);
         this.formGroup = this.fb.group({
             simulationName: [
@@ -132,8 +128,23 @@ export class PanelComponent extends BaseComponent implements OnInit {
                 this.simulation ? this.simulation.description : "",
                 Validators.required,
             ],
-            animalSpecie: [this.animalSpecie ? this.animalSpecie : ""],
+            animalSpecie: [
+                this.animalSpecie ? this.animalSpecie : "",
+                Validators.required,
+            ]
         });
+        this.fromGroupParameters = this.fb.group({
+            heartRate: [
+                this.heartRate ? this.heartRate : 0
+            ],
+            breathRate: [
+                this.breathRate ? this.breathRate : 0
+            ],
+            temperature: [
+                this.temperature ? this.temperature : 0
+            ]
+        })
+        this.onValueChanges();
     }
 
     /**
@@ -142,6 +153,85 @@ export class PanelComponent extends BaseComponent implements OnInit {
     public async onSaveChanges() {
         this.submitForm = true;
         this.saveSimulation();
+    }
+
+    /**
+     * Change detection for each input
+     */
+    private onValueChanges(): void {
+        this.formGroup.get("animalSpecie").valueChanges.subscribe((val) => {
+            this.onLoadCurves(val);
+            this.updateState();
+        });
+        this.fromGroupParameters.get("heartRate").valueChanges.subscribe((val) => {
+            this.curvesHelper.scaleCurves(this.currentState.curves, val, 0);
+            this.updateState();
+        });
+        this.fromGroupParameters.get("breathRate").valueChanges.subscribe((val) => {
+            this.curvesHelper.scaleCurves(this.currentState.curves, 0, val);
+            this.updateState();
+        });
+    }
+
+    /**
+     * Load curves for scenario active for simulation and for animalSpecie selected
+     */
+    public onLoadCurves(as: AnimalSpeciesI) {
+        if (
+            this.activeScenario &&
+            this.activeScenario?.id_scenario &&
+            as != null &&
+            as?.id_as
+        ) {
+            this.curvesService
+                .findAll({
+                    animalSpecie: as.id_as,
+                    scenario: this.activeScenario.id_scenario,
+                })
+                .subscribe(
+                    (state: StatesI) => {
+                        if (state) {
+                            this.currentState = state;
+                            this.onLoadParameters(state);
+                            this.curves = state.curves;
+                        } else {
+                            this.currentState = null;
+                            this.curves = [];
+                            this.localStorageService.removeValue("simulationState");
+                        }
+                    },
+                    (error: any) => {
+                        console.log(error);
+                    }
+                );
+        } else {
+            this.currentState = null;
+            this.curves = [];
+            this.localStorageService.removeValue("simulationState");
+        }
+    }
+
+    /**
+     * Load parameters without curves
+     * @param state
+     */
+    private onLoadParameters(state: StatesI): void {
+        state.curves.forEach((value: CurvesI) => {
+            if (value.curveConfiguration.label === 'RESP') {
+                this.breathRate = value.curveValues[0][0];
+            }
+            if (value.curveConfiguration.label === 'CAR') {
+                this.heartRate = value.curveValues[0][0];
+            }
+            if (value.curveConfiguration.label === 'TEMP') {
+                this.temperature = value.curveValues[0][0];
+            }
+        })
+
+        this.localStorageService.saveValue(
+            "simulationState",
+            JSON.stringify(this.currentState)
+        );
     }
 
     /**
@@ -200,14 +290,57 @@ export class PanelComponent extends BaseComponent implements OnInit {
         }
     }
 
-    getScenarios(scenarios: any): void {
+    public getScenarios(scenarios: any): void {
         this.scenariosSimulation = scenarios;
-        this.activeScenario = this.scenariosSimulation[this.indexActive];
+        this.editScenario = this.scenariosSimulation[this.indexActive];
+        this.activeScenario = this.scenariosSimulation[
+            this.indexSimulationActive
+        ];
+        this.currentState = null;
+        this.onLoadCurves(this.formGroup.value.animalSpecie);
     }
 
-    getPosScenarios(pos: any): void {
+    public getPosScenarios(pos: any): void {
         this.indexActive = pos.indexEdit;
         this.indexSimulationActive = pos.indexActive;
+    }
+
+
+    public onPlaySimulation(): void {
+        if (this.currentState)
+            this.currentState.action = 'play';
+        this.localStorageService.saveValue(
+            "simulationState",
+            JSON.stringify(this.currentState)
+        );
+    }
+
+    public onPauseSimulation(): void {
+        if (this.currentState)
+            this.currentState.action = 'pause';
+        this.localStorageService.saveValue(
+            "simulationState",
+            JSON.stringify(this.currentState)
+        );
+    }
+
+    public onStopSimulation(): void {
+        if (this.currentState)
+            this.currentState.action = 'stop';
+        this.localStorageService.saveValue(
+            "simulationState",
+            JSON.stringify(this.currentState)
+        );
+    }
+
+    private updateState(): void {
+        if (this.currentState) {
+            this.currentState.state++;
+            this.localStorageService.saveValue(
+                "simulationState",
+                JSON.stringify(this.currentState)
+            );
+        }
     }
 
     /**
@@ -215,19 +348,7 @@ export class PanelComponent extends BaseComponent implements OnInit {
      *  Aumenta el rendimiento, ya que solo se vuelven a representar en el DOM los nodos
      *  que han sido actualizados.
      */
-    trackByFnAnimalSpecies(index: number, name: AnimalSpeciesI): number {
+    public trackByFnAnimalSpecies(index: number, name: AnimalSpeciesI): number {
         return name.id_as;
-    }
-
-    trackByFnMedications(index: number, name: MedicationI): number {
-        return name.id_medication;
-    }
-
-    trackByFnArrhythmias(index: number, name: ArrhythmiaI): number {
-        return name.id_arr;
-    }
-
-    trackByFnPathologies(index: number, name: PathologyI): number {
-        return name.id_pat;
     }
 }

@@ -10,8 +10,8 @@
             <button type="submit" *ngIf="formGroup.valid" class="btn btn-primary col-lg-3 saveChanges"
                 (click)="onSaveChanges()">Save
                 changes</button>
-            <button type="submit" *ngIf="!formGroup.valid" class="btn btn-primary col-lg-3 saveChanges" (click)="onSaveChanges()"
-                disabled>Save
+            <button type="submit" *ngIf="!formGroup.valid" class="btn btn-primary col-lg-3 saveChanges"
+                (click)="onSaveChanges()" disabled>Save
                 changes</button>
         </div>
     </div>
@@ -156,13 +156,7 @@
                 </thead>
 
                 <tbody>
-                    <!-- <ng-template [ngIf]="!getFormControlsMedication.controls">
-                            <tr>
-                                <td colspan="12">
-                                    No medications available
-                                </td>
-                            </tr>
-                        </ng-template> -->
+
                     <ng-container formArrayName="medications"
                         *ngFor="let group of getFormControlsMedication.controls; let i = index">
 
@@ -319,6 +313,8 @@
             </table>
         </div>
         <!-- End arrhythmias form-->
+
+
 
     </div>
 </form>

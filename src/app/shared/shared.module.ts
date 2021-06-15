@@ -10,6 +10,8 @@ import { NgModule } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { SidebarModule } from "ng-sidebar";
 import { ArrayJsonPipe } from "./pipes/array-json.pipe";
+import { LocalStorageService } from "./services/localStorage.service";
+import { AudioComponent } from './components/audio/audio.component';
 
 @NgModule({
     declarations: [
@@ -18,6 +20,7 @@ import { ArrayJsonPipe } from "./pipes/array-json.pipe";
         MessageComponent,
         ConfirmModalComponent,
         ArrayJsonPipe,
+        AudioComponent,
     ],
     imports: [CommonModule, FormsModule, RouterModule, SidebarModule.forRoot()],
     exports: [
@@ -26,7 +29,8 @@ import { ArrayJsonPipe } from "./pipes/array-json.pipe";
         MessageComponent,
         ConfirmModalComponent,
         ArrayJsonPipe,
+        AudioComponent
     ],
-    providers: [ApiService, AuthSession],
+    providers: [ApiService, AuthSession, LocalStorageService],
 })
-export class SharedModule {}
+export class SharedModule { }

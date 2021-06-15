@@ -1,5 +1,5 @@
 import { PathologiesService } from "./../../services/pathologies.service";
-import { PathologyI } from "@models/PathologyI";
+import { PathologyI } from "@models/pathologyI";
 import { ConfirmModalComponent } from "../../../../shared/modals/confirm/confirm-modal.component";
 import { Component, OnInit } from "@angular/core";
 import { ToastrService } from "ngx-toastr";

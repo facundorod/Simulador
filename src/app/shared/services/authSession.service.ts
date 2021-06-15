@@ -4,7 +4,7 @@ export class AuthSession {
     static _authUser: BehaviorSubject<any> = new BehaviorSubject(null);
     static readonly authUser$: Observable<any> = AuthSession._authUser.asObservable();
 
-    constructor() {}
+    constructor() { }
 
     /**
      * Log out user
@@ -33,7 +33,6 @@ export class AuthSession {
      * @param authToken
      */
     static saveAuthToken(authToken) {
-        console.log(authToken);
         localStorage.setItem("authToken", authToken);
     }
 

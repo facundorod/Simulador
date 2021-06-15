@@ -43,6 +43,8 @@ export class ScenariosComponent extends BaseComponent implements OnInit {
     scenariosSimulation: any[];
     activeScenario: any;
     simulationsNumber: number = 0;
+    curves: any[] = [];
+
     private isScenariosPanelRoute: boolean = false;
     constructor(
         private scenariosService: ScenarioService,
@@ -154,8 +156,6 @@ export class ScenariosComponent extends BaseComponent implements OnInit {
         );
     }
 
-    onSaveScenario() {}
-
     isActiveScenario(index: number): boolean {
         return index === this.indexScenarioActive;
     }
@@ -247,6 +247,9 @@ export class ScenariosComponent extends BaseComponent implements OnInit {
             this.pathologiesScenario = this.activeScenario.pathologies;
         } else {
             this.pathologiesScenario = [];
+        }
+        if (this.activeScenario && this.activeScenario.curves) {
+            this.curves = this.activeScenario.curves;
         }
 
         if (this.activeScenario)
@@ -388,6 +391,9 @@ export class ScenariosComponent extends BaseComponent implements OnInit {
         }
     }
 
+    /**
+     * Save info scenario for populate all inputs in forms
+     */
     private saveScenarioInfo(): void {
         const arrhythmias: any[] = [];
         this.formGroup.value.arrhythmias.forEach((arr: any) => {
