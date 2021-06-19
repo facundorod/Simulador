@@ -118,4 +118,31 @@ export class CurvesHelper {
         }
     }
 
+    /**
+    * Get the max value on y-axis
+    * @param curveValues
+    * @returns max value for curveValues
+    */
+    public getMaxY(curveValues: number[][]): number {
+        let maxY: number = curveValues[0][1];
+        for (let curve of curveValues) {
+            if (curve[1] > maxY)
+                maxY = curve[1];
+        }
+        return maxY;
+    }
+
+    /**
+     * Get the min value on y-axis
+     * @param curveValues
+     * @returns min value for curveValues
+     */
+    public getMinY(curveValues: number[][]): number {
+        let minY: number = curveValues[0][1];
+        for (let curve of curveValues) {
+            if (curve[1] < minY)
+                minY = curve[1];
+        }
+        return minY;
+    }
 }

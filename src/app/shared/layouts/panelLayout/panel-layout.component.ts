@@ -7,7 +7,7 @@ import { Component, OnInit } from "@angular/core";
 })
 export class PanelLayoutComponent implements OnInit {
     public _opened: boolean = false;
-    ngOnInit(): void {}
+    ngOnInit(): void { }
 
     toggleSidebar() {
         this._opened = !this._opened;
