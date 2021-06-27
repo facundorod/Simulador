@@ -1,17 +1,18 @@
-<div class="container-fluid" *ngFor="let curve of curves; trackBy: trackByFn">
-    <div class="row curves">
-        <div class="col-9">
-            <app-curves [colorLine]="curve.curveConfiguration?.colorLine" [series]="curve.curveValues" [simulation]=true
-                [loadOptions]="chartOptions" [maxSamples]=4 [minX]=0 [minY]=getMinY(curve.curveValues)
-                [maxY]=getMaxY(curve.curveValues)>
-            </app-curves>
-        </div>
-        <!-- Curve Configuration -->
-        <div class="col-2 curve-configuration">
+<div class="container-fluid">
+    <div class="col-9" style="border: 2px solid red;">
+        <app-curves [simulation]=true [curves]="curves" [loadOptions]="chartOptions"
+            [monitorConfiguration]="monitorConfiguration.getMonitorConfiguration()">
+        </app-curves>
+    </div>
 
+    <!-- Curve Configuration -->
+    <!-- <div class="col-3" *ngFor="let curve of curves; trackByFn" style="border: 2px solid yellow;">
+        <div class="col-2 curve-configuration">
+            <p>{{curve.curveConfiguration.alert_high}}</p>
         </div>
         <div class="col-xs-1 curve-label">
             <p class="text-label">{{curve.curveConfiguration.label}}</p>
         </div>
-    </div>
+    </div> -->
+
 </div>

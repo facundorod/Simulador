@@ -3,6 +3,9 @@ import { ECharts, EChartsOption } from "echarts";
 import { NgxEchartsDirective } from "ngx-echarts";
 import { ChartConfigurer } from "../../helpers/chartConfigurer";
 import * as p5 from 'p5';
+import { CurvesI } from "@app/shared/models/curvesI";
+import { MonitorI } from "@app/shared/models/monitorI";
+import { CurvesHelper } from "../../helpers/curvesHelper";
 
 @Component({
     selector: "app-curves",
@@ -10,54 +13,34 @@ import * as p5 from 'p5';
     styleUrls: ["./curves.component.css"],
 })
 export class CurvesComponent implements OnInit {
-    @Input() series: number[][] = null;
-    @Input() colorLine: string;
-    @Input() loadOptions: NgxEchartsDirective["initOpts"] = { height: 100 };
-    @Input() simulation: boolean = true;
-    @Input() minX: number = 0;
-    @Input() maxX: number;
-    @Input() minY: number;
-    @Input() maxY: number;
-    @Input() type: string = null;
-    @Input() maxSamples: number = 4;
-    @Input() sampleFrequency: number = 1;
-    @Input() stop: boolean;
-    private iterator: number = 0;
-    public chartOption: EChartsOption;
-    private echartsInstance: ECharts;
-    private p5: p5;
-    private seriesAux: number[][] = new Array<number[]>(new Array<number>());
+
+    @Input() curves: CurvesI[];
+    @Input() simulation: boolean;
+    @Input() monitorConfiguration: MonitorI;
+    @Input() colorLine: string | undefined;
+    @Input() staticCurves: number[][] | undefined;
+    @Input() loadOptions: NgxEchartsDirective["initOpts"];
+    public chartOption: EChartsOption | undefined;
+    public chartOptions: EChartsOption[] = [];
+    public dynamicCharts: EChartsOption[] = this.chartOptions;
+
+    private echarts: ECharts[] = [];
+    private clockTimer: number = 0.0;
+    private firstSimulation: boolean = true;
+    private datasetSimulation: number[][] | undefined = [];
+    private curvesHelper: CurvesHelper = new CurvesHelper();
     private simulationTimer: NodeJS.Timeout;
-    private clockTimer: number;
-    private clockMonitor: number;
+
     constructor() {
-        this.p5 = new p5(() => { });
-        this.clockTimer = this.sampleFrequency * 50;
-        this.clockMonitor = this.clockTimer;
     }
 
     ngOnInit(): void {
-        const chartConfigurer: ChartConfigurer = new ChartConfigurer(
-            this.series,
-            this.colorLine,
-            this.minX,
-            this.simulation ? this.maxSamples : this.maxX,
-            this.minY,
-            this.maxY,
-            this.simulation,
-            this.type
-        );
-        if (this.series) {
-            // Delete first empty element
-            // this.seriesAux.splice(0, 1);
-            this.chartOption = chartConfigurer.getChart();
-            this.chartOption.series[0].data = this.series;
-            // if (this.simulation) {
-            //     this.simulationTimer = setInterval(() => {
-            //         this.simulateCurve();
-            //         this.updateChart();
-            //     }, this.clockTimer);
-            // }
+
+        if (this.staticCurves) {
+            this.createStaticChart();
+        } else {
+            this.createDynamicCharts();
+            this.simulateCurves();
         }
 
     }
@@ -66,37 +49,74 @@ export class CurvesComponent implements OnInit {
         clearInterval(this.simulationTimer);
     }
 
-
-    public onChartInit(e: ECharts): void {
-        this.echartsInstance = e;
-        this.echartsInstance.setOption(this.chartOption);
+    public onChartInit(ec: ECharts): void {
+        this.echarts.push(ec);
     }
 
-    // private simulateCurve(): void {
-    //     if (this.iterator >= this.series.length) this.updateIterator();
-    //     else
-    //         if (this.series.length > 0) {
-    //             // this.p5.lerp(this.minX, this.maxX, this.)
-    //             let firstData: number[] = this.series[this.iterator].slice();
-    //             this.seriesAux.push([firstData[0], firstData[1]]);
-    //             this.updateIterator(firstData[0]);
-    //         }
-    // }
 
-    // private updateIterator(firstValue: number = 0): void {
-    //     if (firstValue >= this.maxSamples || this.iterator >= this.series.length) {
-    //         this.seriesAux = [];
-    //         this.updateChart();
-    //         this.iterator = 0;
-    //     } else this.iterator++;
-    // }
+    /**
+     * Simulate all curves
+     */
+    private simulateCurves() {
+        this.simulationTimer = setInterval(() => {
+            this.curves.forEach((curve: CurvesI, index: number) => {
+                this.simulateCurve(curve);
+                this.updateCharts(index);
+                this.clockTimer += this.monitorConfiguration.freqSample;
+                this.datasetSimulation = [];
+            });
+        }, this.monitorConfiguration.freqSample);
+    }
 
-    // private updateChart(): void {
-    //     if (this.echartsInstance) {
-    //         this.chartOption.series[0].data = this.seriesAux;
-    //         this.echartsInstance.setOption(this.chartOption);
-    //     }
-    // }
+    private simulateCurve(curve: CurvesI): void {
+        if (this.firstSimulation) {
+            this.datasetSimulation.push(curve.curveValues[this.clockTimer]);
+            if (this.clockTimer === this.monitorConfiguration.maxSamples) {
+                this.firstSimulation = false;
+                this.clockTimer = 0.0;
+            }
+        } else {
+            const firstData: number[] = curve.curveValues[this.clockTimer].slice();
+            firstData[0] += this.monitorConfiguration.freqSample;
+            this.datasetSimulation.push(firstData);
+            if (this.clockTimer === this.monitorConfiguration.maxSamples)
+                this.clockTimer = 0.0;
+        }
+    }
+
+    private updateCharts(index: number): void {
+        let auxChart: EChartsOption = this.dynamicCharts[index];
+        let auxEchart: ECharts = this.echarts[index];
+        auxChart.series[0].data = this.datasetSimulation;
+        auxEchart.setOption(auxChart, false, true);
+        this.echarts[index] = auxEchart;
+        this.dynamicCharts[index] = auxChart;
+    }
+
+
+
+
+    private createDynamicCharts(): void {
+        let auxChart: ChartConfigurer;
+
+        this.curves.forEach((curve: CurvesI) => {
+            const minY: number = this.curvesHelper.getMinY(curve.curveValues);
+            const maxY: number = this.curvesHelper.getMaxY(curve.curveValues);
+            auxChart = new ChartConfigurer(this.datasetSimulation, curve.curveConfiguration.colorLine, 0,
+                this.monitorConfiguration.maxSamples, minY, maxY, false);
+            this.chartOptions.push(auxChart.getChart());
+        })
+    }
+
+    private createStaticChart(): void {
+        const minY: number = this.curvesHelper.getMinY(this.staticCurves);
+        const maxY: number = this.curvesHelper.getMaxY(this.staticCurves);
+        const auxChart: ChartConfigurer = new ChartConfigurer(this.staticCurves, this.colorLine, 0,
+            this.monitorConfiguration.maxSamples, minY, maxY, false);
+        this.chartOption = auxChart.getChart();
+    }
+
+
 }
 
 

@@ -87,8 +87,10 @@
             <button class="btn btn-primary">Apply changes</button>
         </div>
         <div class="col-md-8 curves-configuration">
-            <app-curves [colorLine]="curve.curveConfiguration.colorLine" [series]="curve.curveValues"
-                [simulation]="false" [loadOptions]="chartOptions"></app-curves>
+            <app-curves [colorLine]="curve.curveConfiguration.colorLine" [staticCurves]="curve.curveValues"
+                [simulation]="false" [loadOptions]="chartOptions"
+                [monitorConfiguration]="monitorConfiguration.getMonitorConfiguration()">
+            </app-curves>
         </div>
     </div>
 

@@ -47,3 +47,8 @@
     top: 50%;
     width: 100%;
 }
+
+#sidebar {
+    padding: 0px;
+    margin: 0;
+}

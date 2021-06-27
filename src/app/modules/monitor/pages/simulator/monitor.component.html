@@ -16,7 +16,7 @@
     <div class="row" *ngIf="lastState?.action === 'play' else noPlay">
         <app-audio [play]="true"></app-audio>
         <div class="container-fluid">
-            <app-simulator [sampleFrequency]=1 [clockMonitor]=50 [curves]="curves"></app-simulator>
+            <app-simulator [curves]="curves"></app-simulator>
         </div>
     </div>
 </div>
@@ -35,7 +35,10 @@
     <div *ngIf="lastState?.action === 'stop' else paused">
         <h4 class="text-center" *ngIf="lastState?.action === 'stop'"><i class="fas fa-stop icon-stopped"></i>Simulation
             stopped</h4>
-
+    </div>
+    <app-audio [play]="true"></app-audio>
+    <div class="container-fluid">
+        <app-simulator [curves]="stopCurves"></app-simulator>
     </div>
 </ng-template>
 

@@ -102,3 +102,15 @@ ul ul a {
 .dock {
     margin-top: 3rem;
 }
+
+.tooltip-navbar {
+    font-size: 0.1em;
+}
+
+.dockNav {
+    width: 100%;
+}
+
+.dockUser {
+    margin-left: 0.5rem;
+}

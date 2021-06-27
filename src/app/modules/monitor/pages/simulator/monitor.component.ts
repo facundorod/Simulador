@@ -23,7 +23,7 @@ export class MonitorComponent
     private period: number = 1;
     public maxSamples: number = 4;
     private curvesHelper: CurvesHelper = new CurvesHelper();
-
+    public stopCurves: CurvesI[] = [];
 
     private simulationTimer: NodeJS.Timeout;
     public trackByFn: TrackByFunction<CurvesI> = (_, curve: CurvesI) => curve.curveConfiguration.id_pp;
@@ -71,7 +71,7 @@ export class MonitorComponent
 
         this.simulationTimer = setInterval(() => {
             this.suscribeSimulationInfo();
-        }, 300);
+        }, 500);
     }
 
     /**
@@ -90,10 +90,12 @@ export class MonitorComponent
     private updateCurves(simulationState: StatesI): void {
         if (!this.isSameState(simulationState, this.lastState)) {
             this.curves = simulationState.curves;
+            this.updateStopCurves();
             this.scaleCurves();
             this.lastState = simulationState;
             this.animalSpecie = simulationState.animalSpecie;
         }
+
     }
 
     private scaleCurves(): void {
@@ -101,6 +103,24 @@ export class MonitorComponent
             this.curvesHelper.reSampleCurve(value.curveValues, this.period, this.maxSamples);
         })
     }
+
+    private updateStopCurves(): void {
+        this.stopCurves = [];
+        this.curves.forEach((value: CurvesI) => {
+            const dataValues: number[][] = [[]];
+            dataValues.splice(0, 1);
+            for (let i: number = 0.0; i <= this.maxSamples; i += 0.1) {
+                dataValues.push([i, 1]);
+            }
+            const newValue: CurvesI = {
+                animalSpecie: value.animalSpecie,
+                curveConfiguration: value.curveConfiguration,
+                curveValues: dataValues
+            }
+            this.stopCurves.push(newValue);
+        })
+    }
+
 
 }
 

@@ -17,7 +17,6 @@ export class MainComponent implements OnInit {
     openSidebar(sidebar: Sidebar): void {
         sidebar.open();
         this.sidebarOpen = true;
-
     }
 
     onClosed(): void {

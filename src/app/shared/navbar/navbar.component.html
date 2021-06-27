@@ -1,4 +1,4 @@
-<nav class="sidebar">
+<nav class="sidebar" [ngClass]="{'dockNav': !sidebarOpen}">
     <ng-template [ngIf]="type === 'home'">
         <div *ngIf="sidebarOpen else dockHome">
             <div class="sidebar-header">
@@ -31,7 +31,7 @@
     </ng-template>
 
     <ng-template [ngIf]="type === 'user'">
-        <div *ngIf="sidebarOpen">
+        <div *ngIf="sidebarOpen else userDock">
             <div class="sidebar-header">
                 <h3 class="font-weight-bold text-center"> Welcome </h3>
             </div>
@@ -117,23 +117,105 @@
 <ng-template #dockHome>
     <ul class="list-unstyled components dock">
         <li class="nav-item active">
-            <a class="nav-link" [routerLink]="['/']" placement="top" ngbTooltip="Home">
+            <a class="nav-link" [routerLink]="['/']" placement="top" ngbTooltip="Home" tooltipClass="tooltip-navbar">
                 <img src="https://img.icons8.com/color/28/000000/home-page.png" />
             </a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" [routerLink]="['/auth/login']"> <img
+            <a class="nav-link" [routerLink]="['/auth/login']" placement="top" ngbTooltip="Login"
+                tooltipClass="tooltip-navbar"> <img
                     src="https://img.icons8.com/color/28/000000/login-rounded-right.png" /> </a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" [routerLink]="['/auth/register']">
+            <a class="nav-link" [routerLink]="['/auth/register']" placement="top" ngbTooltip="Register"
+                tooltipClass="tooltip-navbar">
                 <img src="https://img.icons8.com/color/28/000000/add-user-male--v1.png" /> </a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" [routerLink]="['/about']">
+            <a class="nav-link" [routerLink]="['/about']" placement="top" ngbTooltip="About"
+                tooltipClass="tooltip-navbar">
                 <img src="https://img.icons8.com/color/28/000000/about.png" />
 
             </a>
         </li>
     </ul>
+</ng-template>
+
+
+<ng-template #userDock>
+    <!-- <div class="sidebar-header">
+        <h3 class="font-weight-bold text-center"> Welcome </h3>
+    </div>
+    <section class="container sub-header">
+        <h4 class="font-weight-bold text-align-center"> Simulation </h4>
+    </section> -->
+
+    <ul class="list-unstyled components dock dockUser">
+
+        <li class="nav-item active">
+            <a class="nav-link" [routerLink]="['/simulation/new']"> <img
+                    src="https://img.icons8.com/bubbles/28/000000/new.png" /> </a>
+        </li>
+
+        <li class="nav-item">
+
+            <a class="nav-link" [routerLink]="['/panel']"> <img
+                    src="https://img.icons8.com/dusk/28/000000/admin-settings-male.png" />
+            </a>
+        </li>
+
+    </ul>
+
+    <!-- <section #manageDatabase class="container sub-header">
+        <h4 class="font-weight-bold text-align-center"> Manage DataBase </h4>
+    </section> -->
+
+    <ul class="list-group dockUser">
+        <li class="nav-item">
+
+            <a class="nav-link" [routerLink]="['/panel/animalSpecie']"> <img
+                    src="https://img.icons8.com/color/28/000000/dog.png" /> </a>
+        </li>
+
+        <li class="nav-item">
+
+            <a class="nav-link" [routerLink]="['/panel/pathologies']"> <img
+                    src="https://img.icons8.com/color/28/000000/microorganisms.png" /> </a>
+        </li>
+
+        <li class="nav-item">
+
+            <a class="nav-link" [routerLink]="['/panel/medications']"> <img
+                    src="https://img.icons8.com/color/28/000000/pills.png" /> </a>
+        </li>
+
+        <li class="nav-item">
+
+            <a class="nav-link" [routerLink]="['/panel/arrhythmias']"> <img
+                    src="https://img.icons8.com/color/28/000000/pulse.png" /> </a>
+        </li>
+
+        <li class="nav-item">
+
+            <a class="nav-link" [routerLink]="['/panel/scenarios']"> <img
+                    src="https://img.icons8.com/plasticine/28/000000/hospital-gown.png" /> </a>
+
+        </li>
+
+        <li class="nav-item">
+
+            <a class="nav-link" [routerLink]="['/auth/logout']"> <img
+                    src="https://img.icons8.com/emoji/28/000000/waving-hand-emoji.png" /> </a>
+        </li>
+
+    </ul>
+
+    <section class="container sub-header">
+
+        <a class="nav-link" [routerLink]="['/panel']">
+            <h4 class="font-weight-bold text-align-center"> </h4>
+        </a>
+
+    </section>
+
 </ng-template>

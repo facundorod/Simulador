@@ -2,15 +2,17 @@
 
     <!-- Sidebar -->
     <ng-sidebar #sidebar [mode]="'push'" [animate]="true" [showBackdrop]="true" [trapFocus]="true" [autoFocus]="true"
-        [keyClose]="true" [closeOnClickBackdrop]="true" [closeOnClickOutside]="true" [dock]="true">
-        <app-navbar [type]="'user'" class="sidebarS"></app-navbar>
+        [keyClose]="true" [closeOnClickBackdrop]="true" [closeOnClickOutside]="true" [dock]="true" [dockedSize]="'60px'"
+        [animate]="true" (onClosed)="onClosed()">
+        <app-navbar [type]="'user'" [sidebarOpen]="sidebarOpen" class="sidebarS"></app-navbar>
     </ng-sidebar>
+
 
     <!-- Page content -->
     <div ng-sidebar-content>
         <nav class="navbar navbar-expand-lg">
 
-            <button (click)="sidebar.open()" class="navbar__toogle">Open sidebar</button>
+            <button (click)="openSidebar(sidebar)" class="navbar__toogle">Open sidebar</button>
             <h1 class="fs-1 text-center"> SIMVET - Vital Signs Monitor Simulator </h1>
 
         </nav>
