@@ -1,15 +1,18 @@
 <!-- <div echarts [options]="chartOption" [initOpts]="loadOptions" (chartInit)="onChartInit($event)"
     [ngClass]="{'simulation': simulation, 'panel': !simulation}" [merge]="dynamicChart"></div> -->
 <div *ngIf="simulation else noSimulation">
-    <div class="curves" *ngFor="let chart of chartOptions; let i = index">
-        <div echarts [options]="chart" [initOpts]="loadOptions" class="simulation" [merge]="dynamicCharts[i]"
-            (chartInit)="onChartInit($event)">
-        </div>
+    <div *ngFor="let chart of chartsOptions">
+        <apx-chart #chart [series]="chart.series" [stroke]="chart.stroke" [xaxis]="chart.xaxis" [yaxis]="chart.yaxis"
+            [markers]="chart.markers" [dataLabels]="chart.dataLabels" [chart]="chart.chart" [grid]="chart.grid">
+        </apx-chart>
     </div>
 </div>
 
 
 <ng-template #noSimulation>
-    <div echarts [options]="chartOption" [initOpts]="loadOptions" class="panel">
+    <div *ngFor="let chart of chartsOptions">
+        <apx-chart [series]="chart.series" [stroke]="chart.stroke" [xaxis]="chart.xaxis" [yaxis]="chart.yaxis"
+            [markers]="chart.markers" [dataLabels]="chart.dataLabels" [chart]="chart.chart" [grid]="chart.grid">
+        </apx-chart>
     </div>
 </ng-template>

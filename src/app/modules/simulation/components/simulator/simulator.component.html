@@ -1,7 +1,7 @@
 <div class="container-fluid">
     <div class="col-9" style="border: 2px solid red;">
-        <app-curves [simulation]=true [curves]="curves" [loadOptions]="chartOptions"
-            [monitorConfiguration]="monitorConfiguration.getMonitorConfiguration()">
+        <app-curves [simulation]=true [curves]="curves"
+            [monitorConfiguration]="monitorConfiguration.getMonitorConfiguration()" [stopCurves]="stop">
         </app-curves>
     </div>
 

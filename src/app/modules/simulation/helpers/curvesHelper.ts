@@ -21,7 +21,7 @@ export class CurvesHelper {
     protected curves: any[];
     constructor() { }
 
-    public editX(curve: number[][], change: number = null): number[][] {
+    public editX(curve: [number, number][], change: number = null): number[][] {
         if (!change) change = Math.floor(Math.random() * 10);
         curve.forEach((data: number[]) => {
             if (data[0]) data[0] = data[0] + change;
@@ -30,7 +30,7 @@ export class CurvesHelper {
         return curve;
     }
 
-    public editY(curve: number[][], change: number = null): number[][] {
+    public editY(curve: [number, number][], change: number = null): number[][] {
         if (!change) change = Math.floor(Math.random() * 10);
         curve.forEach((data: number[]) => {
             if (data[1]) data[1] = data[1] + change;
@@ -65,7 +65,7 @@ export class CurvesHelper {
      * @param period
      * @returns
      */
-    private scaleCurveHeart(curve: CurvesI, period: number = 1): number[][] {
+    private scaleCurveHeart(curve: CurvesI, period: number = 1): [number, number][] {
         if (period != 1) {
             if (curve.curveConfiguration.rate === 'heart') {
                 curve.curveValues.forEach((data: number[]) => {
@@ -83,7 +83,7 @@ export class CurvesHelper {
      * @param period
      * @returns
      */
-    private scaleCurveBreath(curve: CurvesI, period: number = 1): number[][] {
+    private scaleCurveBreath(curve: CurvesI, period: number = 1): [number, number][] {
         if (period != 1) {
             if (curve.curveConfiguration.rate === 'breath') {
                 curve.curveValues.forEach((data: number[]) => {
@@ -101,7 +101,7 @@ export class CurvesHelper {
      * @param period
      * @param maxSamples
      */
-    public reSampleCurve(curve: number[][], period: number, maxSamples: number) {
+    public reSampleCurve(curve: [number, number][], period: number, maxSamples: number) {
         if (curve) {
             let iterator: number = 0;
             let auxValue: number[] = curve[iterator];
@@ -123,7 +123,7 @@ export class CurvesHelper {
     * @param curveValues
     * @returns max value for curveValues
     */
-    public getMaxY(curveValues: number[][]): number {
+    public getMaxY(curveValues: [number, number][]): number {
         let maxY: number = curveValues[0][1];
         for (let curve of curveValues) {
             if (curve[1] > maxY)
@@ -137,12 +137,19 @@ export class CurvesHelper {
      * @param curveValues
      * @returns min value for curveValues
      */
-    public getMinY(curveValues: number[][]): number {
+    public getMinY(curveValues: [number, number][]): number {
         let minY: number = curveValues[0][1];
         for (let curve of curveValues) {
             if (curve[1] < minY)
                 minY = curve[1];
         }
         return minY;
+    }
+
+    public linealInterpolation(x1: number, x2: number, x: number, y1: number, y2: number): number {
+        const auxCalcX: number = (x - x1) / (x2 - x1);
+        const auxCalcY: number = y2 - y1;
+        return ((auxCalcX * auxCalcY) + y1);
+
     }
 }
