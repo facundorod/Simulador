@@ -12,6 +12,7 @@ export type ChartOptions = {
     stroke: ApexStroke;
     markers: ApexMarkers;
     legend: ApexLegend;
+    tooltip: ApexTooltip;
 };
 
 
@@ -40,28 +41,28 @@ export class ChartConfigurer {
             xaxis: {
                 type: 'numeric',
                 labels: {
-                    show: true
+                    show: false
                 },
                 axisTicks: {
-                    show: true
+                    show: false
                 },
                 max: this.chartOptions.maxX,
                 min: this.chartOptions.minX,
                 axisBorder: {
-                    show: true
+                    show: false
                 }
             },
             chart: {
                 id: "curves",
                 height: this.chartOptions.height,
                 type: "line",
-                animations: {
-                    enabled: true,
-                    easing: "linear",
-                    dynamicAnimation: {
-                        speed: 10
-                    }
-                },
+                // animations: {
+                //     enabled: true,
+                //     easing: "linear",
+                //     dynamicAnimation: {
+                //         speed: 10
+                //     }
+                // },
                 zoom: {
                     enabled: false
                 },
@@ -71,9 +72,9 @@ export class ChartConfigurer {
             },
             yaxis: {
                 labels: {
-                    show: true
+                    show: false
                 },
-                show: true,
+                show: false,
                 max: this.chartOptions.maxY,
                 min: this.chartOptions.minY,
             },
@@ -85,6 +86,9 @@ export class ChartConfigurer {
             },
             grid: {
                 show: false
+            },
+            tooltip: {
+                enabled: this.chartOptions.toolbar
             }
         };
     }

@@ -3,7 +3,8 @@
 <div *ngIf="simulation else noSimulation">
     <div *ngFor="let chart of chartsOptions">
         <apx-chart #chart [series]="chart.series" [stroke]="chart.stroke" [xaxis]="chart.xaxis" [yaxis]="chart.yaxis"
-            [markers]="chart.markers" [dataLabels]="chart.dataLabels" [chart]="chart.chart" [grid]="chart.grid">
+            [markers]="chart.markers" [dataLabels]="chart.dataLabels" [chart]="chart.chart" [grid]="chart.grid"
+            [tooltip]="chart.tooltip">
         </apx-chart>
     </div>
 </div>

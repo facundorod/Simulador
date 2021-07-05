@@ -16,6 +16,11 @@ enum PhysiologicalParamaters {
     CARDIAC_FREQ = "CAR",
 }
 
+export type ClosestPoint = {
+    lessValue: [number, number],
+    greaterValue: [number, number]
+}
+
 export class CurvesHelper {
 
     protected curves: any[];
@@ -151,5 +156,26 @@ export class CurvesHelper {
         const auxCalcY: number = y2 - y1;
         return ((auxCalcX * auxCalcY) + y1);
 
+    }
+
+    /**
+     * Return the two closest values to @param value
+     * @param dataset
+     * @param value
+     */
+    public getClosestIndex(dataset: [number, number][], value: number): ClosestPoint {
+        for (let i: number = 0; i < dataset.length; i++) {
+            if (dataset[i][0] > value) {
+                return {
+                    lessValue: dataset[i - 1],
+                    greaterValue: dataset[i]
+                }
+            };
+        }
+
+        return {
+            lessValue: dataset[dataset.length - 1],
+            greaterValue: dataset[dataset.length - 2]
+        }
     }
 }
