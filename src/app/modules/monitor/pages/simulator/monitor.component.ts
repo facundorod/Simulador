@@ -91,18 +91,18 @@ export class MonitorComponent
         if (!this.isSameState(simulationState, this.lastState)) {
             this.curves = simulationState.curves;
             this.updateStopCurves();
-            this.scaleCurves();
+            // this.scaleCurves();
             this.lastState = simulationState;
             this.animalSpecie = simulationState.animalSpecie;
         }
 
     }
 
-    private scaleCurves(): void {
-        this.curves.forEach((value: CurvesI) => {
-            this.curvesHelper.reSampleCurve(value.curveValues, this.period, this.maxSamples);
-        })
-    }
+    // private scaleCurves(): void {
+    //     this.curves.forEach((value: CurvesI) => {
+    //         this.curvesHelper.reSampleCurve(value.curveValues, this.period, this.maxSamples);
+    //     })
+    // }
 
     private updateStopCurves(): void {
         this.stopCurves = [];

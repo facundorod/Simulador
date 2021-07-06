@@ -24,9 +24,9 @@ export class CurvesComponent implements OnInit, AfterContentInit {
     public chartsOptions: Partial<ChartOptions>[] = [];
     private clockTimer: number = 0.0;
     private firstSimulation: boolean = true;
-    public datasetSimulation: ApexAxisChartSeries = [];
     private curvesHelper: CurvesHelper = new CurvesHelper();
     private simulationTimer: NodeJS.Timeout;
+    private curveTimer: number = 0.0;
 
     constructor() {
 
@@ -59,22 +59,17 @@ export class CurvesComponent implements OnInit, AfterContentInit {
                 this.simulateCurve(curve, index);
             });
             this.clockTimer += (this.monitorConfiguration.freqSample / 1000);
+            this.curveTimer += (this.monitorConfiguration.freqSample / 1000);
         }, 50);
     }
 
     private simulateCurve(curve: CurvesI, index: number): void {
-        if (this.firstSimulation) {
-            if (this.clockTimer >= this.monitorConfiguration.maxSamples) {
-                this.firstSimulation = false;
-                this.clockTimer = 0.0;
-            } else {
-                this.updateDataset(index, curve.curveValues);
-            }
-        } else {
-            if (this.clockTimer === this.monitorConfiguration.maxSamples)
-                this.clockTimer = 0.0;
-
+        if (this.clockTimer >= this.monitorConfiguration.maxSamples) {
+            this.firstSimulation = false;
+            this.clockTimer = 0.0;
         }
+        this.updateDataset(index, curve.curveValues);
+
     }
 
     private createDynamicChart(): void {
@@ -117,8 +112,38 @@ export class CurvesComponent implements OnInit, AfterContentInit {
 
     private updateDataset(index: number, curveValues: [number, number][]): void {
         const currentDataset: any = this.chartsOptions[index].series;
-        const roundTimer: number = Math.round(this.clockTimer * 100) / 100;
-        const aux: [number, number][] = curveValues.filter(data => (Math.round(data[0] * 100) / 100) == roundTimer);
+        const roundTimer: number = Math.round(this.curveTimer * 100) / 100;
+
+        if (roundTimer >= curveValues[curveValues.length - 1][0]) {
+            this.curveTimer = 0.0;
+        } else {
+            const aux: [number, number][] = curveValues.filter(data => (Math.round(data[0] * 100) / 100) == roundTimer);
+            if (aux.length > 0) {
+                if (!this.firstSimulation)
+                    currentDataset[0].data.splice(this.clockTimer, 1);
+                currentDataset[0].data.push([this.clockTimer, aux[0][1]]);
+            } else {
+                const closestIndex: ClosestPoint = this.curvesHelper.getClosestIndex(curveValues, roundTimer);
+                const interpolationNumber: number = this.curvesHelper.linealInterpolation(closestIndex.lessValue[0],
+                    closestIndex.greaterValue[0], roundTimer, closestIndex.lessValue[1], closestIndex.lessValue[1]);
+                if (!this.firstSimulation)
+                    currentDataset[0].data.splice(Math.round(this.clockTimer * 100) / 100, 1);
+
+                currentDataset[0].data.push([Math.round(this.clockTimer * 100) / 100, interpolationNumber]);
+
+            }
+
+            const chart: ChartComponent = this.charts.toArray()[index];
+            chart.updateSeries(currentDataset);
+        }
+
+    }
+
+    private updateDatasetSimulation(index: number, curveValues: [number, number][]): void {
+        const currentDataset: any = this.chartsOptions[index].series;
+        const roundTimer: number = Math.round(this.curveTimer * 100) / 100;
+        const contTimer: number = Math.round(roundTimer + (this.monitorConfiguration.freqSample / 1000)) / 100;
+        const aux: [number, number][] = curveValues.filter(data => (Math.round(data[0] * 100) / 100) == contTimer);
         if (aux.length > 0) {
             currentDataset[0].data.push([aux[0][0], aux[0][1]]);
         } else {
@@ -127,9 +152,11 @@ export class CurvesComponent implements OnInit, AfterContentInit {
                 closestIndex.greaterValue[0], roundTimer, closestIndex.lessValue[1], closestIndex.lessValue[1]);
             currentDataset[0].data.push([roundTimer, interpolationNumber]);
         }
-
         const chart: ChartComponent = this.charts.toArray()[index];
         chart.updateSeries(currentDataset);
+        // if (this.curves[index].curveConfiguration.id_pp = 1)
+        //     console.log("countTimer", contTimer);
+
     }
 }
 
