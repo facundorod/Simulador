@@ -28,9 +28,7 @@ export class CurvesComponent implements OnInit, AfterContentInit {
     private simulationTimer: NodeJS.Timeout;
     private curveTimer: number = 0.0;
 
-    constructor() {
-
-    }
+    constructor() { }
 
     ngAfterContentInit(): void {
         if (this.staticCurves) {
@@ -60,15 +58,26 @@ export class CurvesComponent implements OnInit, AfterContentInit {
             });
             this.clockTimer += (this.monitorConfiguration.freqSample / 1000);
             this.curveTimer += (this.monitorConfiguration.freqSample / 1000);
-        }, 50);
+        }, 80);
     }
 
     private simulateCurve(curve: CurvesI, index: number): void {
-        if (this.clockTimer >= this.monitorConfiguration.maxSamples) {
-            this.firstSimulation = false;
-            this.clockTimer = 0.0;
+        if (this.firstSimulation) {
+            if (this.clockTimer >= this.monitorConfiguration.maxSamples) {
+                this.firstSimulation = false;
+                this.clockTimer = 0.0;
+            }
+            this.updateDataset(index, curve.curveValues);
+        } else {
+            if (this.clockTimer >= this.monitorConfiguration.maxSamples) {
+                this.clockTimer = 0.0;
+
+            }
+            const currentDataset: any = this.chartsOptions[index].series;
+            this.updateDatasetSimulation(currentDataset, index);
+
         }
-        this.updateDataset(index, curve.curveValues);
+
 
     }
 
@@ -107,57 +116,78 @@ export class CurvesComponent implements OnInit, AfterContentInit {
         });
         chartConfigurer.setChart(this.staticCurves);
 
-        // this.chartsOptions.push(chart.getChart());
+        this.chartsOptions.push(chartConfigurer.getChart());
     }
 
     private updateDataset(index: number, curveValues: [number, number][]): void {
         const currentDataset: any = this.chartsOptions[index].series;
         const roundTimer: number = Math.round(this.curveTimer * 100) / 100;
-
+        const roundClockTimer: number = Math.round(this.clockTimer * 100) / 100;
         if (roundTimer >= curveValues[curveValues.length - 1][0]) {
             this.curveTimer = 0.0;
         } else {
+            // Busco el valor del timer de la curva en el eje x del dataset
             const aux: [number, number][] = curveValues.filter(data => (Math.round(data[0] * 100) / 100) == roundTimer);
             if (aux.length > 0) {
-                if (!this.firstSimulation)
-                    currentDataset[0].data.splice(this.clockTimer, 1);
-                currentDataset[0].data.push([this.clockTimer, aux[0][1]]);
+                if (!(roundClockTimer == 0 && currentDataset[0].data.length > 0))
+                    currentDataset[0].data.push([roundClockTimer, aux[0][1]]);
             } else {
-                const closestIndex: ClosestPoint = this.curvesHelper.getClosestIndex(curveValues, roundTimer);
+                // Si no existe el valor del timer en todo el dataset, tengo que interpolar
+                let closestIndex: ClosestPoint = this.curvesHelper.getClosestIndex(curveValues, roundTimer);
                 const interpolationNumber: number = this.curvesHelper.linealInterpolation(closestIndex.lessValue[0],
                     closestIndex.greaterValue[0], roundTimer, closestIndex.lessValue[1], closestIndex.lessValue[1]);
-                if (!this.firstSimulation)
-                    currentDataset[0].data.splice(Math.round(this.clockTimer * 100) / 100, 1);
+                currentDataset[0].data.push([roundClockTimer, interpolationNumber]);
+            }
+            currentDataset[0].data.sort((a: [number, number], b: [number, number]) => {
+                return a[0] - b[0];
+            })
+            const chart: ChartComponent = this.charts.toArray()[index];
+            chart.updateSeries(currentDataset, true);
+        }
 
-                currentDataset[0].data.push([Math.round(this.clockTimer * 100) / 100, interpolationNumber]);
+    }
 
+    private updateDatasetSimulation(currentDataset: any, index: number): void {
+        let curveValues = currentDataset[0].data;
+        const roundTimer: number = Math.round(this.curveTimer * 100) / 100;
+        const roundClockTimer: number = Math.round(this.clockTimer * 100) / 100;
+        const chart: ChartComponent = this.charts.toArray()[index];
+
+        if (roundTimer > curveValues[curveValues.length - 1][0]) {
+            this.curveTimer = 0.0;
+        } else {
+            let indexToDelete: number, indexToInsert: number = -1;
+            curveValues.forEach((value: [number, number], index: number) => {
+                const valueRound: number = Math.round(value[0] * 100) / 100
+                if (valueRound === roundClockTimer)
+                    indexToDelete = index;
+                if (valueRound === roundTimer)
+                    indexToInsert = index;
+            })
+            if (indexToInsert != -1) {
+                if (this.curves[index].curveConfiguration.id_pp == 1) { debugger; }
+                curveValues.push([roundClockTimer, curveValues[indexToInsert][1]]);
+                curveValues.splice(indexToDelete, 1);
+            }
+            else {
+                // Si no existe el valor del timer en todo el dataset, tengo que interpolar
+                let closestIndex: ClosestPoint = this.curvesHelper.getClosestIndex(curveValues, roundTimer);
+                const interpolationNumber: number = this.curvesHelper.linealInterpolation(closestIndex.lessValue[0],
+                    closestIndex.greaterValue[0], roundTimer, closestIndex.lessValue[1], closestIndex.lessValue[1]);
+                curveValues.splice(indexToDelete, 1);
+                curveValues.push([roundClockTimer, interpolationNumber]);
             }
 
-            const chart: ChartComponent = this.charts.toArray()[index];
-            chart.updateSeries(currentDataset);
+            curveValues.sort((a: [number, number], b: [number, number]) => {
+                return a[0] - b[0];
+            })
+            chart.updateSeries(currentDataset, true);
+
         }
+
 
     }
 
-    private updateDatasetSimulation(index: number, curveValues: [number, number][]): void {
-        const currentDataset: any = this.chartsOptions[index].series;
-        const roundTimer: number = Math.round(this.curveTimer * 100) / 100;
-        const contTimer: number = Math.round(roundTimer + (this.monitorConfiguration.freqSample / 1000)) / 100;
-        const aux: [number, number][] = curveValues.filter(data => (Math.round(data[0] * 100) / 100) == contTimer);
-        if (aux.length > 0) {
-            currentDataset[0].data.push([aux[0][0], aux[0][1]]);
-        } else {
-            const closestIndex: ClosestPoint = this.curvesHelper.getClosestIndex(curveValues, roundTimer);
-            const interpolationNumber: number = this.curvesHelper.linealInterpolation(closestIndex.lessValue[0],
-                closestIndex.greaterValue[0], roundTimer, closestIndex.lessValue[1], closestIndex.lessValue[1]);
-            currentDataset[0].data.push([roundTimer, interpolationNumber]);
-        }
-        const chart: ChartComponent = this.charts.toArray()[index];
-        chart.updateSeries(currentDataset);
-        // if (this.curves[index].curveConfiguration.id_pp = 1)
-        //     console.log("countTimer", contTimer);
-
-    }
 }
 
 

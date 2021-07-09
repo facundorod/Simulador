@@ -109,7 +109,7 @@ export class MonitorComponent
         this.curves.forEach((value: CurvesI) => {
             const dataValues: [number, number][] = [];
             dataValues.splice(0, 1);
-            for (let i: number = 0.0; i <= this.maxSamples; i += 0.05) {
+            for (let i: number = 0.0; i <= 1.0; i += 0.05) {
                 dataValues.push([Math.round(i * 100) / 100, 1]);
             }
             const newValue: CurvesI = {

@@ -88,8 +88,8 @@ export class ChartConfigurer {
                 show: false
             },
             tooltip: {
-                enabled: true
-                // this.chartOptions.toolbar
+                // enabled: true
+                enabled: this.chartOptions.toolbar
             }
         };
     }

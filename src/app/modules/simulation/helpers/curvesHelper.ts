@@ -166,10 +166,16 @@ export class CurvesHelper {
     public getClosestIndex(dataset: [number, number][], value: number): ClosestPoint {
         for (let i: number = 0; i < dataset.length; i++) {
             if (dataset[i][0] > value) {
-                return {
-                    lessValue: dataset[i - 1],
-                    greaterValue: dataset[i]
-                }
+                if (i != 0)
+                    return {
+                        lessValue: dataset[i - 1],
+                        greaterValue: dataset[i]
+                    }
+                else
+                    return {
+                        lessValue: dataset[i],
+                        greaterValue: dataset[i + 1]
+                    }
             };
         }
 
