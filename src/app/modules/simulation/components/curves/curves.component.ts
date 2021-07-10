@@ -63,13 +63,13 @@ export class CurvesComponent implements OnInit, AfterContentInit {
 
     private simulateCurve(curve: CurvesI, index: number): void {
         if (this.firstSimulation) {
-            if (this.clockTimer >= this.monitorConfiguration.maxSamples) {
+            if (this.clockTimer > this.monitorConfiguration.maxSamples) {
                 this.firstSimulation = false;
                 this.clockTimer = 0.0;
-            }
-            this.updateDataset(index, curve.curveValues);
+            } else
+                this.updateDataset(index, curve.curveValues);
         } else {
-            if (this.clockTimer >= this.monitorConfiguration.maxSamples) {
+            if (this.clockTimer > this.monitorConfiguration.maxSamples) {
                 this.clockTimer = 0.0;
 
             }
@@ -121,70 +121,60 @@ export class CurvesComponent implements OnInit, AfterContentInit {
 
     private updateDataset(index: number, curveValues: [number, number][]): void {
         const currentDataset: any = this.chartsOptions[index].series;
-        const roundTimer: number = Math.round(this.curveTimer * 100) / 100;
-        const roundClockTimer: number = Math.round(this.clockTimer * 100) / 100;
+        const roundTimer: number = Math.round(this.curveTimer * 10000) / 10000;
+        const roundClockTimer: number = Math.round(this.clockTimer * 10000) / 10000;
         if (roundTimer >= curveValues[curveValues.length - 1][0]) {
             this.curveTimer = 0.0;
-        } else {
-            // Busco el valor del timer de la curva en el eje x del dataset
-            const aux: [number, number][] = curveValues.filter(data => (Math.round(data[0] * 100) / 100) == roundTimer);
-            if (aux.length > 0) {
-                if (!(roundClockTimer == 0 && currentDataset[0].data.length > 0))
-                    currentDataset[0].data.push([roundClockTimer, aux[0][1]]);
-            } else {
-                // Si no existe el valor del timer en todo el dataset, tengo que interpolar
-                let closestIndex: ClosestPoint = this.curvesHelper.getClosestIndex(curveValues, roundTimer);
-                const interpolationNumber: number = this.curvesHelper.linealInterpolation(closestIndex.lessValue[0],
-                    closestIndex.greaterValue[0], roundTimer, closestIndex.lessValue[1], closestIndex.lessValue[1]);
-                currentDataset[0].data.push([roundClockTimer, interpolationNumber]);
-            }
-            currentDataset[0].data.sort((a: [number, number], b: [number, number]) => {
-                return a[0] - b[0];
-            })
-            const chart: ChartComponent = this.charts.toArray()[index];
-            chart.updateSeries(currentDataset, true);
         }
+        // Busco el valor del timer de la curva en el eje x del dataset
+        const aux: [number, number][] = curveValues.filter(data => (Math.round(data[0] * 10000) / 10000) == roundTimer);
+        if (aux.length > 0) {
+            // if (!(roundClockTimer == 0 && currentDataset[0].data.length > 0))
+            currentDataset[0].data.push([roundClockTimer, aux[0][1]]);
+        } else {
+            // Si no existe el valor del timer en todo el dataset, tengo que interpolar
+            let closestIndex: ClosestPoint = this.curvesHelper.getClosestIndex(curveValues, roundTimer);
+            const interpolationNumber: number = this.curvesHelper.linealInterpolation(closestIndex.lessValue[0],
+                closestIndex.greaterValue[0], roundTimer, closestIndex.lessValue[1], closestIndex.lessValue[1]);
+            currentDataset[0].data.push([roundClockTimer, interpolationNumber]);
+
+        }
+        currentDataset[0].data.sort((a: [number, number], b: [number, number]) => {
+            return a[0] - b[0];
+        })
+        const chart: ChartComponent = this.charts.toArray()[index];
+        chart.updateSeries(currentDataset, true);
+
 
     }
 
     private updateDatasetSimulation(currentDataset: any, index: number): void {
         let curveValues = currentDataset[0].data;
-        const roundTimer: number = Math.round(this.curveTimer * 100) / 100;
-        const roundClockTimer: number = Math.round(this.clockTimer * 100) / 100;
+        const roundTimer: number = Math.round(this.curveTimer * 10000) / 10000;
+        const roundClockTimer: number = Math.round(this.clockTimer * 10000) / 10000;
         const chart: ChartComponent = this.charts.toArray()[index];
-
         if (roundTimer > curveValues[curveValues.length - 1][0]) {
             this.curveTimer = 0.0;
-        } else {
-            let indexToDelete: number, indexToInsert: number = -1;
-            curveValues.forEach((value: [number, number], index: number) => {
-                const valueRound: number = Math.round(value[0] * 100) / 100
-                if (valueRound === roundClockTimer)
-                    indexToDelete = index;
-                if (valueRound === roundTimer)
-                    indexToInsert = index;
-            })
-            if (indexToInsert != -1) {
-                if (this.curves[index].curveConfiguration.id_pp == 1) { debugger; }
-                curveValues.push([roundClockTimer, curveValues[indexToInsert][1]]);
-                curveValues.splice(indexToDelete, 1);
-            }
-            else {
-                // Si no existe el valor del timer en todo el dataset, tengo que interpolar
-                let closestIndex: ClosestPoint = this.curvesHelper.getClosestIndex(curveValues, roundTimer);
-                const interpolationNumber: number = this.curvesHelper.linealInterpolation(closestIndex.lessValue[0],
-                    closestIndex.greaterValue[0], roundTimer, closestIndex.lessValue[1], closestIndex.lessValue[1]);
-                curveValues.splice(indexToDelete, 1);
-                curveValues.push([roundClockTimer, interpolationNumber]);
-            }
-
-            curveValues.sort((a: [number, number], b: [number, number]) => {
-                return a[0] - b[0];
-            })
-            chart.updateSeries(currentDataset, true);
-
+        }
+        let indexToDelete: number, indexToInsert: number = -1;
+        curveValues.forEach((value: [number, number], index: number) => {
+            const valueRound: number = Math.round(value[0] * 10000) / 10000
+            if (valueRound === roundClockTimer)
+                indexToDelete = index;
+            if (valueRound === roundTimer)
+                indexToInsert = index;
+        })
+        if (indexToInsert != -1) {
+            if (this.curves[index].curveConfiguration.id_pp == 1 && this.clockTimer == 4) { debugger; }
+            curveValues.push([roundClockTimer, curveValues[indexToInsert][1]]);
+            curveValues.splice(indexToDelete, 1);
         }
 
+
+        curveValues.sort((a: [number, number], b: [number, number]) => {
+            return a[0] - b[0];
+        })
+        chart.updateSeries(currentDataset, true);
 
     }
 
