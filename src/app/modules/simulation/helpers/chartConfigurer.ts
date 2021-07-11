@@ -33,7 +33,7 @@ export class ChartConfigurer {
             ],
             stroke: {
                 curve: 'smooth',
-                width: 2
+                width: 1.5
             },
             markers: {
                 size: 0
