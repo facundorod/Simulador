@@ -145,6 +145,8 @@ export class CurvesComponent implements OnInit, AfterContentInit {
      */
     private updateDatasetSimulation(currentDataset: any, index: number): void {
         let curveValues = currentDataset[0].data;
+        let curveValuesSimulation = currentDataset[1].data;
+
         const roundClockTimer: number = Math.round(this.clockTimer * 10000) / 10000;
         const roundTimer: number = Math.round(this.curveTimer * 10000) / 10000;
         let indexToDelete: number, indexToInsert: number = -1;
@@ -156,9 +158,9 @@ export class CurvesComponent implements OnInit, AfterContentInit {
                 indexToInsert = index;
         })
         if (indexToInsert != -1) {
-            curveValues.push([roundClockTimer, curveValues[indexToInsert][1]]);
+            curveValuesSimulation.push([roundClockTimer, curveValues[indexToInsert][1]]);
             curveValues.splice(indexToDelete, 1);
-            this.sortDataset(curveValues);
+            this.sortDataset(curveValuesSimulation);
             this.updateChart(currentDataset, index);
         }
     }
@@ -170,10 +172,11 @@ export class CurvesComponent implements OnInit, AfterContentInit {
      */
     private updateCurveTimer(curveValues: [number, number][]): void {
         const roundTimer: number = Math.round(this.curveTimer * 10000) / 10000;
-
-        if (roundTimer > curveValues[curveValues.length - 1][0]) {
+        const lastItem: number[] | undefined = curveValues[curveValues.length - 1];
+        if (lastItem && roundTimer > lastItem[0]) {
             this.curveTimer = 0.0;
         }
+
     }
 
     /**
@@ -185,13 +188,28 @@ export class CurvesComponent implements OnInit, AfterContentInit {
             if (this.clockTimer > this.monitorConfiguration.maxSamples) {
                 this.clockTimer = 0.0;
                 this.firstSimulation = false;
+                // At this point, the first simulation end, so we create a new dataset for all curves where
+                // we'll push the simulation data.
+                this.createSimulationDataset();
             }
         } else {
-            if (this.clockTimer > this.monitorConfiguration.maxSamples)
+            if (this.clockTimer > this.monitorConfiguration.maxSamples) {
                 this.clockTimer = 0.0;
+                this.swapCurves();
+            }
         }
     }
 
+
+    private swapCurves(): void {
+        for (let index = 0; index < this.curves.length; index++) {
+            const currentDataset: any = this.chartsOptions[index].series;
+            const auxDataset: [number, number][] = currentDataset[1].data;
+            currentDataset[1].data = [];
+            currentDataset[0].data = auxDataset;
+        }
+
+    }
 
     /**
      * Sort all dataset values
@@ -211,6 +229,20 @@ export class CurvesComponent implements OnInit, AfterContentInit {
     private updateChart(dataset: any, index: number): void {
         const chart: ChartComponent = this.charts.toArray()[index];
         chart.updateSeries(dataset, true);
+    }
+
+    /**
+     * Create simulation dataset for all curves
+     */
+    private createSimulationDataset(): void {
+
+        for (let index = 0; index < this.curves.length; index++) {
+            const currentDataset: any = this.chartsOptions[index].series;
+            currentDataset.push({
+                color: currentDataset[0].color,
+                data: []
+            });
+        }
     }
 }
 

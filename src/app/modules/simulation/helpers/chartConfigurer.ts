@@ -82,14 +82,14 @@ export class ChartConfigurer {
                 enabled: false,
             },
             legend: {
-                show: false
+                show: false,
             },
             grid: {
                 show: false
             },
             tooltip: {
                 // enabled: true
-                enabled: this.chartOptions.toolbar
+                enabled: this.chartOptions.toolbar,
             }
         };
     }
