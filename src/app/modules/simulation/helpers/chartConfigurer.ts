@@ -1,6 +1,5 @@
-import { ViewChild } from '@angular/core';
 import { ChartOptionsI } from '@app/shared/models/chartOptionsI';
-import { ApexAxisChartSeries, ApexChart, ApexDataLabels, ApexGrid, ApexLegend, ApexMarkers, ApexStroke, ApexXAxis, ApexYAxis, ChartComponent } from 'ng-apexcharts';
+import { ApexAxisChartSeries, ApexChart, ApexDataLabels, ApexGrid, ApexLegend, ApexMarkers, ApexStroke, ApexTooltip, ApexXAxis, ApexYAxis, ChartComponent } from 'ng-apexcharts';
 
 export type ChartOptions = {
     series: ApexAxisChartSeries;
