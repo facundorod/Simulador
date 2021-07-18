@@ -1,9 +1,7 @@
 <div class="container-fluid">
-    <div class="col-9" style="border: 2px solid red;">
-        <app-curves [simulation]=true [curves]="curves"
-            [monitorConfiguration]="monitorConfiguration.getMonitorConfiguration()" [stopCurves]="stop">
-        </app-curves>
-    </div>
+    <app-curves [simulation]=true [curves]="curves"
+        [monitorConfiguration]="monitorConfiguration.getMonitorConfiguration()" [stopCurves]="stop">
+    </app-curves>
 
     <!-- Curve Configuration -->
     <!-- <div class="col-3" *ngFor="let curve of curves; trackByFn" style="border: 2px solid yellow;">

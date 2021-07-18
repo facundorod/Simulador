@@ -1,12 +1,19 @@
-<!-- <div echarts [options]="chartOption" [initOpts]="loadOptions" (chartInit)="onChartInit($event)"
-    [ngClass]="{'simulation': simulation, 'panel': !simulation}" [merge]="dynamicChart"></div> -->
 <div *ngIf="simulation else noSimulation">
-    <div *ngFor="let chart of chartsOptions">
-        <apx-chart #chart [series]="chart.series" [stroke]="chart.stroke" [xaxis]="chart.xaxis" [yaxis]="chart.yaxis"
-            [markers]="chart.markers" [dataLabels]="chart.dataLabels" [chart]="chart.chart" [grid]="chart.grid"
-            [tooltip]="chart.tooltip" [autoUpdateSeries]=false [legend]="chart.legend">
-        </apx-chart>
+    <div class="row" *ngFor="let chart of chartsOptions; let i = index">
+        <div class="col-9">
+            <apx-chart #chart [series]="chart.series" [stroke]="chart.stroke" [xaxis]="chart.xaxis"
+                [yaxis]="chart.yaxis" [markers]="chart.markers" [dataLabels]="chart.dataLabels" [chart]="chart.chart"
+                [grid]="chart.grid" [tooltip]="chart.tooltip" [autoUpdateSeries]=false [legend]="chart.legend">
+            </apx-chart>
+        </div>
+        <div class="col-2 curve-configuration">
+            <p>{{curves[i].curveConfiguration.alert_high}}</p>
+        </div>
+        <div class="col-1 curve-label">
+            <p class="text-label">{{curves[i].curveConfiguration.label}}</p>
+        </div>
     </div>
+
 </div>
 
 
