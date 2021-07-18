@@ -1,17 +1,8 @@
-.text-animal-specie {
-    margin-left: 20px;
-}
-
-.curves {
-    max-height: 120px;
-    margin-right: 0px;
-}
-
 .curve-configuration {
     border: 2px solid #fff;
     border-radius: 10px;
     max-height: 120px;
-    margin: 0px;
+    margin-left: 2rem;
     padding: 0px;
 }
 
@@ -29,19 +20,4 @@
     padding: 25px 0px 25px;
     font-size: 20px;
     margin-left: 10px;
-}
-
-.no-simulation {
-    max-height: 300px;
-    height: 300px;
-}
-
-.icon-pause {
-    color: white;
-    margin-right: 2%;
-}
-
-.icon-stopped {
-    color: white;
-    margin-right: 2%;
 }

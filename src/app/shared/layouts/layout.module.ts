@@ -23,4 +23,4 @@ import { SimulationLayoutComponent } from "./simulationLayout/simulation-layout.
         SimulationLayoutComponent,
     ],
 })
-export class LayoutModule {}
+export class LayoutModule { }

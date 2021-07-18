@@ -5,15 +5,14 @@ import { MonitorService } from "../../services/monitor.service";
 import { Subscription } from "rxjs";
 import { CurvesI } from "@app/shared/models/curvesI";
 import { StatesI } from "@app/shared/models/stateI";
-import { NgxEchartsDirective } from "ngx-echarts";
 import { CurvesHelper } from "@app/modules/simulation/helpers/curvesHelper";
 
 @Component({
-    selector: "app-simulator",
-    templateUrl: "./simulator.component.html",
-    styleUrls: ["./simulator.component.css"],
+    selector: "app-monitor",
+    templateUrl: "./monitor.component.html",
+    styleUrls: ["./monitor.component.css"],
 })
-export class SimulatorComponent
+export class MonitorComponent
     extends BaseComponent
     implements OnInit, OnDestroy {
     public curves: CurvesI[];
@@ -24,10 +23,7 @@ export class SimulatorComponent
     private period: number = 1;
     public maxSamples: number = 4;
     private curvesHelper: CurvesHelper = new CurvesHelper();
-    public chartOptions: NgxEchartsDirective["initOpts"] = {
-        height: 180,
-        width: 1180,
-    };
+    public stopCurves: CurvesI[] = [];
 
     private simulationTimer: NodeJS.Timeout;
     public trackByFn: TrackByFunction<CurvesI> = (_, curve: CurvesI) => curve.curveConfiguration.id_pp;
@@ -75,7 +71,7 @@ export class SimulatorComponent
 
         this.simulationTimer = setInterval(() => {
             this.suscribeSimulationInfo();
-        }, 300);
+        }, 500);
     }
 
     /**
@@ -94,58 +90,38 @@ export class SimulatorComponent
     private updateCurves(simulationState: StatesI): void {
         if (!this.isSameState(simulationState, this.lastState)) {
             this.curves = simulationState.curves;
-            this.scaleCurves();
-            // this.currentState = simulationState;
+            this.updateStopCurves();
+            // this.scaleCurves();
             this.lastState = simulationState;
             this.animalSpecie = simulationState.animalSpecie;
         }
+
     }
 
-    private scaleCurves(): void {
+    // private scaleCurves(): void {
+    //     this.curves.forEach((value: CurvesI) => {
+    //         this.curvesHelper.reSampleCurve(value.curveValues, this.period, this.maxSamples);
+    //     })
+    // }
+
+    private updateStopCurves(): void {
+        this.stopCurves = [];
         this.curves.forEach((value: CurvesI) => {
-            this.curvesHelper.reSampleCurve(value.curveValues, this.period, this.maxSamples);
+            const dataValues: [number, number][] = [];
+            dataValues.splice(0, 1);
+            for (let i: number = 0.0; i <= 1.0; i += 0.05) {
+                dataValues.push([Math.round(i * 100) / 100, 1]);
+            }
+            const newValue: CurvesI = {
+                animalSpecie: value.animalSpecie,
+                curveConfiguration: value.curveConfiguration,
+                curveValues: dataValues
+            }
+            this.stopCurves.push(newValue);
         })
     }
 
-    /**
-     * Get the max value on y-axis
-     * @param curveValues
-     * @returns max value for curveValues
-     */
-    public getMaxY(curveValues: number[][]): number {
-        let maxY: number = curveValues[0][1];
-        for (let curve of curveValues) {
-            if (curve[1] > maxY)
-                maxY = curve[1];
-        }
-        return maxY;
-    }
 
-    /**
-     * Get the min value on y-axis
-     * @param curveValues
-     * @returns min value for curveValues
-     */
-    public getMinY(curveValues: number[][]): number {
-        let minY: number = curveValues[0][1];
-        for (let curve of curveValues) {
-            if (curve[1] < minY)
-                minY = curve[1];
-        }
-        return minY;
-    }
-
-    /**
-     * Create a constant curve when the simulation is stopped
-     * @returns Constant curve to show when the simulation is stopped
-     */
-    public onStopCurve(curveValues: number[][]): number[][] {
-        let curveAux: number[][] = [];
-        curveValues.forEach(() => {
-            curveAux.push([1, 1]);
-        });
-        return curveAux;
-    }
 }
 
 

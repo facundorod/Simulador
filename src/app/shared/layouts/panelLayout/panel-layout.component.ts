@@ -1,4 +1,5 @@
 import { Component, OnInit } from "@angular/core";
+import { Sidebar } from "ng-sidebar";
 
 @Component({
     selector: "app-panel-layout",
@@ -6,10 +7,17 @@ import { Component, OnInit } from "@angular/core";
     styleUrls: ["./panel-layout.component.css"],
 })
 export class PanelLayoutComponent implements OnInit {
-    public _opened: boolean = false;
-    ngOnInit(): void {}
+    public sidebarOpen: boolean = false;
 
-    toggleSidebar() {
-        this._opened = !this._opened;
+    ngOnInit(): void { }
+
+    onClosed(): void {
+        this.sidebarOpen = false;
+    }
+
+    openSidebar(sidebar: Sidebar): void {
+        sidebar.open();
+        this.sidebarOpen = true;
+
     }
 }

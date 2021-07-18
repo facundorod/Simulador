@@ -20,6 +20,7 @@ import { MonitorService } from "@app/modules/monitor/services/monitor.service";
 import { StatesI } from "@app/shared/models/stateI";
 import { environment } from "@environments/environment";
 import { PhysiologicalParamaterI } from "@app/shared/models/physiologicalParamaterI";
+import { Monitor } from "@app/shared/models/monitor";
 
 @Component({
     selector: "app-panel",
@@ -45,9 +46,11 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
     public heartRate: number;
     public breathRate: number;
     public temperature: number;
+    public monitorConfiguration: Monitor = new Monitor();
 
     chartOptions: any = {
-        height: 400,
+        height: 300,
+        width: 700
     };
 
     constructor(

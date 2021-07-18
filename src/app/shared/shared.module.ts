@@ -12,6 +12,7 @@ import { SidebarModule } from "ng-sidebar";
 import { ArrayJsonPipe } from "./pipes/array-json.pipe";
 import { LocalStorageService } from "./services/localStorage.service";
 import { AudioComponent } from './components/audio/audio.component';
+import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
 
 @NgModule({
     declarations: [
@@ -22,7 +23,13 @@ import { AudioComponent } from './components/audio/audio.component';
         ArrayJsonPipe,
         AudioComponent,
     ],
-    imports: [CommonModule, FormsModule, RouterModule, SidebarModule.forRoot()],
+    imports: [
+        CommonModule,
+        FormsModule,
+        RouterModule,
+        SidebarModule.forRoot(),
+        NgbModule,
+    ],
     exports: [
         NavbarComponent,
         MainTitleComponent,
