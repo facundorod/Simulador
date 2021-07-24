@@ -10,9 +10,6 @@
     justify-content: center;
     overflow-y: hidden;
 }
-.hidden {
-    margin-top: 20px;
-}
 
 .sidebar .sidebar-header h3 {
     display: block;
@@ -22,18 +19,14 @@
     display: block;
     color: #fff;
 }
-.sidebar ul li a {
-    text-align: left;
-}
 
 .sidebar ul li a {
-    padding: 20px 10px;
     text-align: left;
     font-size: 0.85em;
 }
 
 .sidebar ul li a i {
-    margin-right: 0;
+    /* margin-right: 0; */
     display: block;
     font-size: 1.8em;
     margin-bottom: 5px;
@@ -68,10 +61,6 @@
     letter-spacing: 1px;
 }
 
-.sidebar ul.components {
-    padding: 20px 0;
-}
-
 .sidebar ul li a {
     padding: 10px;
     font-size: 1.1em;
@@ -85,13 +74,8 @@
     background: #545555;
 }
 
-.sidebar ul li a i {
-    margin-right: 10px;
-}
-
 ul ul a {
-    font-size: 0.9em !important;
-    padding-left: 30px !important;
+    font-size: 0.9em;
     background: #6d7fcc;
 }
 
@@ -104,13 +88,9 @@ ul ul a {
 }
 
 .tooltip-navbar {
-    font-size: 0.1em;
+    font-size: 12px;
 }
 
 .dockNav {
-    width: 100%;
-}
-
-.dockUser {
-    margin-left: 0.5rem;
+    width: 60px;
 }

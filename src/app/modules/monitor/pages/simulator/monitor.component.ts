@@ -15,7 +15,7 @@ import { CurvesHelper } from "@app/modules/simulation/helpers/curvesHelper";
 export class MonitorComponent
     extends BaseComponent
     implements OnInit, OnDestroy {
-    public curves: CurvesI[];
+    public curves: StatesI;
     public animalSpecie: AnimalSpeciesI;
     public today: Date = new Date();
     private subscription: Subscription;
@@ -23,7 +23,7 @@ export class MonitorComponent
     private period: number = 1;
     public maxSamples: number = 4;
     private curvesHelper: CurvesHelper = new CurvesHelper();
-    public stopCurves: CurvesI[] = [];
+    public stopCurves: StatesI | any = {};
 
     private simulationTimer: NodeJS.Timeout;
     public trackByFn: TrackByFunction<CurvesI> = (_, curve: CurvesI) => curve.curveConfiguration.id_pp;
@@ -89,24 +89,18 @@ export class MonitorComponent
 
     private updateCurves(simulationState: StatesI): void {
         if (!this.isSameState(simulationState, this.lastState)) {
-            this.curves = simulationState.curves;
+            this.curves = simulationState;
             this.updateStopCurves();
-            // this.scaleCurves();
             this.lastState = simulationState;
             this.animalSpecie = simulationState.animalSpecie;
         }
 
     }
 
-    // private scaleCurves(): void {
-    //     this.curves.forEach((value: CurvesI) => {
-    //         this.curvesHelper.reSampleCurve(value.curveValues, this.period, this.maxSamples);
-    //     })
-    // }
 
     private updateStopCurves(): void {
-        this.stopCurves = [];
-        this.curves.forEach((value: CurvesI) => {
+        this.stopCurves.curves = [];
+        this.curves.curves.forEach((value: CurvesI) => {
             const dataValues: [number, number][] = [];
             dataValues.splice(0, 1);
             for (let i: number = 0.0; i <= 1.0; i += 0.05) {
@@ -117,7 +111,7 @@ export class MonitorComponent
                 curveConfiguration: value.curveConfiguration,
                 curveValues: dataValues
             }
-            this.stopCurves.push(newValue);
+            this.stopCurves.curves.push(newValue);
         })
     }
 

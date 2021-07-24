@@ -1,16 +1,5 @@
 <div class="container-fluid">
-    <app-curves [simulation]=true [curves]="curves"
+    <app-curves [simulation]=true [currentState]="curves"
         [monitorConfiguration]="monitorConfiguration.getMonitorConfiguration()" [stopCurves]="stop">
     </app-curves>
-
-    <!-- Curve Configuration -->
-    <!-- <div class="col-3" *ngFor="let curve of curves; trackByFn" style="border: 2px solid yellow;">
-        <div class="col-2 curve-configuration">
-            <p>{{curve.curveConfiguration.alert_high}}</p>
-        </div>
-        <div class="col-xs-1 curve-label">
-            <p class="text-label">{{curve.curveConfiguration.label}}</p>
-        </div>
-    </div> -->
-
 </div>

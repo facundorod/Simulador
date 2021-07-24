@@ -1,6 +1,7 @@
 import { Component, Input, OnDestroy, OnInit, TrackByFunction } from '@angular/core';
 import { CurvesI } from '@app/shared/models/curvesI';
 import { Monitor } from '@app/shared/models/monitor';
+import { StatesI } from '@app/shared/models/stateI';
 
 
 @Component({
@@ -10,7 +11,7 @@ import { Monitor } from '@app/shared/models/monitor';
 })
 export class SimulatorComponent implements OnInit, OnDestroy {
 
-    @Input() curves: CurvesI[];
+    @Input() curves: StatesI;
     @Input() stop: boolean;
     public monitorConfiguration: Monitor = new Monitor();
 

@@ -5,6 +5,7 @@ import { MonitorI } from "@app/shared/models/monitorI";
 import { CurvesHelper } from "../../helpers/curvesHelper";
 import { ChartComponent } from "ng-apexcharts";
 import { ClosestPoint } from '@app/modules/simulation/helpers/curvesHelper';
+import { StatesI } from "@app/shared/models/stateI";
 @Component({
     selector: "app-curves",
     templateUrl: "./curves.component.html",
@@ -12,7 +13,7 @@ import { ClosestPoint } from '@app/modules/simulation/helpers/curvesHelper';
 })
 export class CurvesComponent implements OnInit, AfterContentInit {
 
-    @Input() curves: CurvesI[];
+    @Input() currentState: StatesI;
     @Input() simulation: boolean;
     @Input() monitorConfiguration: MonitorI;
     @Input() colorLine: string | undefined;
@@ -30,16 +31,16 @@ export class CurvesComponent implements OnInit, AfterContentInit {
     constructor() { }
 
     ngAfterContentInit(): void {
-
-    }
-
-    ngOnInit(): void {
         if (this.staticCurves) {
             this.createStaticChart();
         } else {
             this.createDynamicChart();
             this.simulateCurves();
         }
+    }
+
+    ngOnInit(): void {
+
     }
 
     ngOnDestroy() {
@@ -51,7 +52,7 @@ export class CurvesComponent implements OnInit, AfterContentInit {
      */
     private simulateCurves() {
         this.simulationTimer = setInterval(() => {
-            this.curves.forEach((curve: CurvesI, index: number) => {
+            this.currentState.curves.forEach((curve: CurvesI, index: number) => {
                 this.simulateCurve(curve, index);
             });
             this.clockTimer += (this.monitorConfiguration.freqSample / 1000);
@@ -75,7 +76,7 @@ export class CurvesComponent implements OnInit, AfterContentInit {
      * Create dynamic chart (for simulation)
      */
     private createDynamicChart(): void {
-        this.curves.forEach((curve: CurvesI) => {
+        this.currentState.curves.forEach((curve: CurvesI) => {
             const maxY: number = this.curvesHelper.getMaxY(curve.curveValues) + 1;
             const minY: number = this.curvesHelper.getMinY(curve.curveValues) - 1;
             const chart: ChartConfigurer = new ChartConfigurer({
@@ -131,6 +132,7 @@ export class CurvesComponent implements OnInit, AfterContentInit {
             let closestIndex: ClosestPoint = this.curvesHelper.getClosestIndex(curveValues, roundTimer);
             const interpolationNumber: number = this.curvesHelper.linealInterpolation(closestIndex.lessValue[0],
                 closestIndex.greaterValue[0], roundTimer, closestIndex.lessValue[1], closestIndex.lessValue[1]);
+            // const interpolationNumber: number = this.curvesHelper.lagrangeInterpolation(curveValues, roundTimer)
             currentDataset[0].data.push([roundClockTimer, interpolationNumber]);
         }
         this.updateChart(currentDataset, index);
@@ -209,7 +211,7 @@ export class CurvesComponent implements OnInit, AfterContentInit {
      * simulation dataset, and new dataset will start empty
      */
     private swapCurves(): void {
-        for (let index = 0; index < this.curves.length; index++) {
+        for (let index = 0; index < this.currentState.curves.length; index++) {
             const currentDataset: any = this.chartsOptions[index].series;
             const auxDataset: [number, number][] = currentDataset[1].data;
             currentDataset[0].data = auxDataset;
@@ -243,13 +245,17 @@ export class CurvesComponent implements OnInit, AfterContentInit {
      */
     private createSimulationDataset(): void {
 
-        for (let index = 0; index < this.curves.length; index++) {
+        for (let index = 0; index < this.currentState.curves.length; index++) {
             const currentDataset: any = this.chartsOptions[index].series;
             currentDataset.push({
                 data: [],
                 color: currentDataset[0].color,
             });
         }
+    }
+
+    public getColor(curve: CurvesI): string {
+        return curve.curveConfiguration.colorLine;
     }
 }
 
