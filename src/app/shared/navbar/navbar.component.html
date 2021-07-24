@@ -143,79 +143,65 @@
 
 
 <ng-template #userDock>
-    <!-- <div class="sidebar-header">
-        <h3 class="font-weight-bold text-center"> Welcome </h3>
-    </div>
-    <section class="container sub-header">
-        <h4 class="font-weight-bold text-align-center"> Simulation </h4>
-    </section> -->
 
     <ul class="list-unstyled components dock dockUser">
 
         <li class="nav-item active">
-            <a class="nav-link" [routerLink]="['/simulation/new']"> <img
-                    src="https://img.icons8.com/bubbles/28/000000/new.png" /> </a>
+            <a class="nav-link" [routerLink]="['/simulation/new']" ngbTooltip="New" tooltipClass="tooltip-navbar"
+                placement="top"> <img src="https://img.icons8.com/bubbles/28/000000/new.png" /> </a>
         </li>
 
         <li class="nav-item">
 
-            <a class="nav-link" [routerLink]="['/panel']"> <img
-                    src="https://img.icons8.com/dusk/28/000000/admin-settings-male.png" />
+            <a class="nav-link" [routerLink]="['/panel']" ngbTooltip="Manage" tooltipClass="tooltip-navbar"
+                placement="top">
+                <img src="https://img.icons8.com/dusk/28/000000/admin-settings-male.png" />
             </a>
         </li>
 
     </ul>
 
-    <!-- <section #manageDatabase class="container sub-header">
-        <h4 class="font-weight-bold text-align-center"> Manage DataBase </h4>
-    </section> -->
-
     <ul class="list-group dockUser">
         <li class="nav-item">
 
-            <a class="nav-link" [routerLink]="['/panel/animalSpecie']"> <img
-                    src="https://img.icons8.com/color/28/000000/dog.png" /> </a>
+            <a class="nav-link" [routerLink]="['/panel/animalSpecie']" ngbTooltip="Animals" placement="top"
+                tooltipClass="tooltip-navbar"> <img src="https://img.icons8.com/color/28/000000/dog.png" /> </a>
         </li>
 
         <li class="nav-item">
 
-            <a class="nav-link" [routerLink]="['/panel/pathologies']"> <img
-                    src="https://img.icons8.com/color/28/000000/microorganisms.png" /> </a>
+            <a class="nav-link" [routerLink]="['/panel/pathologies']" ngbTooltip="Path" tooltipClass="tooltip-navbar"
+                placement="top"> <img src="https://img.icons8.com/color/28/000000/microorganisms.png" />
+            </a>
         </li>
 
         <li class="nav-item">
 
-            <a class="nav-link" [routerLink]="['/panel/medications']"> <img
-                    src="https://img.icons8.com/color/28/000000/pills.png" /> </a>
+            <a class="nav-link" [routerLink]="['/panel/medications']" ngbTooltip="Med" tooltipClass="tooltip-navbar"
+                placement="top"> <img src="https://img.icons8.com/color/28/000000/pills.png" /> </a>
         </li>
 
         <li class="nav-item">
 
-            <a class="nav-link" [routerLink]="['/panel/arrhythmias']"> <img
-                    src="https://img.icons8.com/color/28/000000/pulse.png" /> </a>
+            <a class="nav-link" [routerLink]="['/panel/arrhythmias']" ngbTooltip="Arr" tooltipClass="tooltip-navbar"
+                placement="top">
+                <img src="https://img.icons8.com/color/28/000000/pulse.png" /> </a>
         </li>
 
         <li class="nav-item">
 
-            <a class="nav-link" [routerLink]="['/panel/scenarios']"> <img
-                    src="https://img.icons8.com/plasticine/28/000000/hospital-gown.png" /> </a>
+            <a class="nav-link" [routerLink]="['/panel/scenarios']" ngbTooltip="Scenarios" tooltipClass="tooltip-navbar"
+                placement="top"> <img src="https://img.icons8.com/plasticine/28/000000/hospital-gown.png" /> </a>
 
         </li>
 
         <li class="nav-item">
 
-            <a class="nav-link" [routerLink]="['/auth/logout']"> <img
+            <a class="nav-link" [routerLink]="['/auth/logout']" ngbTooltip="Logout" tooltipClass="tooltip-navbar"> <img
                     src="https://img.icons8.com/emoji/28/000000/waving-hand-emoji.png" /> </a>
         </li>
 
     </ul>
 
-    <section class="container sub-header">
-
-        <a class="nav-link" [routerLink]="['/panel']">
-            <h4 class="font-weight-bold text-align-center"> </h4>
-        </a>
-
-    </section>
 
 </ng-template>

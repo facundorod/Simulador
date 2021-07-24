@@ -6,4 +6,6 @@ export interface StatesI {
     animalSpecie: AnimalSpeciesI;
     curves: CurvesI[];
     action?: string | undefined;
+    rateSource?: string;
+    rate: number;
 }

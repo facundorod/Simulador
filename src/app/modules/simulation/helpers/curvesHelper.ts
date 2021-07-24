@@ -155,7 +155,26 @@ export class CurvesHelper {
         const auxCalcX: number = (x - x1) / (x2 - x1);
         const auxCalcY: number = y2 - y1;
         return ((auxCalcX * auxCalcY) + y1);
+    }
 
+    public lagrangeInterpolation(dataset: [number, number][], value: number): number {
+        let count: number = 0;
+        for (let i = 0; i < dataset.length; i++) {
+            count += (dataset[i][1] * this.lagrangeFunction(dataset, value, i));
+        }
+        return count;
+    }
+
+    private lagrangeFunction(dataset: [number, number][], valueToInterpolate: number, i: number): number {
+        let num: number = 1;
+        let den: number = 1;
+        for (let j = 0; j < dataset.length - 1; j++) {
+            if (i != j) {
+                num *= (valueToInterpolate - dataset[j][0]);
+                den *= (dataset[i][0] - dataset[j][0]);
+            }
+        }
+        return num / den;
     }
 
     /**

@@ -222,9 +222,11 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
         state.curves.forEach((value: CurvesI) => {
             if (value.curveConfiguration.label === 'RESP') {
                 this.breathRate = value.curveValues[0][0];
+                this.currentState.rate = this.breathRate;
             }
             if (value.curveConfiguration.label === 'CAR') {
                 this.heartRate = value.curveValues[0][0];
+                this.currentState.rate = this.heartRate;
             }
             if (value.curveConfiguration.label === 'TEMP') {
                 this.temperature = value.curveValues[0][0];
