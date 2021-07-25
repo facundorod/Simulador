@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, ViewChildren, QueryList, AfterContentInit } from "@angular/core";
+import { Component, OnInit, Input, ViewChildren, QueryList, AfterContentInit, AfterViewInit, AfterViewChecked, HostListener } from "@angular/core";
 import { ChartConfigurer, ChartOptions } from "../../helpers/chartConfigurer";
 import { CurvesI } from "@app/shared/models/curvesI";
 import { MonitorI } from "@app/shared/models/monitorI";
@@ -11,7 +11,7 @@ import { StatesI } from "@app/shared/models/stateI";
     templateUrl: "./curves.component.html",
     styleUrls: ["./curves.component.css"],
 })
-export class CurvesComponent implements OnInit, AfterContentInit {
+export class CurvesComponent implements OnInit, AfterViewInit {
 
     @Input() currentState: StatesI;
     @Input() simulation: boolean;
@@ -20,7 +20,7 @@ export class CurvesComponent implements OnInit, AfterContentInit {
     @Input() stopCurves: boolean = false;
     @Input() staticCurves: [number, number][] | undefined;
     @ViewChildren('chart') charts: QueryList<ChartComponent>;
-
+    public startSimulation: boolean = false;
     public chartsOptions: Partial<ChartOptions>[] = [];
     private clockTimer: number = 0.0;
     private firstSimulation: boolean = true;
@@ -30,7 +30,13 @@ export class CurvesComponent implements OnInit, AfterContentInit {
 
     constructor() { }
 
-    ngAfterContentInit(): void {
+    ngAfterViewInit(): void {
+
+    }
+
+
+    ngOnInit(): void {
+        this.startSimulation = true;
         if (this.staticCurves) {
             this.createStaticChart();
         } else {
@@ -39,12 +45,10 @@ export class CurvesComponent implements OnInit, AfterContentInit {
         }
     }
 
-    ngOnInit(): void {
-
-    }
-
+    @HostListener('unloaded')
     ngOnDestroy() {
         clearInterval(this.simulationTimer);
+        this.startSimulation = false;
     }
 
     /**
@@ -237,7 +241,8 @@ export class CurvesComponent implements OnInit, AfterContentInit {
      */
     private updateChart(dataset: any, index: number): void {
         const chart: ChartComponent = this.charts.toArray()[index];
-        chart.updateSeries(dataset, false);
+        if (chart)
+            chart.updateSeries(dataset, false);
     }
 
     /**
