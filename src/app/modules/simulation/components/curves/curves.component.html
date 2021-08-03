@@ -1,5 +1,5 @@
-<div *ngIf="simulation else noSimulation">
-    <div *ngIf="startSimulation">
+<div id="simulation" *ngIf="startSimulation">
+    <div *ngIf="simulation else noSimulation">
         <div class="row" *ngFor="let chart of chartsOptions; let i = index">
             <div class="col-9">
                 <apx-chart #chart [series]="chart.series" [stroke]="chart.stroke" [xaxis]="chart.xaxis"

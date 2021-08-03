@@ -4,6 +4,7 @@ import { NgModule } from "@angular/core";
 import { Routes, RouterModule } from "@angular/router";
 import { AuthGuard } from "@guards/auth.guard";
 import { SimulationLayoutComponent } from "./shared/layouts/simulationLayout/simulation-layout.component";
+import { LoginGuard } from "./guards/login.guard";
 
 const routes: Routes = [
     { path: "", redirectTo: "/home", pathMatch: "full" },
@@ -26,6 +27,7 @@ const routes: Routes = [
         children: [
             {
                 path: "",
+                canActivate: [LoginGuard],
                 loadChildren: () =>
                     import("@home/home.module").then((m) => m.HomeModule),
             },
@@ -78,4 +80,4 @@ const routes: Routes = [
     imports: [RouterModule.forRoot(routes)],
     exports: [RouterModule],
 })
-export class AppRoutingModule {}
+export class AppRoutingModule { }

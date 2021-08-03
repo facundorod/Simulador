@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, ViewChildren, QueryList, AfterContentInit, AfterViewInit, AfterViewChecked, HostListener } from "@angular/core";
+import { Component, OnInit, Input, ViewChildren, QueryList, AfterContentInit, AfterViewInit, AfterViewChecked, HostListener, AfterContentChecked, Renderer2, ElementRef, OnChanges } from "@angular/core";
 import { ChartConfigurer, ChartOptions } from "../../helpers/chartConfigurer";
 import { CurvesI } from "@app/shared/models/curvesI";
 import { MonitorI } from "@app/shared/models/monitorI";
@@ -11,7 +11,7 @@ import { StatesI } from "@app/shared/models/stateI";
     templateUrl: "./curves.component.html",
     styleUrls: ["./curves.component.css"],
 })
-export class CurvesComponent implements OnInit, AfterViewInit {
+export class CurvesComponent implements OnInit, AfterContentInit, OnChanges {
 
     @Input() currentState: StatesI;
     @Input() simulation: boolean;
@@ -30,22 +30,28 @@ export class CurvesComponent implements OnInit, AfterViewInit {
 
     constructor() { }
 
-    ngAfterViewInit(): void {
+    ngAfterContentInit(): void {
+        if (this.staticCurves) {
+            this.startSimulation = true;
+            this.createStaticChart();
+        }
+        // this.startSimulation = false;
 
     }
-
 
     ngOnInit(): void {
-        this.startSimulation = true;
-        if (this.staticCurves) {
-            this.createStaticChart();
-        } else {
-            this.createDynamicChart();
-            this.simulateCurves();
-        }
+
     }
 
-    @HostListener('unloaded')
+    ngOnChanges(): void {
+        this.startSimulation = false;
+        clearInterval(this.simulationTimer);
+        this.createDynamicChart();
+        this.startSimulation = true;
+        this.simulateCurves();
+
+    }
+
     ngOnDestroy() {
         clearInterval(this.simulationTimer);
         this.startSimulation = false;
