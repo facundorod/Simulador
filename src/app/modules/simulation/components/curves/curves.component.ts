@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, ViewChildren, QueryList, AfterContentInit, AfterViewInit, AfterViewChecked, HostListener, AfterContentChecked, Renderer2, ElementRef, OnChanges } from "@angular/core";
+import { Component, OnInit, Input, ViewChildren, QueryList, AfterContentInit, AfterViewInit, AfterViewChecked, HostListener, AfterContentChecked, Renderer2, ElementRef, OnChanges, ChangeDetectorRef } from "@angular/core";
 import { ChartConfigurer, ChartOptions } from "../../helpers/chartConfigurer";
 import { CurvesI } from "@app/shared/models/curvesI";
 import { MonitorI } from "@app/shared/models/monitorI";
@@ -11,7 +11,7 @@ import { StatesI } from "@app/shared/models/stateI";
     templateUrl: "./curves.component.html",
     styleUrls: ["./curves.component.css"],
 })
-export class CurvesComponent implements OnInit, AfterContentInit, OnChanges {
+export class CurvesComponent implements OnInit, OnChanges, AfterViewInit {
 
     @Input() currentState: StatesI;
     @Input() simulation: boolean;
@@ -20,41 +20,43 @@ export class CurvesComponent implements OnInit, AfterContentInit, OnChanges {
     @Input() stopCurves: boolean = false;
     @Input() staticCurves: [number, number][] | undefined;
     @ViewChildren('chart') charts: QueryList<ChartComponent>;
-    public startSimulation: boolean = false;
-    public chartsOptions: Partial<ChartOptions>[] = [];
-    private clockTimer: number = 0.0;
-    private firstSimulation: boolean = true;
+    public chartsOptions: Partial<ChartOptions>[];
+    private clockTimer: number;
+    private firstSimulation: boolean;
     private curvesHelper: CurvesHelper = new CurvesHelper();
     private simulationTimer: NodeJS.Timeout;
-    private curveTimer: number = 0.0;
+    private curveTimer: number;
 
-    constructor() { }
+    constructor() {
+        this.initVariables();
+    }
 
-    ngAfterContentInit(): void {
-        if (this.staticCurves) {
-            this.startSimulation = true;
+
+    ngOnInit(): void { }
+
+    ngAfterViewInit(): void {
+        if (!this.staticCurves) {
+            this.createDynamicChart();
+            this.simulateCurves();
+        } else {
             this.createStaticChart();
         }
-        // this.startSimulation = false;
-
     }
 
-    ngOnInit(): void {
+    ngOnChanges(): void { }
 
-    }
-
-    ngOnChanges(): void {
-        this.startSimulation = false;
-        clearInterval(this.simulationTimer);
-        this.createDynamicChart();
-        this.startSimulation = true;
-        this.simulateCurves();
-
+    private initVariables(): void {
+        this.clockTimer = 0.0;
+        this.firstSimulation = true;
+        this.curveTimer = 0.0;
+        this.chartsOptions = [];
     }
 
     ngOnDestroy() {
         clearInterval(this.simulationTimer);
-        this.startSimulation = false;
+        this.charts.forEach((chart: ChartComponent) => {
+            chart.destroy();
+        })
     }
 
     /**
@@ -62,12 +64,12 @@ export class CurvesComponent implements OnInit, AfterContentInit, OnChanges {
      */
     private simulateCurves() {
         this.simulationTimer = setInterval(() => {
-            this.currentState.curves.forEach((curve: CurvesI, index: number) => {
+            this.currentState?.curves.forEach((curve: CurvesI, index: number) => {
                 this.simulateCurve(curve, index);
             });
             this.clockTimer += (this.monitorConfiguration.freqSample / 1000);
             this.curveTimer += (this.monitorConfiguration.freqSample / 1000);
-        }, 60);
+        }, 40);
     }
 
     private simulateCurve(curve: CurvesI, index: number): void {
@@ -76,7 +78,7 @@ export class CurvesComponent implements OnInit, AfterContentInit, OnChanges {
             this.updateCurveTimer(curve.curveValues);
             this.updateDataset(index, curve.curveValues);
         } else {
-            const currentDataset: any = this.chartsOptions[index].series;
+            const currentDataset: any = this.chartsOptions[index].series.slice();
             this.updateCurveTimer(currentDataset[0].data);
             this.updateDatasetSimulation(currentDataset, index);
         }
@@ -130,7 +132,8 @@ export class CurvesComponent implements OnInit, AfterContentInit, OnChanges {
      * @param curveValues
      */
     private updateDataset(index: number, curveValues: [number, number][]): void {
-        const currentDataset: any = this.chartsOptions[index].series;
+        debugger;
+        const currentDataset: any = this.chartsOptions[index].series.slice();
         const roundTimer: number = Math.round(this.curveTimer * 10000) / 10000;
         const roundClockTimer: number = Math.round(this.clockTimer * 10000) / 10000;
         // Find roundTimer in the xAxis (current dataset)
@@ -230,15 +233,6 @@ export class CurvesComponent implements OnInit, AfterContentInit, OnChanges {
 
     }
 
-    /**
-     * Sort all dataset values
-     * @param curveValues
-     */
-    private sortDataset(curveValues: [number, number][]): void {
-        curveValues.sort((a: [number, number], b: [number, number]) => {
-            return a[0] - b[0];
-        });
-    }
 
     /**
      * Update chart with the @param dataset
@@ -246,9 +240,10 @@ export class CurvesComponent implements OnInit, AfterContentInit, OnChanges {
      * @param index
      */
     private updateChart(dataset: any, index: number): void {
+
         const chart: ChartComponent = this.charts.toArray()[index];
         if (chart)
-            chart.updateSeries(dataset, false);
+            chart.updateSeries(dataset, this.firstSimulation)
     }
 
     /**

@@ -1,4 +1,4 @@
-import { Component, HostListener, OnDestroy, OnInit, TrackByFunction } from "@angular/core";
+import { Component, HostListener, OnChanges, OnDestroy, OnInit, SimpleChanges, TrackByFunction } from "@angular/core";
 import { BaseComponent } from "@app/shared/components/base.component";
 import { AnimalSpeciesI } from "@app/shared/models/animal-speciesI";
 import { MonitorService } from "../../services/monitor.service";
@@ -34,20 +34,18 @@ export class MonitorComponent
         this.checkLocalStorage();
     }
 
-    @HostListener('unloaded')
     ngOnDestroy(): void {
         this.subscription.unsubscribe();
         clearInterval(this.simulationTimer);
-        let curves = document.querySelector('curves');
-        curves.innerHTML = '';
     }
 
+
     /**
-     * Subscribe to simulation info.
+     * Check localstorage every 300 ms.
      */
-    private suscribeSimulationInfo(): void {
+    private checkLocalStorage(): void {
         // Create the conection with the monitor service
-        this.monitorService.getInfo(this.lastState).subscribe(
+        this.monitorService.getInfo().subscribe(
             (simulationState: StatesI) => {
                 if (simulationState) {
                     this.updateCurves(simulationState);
@@ -64,16 +62,6 @@ export class MonitorComponent
                 console.log("Simulation finished!");
             }
         );
-    }
-
-    /**
-     * Check localstorage every 300 ms.
-     */
-    private checkLocalStorage(): void {
-
-        this.simulationTimer = setInterval(() => {
-            this.suscribeSimulationInfo();
-        }, 500);
     }
 
     /**
