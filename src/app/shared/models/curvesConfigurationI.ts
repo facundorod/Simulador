@@ -10,4 +10,5 @@ export interface CurvesConfigurationI {
     min?: number;
     max?: number;
     colorLine?: string;
+    refValue?: number;
 }

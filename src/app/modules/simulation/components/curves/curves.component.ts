@@ -11,7 +11,7 @@ import { StatesI } from "@app/shared/models/stateI";
     templateUrl: "./curves.component.html",
     styleUrls: ["./curves.component.css"],
 })
-export class CurvesComponent implements OnInit, OnChanges, AfterViewInit {
+export class CurvesComponent implements OnInit, AfterViewInit {
 
     @Input() currentState: StatesI;
     @Input() simulation: boolean;
@@ -43,7 +43,6 @@ export class CurvesComponent implements OnInit, OnChanges, AfterViewInit {
         }
     }
 
-    ngOnChanges(): void { }
 
     private initVariables(): void {
         this.clockTimer = 0.0;
@@ -65,7 +64,8 @@ export class CurvesComponent implements OnInit, OnChanges, AfterViewInit {
     private simulateCurves() {
         this.simulationTimer = setInterval(() => {
             this.currentState?.curves.forEach((curve: CurvesI, index: number) => {
-                this.simulateCurve(curve, index);
+                if (curve.curveValues.length)
+                    this.simulateCurve(curve, index);
             });
             this.clockTimer += (this.monitorConfiguration.freqSample / 1000);
             this.curveTimer += (this.monitorConfiguration.freqSample / 1000);
@@ -89,20 +89,22 @@ export class CurvesComponent implements OnInit, OnChanges, AfterViewInit {
      */
     private createDynamicChart(): void {
         this.currentState.curves.forEach((curve: CurvesI) => {
-            const maxY: number = this.curvesHelper.getMaxY(curve.curveValues) + 1;
-            const minY: number = this.curvesHelper.getMinY(curve.curveValues) - 1;
-            const chart: ChartConfigurer = new ChartConfigurer({
-                colorLine: curve.curveConfiguration.colorLine,
-                height: 100,
-                minX: 0,
-                maxX: this.monitorConfiguration.maxSamples,
-                minY: minY,
-                maxY: maxY,
-                toolbar: false
-            });
-            chart.setChart([]);
+            if (curve.curveValues.length > 0) {
+                const maxY: number = this.curvesHelper.getMaxY(curve.curveValues) + 1;
+                const minY: number = this.curvesHelper.getMinY(curve.curveValues) - 1;
+                const chart: ChartConfigurer = new ChartConfigurer({
+                    colorLine: curve.curveConfiguration.colorLine,
+                    height: 100,
+                    minX: 0,
+                    maxX: this.monitorConfiguration.maxSamples,
+                    minY: minY,
+                    maxY: maxY,
+                    toolbar: false
+                });
+                chart.setChart([]);
 
-            this.chartsOptions.push(chart.getChart());
+                this.chartsOptions.push(chart.getChart());
+            }
         });
     }
 
@@ -206,7 +208,7 @@ export class CurvesComponent implements OnInit, OnChanges, AfterViewInit {
                 this.clockTimer = 0.0;
                 this.firstSimulation = false;
                 // At this point, the first simulation end, so we create a new dataset for all curves where
-                // we'll push the simulation data.
+                // we're going to push the simulation data.
                 this.createSimulationDataset();
             }
         } else {
@@ -260,6 +262,11 @@ export class CurvesComponent implements OnInit, OnChanges, AfterViewInit {
         }
     }
 
+    /**
+     * Return the curve color
+     * @param curve
+     * @returns
+     */
     public getColor(curve: CurvesI): string {
         return curve.curveConfiguration.colorLine;
     }
