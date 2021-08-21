@@ -46,59 +46,7 @@ export class CurvesHelper {
 
 
 
-    /**
-     * Scale all curves according to heart rate or breathRate
-     * @param state
-     * @param heartRate
-     * @param breathRate
-     */
-    public scaleCurves(curves: CurvesI[], heartRate: number = 0, breathRate: number = 0): void {
-        if (curves) {
-            curves.forEach((curve: CurvesI) => {
-                if (heartRate > 0)
-                    this.scaleCurveHeart(curve, heartRate);
-                if (breathRate > 0)
-                    this.scaleCurveBreath(curve, breathRate);
-            })
-        }
 
-    }
-
-    /**
-     * Scale curves associated with heart rate
-     * @param curve
-     * @param period
-     * @returns
-     */
-    private scaleCurveHeart(curve: CurvesI, period: number = 1): [number, number][] {
-        if (period != 1) {
-            if (curve.curveConfiguration.rate === 'heart') {
-                curve.curveValues.forEach((data: number[]) => {
-                    data[0] *= period;
-                });
-            }
-        }
-        return curve.curveValues;
-
-    }
-
-    /**
-     * Scale curves associated with breath rate
-     * @param curve
-     * @param period
-     * @returns
-     */
-    private scaleCurveBreath(curve: CurvesI, period: number = 1): [number, number][] {
-        if (period != 1) {
-            if (curve.curveConfiguration.rate === 'breath') {
-                curve.curveValues.forEach((data: number[]) => {
-                    data[0] *= period;
-                });
-            }
-        }
-        return curve.curveValues;
-
-    }
 
     /**
      * Resample curve according to period until max
