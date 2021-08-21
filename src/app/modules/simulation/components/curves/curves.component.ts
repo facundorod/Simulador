@@ -6,6 +6,7 @@ import { CurvesHelper } from "../../helpers/curvesHelper";
 import { ApexAxisChartSeries, ChartComponent } from "ng-apexcharts";
 import { ClosestPoint } from '@app/modules/simulation/helpers/curvesHelper';
 import { StatesI } from "@app/shared/models/stateI";
+import { CurveValuesI } from "@app/shared/models/curveValuesI";
 @Component({
     selector: "app-curves",
     templateUrl: "./curves.component.html",
@@ -93,11 +94,11 @@ export class CurvesComponent implements OnInit, AfterViewInit {
 
     private simulateCurve(curve: CurvesI, index: number): void {
         if (this.firstSimulation) {
-            this.updateCurveTimer(curve.curveValues, index);
+            this.updateCurveTimer(index);
             this.updateDataset(index, curve.curveValues);
         } else {
             const currentDataset: any = this.chartsOptions[index].series.slice();
-            this.updateCurveTimer(currentDataset[0].data, index);
+            this.updateCurveTimer(index);
             this.updateDatasetSimulation(currentDataset, index);
         }
     }
@@ -180,33 +181,27 @@ export class CurvesComponent implements OnInit, AfterViewInit {
 
         const roundClockTimer: number = this.roundTimer(this.clockTimer);
         const roundTimer: number = this.roundTimer(this.curveTimers[index]);
-        const { indexToDelete, indexToInsert } = this.getIndex(curveValues, roundClockTimer, roundTimer);
-        if (indexToInsert != -1 && indexToDelete != -1) {
-            const valueToInsert: number = curveValues[indexToInsert][1];
-            curveValues.splice(indexToDelete, 1);
-            curveValuesSimulation.push([roundClockTimer, valueToInsert]);
-        } else {
-            if (indexToInsert == -1) {
-                const valueToInsert: number = curveValuesSimulation[0][1];
-                curveValues.splice(indexToDelete, 1);
-                curveValuesSimulation.push([roundClockTimer, valueToInsert]);
-            }
-        }
+        let indexToDelete = this.getIndex(curveValues, roundClockTimer, roundTimer);
+        const originalDataset: [number, number][] = this.currentState.curves[index].curveValues;
+        let closestIndex: ClosestPoint = this.curvesHelper.getClosestIndex(originalDataset, roundTimer);
+        const interpolationNumber: number = this.curvesHelper.linealInterpolation(closestIndex.lessValue[0],
+            closestIndex.greaterValue[0], roundTimer, closestIndex.lessValue[1], closestIndex.lessValue[1]);
+        curveValues.splice(indexToDelete, 1);
+        curveValuesSimulation.push([roundClockTimer, interpolationNumber]);
         this.updateChart(currentDataset, index, true);
     }
 
-    private getIndex(curveValues: [number, number][], roundClockTimer: number, roundTimer: number): { indexToDelete: number, indexToInsert: number } {
-        let indexToDelete: number = -1, indexToInsert: number = -1;
+    private getIndex(curveValues: [number, number][], roundClockTimer: number, roundTimer: number): number {
+        let indexToDelete: number = -1;
         curveValues.forEach((value: [number, number], index: number) => {
             const valueRound: number = this.roundTimer(value[0]);
-            if (valueRound === roundClockTimer)
+            if (valueRound === roundClockTimer) {
                 indexToDelete = index;
-            if (valueRound === roundTimer)
-                indexToInsert = index;
+                return;
+            }
+
         });
-
-
-        return { indexToDelete, indexToInsert };
+        return indexToDelete;
     }
 
     /**
@@ -214,11 +209,10 @@ export class CurvesComponent implements OnInit, AfterViewInit {
      * curve timer go back to 0.
      * @param curveValues
      */
-    private updateCurveTimer(curveValues: [number, number][], index: number): void {
+    private updateCurveTimer(index: number): void {
         const roundTimer: number = this.roundTimer(this.curveTimers[index]);
         const lastItem: number = this.roundTimer(this.maxValues[index]);
         if (lastItem && roundTimer > lastItem) {
-            debugger;
             this.curveTimers[index] = 0.0;
         }
 
