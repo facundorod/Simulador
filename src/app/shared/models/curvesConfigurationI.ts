@@ -1,3 +1,5 @@
+import { PhysiologicalParamaterI } from "./physiologicalParamaterI";
+
 export interface CurvesConfigurationI {
     alert_low: number;
     alert_high: number;
@@ -6,9 +8,7 @@ export interface CurvesConfigurationI {
     id_pp: number;
     name: string;
     description: string;
-    rate?: string;
-    min?: number;
-    max?: number;
+    source?: PhysiologicalParamaterI;
     colorLine?: string;
     refValue?: number;
 }

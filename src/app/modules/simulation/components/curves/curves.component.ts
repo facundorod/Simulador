@@ -6,7 +6,8 @@ import { CurvesHelper } from "../../helpers/curvesHelper";
 import { ApexAxisChartSeries, ChartComponent } from "ng-apexcharts";
 import { ClosestPoint } from '@app/modules/simulation/helpers/curvesHelper';
 import { StatesI } from "@app/shared/models/stateI";
-import { CurveValuesI } from "@app/shared/models/curveValuesI";
+import { ParameterInfoI } from "@app/shared/models/parameterInfoI";
+
 @Component({
     selector: "app-curves",
     templateUrl: "./curves.component.html",
@@ -36,15 +37,18 @@ export class CurvesComponent implements OnInit, AfterViewInit {
 
 
     ngOnInit(): void {
+
     }
 
     ngAfterViewInit(): void {
-        this.initCurveTimers();
-        if (!this.staticCurves) {
-            this.createDynamicChart();
-            this.simulateCurves();
-        } else {
-            this.createStaticChart();
+        if (this.currentState) {
+            this.initCurveTimers();
+            if (!this.staticCurves) {
+                this.createDynamicChart();
+                this.simulateCurves();
+            } else {
+                this.createStaticChart();
+            }
         }
     }
 
@@ -61,11 +65,10 @@ export class CurvesComponent implements OnInit, AfterViewInit {
         this.currentState.curves.forEach((curve: CurvesI) => {
             if (curve.curveValues.length > 0) {
                 this.curveTimers.push(0);
-                const maxValueRound: number = this.roundTimer(curve.curveValues[curve.curveValues.length - 1][0]);
-                this.maxValues.push(maxValueRound);
+                const maxValue: number = curve.curveValues[curve.curveValues.length - 1][0];
+                this.maxValues.push(maxValue);
             }
         });
-        console.log("this.max values", this.maxValues);
     }
 
     ngOnDestroy() {
@@ -84,11 +87,11 @@ export class CurvesComponent implements OnInit, AfterViewInit {
             this.currentState?.curves.forEach((curve: CurvesI, index: number) => {
                 if (curve.curveValues.length > 0) {
                     this.simulateCurve(curve, index);
-                    this.curveTimers[index] += this.roundTimer(this.monitorConfiguration.freqSample / 1000);
+                    this.curveTimers[index] += (this.monitorConfiguration.freqSample / 1000);
                 }
             });
             this.clockTimer += (this.monitorConfiguration.freqSample / 1000);
-        }, 40);
+        }, this.monitorConfiguration.clockTimer);
     }
 
 
@@ -154,19 +157,12 @@ export class CurvesComponent implements OnInit, AfterViewInit {
      */
     private updateDataset(index: number, curveValues: [number, number][]): void {
         const currentDataset: any = this.chartsOptions[index].series.slice();
-        const roundTimer: number = this.roundTimer(this.curveTimers[index]);
-        const roundClockTimer: number = this.roundTimer(this.clockTimer);
-        // Find roundTimer in the xAxis (current dataset)
-        const aux: [number, number][] = curveValues.filter(data => this.roundTimer(data[0]) == roundTimer);
-        if (aux.length > 0) {
-            currentDataset[0].data.push([roundClockTimer, aux[0][1]]);
-        } else {
-            // If the value (clockTimer) doesn't exist in the original dataset, we need to interpolate it
-            let closestIndex: ClosestPoint = this.curvesHelper.getClosestIndex(curveValues, roundTimer);
-            const interpolationNumber: number = this.curvesHelper.linealInterpolation(closestIndex.lessValue[0],
-                closestIndex.greaterValue[0], roundTimer, closestIndex.lessValue[1], closestIndex.lessValue[1]);
-            currentDataset[0].data.push([roundClockTimer, interpolationNumber]);
-        }
+        const curveTimer: number = this.curveTimers[index];
+        const roundClockTimer: number = this.clockTimer;
+        let closestIndex: ClosestPoint = this.curvesHelper.getClosestIndex(curveValues, curveTimer);
+        const interpolationNumber: number = this.curvesHelper.linealInterpolation(closestIndex.lessValue[0],
+            closestIndex.greaterValue[0], curveTimer, closestIndex.lessValue[1], closestIndex.lessValue[1]);
+        currentDataset[0].data.push([roundClockTimer, interpolationNumber]);
         this.updateChart(currentDataset, index, true);
     }
 
@@ -178,23 +174,21 @@ export class CurvesComponent implements OnInit, AfterViewInit {
     private updateDatasetSimulation(currentDataset: any, index: number): void {
         let curveValues = currentDataset[0].data;
         let curveValuesSimulation = currentDataset[1].data;
-
-        const roundClockTimer: number = this.roundTimer(this.clockTimer);
-        const roundTimer: number = this.roundTimer(this.curveTimers[index]);
-        let indexToDelete = this.getIndex(curveValues, roundClockTimer, roundTimer);
+        const roundTimer: number = this.curveTimers[index];
+        let indexToDelete = this.getIndex(curveValues, this.clockTimer);
         const originalDataset: [number, number][] = this.currentState.curves[index].curveValues;
         let closestIndex: ClosestPoint = this.curvesHelper.getClosestIndex(originalDataset, roundTimer);
         const interpolationNumber: number = this.curvesHelper.linealInterpolation(closestIndex.lessValue[0],
             closestIndex.greaterValue[0], roundTimer, closestIndex.lessValue[1], closestIndex.lessValue[1]);
         curveValues.splice(indexToDelete, 1);
-        curveValuesSimulation.push([roundClockTimer, interpolationNumber]);
+        curveValuesSimulation.push([this.clockTimer, interpolationNumber]);
         this.updateChart(currentDataset, index, true);
     }
 
-    private getIndex(curveValues: [number, number][], roundClockTimer: number, roundTimer: number): number {
+    private getIndex(curveValues: [number, number][], roundClockTimer: number): number {
         let indexToDelete: number = -1;
         curveValues.forEach((value: [number, number], index: number) => {
-            const valueRound: number = this.roundTimer(value[0]);
+            const valueRound: number = value[0];
             if (valueRound === roundClockTimer) {
                 indexToDelete = index;
                 return;
@@ -210,9 +204,9 @@ export class CurvesComponent implements OnInit, AfterViewInit {
      * @param curveValues
      */
     private updateCurveTimer(index: number): void {
-        const roundTimer: number = this.roundTimer(this.curveTimers[index]);
-        const lastItem: number = this.roundTimer(this.maxValues[index]);
-        if (lastItem && roundTimer > lastItem) {
+        const curveTimer: number = this.curveTimers[index];
+        const lastItem: number = this.maxValues[index];
+        if (lastItem && curveTimer > lastItem) {
             this.curveTimers[index] = 0.0;
         }
 
@@ -260,7 +254,7 @@ export class CurvesComponent implements OnInit, AfterViewInit {
                 const auxDataset: [number, number][] = currentDataset[1].data;
                 currentDataset[0].data = auxDataset;
                 currentDataset[1].data = [];
-                this.updateChart(currentDataset, index, true);
+                this.updateChart(currentDataset, index, false);
             }
         }
     }
@@ -299,6 +293,20 @@ export class CurvesComponent implements OnInit, AfterViewInit {
      */
     public getColor(curve: CurvesI): string {
         return curve.curveConfiguration.colorLine;
+    }
+
+    public getSourceRateValue(curve: CurvesI): number {
+        const parameterInfo: ParameterInfoI = JSON.parse(localStorage.getItem('parameterState'));
+        switch (curve.curveConfiguration.source.label) {
+            case 'CAR':
+                return parameterInfo.heartRate;
+            case 'RESP':
+                return parameterInfo.breathRate;
+            case 'SPO2':
+                return curve.curveConfiguration.refValue;
+            default:
+                break;
+        }
     }
 }
 

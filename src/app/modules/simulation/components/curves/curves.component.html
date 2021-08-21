@@ -12,7 +12,8 @@
 
                 </div>
                 <div class="col-5">
-                    <p class="text-rate" [style.color]="getColor(currentState.curves[i])">{{currentState.rate}}</p>
+                    <p class="text-rate" [style.color]="getColor(currentState.curves[i])">
+                        {{getSourceRateValue(currentState.curves[i])}}</p>
                 </div>
                 <div class="col-4 parameter-box-var">
                     <p class="first-var" [style.color]="getColor(currentState.curves[i])">
@@ -21,7 +22,7 @@
                     <p [style.color]="getColor(currentState.curves[i])">
                         {{currentState.curves[i].curveConfiguration.alert_low}}</p>
                     <p [style.color]="getColor(currentState.curves[i])">
-                        {{currentState.curves[i].curveConfiguration.rate}}</p>
+                        {{currentState.curves[i].curveConfiguration.source.label}}</p>
                     <p [style.color]="getColor(currentState.curves[i])">
                         {{currentState.curves[i].curveConfiguration.unit}}</p>
                 </div>

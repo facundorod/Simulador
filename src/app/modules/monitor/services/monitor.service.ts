@@ -15,7 +15,7 @@ export class MonitorService {
                 this.currentState = lastStatus;
                 this.values.next(this.currentState);
             }
-        }, 500)
+        }, 1000)
     }
 
     /**

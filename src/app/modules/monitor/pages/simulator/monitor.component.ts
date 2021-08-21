@@ -91,19 +91,17 @@ export class MonitorComponent
     private updateStopCurves(): void {
         this.stopCurves.curves = [];
         this.curves.curves.forEach((value: CurvesI) => {
-            if (value.curveValues.length > 0) {
-                const dataValues: [number, number][] = [];
-                dataValues.splice(0, 1);
-                for (let i: number = 0.0; i <= 1.0; i += 0.05) {
-                    dataValues.push([Math.round(i * 100) / 100, 1]);
-                }
-                const newValue: CurvesI = {
-                    animalSpecie: value.animalSpecie,
-                    curveConfiguration: value.curveConfiguration,
-                    curveValues: dataValues
-                }
-                this.stopCurves.curves.push(newValue);
+            const dataValues: [number, number][] = [];
+            dataValues.splice(0, 1);
+            for (let i: number = 0.0; i <= 1.0; i += 0.05) {
+                dataValues.push([Math.round(i * 100) / 100, 1]);
             }
+            const newValue: CurvesI = {
+                animalSpecie: value.animalSpecie,
+                curveConfiguration: value.curveConfiguration,
+                curveValues: dataValues
+            }
+            this.stopCurves.curves.push(newValue);
         })
     }
 
