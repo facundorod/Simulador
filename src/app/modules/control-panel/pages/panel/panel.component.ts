@@ -44,6 +44,7 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
     public heartRate: number;
     public breathRate: number;
     public temperature: number;
+    public spo2: number;
     public monitorConfiguration: Monitor = new Monitor();
 
 
@@ -212,7 +213,7 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
      */
     private onLoadParameters(): void {
         this.currentState.curves = this.currentState.curves.filter((value: CurvesI) => {
-            switch (value.curveConfiguration.label) {
+            switch (value.curveConfiguration.label.toUpperCase()) {
                 case 'RESP':
                     this.breathRate = value.curveConfiguration.refValue;
                     break;
@@ -222,6 +223,9 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
                 case 'TEMP':
                     this.temperature = value.curveConfiguration.refValue;
                     break;
+                case 'SPO2':
+                    this.spo2 = value.curveConfiguration.refValue;
+                    return value;
                 default:
                     return value;
             }
@@ -233,9 +237,9 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
         const parameterInfo: ParameterInfoI = {
             temperature: this.temperature,
             heartRate: this.heartRate,
-            breathRate: this.breathRate
+            breathRate: this.breathRate,
+            spO2: this.spo2
         }
-
         this.localStorageService.saveValue('parameterState', JSON.stringify(parameterInfo));
     }
 

@@ -297,13 +297,13 @@ export class CurvesComponent implements OnInit, AfterViewInit {
 
     public getSourceRateValue(curve: CurvesI): number {
         const parameterInfo: ParameterInfoI = JSON.parse(localStorage.getItem('parameterState'));
-        switch (curve.curveConfiguration.source.label) {
+        switch (curve.curveConfiguration.source.label.toUpperCase()) {
             case 'CAR':
                 return parameterInfo.heartRate;
             case 'RESP':
                 return parameterInfo.breathRate;
             case 'SPO2':
-                return curve.curveConfiguration.refValue;
+                return parameterInfo.spO2;
             default:
                 break;
         }
