@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, ViewChildren, QueryList, AfterContentInit, AfterViewInit, AfterViewChecked, HostListener, AfterContentChecked, Renderer2, ElementRef, OnChanges, ChangeDetectorRef } from "@angular/core";
+import { Component, OnInit, Input, ViewChildren, QueryList, AfterContentInit, AfterViewInit, AfterViewChecked, HostListener, AfterContentChecked, Renderer2, ElementRef, OnChanges, ChangeDetectorRef, SimpleChanges } from "@angular/core";
 import { ChartConfigurer, ChartOptions } from "../../helpers/chartConfigurer";
 import { CurvesI } from "@app/shared/models/curvesI";
 import { MonitorI } from "@app/shared/models/monitorI";
@@ -13,7 +13,7 @@ import { ParameterInfoI } from "@app/shared/models/parameterInfoI";
     templateUrl: "./curves.component.html",
     styleUrls: ["./curves.component.css"],
 })
-export class CurvesComponent implements OnInit, AfterViewInit {
+export class CurvesComponent implements OnInit, AfterViewInit, OnChanges {
 
     @Input() currentState: StatesI;
     @Input() simulation: boolean;
@@ -24,6 +24,7 @@ export class CurvesComponent implements OnInit, AfterViewInit {
     @ViewChildren('chart') charts: QueryList<ChartComponent>;
     public chartsOptions: Partial<ChartOptions>[];
     private clockTimer: number;
+    private parameterInfo: ParameterInfoI;
     private curveTimers: number[];
     // Max values for each curve. This value contains the last element (in seconds) for
     // the curve on the interval [0-100%]
@@ -35,10 +36,14 @@ export class CurvesComponent implements OnInit, AfterViewInit {
         this.initVariables();
     }
 
-
-    ngOnInit(): void {
+    ngOnChanges(changes: SimpleChanges): void {
+        this.parameterInfo = JSON.parse(localStorage.getItem('parameterState'));
 
     }
+
+
+    ngOnInit(): void { }
+
 
     ngAfterViewInit(): void {
         if (this.currentState) {
@@ -90,7 +95,8 @@ export class CurvesComponent implements OnInit, AfterViewInit {
                     this.curveTimers[index] += (this.monitorConfiguration.freqSample / 1000);
                 }
             });
-            this.clockTimer += (this.monitorConfiguration.freqSample / 1000);
+            this.clockTimer = this.curvesHelper.calculateRate(this.parameterInfo.heartRate, this.clockTimer, this.monitorConfiguration.freqSample);
+            // this.clockTimer += ((this.monitorConfiguration.freqSample / 1000) / 2);
         }, this.monitorConfiguration.clockTimer);
     }
 
@@ -243,6 +249,7 @@ export class CurvesComponent implements OnInit, AfterViewInit {
             }
         }
     }
+
     /**
      * Swap curves between simulation data and current dataset. Old dataset will be the previous
      * simulation dataset, and new dataset will start empty
@@ -296,14 +303,14 @@ export class CurvesComponent implements OnInit, AfterViewInit {
     }
 
     public getSourceRateValue(curve: CurvesI): number {
-        const parameterInfo: ParameterInfoI = JSON.parse(localStorage.getItem('parameterState'));
+
         switch (curve.curveConfiguration.source.label.toUpperCase()) {
             case 'CAR':
-                return parameterInfo.heartRate;
+                return this.parameterInfo.heartRate;
             case 'RESP':
-                return parameterInfo.breathRate;
+                return this.parameterInfo.breathRate;
             case 'SPO2':
-                return parameterInfo.spO2;
+                return this.parameterInfo.spO2;
             default:
                 break;
         }
