@@ -95,8 +95,7 @@ export class CurvesComponent implements OnInit, AfterViewInit, OnChanges {
                     this.curveTimers[index] += (this.monitorConfiguration.freqSample / 1000);
                 }
             });
-            this.clockTimer = this.curvesHelper.calculateRate(this.parameterInfo.heartRate, this.clockTimer, this.monitorConfiguration.freqSample);
-            // this.clockTimer += ((this.monitorConfiguration.freqSample / 1000) / 2);
+            this.clockTimer += this.curvesHelper.calculateRate(this.parameterInfo.heartRate, this.monitorConfiguration.freqSample);
         }, this.monitorConfiguration.clockTimer);
     }
 
@@ -186,7 +185,9 @@ export class CurvesComponent implements OnInit, AfterViewInit, OnChanges {
         let closestIndex: ClosestPoint = this.curvesHelper.getClosestIndex(originalDataset, roundTimer);
         const interpolationNumber: number = this.curvesHelper.linealInterpolation(closestIndex.lessValue[0],
             closestIndex.greaterValue[0], roundTimer, closestIndex.lessValue[1], closestIndex.lessValue[1]);
-        curveValues.splice(indexToDelete, 1);
+        if (indexToDelete == -1)
+            curveValues.splice(curveValues[curveValues.length - 1], 1);
+        else curveValues.splice(indexToDelete, 1);
         curveValuesSimulation.push([this.clockTimer, interpolationNumber]);
         this.updateChart(currentDataset, index, true);
     }

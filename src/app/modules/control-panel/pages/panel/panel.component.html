@@ -66,7 +66,7 @@
     </div>
 
     <div class="mt-4 progress">
-        <div class="bar-separator progress-bar bg-info" role="progressbar" aria-valuenow="50" aria-valuemin="0"
+        <div class="bar-separator progress-bar bg-info" role="progressbar" aria-valuenow="60" aria-valuemin="0"
             aria-valuemax="100"></div>
     </div>
 
@@ -100,7 +100,8 @@
             <div class="col-sm-4">
                 <label class="form-label">Heart Rate</label>
                 <div class="row ml-3">
-                    <input type="range" class="form-range" min="1" max="5" step="0.5" formControlName="heartRate">
+                    <input type="range" class="form-range" min="30" max="250" step="1" formControlName="heartRate">
+                    <span class="rate-value">{{heartRate}}</span>
                 </div>
 
                 <!-- <input type="number" class="form-control" formControlName="heartRate"> -->
@@ -108,8 +109,8 @@
             <div class="col-sm-4">
                 <label class="form-label">Breath Rate [rpm]</label>
                 <div class="row ml-3">
-                    <input type="range" class="form-range" min="1" max="5" step="0.5" formControlName="breathRate">
-
+                    <input type="range" class="form-range" min="1" max="15" step="0.1" formControlName="breathRate">
+                    <span class="rate-value">{{breathRate}}</span>
                 </div>
                 <!-- <input type="number" class="form-control" formControlName="breathRate"> -->
             </div>

@@ -114,10 +114,10 @@ export class CurvesHelper {
      * @param freq
      * @returns
      */
-    public calculateRate(rateValue: number, currentTimer: number, freq: number): number {
+    public calculateRate(rateValue: number, freq: number): number {
         const period: number = rateValue / 60;
         if (period)
-            return (currentTimer + (freq / 1000)) / period;
+            return (freq / 1000) / period;
         return -1;
     }
 }
