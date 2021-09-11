@@ -95,7 +95,7 @@ export class CurvesComponent implements OnInit, AfterViewInit, OnChanges {
                     this.curveTimers[index] += (this.monitorConfiguration.freqSample / 1000);
                 }
             });
-            this.clockTimer += this.curvesHelper.calculateRate(this.parameterInfo.heartRate, this.monitorConfiguration.freqSample);
+            this.clockTimer = this.roundTimer(this.clockTimer + this.curvesHelper.calculateRate(this.parameterInfo.heartRate, this.monitorConfiguration.freqSample));
         }, this.monitorConfiguration.clockTimer);
     }
 
@@ -163,11 +163,10 @@ export class CurvesComponent implements OnInit, AfterViewInit, OnChanges {
     private updateDataset(index: number, curveValues: [number, number][]): void {
         const currentDataset: any = this.chartsOptions[index].series.slice();
         const curveTimer: number = this.curveTimers[index];
-        const roundClockTimer: number = this.clockTimer;
         let closestIndex: ClosestPoint = this.curvesHelper.getClosestIndex(curveValues, curveTimer);
         const interpolationNumber: number = this.curvesHelper.linealInterpolation(closestIndex.lessValue[0],
             closestIndex.greaterValue[0], curveTimer, closestIndex.lessValue[1], closestIndex.lessValue[1]);
-        currentDataset[0].data.push([roundClockTimer, interpolationNumber]);
+        currentDataset[0].data.push([this.clockTimer, interpolationNumber]);
         this.updateChart(currentDataset, index, true);
     }
 
@@ -179,29 +178,23 @@ export class CurvesComponent implements OnInit, AfterViewInit, OnChanges {
     private updateDatasetSimulation(currentDataset: any, index: number): void {
         let curveValues = currentDataset[0].data;
         let curveValuesSimulation = currentDataset[1].data;
-        const roundTimer: number = this.curveTimers[index];
-        let indexToDelete = this.getIndex(curveValues, this.clockTimer);
         const originalDataset: [number, number][] = this.currentState.curves[index].curveValues;
-        let closestIndex: ClosestPoint = this.curvesHelper.getClosestIndex(originalDataset, roundTimer);
+        let closestIndex: ClosestPoint = this.curvesHelper.getClosestIndex(originalDataset, this.curveTimers[index]);
         const interpolationNumber: number = this.curvesHelper.linealInterpolation(closestIndex.lessValue[0],
-            closestIndex.greaterValue[0], roundTimer, closestIndex.lessValue[1], closestIndex.lessValue[1]);
-        if (indexToDelete == -1)
-            curveValues.splice(curveValues[curveValues.length - 1], 1);
-        else curveValues.splice(indexToDelete, 1);
+            closestIndex.greaterValue[0], this.curveTimers[index], closestIndex.lessValue[1], closestIndex.lessValue[1]);
+        // Synchronize between past and actual dataset
+        this.deleteOldPoints(curveValues);
         curveValuesSimulation.push([this.clockTimer, interpolationNumber]);
         this.updateChart(currentDataset, index, true);
     }
 
-    private getIndex(curveValues: [number, number][], roundClockTimer: number): number {
+    private getIndex(curveValues: [number, number][], clockTimer: number): number {
         let indexToDelete: number = -1;
-        curveValues.forEach((value: [number, number], index: number) => {
-            const valueRound: number = value[0];
-            if (valueRound === roundClockTimer) {
-                indexToDelete = index;
-                return;
-            }
-
-        });
+        for (let index = 0; index < curveValues.length; index++) {
+            const xValue: number = curveValues[index][0];
+            if (xValue === clockTimer)
+                return index;
+        }
         return indexToDelete;
     }
 
@@ -216,7 +209,6 @@ export class CurvesComponent implements OnInit, AfterViewInit, OnChanges {
         if (lastItem && curveTimer > lastItem) {
             this.curveTimers[index] = 0.0;
         }
-
     }
 
     /**
@@ -225,7 +217,7 @@ export class CurvesComponent implements OnInit, AfterViewInit, OnChanges {
      * @returns
      */
     private roundTimer(timer: number): number {
-        return Math.round(timer * 10000) / 10000;
+        return Math.round(timer * 100) / 100;
     }
 
     /**
@@ -314,6 +306,18 @@ export class CurvesComponent implements OnInit, AfterViewInit, OnChanges {
                 return this.parameterInfo.spO2;
             default:
                 break;
+        }
+    }
+
+    /**
+     * Delete all points less than actual curveTimer
+     * @param oldDataset
+     * @param valueToCompare
+     */
+    private deleteOldPoints(oldDataset: [number, number][]): void {
+        let i: number = 0;
+        while (i < oldDataset.length && oldDataset[i][0] <= this.clockTimer) {
+            oldDataset.splice(i, 1);
         }
     }
 }
