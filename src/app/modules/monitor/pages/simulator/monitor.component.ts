@@ -1,11 +1,11 @@
-import { Component, OnDestroy, OnInit, TrackByFunction } from "@angular/core";
+import { Component, HostListener, OnChanges, OnDestroy, OnInit, SimpleChanges, TrackByFunction } from "@angular/core";
 import { BaseComponent } from "@app/shared/components/base.component";
 import { AnimalSpeciesI } from "@app/shared/models/animal-speciesI";
 import { MonitorService } from "../../services/monitor.service";
 import { Subscription } from "rxjs";
 import { CurvesI } from "@app/shared/models/curvesI";
 import { StatesI } from "@app/shared/models/stateI";
-import { CurvesHelper } from "@app/modules/simulation/helpers/curvesHelper";
+import { Monitor } from "@app/shared/models/monitor";
 
 @Component({
     selector: "app-monitor",
@@ -20,10 +20,9 @@ export class MonitorComponent
     public today: Date = new Date();
     private subscription: Subscription;
     public lastState: StatesI;
-    private period: number = 1;
     public maxSamples: number = 4;
-    private curvesHelper: CurvesHelper = new CurvesHelper();
     public stopCurves: StatesI | any = {};
+    public monitorConfiguration: Monitor = new Monitor();
 
     private simulationTimer: NodeJS.Timeout;
     public trackByFn: TrackByFunction<CurvesI> = (_, curve: CurvesI) => curve.curveConfiguration.id_pp;
@@ -40,12 +39,13 @@ export class MonitorComponent
         clearInterval(this.simulationTimer);
     }
 
+
     /**
-     * Subscribe to simulation info.
+     * Check localstorage every 300 ms.
      */
-    private suscribeSimulationInfo(): void {
+    private checkLocalStorage(): void {
         // Create the conection with the monitor service
-        this.monitorService.getInfo(this.lastState).subscribe(
+        this.monitorService.getInfo().subscribe(
             (simulationState: StatesI) => {
                 if (simulationState) {
                     this.updateCurves(simulationState);
@@ -62,16 +62,6 @@ export class MonitorComponent
                 console.log("Simulation finished!");
             }
         );
-    }
-
-    /**
-     * Check localstorage every 300 ms.
-     */
-    private checkLocalStorage(): void {
-
-        this.simulationTimer = setInterval(() => {
-            this.suscribeSimulationInfo();
-        }, 500);
     }
 
     /**

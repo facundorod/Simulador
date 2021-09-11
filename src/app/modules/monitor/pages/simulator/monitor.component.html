@@ -16,7 +16,9 @@
     <div class="row" *ngIf="lastState?.action === 'play' else noPlay">
         <app-audio [play]="true"></app-audio>
         <div class="container-fluid">
-            <app-simulator [curves]="curves"></app-simulator>
+            <app-curves [simulation]=true [currentState]="curves"
+                [monitorConfiguration]="monitorConfiguration.getMonitorConfiguration()" [stopCurves]=false>
+            </app-curves>
         </div>
     </div>
 </div>
@@ -38,8 +40,11 @@
     </div>
     <app-audio [play]="true"></app-audio>
     <div class="container-fluid">
-        <app-simulator [curves]="stopCurves" [stop]=true></app-simulator>
+        <app-curves [simulation]=true [currentState]="stopCurves"
+            [monitorConfiguration]="monitorConfiguration.getMonitorConfiguration()" [stopCurves]=true>
+        </app-curves>
     </div>
+
 </ng-template>
 
 

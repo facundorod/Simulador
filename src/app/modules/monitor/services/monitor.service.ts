@@ -7,31 +7,15 @@ export class MonitorService {
     private values: Subject<StatesI> = new Subject<StatesI>();
     private currentState: StatesI;
 
-    /**
-     * Check if the status has been changed and update the current state with the last status
-     * @param simulationState
-     * @returns
-     */
-    private getCurvesLocalStorage(simulationState: StatesI): boolean {
-        try {
-            const lastStatus: StatesI = JSON.parse(
-                localStorage.getItem("simulationState")
-            );
-            if (simulationState) {
-                if (simulationState.state != lastStatus?.state || simulationState?.action != lastStatus?.action) {
-                    this.currentState = lastStatus;
-                    return true;
-                } else {
-                    return false;
-                }
-            } else {
+    constructor() {
+        setInterval(() => {
+            const lastStatus: StatesI = JSON.parse(localStorage.getItem("simulationState"));
+            if (!lastStatus) return;
+            if (!this.currentState || this.isDiff(lastStatus)) {
                 this.currentState = lastStatus;
-                return true;
+                this.values.next(this.currentState);
             }
-        } catch (error) {
-            return false;
-        }
-
+        }, 1000)
     }
 
     /**
@@ -39,9 +23,11 @@ export class MonitorService {
      * @param lastState
      * @returns
      */
-    public getInfo(lastState: StatesI): Observable<StatesI> {
-        if (this.getCurvesLocalStorage(lastState))
-            this.values.next(this.currentState);
+    public getInfo(): Observable<StatesI> {
         return this.values.asObservable();
+    }
+
+    private isDiff(state: StatesI): boolean {
+        return (state.state !== this.currentState.state || state.action !== this.currentState.action);
     }
 }

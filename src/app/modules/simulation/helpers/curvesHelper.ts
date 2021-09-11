@@ -1,21 +1,3 @@
-import { CurvesService } from "@app/modules/control-panel/services/curves.service";
-import { CurvesConfigurationI } from "@app/shared/models/curvesConfigurationI";
-import { CurvesI } from "@app/shared/models/curvesI";
-import { CurveValuesI } from "@app/shared/models/curveValuesI";
-import { PhysiologicalParamaterI } from "@app/shared/models/physiologicalParamaterI";
-import { StatesI } from "@app/shared/models/stateI";
-
-enum PhysiologicalParamaters {
-    SPO2 = "SPO2",
-    ETCO2 = "ETCO2",
-    ECG = "ECG",
-    NIBP = "NIBP",
-    IBP = "IBP",
-    TEMP = "TEMP",
-    RESP = "RESP",
-    CARDIAC_FREQ = "CAR",
-}
-
 export type ClosestPoint = {
     lessValue: [number, number],
     greaterValue: [number, number]
@@ -42,85 +24,6 @@ export class CurvesHelper {
         });
 
         return curve;
-    }
-
-
-
-    /**
-     * Scale all curves according to heart rate or breathRate
-     * @param state
-     * @param heartRate
-     * @param breathRate
-     */
-    public scaleCurves(curves: CurvesI[], heartRate: number = 0, breathRate: number = 0): void {
-        if (curves) {
-            curves.forEach((curve: CurvesI) => {
-                if (heartRate > 0)
-                    this.scaleCurveHeart(curve, heartRate);
-                if (breathRate > 0)
-                    this.scaleCurveBreath(curve, breathRate);
-            })
-        }
-
-    }
-
-    /**
-     * Scale curves associated with heart rate
-     * @param curve
-     * @param period
-     * @returns
-     */
-    private scaleCurveHeart(curve: CurvesI, period: number = 1): [number, number][] {
-        if (period != 1) {
-            if (curve.curveConfiguration.rate === 'heart') {
-                curve.curveValues.forEach((data: number[]) => {
-                    data[0] *= period;
-                });
-            }
-        }
-        return curve.curveValues;
-
-    }
-
-    /**
-     * Scale curves associated with breath rate
-     * @param curve
-     * @param period
-     * @returns
-     */
-    private scaleCurveBreath(curve: CurvesI, period: number = 1): [number, number][] {
-        if (period != 1) {
-            if (curve.curveConfiguration.rate === 'breath') {
-                curve.curveValues.forEach((data: number[]) => {
-                    data[0] *= period;
-                });
-            }
-        }
-        return curve.curveValues;
-
-    }
-
-    /**
-     * Resample curve according to period until max
-     * @param curve
-     * @param period
-     * @param maxSamples
-     */
-    public reSampleCurve(curve: [number, number][], period: number, maxSamples: number) {
-        if (curve) {
-            let iterator: number = 0;
-            let auxValue: number[] = curve[iterator];
-            iterator++;
-            while (auxValue[0] + period <= maxSamples) {
-                curve.push([auxValue[0] + period, auxValue[1]]);
-                curve.sort((a: number[], b: number[]) => {
-                    return a[0] - b[0];
-                });
-                auxValue = curve[iterator];
-                iterator++;
-            }
-
-        }
     }
 
     /**
@@ -202,5 +105,19 @@ export class CurvesHelper {
             lessValue: dataset[dataset.length - 1],
             greaterValue: dataset[dataset.length - 2]
         }
+    }
+
+    /**
+     * Calculate new rate according to monitor's frequency and rateValue
+     * @param rateValue
+     * @param currentTimer
+     * @param freq
+     * @returns
+     */
+    public calculateRate(rateValue: number, freq: number): number {
+        const period: number = rateValue / 60;
+        if (period)
+            return (freq / 1000) / period;
+        return -1;
     }
 }

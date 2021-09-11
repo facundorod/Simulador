@@ -21,6 +21,7 @@ import { StatesI } from "@app/shared/models/stateI";
 import { environment } from "@environments/environment";
 import { PhysiologicalParamaterI } from "@app/shared/models/physiologicalParamaterI";
 import { Monitor } from "@app/shared/models/monitor";
+import { ParameterInfoI } from "@app/shared/models/parameterInfoI";
 
 @Component({
     selector: "app-panel",
@@ -28,9 +29,7 @@ import { Monitor } from "@app/shared/models/monitor";
     styleUrls: ["./panel.component.css"],
 })
 export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
-    editScenario: any = {}; // Scenario active for edit
-    activeScenario: any; // Scenario active for simulation
-    simulationsNumber: number = 0; // Number of simulation's scenario.
+    private activeScenario: any; // Scenario active for simulation
 
     public scenariosSimulation: any[] = [];
     public animalSpecies: any[] = []; // Animal Species to populate the dropdown
@@ -38,20 +37,16 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
     public simulation: any = {}; // Simulation from localStorage
     public indexActive: number = 0; // Index for scenario edit Active
     public indexSimulationActive: number = 0; // Index for scenario simulation Active
-    private currentState: StatesI; // Curves for scenario and animalSpecie selected
-    public curves: CurvesI[] = new Array<CurvesI>();
+    public currentState: StatesI; // Curves for scenario and animalSpecie selected
     private curvesHelper = new CurvesHelper();
     // Paramaters Physiological without curves
     public fromGroupParameters: FormGroup;
     public heartRate: number;
     public breathRate: number;
     public temperature: number;
+    public spo2: number;
     public monitorConfiguration: Monitor = new Monitor();
 
-    chartOptions: any = {
-        height: 300,
-        width: 700
-    };
 
     constructor(
         private animalSpecieService: AnimalSpeciesService,
@@ -94,7 +89,7 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
 
         // Create new simulation
         if (!this.simulation) {
-            this.animalSpecieService.list(null, null).subscribe(
+            this.animalSpecieService.list().subscribe(
                 (animalSpecies) => {
                     this.setLoading(false);
                     this.animalSpecies = animalSpecies.data;
@@ -121,7 +116,6 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
      * Initialize the reactive form
      */
     private initFormGroup(): void {
-        this.setSubmitForm(false);
         this.formGroup = this.fb.group({
             simulationName: [
                 this.simulation ? this.simulation.name : "",
@@ -153,7 +147,7 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
     /**
      * Save scenario and simulations according to form data
      */
-    public async onSaveChanges() {
+    public onSaveChanges() {
         this.submitForm = true;
         this.saveSimulation();
     }
@@ -164,28 +158,29 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
     private onValueChanges(): void {
         this.formGroup.get("animalSpecie").valueChanges.subscribe((val) => {
             this.onLoadCurves(val);
+
             this.updateState();
         });
         this.fromGroupParameters.get("heartRate").valueChanges.subscribe((val) => {
-            this.curvesHelper.scaleCurves(this.currentState.curves, val, 0);
+            // this.curvesHelper.scaleCurves(this.currentState.curves, val, 0);
+            this.heartRate = val;
+            this.saveParameterInfo();
             this.updateState();
         });
         this.fromGroupParameters.get("breathRate").valueChanges.subscribe((val) => {
-            this.curvesHelper.scaleCurves(this.currentState.curves, 0, val);
+            // this.curvesHelper.scaleCurves(this.currentState.curves, 0, val);
+            this.breathRate = val;
+            this.saveParameterInfo();
             this.updateState();
         });
+
     }
 
     /**
-     * Load curves for scenario active for simulation and for animalSpecie selected
+     * Load curves for scenario active for simulation and animalSpecie selected
      */
     public onLoadCurves(as: AnimalSpeciesI) {
-        if (
-            this.activeScenario &&
-            this.activeScenario?.id_scenario &&
-            as != null &&
-            as?.id_as
-        ) {
+        if (this.activeScenario?.id_scenario && as?.id_as) {
             this.curvesService
                 .findAll({
                     animalSpecie: as.id_as,
@@ -195,11 +190,10 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
                     (state: StatesI) => {
                         if (state) {
                             this.currentState = state;
-                            this.onLoadParameters(state);
-                            this.curves = state.curves;
+                            this.onLoadParameters();
+                            this.localStorageService.saveValue("simulationState", JSON.stringify(this.currentState));
                         } else {
                             this.currentState = null;
-                            this.curves = [];
                             this.localStorageService.removeValue("simulationState");
                         }
                     },
@@ -209,7 +203,6 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
                 );
         } else {
             this.currentState = null;
-            this.curves = [];
             this.localStorageService.removeValue("simulationState");
         }
     }
@@ -218,26 +211,38 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
      * Load parameters without curves
      * @param state
      */
-    private onLoadParameters(state: StatesI): void {
-        state.curves.forEach((value: CurvesI) => {
-            if (value.curveConfiguration.label === 'RESP') {
-                this.breathRate = value.curveValues[0][0];
-                this.currentState.rate = this.breathRate;
-            }
-            if (value.curveConfiguration.label === 'CAR') {
-                this.heartRate = value.curveValues[0][0];
-                this.currentState.rate = this.heartRate;
-            }
-            if (value.curveConfiguration.label === 'TEMP') {
-                this.temperature = value.curveValues[0][0];
+    private onLoadParameters(): void {
+        this.currentState.curves = this.currentState.curves.filter((value: CurvesI) => {
+            switch (value.curveConfiguration.label.toUpperCase()) {
+                case 'RESP':
+                    this.breathRate = value.curveConfiguration.refValue;
+                    break;
+                case 'CAR':
+                    this.heartRate = value.curveConfiguration.refValue;
+                    break;
+                case 'TEMP':
+                    this.temperature = value.curveConfiguration.refValue;
+                    break;
+                case 'SPO2':
+                    this.spo2 = value.curveConfiguration.refValue;
+                    return value;
+                default:
+                    return value;
             }
         })
-
-        this.localStorageService.saveValue(
-            "simulationState",
-            JSON.stringify(this.currentState)
-        );
+        this.saveParameterInfo();
     }
+
+    private saveParameterInfo(): void {
+        const parameterInfo: ParameterInfoI = {
+            temperature: this.temperature,
+            heartRate: this.heartRate,
+            breathRate: this.breathRate,
+            spO2: this.spo2
+        }
+        this.localStorageService.saveValue('parameterState', JSON.stringify(parameterInfo));
+    }
+
 
     /**
      * Save simulation
@@ -297,7 +302,6 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
 
     public getScenarios(scenarios: any): void {
         this.scenariosSimulation = scenarios;
-        this.editScenario = this.scenariosSimulation[this.indexActive];
         this.activeScenario = this.scenariosSimulation[
             this.indexSimulationActive
         ];
@@ -330,21 +334,14 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
     }
 
     public onStopSimulation(): void {
-        if (this.currentState)
-            this.currentState.action = 'stop';
-        this.localStorageService.saveValue(
-            "simulationState",
-            JSON.stringify(this.currentState)
-        );
+        if (this.currentState) this.currentState.action = 'stop';
+        this.localStorageService.saveValue("simulationState", JSON.stringify(this.currentState));
     }
 
     private updateState(): void {
         if (this.currentState) {
             this.currentState.state++;
-            this.localStorageService.saveValue(
-                "simulationState",
-                JSON.stringify(this.currentState)
-            );
+            this.localStorageService.saveValue("simulationState", JSON.stringify(this.currentState));
         }
     }
 

@@ -60,3 +60,9 @@
 .form-parameters {
     margin-top: 3%;
 }
+
+.rate-value {
+    font-size: 1.5rem;
+    color: white;
+    padding-left: 12%;
+}
