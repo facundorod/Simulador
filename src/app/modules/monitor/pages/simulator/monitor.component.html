@@ -1,4 +1,4 @@
-<div class="container-fluid" *ngIf="curves?.curves.length > 0 else noSimulation">
+<div class="container-fluid" *ngIf="currentState?.curves.length > 0 else noSimulation">
     <div class="row">
         <div class="col-lg-6">
             <p class="text-left">
@@ -16,9 +16,43 @@
     <div class="row" *ngIf="lastState?.action === 'play' else noPlay">
         <app-audio [play]="true"></app-audio>
         <div class="container-fluid">
-            <app-curves [simulation]=true [currentState]="curves"
-                [monitorConfiguration]="monitorConfiguration.getMonitorConfiguration()" [stopCurves]=false>
-            </app-curves>
+            <div id="charts" class="row" *ngFor="let chart of chartsOptions; let i = index">
+                <div class="col-9">
+                    <apx-chart #chart [series]="chart.series" [stroke]="chart.stroke" [xaxis]="chart.xaxis"
+                        [yaxis]="chart.yaxis" [markers]="chart.markers" [dataLabels]="chart.dataLabels"
+                        [chart]="chart.chart" [grid]="chart.grid" [tooltip]="chart.tooltip" [autoUpdateSeries]=false
+                        [legend]="chart.legend">
+                    </apx-chart>
+                </div>
+                <div class="col-2 curve-configuration">
+                    <div class="row">
+                        <div class="col-3">
+
+                        </div>
+                        <div class="col-5">
+                            <p class="text-rate" [style.color]="getColor(currentState.curves[i])">
+                                {{getSourceRateValue(currentState.curves[i])}}</p>
+                        </div>
+                        <div class="col-4 parameter-box-var">
+                            <p class="first-var" [style.color]="getColor(currentState.curves[i])">
+                                {{currentState.curves[i].curveConfiguration.alert_high}}
+                            </p>
+                            <p [style.color]="getColor(currentState.curves[i])">
+                                {{currentState.curves[i].curveConfiguration.alert_low}}</p>
+                            <p [style.color]="getColor(currentState.curves[i])">
+                                {{currentState.curves[i].curveConfiguration.source.label}}</p>
+                            <p [style.color]="getColor(currentState.curves[i])">
+                                {{currentState.curves[i].curveConfiguration.unit}}</p>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="col-1 curve-label">
+                    <p class="text-label" [style.color]="getColor(currentState.curves[i])">
+                        {{currentState.curves[i].curveConfiguration.label}}</p>
+                </div>
+            </div>
+
         </div>
     </div>
 </div>
@@ -39,11 +73,6 @@
             stopped</h4>
     </div>
     <app-audio [play]="true"></app-audio>
-    <div class="container-fluid">
-        <app-curves [simulation]=true [currentState]="stopCurves"
-            [monitorConfiguration]="monitorConfiguration.getMonitorConfiguration()" [stopCurves]=true>
-        </app-curves>
-    </div>
 
 </ng-template>
 

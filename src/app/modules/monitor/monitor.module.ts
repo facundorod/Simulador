@@ -7,6 +7,7 @@ import { MonitorRoutingModule } from "./monitor-routing.module";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { MonitorService } from "./services/monitor.service";
 import { SharedModule } from "@app/shared/shared.module";
+import { NgApexchartsModule } from "ng-apexcharts";
 
 @NgModule({
     declarations: [MonitorComponent],
@@ -17,6 +18,8 @@ import { SharedModule } from "@app/shared/shared.module";
         FormsModule,
         SharedModule,
         ReactiveFormsModule,
+        NgApexchartsModule
+
     ],
     providers: [CurvesService, MonitorService],
 })

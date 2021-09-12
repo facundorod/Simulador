@@ -1,11 +1,14 @@
-import { Component, HostListener, OnChanges, OnDestroy, OnInit, SimpleChanges, TrackByFunction } from "@angular/core";
+import { AfterViewInit, Component, HostListener, OnChanges, OnDestroy, OnInit, QueryList, SimpleChanges, TrackByFunction, ViewChildren } from "@angular/core";
 import { BaseComponent } from "@app/shared/components/base.component";
 import { AnimalSpeciesI } from "@app/shared/models/animal-speciesI";
 import { MonitorService } from "../../services/monitor.service";
-import { Subscription } from "rxjs";
 import { CurvesI } from "@app/shared/models/curvesI";
 import { StatesI } from "@app/shared/models/stateI";
 import { Monitor } from "@app/shared/models/monitor";
+import { ApexAxisChartSeries, ChartComponent } from "ng-apexcharts";
+import { ParameterInfoI } from "@app/shared/models/parameterInfoI";
+import { ChartConfigurer, ChartOptions } from "@app/modules/simulation/helpers/chartConfigurer";
+import { ClosestPoint, CurvesHelper } from "@app/modules/simulation/helpers/curvesHelper";
 
 @Component({
     selector: "app-monitor",
@@ -15,42 +18,67 @@ import { Monitor } from "@app/shared/models/monitor";
 export class MonitorComponent
     extends BaseComponent
     implements OnInit, OnDestroy {
-    public curves: StatesI;
+    public currentState: StatesI;
     public animalSpecie: AnimalSpeciesI;
+    @ViewChildren('chart') charts: QueryList<ChartComponent>;
+    private curveTimers: number[] = [];
     public today: Date = new Date();
-    private subscription: Subscription;
     public lastState: StatesI;
     public maxSamples: number = 4;
+    private clockTimer: number;
+    private parameterInfo: ParameterInfoI;
+    // Max values for each curve. This value contains the last element (in seconds) for
+    // the curve on the interval [0-100%]
+    private maxValues: number[];
+    public chartsOptions: Partial<ChartOptions>[];
+    private curvesHelper: CurvesHelper = new CurvesHelper();
     public stopCurves: StatesI | any = {};
-    public monitorConfiguration: Monitor = new Monitor();
-
     private simulationTimer: NodeJS.Timeout;
+    public monitorConfiguration: Monitor = new Monitor();
     public trackByFn: TrackByFunction<CurvesI> = (_, curve: CurvesI) => curve.curveConfiguration.id_pp;
+    private firstSimulation: boolean;
+
     constructor(private monitorService: MonitorService) {
         super();
     }
 
     ngOnInit(): void {
         this.checkLocalStorage();
+        this.clockTimer = 0.0;
+        this.firstSimulation = true;
+        this.curveTimers = [];
+        this.maxValues = [];
+        this.chartsOptions = [];
     }
 
-    ngOnDestroy(): void {
-        this.subscription.unsubscribe();
+    ngOnDestroy() {
         clearInterval(this.simulationTimer);
+        this.charts.forEach((chart: ChartComponent) => {
+            chart.destroy();
+        })
     }
 
 
-    /**
-     * Check localstorage every 300 ms.
-     */
+
+    private initCurveTimers(): void {
+        this.currentState.curves.forEach((curve: CurvesI) => {
+            if (curve.curveValues.length > 0) {
+                this.curveTimers.push(0);
+                const maxValue: number = curve.curveValues[curve.curveValues.length - 1][0];
+                this.maxValues.push(maxValue);
+            }
+        });
+    }
+
     private checkLocalStorage(): void {
         // Create the conection with the monitor service
         this.monitorService.getInfo().subscribe(
             (simulationState: StatesI) => {
                 if (simulationState) {
                     this.updateCurves(simulationState);
+                    this.parameterInfo = JSON.parse(localStorage.getItem('parameterState'));
                 } else {
-                    this.curves = null;
+                    this.currentState = null;
                     this.lastState = null;
                     this.animalSpecie = null;
                 }
@@ -79,30 +107,228 @@ export class MonitorComponent
 
     private updateCurves(simulationState: StatesI): void {
         if (!this.isSameState(simulationState, this.lastState)) {
-            this.curves = simulationState;
-            this.updateStopCurves();
+            this.currentState = simulationState;
+            // this.updateStopCurves();
             this.lastState = simulationState;
             this.animalSpecie = simulationState.animalSpecie;
+            if (this.chartsOptions.length == 0) {
+                this.initCurveTimers();
+                this.createDynamicChart();
+            }
+            this.simulateCurves();
         }
 
     }
 
 
-    private updateStopCurves(): void {
-        this.stopCurves.curves = [];
-        this.curves.curves.forEach((value: CurvesI) => {
-            const dataValues: [number, number][] = [];
-            dataValues.splice(0, 1);
-            for (let i: number = 0.0; i <= 1.0; i += 0.05) {
-                dataValues.push([Math.round(i * 100) / 100, 1]);
+    /**
+     * Create dynamic chart (for simulation)
+     */
+    private createDynamicChart(): void {
+        this.currentState.curves.forEach((curve: CurvesI) => {
+            if (curve.curveValues.length > 0) {
+                const maxY: number = this.curvesHelper.getMaxY(curve.curveValues) + 1;
+                const minY: number = this.curvesHelper.getMinY(curve.curveValues) - 1;
+                const chart: ChartConfigurer = new ChartConfigurer({
+                    colorLine: curve.curveConfiguration.colorLine,
+                    height: 100,
+                    minX: 0,
+                    maxX: this.monitorConfiguration.getMonitorConfiguration().maxSamples,
+                    minY: minY,
+                    maxY: maxY,
+                    toolbar: false
+                });
+                chart.setChart([]);
+                this.chartsOptions.push(chart.getChart());
             }
-            const newValue: CurvesI = {
-                animalSpecie: value.animalSpecie,
-                curveConfiguration: value.curveConfiguration,
-                curveValues: dataValues
+        });
+    }
+
+    /**
+     * Simulate all curves
+     */
+    private simulateCurves() {
+        this.simulationTimer = setInterval(() => {
+            this.updateClockTimer();
+            this.currentState.curves.forEach((curve: CurvesI, index: number) => {
+                if (curve.curveValues.length > 0) {
+                    this.simulateCurve(curve, index);
+                    this.curveTimers[index] += (this.monitorConfiguration.getMonitorConfiguration().freqSample / 1000);
+                }
+            });
+            this.clockTimer = this.roundTimer(this.clockTimer + this.curvesHelper.calculateRate(this.parameterInfo.heartRate, this.monitorConfiguration.getMonitorConfiguration().freqSample));
+        }, this.monitorConfiguration.getMonitorConfiguration().clockTimer);
+    }
+
+    private simulateCurve(curve: CurvesI, index: number): void {
+        if (this.firstSimulation) {
+            this.updateCurveTimer(index);
+            this.updateDataset(index, curve.curveValues);
+        } else {
+            const currentDataset: any = this.chartsOptions[index].series.slice();
+            this.updateCurveTimer(index);
+            this.updateDatasetSimulation(currentDataset, index);
+        }
+    }
+
+    /**
+        * Round timer
+        * @param timer
+        * @returns
+        */
+    private roundTimer(timer: number): number {
+        return Math.round(timer * 100) / 100;
+    }
+
+
+
+    /**
+     * Update curve timer. If the curve timer overcome the last item in the dataset, then
+     * curve timer go back to 0.
+     * @param curveValues
+     */
+    private updateCurveTimer(index: number): void {
+        const curveTimer: number = this.curveTimers[index];
+        const lastItem: number = this.maxValues[index];
+        if (lastItem && curveTimer > lastItem) {
+            this.curveTimers[index] = 0.0;
+        }
+    }
+
+    /**
+    * Update the dataset for the first simulation (until clock timer overcomes max samples value)
+    * @param index
+    * @param curveValues
+    */
+    private updateDataset(index: number, curveValues: [number, number][]): void {
+        const currentDataset: any = this.chartsOptions[index].series.slice();
+        const curveTimer: number = this.curveTimers[index];
+        let closestIndex: ClosestPoint = this.curvesHelper.getClosestIndex(curveValues, curveTimer);
+        const interpolationNumber: number = this.curvesHelper.linealInterpolation(closestIndex.lessValue[0],
+            closestIndex.greaterValue[0], curveTimer, closestIndex.lessValue[1], closestIndex.lessValue[1]);
+        currentDataset[0].data.push([this.clockTimer, interpolationNumber]);
+        this.updateChart(currentDataset, index, true);
+    }
+
+    /**
+     * Update all values on currentDataset for the simulation
+     * @param currentDataset
+     * @param index
+     */
+    private updateDatasetSimulation(currentDataset: any, index: number): void {
+        let curveValues = currentDataset[0].data;
+        let curveValuesSimulation = currentDataset[1].data;
+        const originalDataset: [number, number][] = this.currentState.curves[index].curveValues;
+        let closestIndex: ClosestPoint = this.curvesHelper.getClosestIndex(originalDataset, this.curveTimers[index]);
+        const interpolationNumber: number = this.curvesHelper.linealInterpolation(closestIndex.lessValue[0],
+            closestIndex.greaterValue[0], this.curveTimers[index], closestIndex.lessValue[1], closestIndex.lessValue[1]);
+        // Synchronize between past and actual dataset
+        this.deleteOldPoints(curveValues);
+        curveValuesSimulation.push([this.clockTimer, interpolationNumber]);
+        this.updateChart(currentDataset, index, true);
+    }
+
+
+    /**
+    * Update clock timer and update if the first simulation is completed:
+    * If clockTimer overcome monitor's max samples, then clockTimer = 0.0
+    */
+    private updateClockTimer(): void {
+        if (this.firstSimulation) {
+            if (this.clockTimer >= this.monitorConfiguration.getMonitorConfiguration().maxSamples) {
+                this.clockTimer = 0.0;
+                this.firstSimulation = false;
+                // At this point, the first simulation end, so we create a new dataset for all curves where
+                // we're going to push the simulation data.
+                this.createSimulationDataset();
             }
-            this.stopCurves.curves.push(newValue);
-        })
+        } else {
+            if (this.clockTimer >= this.monitorConfiguration.getMonitorConfiguration().maxSamples) {
+                this.clockTimer = 0.0;
+                // At this point, the clock timer overcomes monitor max samples, so we need to
+                // "restart" simulation
+                this.swapCurves();
+            }
+        }
+    }
+
+    /**
+     * Update all Apex Charts
+     */
+    private updateChart(chartDataset: ApexAxisChartSeries, index: number, animate: boolean = true): void {
+
+        const chart: ChartComponent = this.charts.toArray()[index];
+        if (chart) {
+            chart.updateSeries(chartDataset, false);
+        }
+    }
+
+
+    /**
+     * Return the curve color
+     * @param curve
+     * @returns
+     */
+    public getColor(curve: CurvesI): string {
+        return curve.curveConfiguration.colorLine;
+    }
+
+    public getSourceRateValue(curve: CurvesI): number {
+
+        switch (curve.curveConfiguration.source.label.toUpperCase()) {
+            case 'CAR':
+                return this.parameterInfo.heartRate;
+            case 'RESP':
+                return this.parameterInfo.breathRate;
+            case 'SPO2':
+                return this.parameterInfo.spO2;
+            default:
+                break;
+        }
+    }
+
+    /**
+     * Delete all points less than actual curveTimer
+     * @param oldDataset
+     * @param valueToCompare
+     */
+    private deleteOldPoints(oldDataset: [number, number][]): void {
+        let i: number = 0;
+        while (i < oldDataset.length && oldDataset[i][0] <= this.clockTimer) {
+            oldDataset.splice(i, 1);
+        }
+    }
+
+    /**
+     * Swap curves between simulation data and current dataset. Old dataset will be the previous
+     * simulation dataset, and new dataset will start empty
+     */
+    private swapCurves(): void {
+        for (let index = 0; index < this.currentState.curves.length; index++) {
+            if (this.currentState.curves[index].curveValues.length > 0) {
+                const currentDataset: any = this.chartsOptions[index].series;
+                const auxDataset: [number, number][] = currentDataset[1].data;
+                currentDataset[0].data = auxDataset;
+                currentDataset[1].data = [];
+                this.updateChart(currentDataset, index, false);
+            }
+        }
+    }
+
+
+    /**
+   * Create simulation dataset for all curves
+   */
+    private createSimulationDataset(): void {
+
+        for (let index = 0; index < this.currentState.curves.length; index++) {
+            const currentDataset: any = this.chartsOptions[index]?.series;
+            if (currentDataset)
+                currentDataset.push({
+                    data: [],
+                    color: currentDataset[0].color,
+                });
+        }
     }
 
 
