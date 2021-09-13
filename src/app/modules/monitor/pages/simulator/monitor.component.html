@@ -13,9 +13,15 @@
         </div>
     </div>
 
-    <div class="row" *ngIf="lastState?.action === 'play' else noPlay">
+    <div class="row">
         <app-audio [play]="true"></app-audio>
+
         <div class="container-fluid">
+            <ng-template [ngIf]="currentState?.action === 'stop'">
+                <h4 class="text-center" *ngIf="lastState?.action === 'stop'"><i
+                        class="fas fa-stop icon-stopped"></i>Simulation
+                    stopped</h4>
+            </ng-template>
             <div id="charts" class="row" *ngFor="let chart of chartsOptions; let i = index">
                 <div class="col-9">
                     <apx-chart #chart [series]="chart.series" [stroke]="chart.stroke" [xaxis]="chart.xaxis"

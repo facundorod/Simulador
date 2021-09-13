@@ -92,31 +92,17 @@ export class MonitorComponent
         );
     }
 
-    /**
-     * If the simulation for the local storage (@param simulationState) is different to current state (@param currentState)
-     * return true, else return false.
-     * @param simulationState
-     * @param currentState
-     * @returns true or false
-     */
-    public isSameState(simulationState: StatesI, currentState: StatesI): boolean {
-        if (!currentState) return false;
-        return (simulationState.state === currentState?.state) && (simulationState?.action === currentState?.action);
-    }
 
 
     private updateCurves(simulationState: StatesI): void {
-        if (!this.isSameState(simulationState, this.lastState)) {
-            this.currentState = simulationState;
-            // this.updateStopCurves();
-            this.lastState = simulationState;
-            this.animalSpecie = simulationState.animalSpecie;
-            if (this.chartsOptions.length == 0) {
-                this.initCurveTimers();
-                this.createDynamicChart();
-            }
-            this.simulateCurves();
+        this.currentState = simulationState;
+        this.lastState = simulationState;
+        this.animalSpecie = simulationState.animalSpecie;
+        if (this.chartsOptions.length == 0) {
+            this.initCurveTimers();
+            this.createDynamicChart();
         }
+        this.simulateCurves();
 
     }
 
@@ -203,10 +189,15 @@ export class MonitorComponent
     private updateDataset(index: number, curveValues: [number, number][]): void {
         const currentDataset: any = this.chartsOptions[index].series.slice();
         const curveTimer: number = this.curveTimers[index];
-        let closestIndex: ClosestPoint = this.curvesHelper.getClosestIndex(curveValues, curveTimer);
-        const interpolationNumber: number = this.curvesHelper.linealInterpolation(closestIndex.lessValue[0],
-            closestIndex.greaterValue[0], curveTimer, closestIndex.lessValue[1], closestIndex.lessValue[1]);
-        currentDataset[0].data.push([this.clockTimer, interpolationNumber]);
+        if (this.currentState.action == 'stop') {
+            currentDataset[0].data.push([this.clockTimer, 4]);
+        } else {
+            let closestIndex: ClosestPoint = this.curvesHelper.getClosestIndex(curveValues, curveTimer);
+            const interpolationNumber: number = this.curvesHelper.linealInterpolation(closestIndex.lessValue[0],
+                closestIndex.greaterValue[0], curveTimer, closestIndex.lessValue[1], closestIndex.lessValue[1]);
+            currentDataset[0].data.push([this.clockTimer, interpolationNumber]);
+        }
+
         this.updateChart(currentDataset, index, true);
     }
 
@@ -218,14 +209,20 @@ export class MonitorComponent
     private updateDatasetSimulation(currentDataset: any, index: number): void {
         let curveValues = currentDataset[0].data;
         let curveValuesSimulation = currentDataset[1].data;
-        const originalDataset: [number, number][] = this.currentState.curves[index].curveValues;
-        let closestIndex: ClosestPoint = this.curvesHelper.getClosestIndex(originalDataset, this.curveTimers[index]);
-        const interpolationNumber: number = this.curvesHelper.linealInterpolation(closestIndex.lessValue[0],
-            closestIndex.greaterValue[0], this.curveTimers[index], closestIndex.lessValue[1], closestIndex.lessValue[1]);
-        // Synchronize between past and actual dataset
+        if (this.currentState.action == 'stop') {
+            curveValuesSimulation.push([this.clockTimer, 4]);
+        } else {
+            const originalDataset: [number, number][] = this.currentState.curves[index].curveValues;
+            let closestIndex: ClosestPoint = this.curvesHelper.getClosestIndex(originalDataset, this.curveTimers[index]);
+            const interpolationNumber: number = this.curvesHelper.linealInterpolation(closestIndex.lessValue[0],
+                closestIndex.greaterValue[0], this.curveTimers[index], closestIndex.lessValue[1], closestIndex.lessValue[1]);
+            // Synchronize between past and actual dataset
+            curveValuesSimulation.push([this.clockTimer, interpolationNumber]);
+        }
         this.deleteOldPoints(curveValues);
-        curveValuesSimulation.push([this.clockTimer, interpolationNumber]);
         this.updateChart(currentDataset, index, true);
+
+
     }
 
 
