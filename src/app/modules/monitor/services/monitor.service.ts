@@ -10,7 +10,7 @@ export class MonitorService {
     constructor() {
         setInterval(() => {
             const lastStatus: StatesI = JSON.parse(localStorage.getItem("simulationState"));
-            if (!lastStatus) return;
+
             if (!this.currentState || this.isDiff(lastStatus)) {
                 this.currentState = lastStatus;
                 this.values.next(this.currentState);
@@ -28,6 +28,8 @@ export class MonitorService {
     }
 
     private isDiff(state: StatesI): boolean {
-        return (state.state !== this.currentState.state || state.action !== this.currentState.action);
+        return ((!state && this.currentState != null) ||
+            (state.state !== this.currentState.state) ||
+            (state.action !== this.currentState.action));
     }
 }
