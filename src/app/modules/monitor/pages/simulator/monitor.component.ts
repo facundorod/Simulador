@@ -42,6 +42,7 @@ export class MonitorComponent
         super();
     }
 
+
     ngOnInit(): void {
         this.checkLocalStorage();
         this.clockTimer = 0.0;
@@ -134,16 +135,20 @@ export class MonitorComponent
      * Simulate all curves
      */
     private simulateCurves() {
-        this.simulationTimer = setInterval(() => {
-            this.updateClockTimer();
-            this.currentState.curves.forEach((curve: CurvesI, index: number) => {
-                if (curve.curveValues.length > 0) {
-                    this.simulateCurve(curve, index);
-                    this.curveTimers[index] += (this.monitorConfiguration.getMonitorConfiguration().freqSample / 1000);
+        if (this.currentState) {
+            this.simulationTimer = setInterval(() => {
+                if (this.currentState && this.currentState.curves) {
+                    this.updateClockTimer();
+                    this.currentState.curves.forEach((curve: CurvesI, index: number) => {
+                        if (curve.curveValues.length > 0) {
+                            this.simulateCurve(curve, index);
+                            this.curveTimers[index] += (this.monitorConfiguration.getMonitorConfiguration().freqSample / 1000);
+                        }
+                    });
+                    this.clockTimer = this.roundTimer(this.clockTimer + this.curvesHelper.calculateRate(this.parameterInfo.heartRate, this.monitorConfiguration.getMonitorConfiguration().freqSample));
                 }
-            });
-            this.clockTimer = this.roundTimer(this.clockTimer + this.curvesHelper.calculateRate(this.parameterInfo.heartRate, this.monitorConfiguration.getMonitorConfiguration().freqSample));
-        }, this.monitorConfiguration.getMonitorConfiguration().clockTimer);
+            }, this.monitorConfiguration.getMonitorConfiguration().clockTimer);
+        }
     }
 
     private simulateCurve(curve: CurvesI, index: number): void {
@@ -190,7 +195,12 @@ export class MonitorComponent
         const currentDataset: any = this.chartsOptions[index].series.slice();
         const curveTimer: number = this.curveTimers[index];
         if (this.currentState.action == 'stop') {
-            currentDataset[0].data.push([this.clockTimer, 4]);
+            const chart: any = this.charts.toArray()[index];
+            const maxY: number = chart.yaxis.max;
+            const minY: number = chart.yaxis.min;
+            if (maxY && minY)
+                currentDataset[0].data.push([this.clockTimer, (maxY + minY) / 2]);
+
         } else {
             let closestIndex: ClosestPoint = this.curvesHelper.getClosestIndex(curveValues, curveTimer);
             const interpolationNumber: number = this.curvesHelper.linealInterpolation(closestIndex.lessValue[0],
@@ -210,7 +220,12 @@ export class MonitorComponent
         let curveValues = currentDataset[0].data;
         let curveValuesSimulation = currentDataset[1].data;
         if (this.currentState.action == 'stop') {
-            curveValuesSimulation.push([this.clockTimer, 4]);
+            const chart: any = this.charts.toArray()[index];
+            const maxY: number = chart.yaxis.max;
+            const minY: number = chart.yaxis.min;
+            if (maxY && minY)
+
+                curveValuesSimulation.push([this.clockTimer, (maxY + minY) / 2]);
         } else {
             const originalDataset: [number, number][] = this.currentState.curves[index].curveValues;
             let closestIndex: ClosestPoint = this.curvesHelper.getClosestIndex(originalDataset, this.curveTimers[index]);
@@ -256,7 +271,7 @@ export class MonitorComponent
 
         const chart: ChartComponent = this.charts.toArray()[index];
         if (chart) {
-            chart.updateSeries(chartDataset, false);
+            chart.updateSeries(chartDataset, true);
         }
     }
 
