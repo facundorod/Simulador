@@ -2,9 +2,9 @@ import { MonitorI } from "./monitorI";
 
 export class Monitor {
     private monitorConfiguration: MonitorI = {
-        clockTimer: 90,
-        freqSample: 50,
-        maxSamples: 4
+        clockTimer: 50,
+        freqSample: 30,
+        maxSamples: 6
     };
 
     public constructor() { }

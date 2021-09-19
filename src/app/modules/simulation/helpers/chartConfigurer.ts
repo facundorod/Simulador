@@ -1,5 +1,5 @@
 import { ChartOptionsI } from '@app/shared/models/chartOptionsI';
-import { ApexAxisChartSeries, ApexChart, ApexDataLabels, ApexGrid, ApexLegend, ApexMarkers, ApexStroke, ApexTooltip, ApexXAxis, ApexYAxis, ChartComponent } from 'ng-apexcharts';
+import { ApexAxisChartSeries, ApexChart, ApexDataLabels, ApexFill, ApexGrid, ApexLegend, ApexMarkers, ApexStroke, ApexTooltip, ApexXAxis, ApexYAxis, ChartComponent, ChartType } from 'ng-apexcharts';
 
 export type ChartOptions = {
     series: ApexAxisChartSeries;
@@ -12,10 +12,11 @@ export type ChartOptions = {
     markers: ApexMarkers;
     legend: ApexLegend;
     tooltip: ApexTooltip;
+    fill?: ApexFill;
 };
 
 export function commonOptions(toolbarEnabled: boolean, maxX: number, minX: number,
-    maxY: number, minY: number): Partial<ChartOptions> {
+    maxY: number, minY: number, type?: ChartType): Partial<ChartOptions> {
     return {
         stroke: {
             curve: 'smooth',
@@ -41,7 +42,7 @@ export function commonOptions(toolbarEnabled: boolean, maxX: number, minX: numbe
         },
         chart: {
             id: "curves",
-            type: "line",
+            type: type ? type : "line",
             height: 100,
             // animations: {
             //     enabled: true,
@@ -56,6 +57,9 @@ export function commonOptions(toolbarEnabled: boolean, maxX: number, minX: numbe
             toolbar: {
                 show: toolbarEnabled
             }
+        },
+        fill: {
+            type: "solid"
         },
         yaxis: {
             labels: {
@@ -91,7 +95,7 @@ export class ChartConfigurer {
 
 
 
-    public setChart(dataset: [number, number][]): void {
+    public setChart(dataset: [number, number][], type?: ChartType): void {
         this.apexChartOptions = {
             series: [
                 {
@@ -123,7 +127,7 @@ export class ChartConfigurer {
             chart: {
                 id: "curves",
                 height: this.chartOptions.height,
-                type: "line",
+                type: type ? type : 'line',
                 // animations: {
                 //     enabled: true,
                 //     easing: "linear",

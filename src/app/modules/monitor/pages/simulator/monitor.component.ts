@@ -129,7 +129,7 @@ export class MonitorComponent
                     maxY: maxY,
                     toolbar: false
                 });
-                chart.setChart([]);
+                chart.setChart([], curve.curveConfiguration.label == 'etCO2' ? 'area' : null);
                 this.chartsOptions.push(chart.getChart());
             }
         });
@@ -347,12 +347,16 @@ export class MonitorComponent
         }
     }
 
+    /**
+     * Show or hidden the toolbar according to current action
+     */
     private showToolbar(): void {
         const charts: ChartComponent[] = this.charts.toArray();
         for (let i: number = 0; i < charts.length; i++) {
             const currentOptions: any = charts[i];
             const options: Partial<ChartOptions> = commonOptions(this.currentState.action == 'pause',
-                currentOptions.xaxis.max, currentOptions.xaxis.min, currentOptions.yaxis.max, currentOptions.yaxis.min);
+                currentOptions.xaxis.max, currentOptions.xaxis.min, currentOptions.yaxis.max, currentOptions.yaxis.min,
+                currentOptions.chart.type);
             charts[i].updateOptions(options);
         }
 
