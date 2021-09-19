@@ -27,20 +27,11 @@
             </ng-template>
             <div id="charts" class="row" *ngFor="let chart of chartsOptions; let i = index">
                 <div class="col-9">
-                    <!-- <ng-template [ngIf]="currentState?.action === 'pause'">
-                        <apx-chart #chart [series]="chart.series" [stroke]="chart.stroke" [xaxis]="chart.xaxis"
-                            [yaxis]="chart.yaxis" [markers]="chart.markers" [dataLabels]="chart.dataLabels"
-                            [chart]="chart.chart" [grid]="chart.grid" [tooltip]="tooltipPause" [autoUpdateSeries]=false
-                            [legend]="chart.legend">
-                        </apx-chart>
-                    </ng-template> -->
-                    <!-- <ng-template [ngIf]="currentState?.action !== 'pause'"> -->
                     <apx-chart #chart [series]="chart.series" [stroke]="chart.stroke" [xaxis]="chart.xaxis"
                         [yaxis]="chart.yaxis" [markers]="chart.markers" [dataLabels]="chart.dataLabels"
                         [chart]="chart.chart" [grid]="chart.grid" [tooltip]="chart.tooltip" [autoUpdateSeries]=false
                         [legend]="chart.legend">
                     </apx-chart>
-                    <!-- </ng-template> -->
                 </div>
                 <div class="col-2 curve-configuration">
                     <div class="row">

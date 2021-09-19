@@ -9,7 +9,7 @@ import { ApexAxisChartSeries, ApexTooltip, ChartComponent } from "ng-apexcharts"
 import { ParameterInfoI } from "@app/shared/models/parameterInfoI";
 import { ChartConfigurer, ChartOptions } from "@app/modules/simulation/helpers/chartConfigurer";
 import { ClosestPoint, CurvesHelper } from "@app/modules/simulation/helpers/curvesHelper";
-
+import { commonOptions } from "@app/modules/simulation/helpers/chartConfigurer";
 @Component({
     selector: "app-monitor",
     templateUrl: "./monitor.component.html",
@@ -350,23 +350,10 @@ export class MonitorComponent
     private showToolbar(): void {
         const charts: ChartComponent[] = this.charts.toArray();
         for (let i: number = 0; i < charts.length; i++) {
-            this.currentState.action == 'pause' ? charts[i].chart.toolbar = {
-                show: true
-            } : charts[i].chart.toolbar = {
-                show: false
-            }
-            this.currentState.action == 'pause' ? charts[i].chart.zoom = {
-                enabled: true
-            } : charts[i].chart.zoom = {
-                enabled: false
-            };
-
-            this.currentState.action == 'pause' ? charts[i].tooltip = {
-                enabled: true
-            } : charts[i].tooltip = {
-                enabled: false
-            };
-            charts[i].updateOptions(charts[i]);
+            const currentOptions: any = charts[i];
+            const options: Partial<ChartOptions> = commonOptions(this.currentState.action == 'pause',
+                currentOptions.xaxis.max, currentOptions.xaxis.min, currentOptions.yaxis.max, currentOptions.yaxis.min);
+            charts[i].updateOptions(options);
         }
 
     }

@@ -14,13 +14,82 @@ export type ChartOptions = {
     tooltip: ApexTooltip;
 };
 
+export function commonOptions(toolbarEnabled: boolean, maxX: number, minX: number,
+    maxY: number, minY: number): Partial<ChartOptions> {
+    return {
+        stroke: {
+            curve: 'smooth',
+            width: 1.8
+        },
+        markers: {
+            size: 0
+        },
+        xaxis: {
+            type: 'numeric',
+            labels: {
+                show: false
+            },
+            axisTicks: {
+                show: false
+            },
+
+            axisBorder: {
+                show: false
+            },
+            max: maxX,
+            min: minX,
+        },
+        chart: {
+            id: "curves",
+            type: "line",
+            height: 100,
+            // animations: {
+            //     enabled: true,
+            //     easing: "linear",
+            //     dynamicAnimation: {
+            //         speed: 10
+            //     }
+            // },
+            zoom: {
+                enabled: toolbarEnabled
+            },
+            toolbar: {
+                show: toolbarEnabled
+            }
+        },
+        yaxis: {
+            labels: {
+                show: false
+            },
+            show: false,
+            max: maxY,
+            min: minY,
+        },
+        dataLabels: {
+            enabled: false,
+        },
+        legend: {
+            show: false,
+        },
+        grid: {
+            show: false
+        },
+        tooltip: {
+            enabled: toolbarEnabled
+        }
+    }
+}
+
 
 export class ChartConfigurer {
     private apexChartOptions: Partial<ChartOptions>;
     private chartOptions: ChartOptionsI;
+
     constructor(chartOptions: ChartOptionsI) {
         this.chartOptions = chartOptions;
     }
+
+
 
     public setChart(dataset: [number, number][]): void {
         this.apexChartOptions = {
@@ -96,5 +165,7 @@ export class ChartConfigurer {
     public getChart(): Partial<ChartOptions> {
         return this.apexChartOptions;
     }
+
+
 }
 
