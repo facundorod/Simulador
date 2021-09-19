@@ -21,13 +21,26 @@
                 <h4 class="text-center"><i class="fas fa-stop icon-stopped"></i>Simulation
                     stopped</h4>
             </ng-template>
+            <ng-template [ngIf]="currentState?.action === 'pause'">
+                <h4 class="text-center"><i class=" fas fa-pause icon-pause"></i>Simulation
+                    paused</h4>
+            </ng-template>
             <div id="charts" class="row" *ngFor="let chart of chartsOptions; let i = index">
                 <div class="col-9">
+                    <!-- <ng-template [ngIf]="currentState?.action === 'pause'">
+                        <apx-chart #chart [series]="chart.series" [stroke]="chart.stroke" [xaxis]="chart.xaxis"
+                            [yaxis]="chart.yaxis" [markers]="chart.markers" [dataLabels]="chart.dataLabels"
+                            [chart]="chart.chart" [grid]="chart.grid" [tooltip]="tooltipPause" [autoUpdateSeries]=false
+                            [legend]="chart.legend">
+                        </apx-chart>
+                    </ng-template> -->
+                    <!-- <ng-template [ngIf]="currentState?.action !== 'pause'"> -->
                     <apx-chart #chart [series]="chart.series" [stroke]="chart.stroke" [xaxis]="chart.xaxis"
                         [yaxis]="chart.yaxis" [markers]="chart.markers" [dataLabels]="chart.dataLabels"
                         [chart]="chart.chart" [grid]="chart.grid" [tooltip]="chart.tooltip" [autoUpdateSeries]=false
                         [legend]="chart.legend">
                     </apx-chart>
+                    <!-- </ng-template> -->
                 </div>
                 <div class="col-2 curve-configuration">
                     <div class="row">
@@ -70,19 +83,4 @@
             <h3 class="text-center">Waiting for simulation</h3>
         </div>
     </div>
-</ng-template>
-
-<ng-template #noPlay>
-    <div *ngIf="currentState?.action === 'stop' else paused">
-        <h4 class="text-center"><i class="fas fa-stop icon-stopped"></i>Simulation
-            stopped</h4>
-    </div>
-    <app-audio [play]="true"></app-audio>
-
-</ng-template>
-
-
-<ng-template #paused>
-    <h4 class="text-center"><i class=" fas fa-pause icon-pause"></i>Simulation
-        paused</h4>
 </ng-template>

@@ -5,7 +5,7 @@ import { MonitorService } from "../../services/monitor.service";
 import { CurvesI } from "@app/shared/models/curvesI";
 import { StatesI } from "@app/shared/models/stateI";
 import { Monitor } from "@app/shared/models/monitor";
-import { ApexAxisChartSeries, ChartComponent } from "ng-apexcharts";
+import { ApexAxisChartSeries, ApexTooltip, ChartComponent } from "ng-apexcharts";
 import { ParameterInfoI } from "@app/shared/models/parameterInfoI";
 import { ChartConfigurer, ChartOptions } from "@app/modules/simulation/helpers/chartConfigurer";
 import { ClosestPoint, CurvesHelper } from "@app/modules/simulation/helpers/curvesHelper";
@@ -37,6 +37,9 @@ export class MonitorComponent
     public monitorConfiguration: Monitor = new Monitor();
     public trackByFn: TrackByFunction<CurvesI> = (_, curve: CurvesI) => curve.curveConfiguration.id_pp;
     private firstSimulation: boolean;
+    public tooltipPause: ApexTooltip = {
+        enabled: true,
+    }
 
     constructor(private monitorService: MonitorService) {
         super();
@@ -97,13 +100,14 @@ export class MonitorComponent
 
     private updateCurves(simulationState: StatesI): void {
         this.currentState = simulationState;
-        this.lastState = simulationState;
         this.animalSpecie = simulationState.animalSpecie;
         if (this.chartsOptions.length == 0) {
             this.initCurveTimers();
             this.createDynamicChart();
         }
-        this.simulateCurves();
+        clearInterval(this.simulationTimer);
+        if (simulationState.action != 'pause') this.simulateCurves();
+        this.showToolbar();
 
     }
 
@@ -208,7 +212,7 @@ export class MonitorComponent
             currentDataset[0].data.push([this.clockTimer, interpolationNumber]);
         }
 
-        this.updateChart(currentDataset, index, true);
+        this.updateChart(currentDataset, index, false);
     }
 
     /**
@@ -271,7 +275,7 @@ export class MonitorComponent
 
         const chart: ChartComponent = this.charts.toArray()[index];
         if (chart) {
-            chart.updateSeries(chartDataset, true);
+            chart.updateSeries(chartDataset, false);
         }
     }
 
@@ -343,7 +347,29 @@ export class MonitorComponent
         }
     }
 
+    private showToolbar(): void {
+        const charts: ChartComponent[] = this.charts.toArray();
+        for (let i: number = 0; i < charts.length; i++) {
+            this.currentState.action == 'pause' ? charts[i].chart.toolbar = {
+                show: true
+            } : charts[i].chart.toolbar = {
+                show: false
+            }
+            this.currentState.action == 'pause' ? charts[i].chart.zoom = {
+                enabled: true
+            } : charts[i].chart.zoom = {
+                enabled: false
+            };
 
+            this.currentState.action == 'pause' ? charts[i].tooltip = {
+                enabled: true
+            } : charts[i].tooltip = {
+                enabled: false
+            };
+            charts[i].updateOptions(charts[i]);
+        }
+
+    }
 }
 
 
