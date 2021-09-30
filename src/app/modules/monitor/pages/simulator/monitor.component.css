@@ -16,3 +16,46 @@
     color: white;
     margin-right: 2%;
 }
+
+/* Simulation */
+.curves {
+    /* max-height: 120px; */
+    margin-right: 0px;
+}
+
+.curve-configuration {
+    border: 2px solid #fff;
+    border-radius: 10px;
+    max-height: 120px;
+    padding: 0px;
+}
+
+.curve-label {
+    border: 2px solid #fff;
+    border-radius: 10px;
+    margin: 0px;
+    max-width: 20px;
+    max-height: 120px;
+}
+
+.text-label {
+    writing-mode: vertical-lr;
+    /* width: 10px; */
+    padding: 25px 0px 25px;
+    font-size: 20px;
+    margin-left: -13px;
+    /* margin-left: 10px; */
+}
+
+.text-rate {
+    padding: 1rem;
+    font-size: 3rem;
+}
+
+.parameter-box-var p {
+    line-height: 0.4em;
+}
+
+.parameter-box-var .first-var {
+    padding-top: 1.3rem;
+}

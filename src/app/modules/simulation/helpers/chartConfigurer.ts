@@ -1,5 +1,5 @@
 import { ChartOptionsI } from '@app/shared/models/chartOptionsI';
-import { ApexAxisChartSeries, ApexChart, ApexDataLabels, ApexGrid, ApexLegend, ApexMarkers, ApexStroke, ApexTooltip, ApexXAxis, ApexYAxis, ChartComponent } from 'ng-apexcharts';
+import { ApexAxisChartSeries, ApexChart, ApexDataLabels, ApexFill, ApexGrid, ApexLegend, ApexMarkers, ApexStroke, ApexTooltip, ApexXAxis, ApexYAxis, ChartComponent, ChartType } from 'ng-apexcharts';
 
 export type ChartOptions = {
     series: ApexAxisChartSeries;
@@ -12,17 +12,90 @@ export type ChartOptions = {
     markers: ApexMarkers;
     legend: ApexLegend;
     tooltip: ApexTooltip;
+    fill?: ApexFill;
 };
+
+export function commonOptions(toolbarEnabled: boolean, maxX: number, minX: number,
+    maxY: number, minY: number, type?: ChartType): Partial<ChartOptions> {
+    return {
+        stroke: {
+            curve: 'smooth',
+            width: 1.8
+        },
+        markers: {
+            size: 0
+        },
+        xaxis: {
+            type: 'numeric',
+            labels: {
+                show: false
+            },
+            axisTicks: {
+                show: false
+            },
+
+            axisBorder: {
+                show: false
+            },
+            max: maxX,
+            min: minX,
+        },
+        chart: {
+            id: "curves",
+            type: type ? type : "line",
+            height: 100,
+            // animations: {
+            //     enabled: true,
+            //     easing: "linear",
+            //     dynamicAnimation: {
+            //         speed: 10
+            //     }
+            // },
+            zoom: {
+                enabled: toolbarEnabled
+            },
+            toolbar: {
+                show: toolbarEnabled
+            }
+        },
+        fill: {
+            type: "solid"
+        },
+        yaxis: {
+            labels: {
+                show: false
+            },
+            show: false,
+            max: maxY,
+            min: minY,
+        },
+        dataLabels: {
+            enabled: false,
+        },
+        legend: {
+            show: false,
+        },
+        grid: {
+            show: false
+        },
+        tooltip: {
+            enabled: toolbarEnabled
+        }
+    }
+}
 
 
 export class ChartConfigurer {
     private apexChartOptions: Partial<ChartOptions>;
     private chartOptions: ChartOptionsI;
+
     constructor(chartOptions: ChartOptionsI) {
         this.chartOptions = chartOptions;
     }
 
-    public setChart(dataset: [number, number][]): void {
+
+
+    public setChart(dataset: [number, number][], type?: ChartType): void {
         this.apexChartOptions = {
             series: [
                 {
@@ -54,7 +127,7 @@ export class ChartConfigurer {
             chart: {
                 id: "curves",
                 height: this.chartOptions.height,
-                type: "line",
+                type: type ? type : 'line',
                 // animations: {
                 //     enabled: true,
                 //     easing: "linear",
@@ -96,5 +169,7 @@ export class ChartConfigurer {
     public getChart(): Partial<ChartOptions> {
         return this.apexChartOptions;
     }
+
+
 }
 

@@ -190,6 +190,7 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
                     (state: StatesI) => {
                         if (state) {
                             this.currentState = state;
+                            this.currentState.action = 'stop';
                             this.onLoadParameters();
                             this.localStorageService.saveValue("simulationState", JSON.stringify(this.currentState));
                         } else {

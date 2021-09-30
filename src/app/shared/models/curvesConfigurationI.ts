@@ -10,5 +10,7 @@ export interface CurvesConfigurationI {
     description: string;
     source?: PhysiologicalParamaterI;
     colorLine?: string;
+    minY?: number;
+    maxY?: number;
     refValue?: number;
 }

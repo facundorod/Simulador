@@ -7,7 +7,6 @@ import { CommonModule } from "@angular/common";
 import { SimulationRoutingModule } from "./simulation-routing.module";
 import { NewComponent } from "./pages/new/new.component";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
-import { CurvesComponent } from "./components/curves/curves.component";
 import { NgApexchartsModule } from "ng-apexcharts";
 
 @NgModule({
@@ -15,7 +14,6 @@ import { NgApexchartsModule } from "ng-apexcharts";
         NewComponent,
         SimulationsComponent,
         ScenariosModalComponent,
-        CurvesComponent,
     ],
     imports: [
         CommonModule,
@@ -24,7 +22,7 @@ import { NgApexchartsModule } from "ng-apexcharts";
         ReactiveFormsModule,
         NgApexchartsModule
     ],
-    exports: [CurvesComponent],
+    exports: [],
     providers: [SimulationService, ScenarioService],
 })
 export class SimulationModule { }
