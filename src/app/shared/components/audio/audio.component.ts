@@ -1,25 +1,25 @@
-import { AfterViewInit, Component, Input, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, Input, OnChanges, OnInit, SimpleChanges, ViewChild } from '@angular/core';
 
 @Component({
     selector: 'app-audio',
     templateUrl: './audio.component.html',
     styleUrls: ['./audio.component.css']
 })
-export class AudioComponent implements OnInit, AfterViewInit {
-    public src: string = '/assets/sounds/monitor.mp3';
+export class AudioComponent implements OnInit, OnChanges {
+    @Input() src: string;
     @Input() play: boolean = false;
-
+    @ViewChild('audio') audio: HTMLAudioElement;
     @Input() playRate: number = 1.0;
     constructor() { }
 
 
-    ngAfterViewInit(): void {
-        const audio: HTMLAudioElement | any = document.getElementById('audio');
-        if (audio)
-            audio.playbackRate = this.playRate;
+    ngOnChanges(changes: SimpleChanges): void {
+        const audio = document.querySelector('audio');
+        if (audio && changes.playRate) {
+            audio.playbackRate = changes.playRate.currentValue;
+        }
+
     }
-
-
 
     ngOnInit(): void {
     }
