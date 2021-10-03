@@ -39,6 +39,7 @@ export class MonitorComponent
     private curvesHelper: CurvesHelper = new CurvesHelper();
     public stopCurves: StatesI | any = {};
     private simulationTimer: NodeJS.Timeout;
+    private enableAlerts: boolean[] = [];
     public monitorConfiguration: Monitor = new Monitor();
     public trackByFn: TrackByFunction<CurvesI> = (_, curve: CurvesI) => curve.curveConfiguration.id_pp;
     private firstSimulationHeart: boolean;
@@ -83,8 +84,8 @@ export class MonitorComponent
         this.monitorService.getInfo().subscribe(
             (simulationState: StatesI) => {
                 if (simulationState) {
+                    this.updateParameterInfo();
                     this.updateCurves(simulationState);
-                    this.parameterInfo = JSON.parse(localStorage.getItem('parameterState'));
                 } else {
                     this.initVariables();
                 }
@@ -98,6 +99,10 @@ export class MonitorComponent
         );
     }
 
+    private updateParameterInfo(): void {
+        this.parameterInfo = JSON.parse(localStorage.getItem('parameterState'));
+    }
+
 
     /**
      * Initialize all variables
@@ -106,6 +111,7 @@ export class MonitorComponent
         this.currentState = null;
         this.lastState = null;
         this.animalSpecie = null;
+        this.enableAlerts = [];
         this.firstSimulationHeart = true;
         this.firstSimulationBreath = true;
         this.curveTimers = [];
@@ -132,14 +138,19 @@ export class MonitorComponent
     }
 
     private initCharts(): void {
-        if (this.chartsOptions?.length == 0) {
-            this.currentState.curves.forEach((curve: CurvesI) => {
+        let initCharts: boolean = this.chartsOptions?.length == 0;
+        this.currentState.curves.forEach((curve: CurvesI, index: number) => {
+            const enableAlert: boolean | undefined = this.enableAlerts[index];
+            if (initCharts) {
                 this.initCurveTimers(curve);
                 this.createDynamicChart(curve);
-            })
-        }
-    }
+            }
+            if (!enableAlert)
+                this.enableAlerts.push(this.enableAlert(curve.curveConfiguration));
+            else this.enableAlerts.splice(index, 0, this.enableAlert(curve.curveConfiguration))
+        })
 
+    }
 
     /**
      * Create dynamic chart (for simulation)
@@ -227,6 +238,10 @@ export class MonitorComponent
         }
     }
 
+    public getAlerts(): boolean[] {
+        return this.enableAlerts;
+    }
+
     /**
     * Update the dataset for the first simulation (until clock timer overcomes max samples value)
     * @param index
@@ -247,7 +262,7 @@ export class MonitorComponent
                 closestIndex.greaterValue[0], curveTimer, closestIndex.lessValue[1], closestIndex.lessValue[1]);
             currentDataset[0].data.push([isBreathCurve ? this.breathTimer : this.heartTimer, interpolationNumber]);
         }
-        this.updateChart(currentDataset, index, true);
+        this.updateChart(currentDataset, index, false);
     }
 
     /**
@@ -272,7 +287,9 @@ export class MonitorComponent
             curveValuesSimulation.push([isBreathCurve ? this.breathTimer : this.heartTimer, interpolationNumber]);
         }
         this.deleteOldPoints(curveValues, isBreathCurve ? this.breathTimer : this.heartTimer);
-        this.updateChart(currentDataset, index, false);
+        let animate: boolean = false;
+        if (curveValuesSimulation.length == 1 && this.currentState.action == 'stop') animate = true;
+        this.updateChart(currentDataset, index, animate);
 
 
     }
@@ -357,6 +374,24 @@ export class MonitorComponent
         }
     }
 
+    public getParameterInfo(): ParameterInfoI {
+        return this.parameterInfo;
+    }
+
+    public enableAlert(curve: CurvesConfigurationI): boolean {
+        if (curve.source.label.toUpperCase() === 'CAR' && (
+            curve.alert_high <= this.parameterInfo.heartRate ||
+            curve.alert_low >= this.parameterInfo.heartRate)) return true;
+        if (curve.source.label.toUpperCase() === 'RESP' &&
+            (curve.alert_high <= this.parameterInfo.breathRate ||
+                curve.alert_low >= this.parameterInfo.breathRate)) return true;
+        if (curve.source.label.toUpperCase() === 'SPO2' &&
+            (curve.alert_high <= this.parameterInfo.spO2 ||
+                curve.alert_low >= this.parameterInfo.spO2)) return true;
+        return false;
+    }
+
+
     /**
      * Delete all points less than actual curveTimer
      * @param oldDataset
@@ -381,7 +416,7 @@ export class MonitorComponent
                     const auxDataset: [number, number][] = currentDataset[1].data;
                     currentDataset[0].data = auxDataset;
                     currentDataset[1].data = [];
-                    this.updateChart(currentDataset, index, true);
+                    this.updateChart(currentDataset, index, false);
                 }
             }
         }
@@ -430,6 +465,11 @@ export class MonitorComponent
             charts[i].updateOptions(options);
         }
 
+    }
+
+    public calculatePlayRate(): number {
+
+        return 1;
     }
 }
 
