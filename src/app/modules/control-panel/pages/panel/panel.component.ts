@@ -1,14 +1,12 @@
 import { SimulationService } from "./../../../simulation/services/simulation.service";
 import { ToastrService } from "ngx-toastr";
-import { Component, Input, OnDestroy, OnInit } from "@angular/core";
+import { Component, OnDestroy, OnInit } from "@angular/core";
 
 // Service
 import { AnimalSpeciesService } from "./../../services/animalSpecies.service";
 
 // Models
-import { PathologyI } from "@models/pathologyI";
-import { MedicationI } from "@models/medicationI";
-import { ArrhythmiaI } from "@models/arrhythmiaI";
+
 import { AnimalSpeciesI } from "@models/animal-speciesI";
 import { BaseComponent } from "@app/shared/components/base.component";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
@@ -16,10 +14,8 @@ import { CurvesService } from "../../services/curves.service";
 import { CurvesI } from "@app/shared/models/curvesI";
 import { CurvesHelper } from "./../../../simulation/helpers/curvesHelper";
 import { LocalStorageService } from "@app/shared/services/localStorage.service";
-import { MonitorService } from "@app/modules/monitor/services/monitor.service";
 import { StatesI } from "@app/shared/models/stateI";
 import { environment } from "@environments/environment";
-import { PhysiologicalParamaterI } from "@app/shared/models/physiologicalParamaterI";
 import { Monitor } from "@app/shared/models/monitor";
 import { ParameterInfoI } from "@app/shared/models/parameterInfoI";
 
@@ -38,13 +34,12 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
     public indexActive: number = 0; // Index for scenario edit Active
     public indexSimulationActive: number = 0; // Index for scenario simulation Active
     public currentState: StatesI; // Curves for scenario and animalSpecie selected
-    private curvesHelper = new CurvesHelper();
     // Paramaters Physiological without curves
     public fromGroupParameters: FormGroup;
-    public heartRate: number;
-    public breathRate: number;
-    public temperature: number;
-    public spo2: number;
+    public heartRate: number = 0;
+    public breathRate: number = 0;
+    public temperature: number = 0;
+    public spo2: number = 0;
     public monitorConfiguration: Monitor = new Monitor();
 
 
@@ -139,6 +134,9 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
             ],
             temperature: [
                 this.temperature ? this.temperature : 0
+            ],
+            spo2: [
+                this.spo2 ? this.spo2 : 0
             ]
         })
         this.onValueChanges();
@@ -158,7 +156,6 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
     private onValueChanges(): void {
         this.formGroup.get("animalSpecie").valueChanges.subscribe((val) => {
             this.onLoadCurves(val);
-
             this.updateState();
         });
         this.fromGroupParameters.get("heartRate").valueChanges.subscribe((val) => {
@@ -170,6 +167,18 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
         this.fromGroupParameters.get("breathRate").valueChanges.subscribe((val) => {
             // this.curvesHelper.scaleCurves(this.currentState.curves, 0, val);
             this.breathRate = val;
+            this.saveParameterInfo();
+            this.updateState();
+        });
+        this.fromGroupParameters.get("temperature").valueChanges.subscribe((val) => {
+            // this.curvesHelper.scaleCurves(this.currentState.curves, 0, val);
+            this.temperature = val;
+            this.saveParameterInfo();
+            this.updateState();
+        });
+        this.fromGroupParameters.get("spo2").valueChanges.subscribe((val) => {
+            // this.curvesHelper.scaleCurves(this.currentState.curves, 0, val);
+            this.spo2 = val;
             this.saveParameterInfo();
             this.updateState();
         });

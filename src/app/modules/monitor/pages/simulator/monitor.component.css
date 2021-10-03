@@ -27,6 +27,7 @@
     border: 2px solid #fff;
     border-radius: 10px;
     max-height: 120px;
+    animation: none;
     padding: 0px;
 }
 
@@ -58,4 +59,17 @@
 
 .parameter-box-var .first-var {
     padding-top: 1.3rem;
+}
+
+.alert-enabled {
+    animation: pulse 3s infinite;
+    font-weight: bold;
+}
+@keyframes pulse {
+    0% {
+        background-color: #bfbdb5;
+    }
+    100% {
+        background-color: #f42922;
+    }
 }
