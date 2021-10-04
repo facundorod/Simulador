@@ -18,7 +18,6 @@ export class AudioComponent implements OnInit, OnChanges {
         if (audio && changes.playRate) {
             audio.playbackRate = changes.playRate.currentValue;
         }
-
     }
 
     ngOnInit(): void {

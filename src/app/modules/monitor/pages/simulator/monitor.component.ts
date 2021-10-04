@@ -142,12 +142,13 @@ export class MonitorComponent
                 this.initCurveTimers(curve);
                 this.createDynamicChart(curve);
             }
-            if (!enableAlert) {
+            if (enableAlert == undefined) {
                 const alert: boolean = this.enableAlert(curve.curveConfiguration);
-                this.enableSoundAlarm = alert;
                 this.enableAlerts.push(alert);
             }
-            else this.enableAlerts.splice(index, 0, this.enableAlert(curve.curveConfiguration))
+            else this.enableAlerts[index] = this.enableAlert(curve.curveConfiguration)
+            this.enableSoundAlarm = this.enableAlerts.includes(true);
+
         })
 
     }

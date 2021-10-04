@@ -15,7 +15,7 @@
 
     <div class="row">
         <app-audio [play]="true" [src]="'/assets/sounds/monitor.mp3'" [playRate]=calculatePlayRate()></app-audio>
-        <app-audio *ngIf="enableSoundAlarm" [play]="true" [src]="'/assets/sounds/alarmLimit.mp3'" [playRate]=1>
+        <app-audio [play]="enableSoundAlarm" [src]="'/assets/sounds/alarmLimit.mp3'" [playRate]=1>
         </app-audio>
         <div class="container-fluid">
             <ng-template [ngIf]="currentState?.action === 'stop'">

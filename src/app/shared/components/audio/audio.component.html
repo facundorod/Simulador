@@ -1,4 +1,5 @@
-<audio id="audio" playbackRate=playRate #audio [src]="src" type="audio/mp3" *ngIf="play" loop=true autoplay=true
-    preload="auto">
-
-</audio>
+<div *ngIf="play">
+    <audio id="audio" playbackRate=playRate #audio [src]="src" type="audio/mp3" *ngIf="play" loop=true autoplay=true
+        preload="auto">
+    </audio>
+</div>
