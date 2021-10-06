@@ -27,8 +27,6 @@ export class MonitorComponent
     public lastState: StatesI;
     public maxSamples: number = 4;
     private heartTimer: number;
-    private auxHeartTimer: number;
-    private auxBreathTimer: number;
     private breathTimer: number;
     private firstSimulationBreath: boolean;
     private parameterInfo: ParameterInfoI;
@@ -43,6 +41,7 @@ export class MonitorComponent
     public monitorConfiguration: Monitor = new Monitor();
     public trackByFn: TrackByFunction<CurvesI> = (_, curve: CurvesI) => curve.curveConfiguration.id_pp;
     private firstSimulationHeart: boolean;
+    public enableSoundAlarm: boolean = false;
     public tooltipPause: ApexTooltip = {
         enabled: true,
     }
@@ -118,9 +117,7 @@ export class MonitorComponent
         this.maxValues = [];
         this.chartsOptions = [];
         this.breathTimer = 0.0;
-        this.auxBreathTimer = 0.0;
         this.heartTimer = 0.0;
-        this.auxHeartTimer = 0.0;
         clearInterval(this.simulationTimer);
     }
 
@@ -145,9 +142,13 @@ export class MonitorComponent
                 this.initCurveTimers(curve);
                 this.createDynamicChart(curve);
             }
-            if (!enableAlert)
-                this.enableAlerts.push(this.enableAlert(curve.curveConfiguration));
-            else this.enableAlerts.splice(index, 0, this.enableAlert(curve.curveConfiguration))
+            if (enableAlert == undefined) {
+                const alert: boolean = this.enableAlert(curve.curveConfiguration);
+                this.enableAlerts.push(alert);
+            }
+            else this.enableAlerts[index] = this.enableAlert(curve.curveConfiguration)
+            this.enableSoundAlarm = this.enableAlerts.includes(true);
+
         })
 
     }
@@ -262,7 +263,9 @@ export class MonitorComponent
                 closestIndex.greaterValue[0], curveTimer, closestIndex.lessValue[1], closestIndex.lessValue[1]);
             currentDataset[0].data.push([isBreathCurve ? this.breathTimer : this.heartTimer, interpolationNumber]);
         }
-        this.updateChart(currentDataset, index, false);
+        let animate: boolean = false;
+        if (currentDataset.length == 1) animate = true;
+        this.updateChart(currentDataset, index, true);
     }
 
     /**
@@ -468,8 +471,7 @@ export class MonitorComponent
     }
 
     public calculatePlayRate(): number {
-
-        return 1;
+        return this.parameterInfo.heartRate / 60;
     }
 }
 

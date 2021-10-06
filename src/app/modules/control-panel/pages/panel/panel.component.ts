@@ -60,6 +60,8 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
         this.setLoading(true);
         this.loadData();
         this.initFormGroup();
+        this.initFormParameters();
+        this.onValueChanges();
         this.onLoadCurves(this.formGroup.value.animalSpecie);
     }
 
@@ -125,6 +127,17 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
                 Validators.required,
             ]
         });
+    }
+
+    private initFormValues(): void {
+        this.heartRate = 0;
+        this.breathRate = 0;
+        this.temperature = 0;
+        this.spo2 = 0;
+        this.fromGroupParameters.setValue({ heartRate: 0, breathRate: 0, temperature: 0, spo2: 0 })
+    }
+
+    private initFormParameters(): void {
         this.fromGroupParameters = this.fb.group({
             heartRate: [
                 this.heartRate ? this.heartRate : 0
@@ -139,7 +152,6 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
                 this.spo2 ? this.spo2 : 0
             ]
         })
-        this.onValueChanges();
     }
 
     /**
@@ -159,25 +171,21 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
             this.updateState();
         });
         this.fromGroupParameters.get("heartRate").valueChanges.subscribe((val) => {
-            // this.curvesHelper.scaleCurves(this.currentState.curves, val, 0);
             this.heartRate = val;
             this.saveParameterInfo();
             this.updateState();
         });
         this.fromGroupParameters.get("breathRate").valueChanges.subscribe((val) => {
-            // this.curvesHelper.scaleCurves(this.currentState.curves, 0, val);
             this.breathRate = val;
             this.saveParameterInfo();
             this.updateState();
         });
         this.fromGroupParameters.get("temperature").valueChanges.subscribe((val) => {
-            // this.curvesHelper.scaleCurves(this.currentState.curves, 0, val);
             this.temperature = val;
             this.saveParameterInfo();
             this.updateState();
         });
         this.fromGroupParameters.get("spo2").valueChanges.subscribe((val) => {
-            // this.curvesHelper.scaleCurves(this.currentState.curves, 0, val);
             this.spo2 = val;
             this.saveParameterInfo();
             this.updateState();
@@ -312,16 +320,22 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
 
     public getScenarios(scenarios: any): void {
         this.scenariosSimulation = scenarios;
-        this.activeScenario = this.scenariosSimulation[
-            this.indexSimulationActive
-        ];
-        this.currentState = null;
-        this.onLoadCurves(this.formGroup.value.animalSpecie);
+        if (this.activeScenario != this.scenariosSimulation[this.indexSimulationActive]) {
+            this.activeScenario = this.scenariosSimulation[this.indexSimulationActive];
+            this.currentState = null;
+            this.initFormValues();
+            this.onLoadCurves(this.formGroup.value.animalSpecie);
+        }
     }
 
     public getPosScenarios(pos: any): void {
+        if (this.indexSimulationActive != pos.indexActive) {
+            this.indexSimulationActive = pos.indexActive;
+            this.initFormValues();
+            this.onLoadCurves(this.formGroup.value.animalSpecie);
+
+        }
         this.indexActive = pos.indexEdit;
-        this.indexSimulationActive = pos.indexActive;
     }
 
 
