@@ -263,7 +263,9 @@ export class MonitorComponent
                 closestIndex.greaterValue[0], curveTimer, closestIndex.lessValue[1], closestIndex.lessValue[1]);
             currentDataset[0].data.push([isBreathCurve ? this.breathTimer : this.heartTimer, interpolationNumber]);
         }
-        this.updateChart(currentDataset, index, false);
+        let animate: boolean = false;
+        if (currentDataset.length == 1) animate = true;
+        this.updateChart(currentDataset, index, true);
     }
 
     /**
