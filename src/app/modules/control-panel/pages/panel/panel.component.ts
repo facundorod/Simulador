@@ -288,7 +288,7 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
                     this.simulation = simulationData;
                     this.simulation.id_simulation = data.id_simulation;
                 },
-                (error: any) => {
+                (error: Error) => {
                     this.toast.toastrConfig.timeOut = 1000;
                     this.toast.toastrConfig.positionClass = "toast-bottom-left";
                     this.toast.toastrConfig.closeButton = true;
@@ -307,7 +307,7 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
                         this.toast.toastrConfig.closeButton = true;
                         this.toast.success("Simulation saved!");
                     },
-                    (error: any) => {
+                    (error: Error) => {
                         this.toast.toastrConfig.timeOut = 1000;
                         this.toast.toastrConfig.positionClass =
                             "toast-bottom-left";
@@ -333,7 +333,6 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
             this.indexSimulationActive = pos.indexActive;
             this.initFormValues();
             this.onLoadCurves(this.formGroup.value.animalSpecie);
-
         }
         this.indexActive = pos.indexEdit;
     }

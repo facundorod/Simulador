@@ -11,7 +11,7 @@ export class AuthGuard implements CanActivate {
         private authSvc: AuthService,
         private router: Router,
         private toast: ToastrService
-    ) {}
+    ) { }
 
     canActivate() {
         const statusUser = this.authSvc.isLogged();
@@ -22,7 +22,7 @@ export class AuthGuard implements CanActivate {
         this.toast.toastrConfig.positionClass =
             "toast-bottom-full-width";
         this.toast.error(
-            "You do not access!"
+            "You don't have access!"
         );
         this.router.navigateByUrl("/home");
         return false;

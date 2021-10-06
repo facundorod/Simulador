@@ -27,14 +27,17 @@ export class InterceptorService implements HttpInterceptor {
         return next.handle(request).pipe(
             catchError((err: HttpErrorResponse) => {
                 if (err.status >= 400 && err.status < 500) {
-                    message = `User or password wrong`;
+                    if (err.status == 401 || err.status == 412) {
+                        message = `You don't have access`;
+                    } else {
+                        message = err.message;
+                    }
                     this.router.navigateByUrl("/auth/login");
                 }
                 if (err.status >= 500) {
                     message = `Something bad has happened!`;
                     this.router.navigateByUrl("/home");
                 }
-
                 this.toast.toastrConfig.timeOut = 0;
                 this.toast.error("Retry again!", `${message}`);
 
