@@ -44,13 +44,13 @@ export function commonOptions(toolbarEnabled: boolean, maxX: number, minX: numbe
             id: "curves",
             type: type ? type : "line",
             height: 100,
-            // animations: {
-            //     enabled: true,
-            //     easing: "linear",
-            //     dynamicAnimation: {
-            //         speed: 10
-            //     }
-            // },
+            animations: {
+                enabled: true,
+                easing: "linear",
+                dynamicAnimation: {
+                    speed: 10
+                }
+            },
             zoom: {
                 enabled: toolbarEnabled
             },

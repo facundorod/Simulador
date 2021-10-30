@@ -13,7 +13,7 @@
         </div>
     </div>
 
-    <div class="row">
+    <div class="row" *ngIf="existDataset() else noDataset">
         <app-audio [play]="true" [src]="'/assets/sounds/monitor.mp3'" [playRate]=calculatePlayRate()></app-audio>
         <app-audio [play]="enableSoundAlarm" [src]="'/assets/sounds/alarmLimit.mp3'" [playRate]=1>
         </app-audio>
@@ -30,7 +30,7 @@
                 <div class="col-9">
                     <apx-chart #chart [series]="chart.series" [stroke]="chart.stroke" [xaxis]="chart.xaxis"
                         [yaxis]="chart.yaxis" [markers]="chart.markers" [dataLabels]="chart.dataLabels"
-                        [chart]="chart.chart" [grid]="chart.grid" [tooltip]="chart.tooltip" [autoUpdateSeries]=false
+                        [chart]="chart.chart" [grid]="chart.grid" [tooltip]="chart.tooltip" [autoUpdateSeries]=true
                         [legend]="chart.legend">
                     </apx-chart>
                 </div>
@@ -45,21 +45,22 @@
                         </div>
                         <div class="col-4 parameter-box-var">
                             <p class="first-var" [style.color]="getColor(currentState.curves[i])">
-                                {{currentState.curves[i].curveConfiguration.alert_high}}
+                                {{currentState.curves[i]?.curveConfiguration?.alert_high}}
                             </p>
                             <p [style.color]="getColor(currentState.curves[i])">
-                                {{currentState.curves[i].curveConfiguration.alert_low}}</p>
+                                {{currentState.curves[i]?.curveConfiguration?.alert_low}}</p>
                             <p [style.color]="getColor(currentState.curves[i])">
-                                {{currentState.curves[i].curveConfiguration.source.label}}</p>
+                                {{currentState.curves[i]?.curveConfiguration?.source.label}}</p>
                             <p [style.color]="getColor(currentState.curves[i])">
-                                {{currentState.curves[i].curveConfiguration.unit}}</p>
+                                {{currentState.curves[i]?.curveConfiguration?.unit}}</p>
                         </div>
                     </div>
 
                 </div>
                 <div class="col-1 curve-label">
                     <p class="text-label" [style.color]="getColor(currentState.curves[i])">
-                        {{currentState.curves[i].curveConfiguration.label}}</p>
+                        {{currentState.curves[i]?.curveConfiguration?.label}}
+                    </p>
                 </div>
             </div>
 
@@ -68,11 +69,20 @@
 </div>
 
 <ng-template #noSimulation class="mt-4 no-simulation">
+
     <div class="container row no-simulation">
         <div class="spinner-border text-danger" role="status">
         </div>
         <div class="ml-4">
             <h3 class="text-center">Waiting for simulation</h3>
         </div>
+    </div>
+</ng-template>
+
+
+<ng-template #noDataset class="mt-4 no-simulation">
+
+    <div class="container row no-simulation">
+        NO SIMULATION
     </div>
 </ng-template>
