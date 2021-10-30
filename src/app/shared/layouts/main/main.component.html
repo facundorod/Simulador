@@ -1,17 +1,27 @@
 <ng-sidebar-container>
 
     <!-- Sidebar -->
-    <ng-sidebar #sidebar [mode]="'push'" [animate]="true" [showBackdrop]="true" [trapFocus]="true" [autoFocus]="true"
-        [keyClose]="true" [closeOnClickBackdrop]="true" [closeOnClickOutside]="true" [dock]="true" [dockedSize]="'60px'"
-        [animate]="true" (onClosed)="onClosed()">
-        <app-navbar [type]="'home'" [sidebarOpen]="sidebarOpen" class="sidebar"></app-navbar>
+    <ng-sidebar #sidebar class="sidebar" [mode]="'push'" [animate]="true" [showBackdrop]="true" [trapFocus]="true"
+        [autoFocus]="true" [keyClose]="true" [closeOnClickBackdrop]="true" [closeOnClickOutside]="true" [dock]="true"
+        [dockedSize]="'60px'" [animate]="true" (onClosed)="onClosed()">
+        <app-sidebar [type]="'home'" [sidebarOpen]="sidebarOpen">
+        </app-sidebar>
     </ng-sidebar>
 
     <!-- Page content -->
     <div ng-sidebar-content>
         <nav class="navbar navbar-expand-lg">
-            <button (click)="openSidebar(sidebar)" class="navbar__toogle">Open sidebar</button>
-            <h1 class="fs-1 text-center"> SIMVET - Vital Signs Monitor Simulator </h1>
+            <div class="toogle">
+                <button (click)="openSidebar(sidebar)" class="navbar__toogle"></button>
+            </div>
+
+            <div class="container-text">
+                <h1 class="fs-1 text-center desktop"> SIMVET - Vital Signs Monitor Simulator </h1>
+                <h1 class="fs-1 text-center mobile"> SIMVET </h1>
+            </div>
+
+
+
         </nav>
         <main role="main" class="container">
             <div class="template">

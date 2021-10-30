@@ -1,28 +1,38 @@
-@import "~bootstrap/dist/css/bootstrap.css";
-/* @import "@fortawesome/fontawesome-free/css/all.css"; */
-/* @import "@fortawesome/fontawesome-free/css/all.css"; */
+@font-face {
+    font-family: "Open Sans";
+    font-style: normal;
+    font-weight: 400;
+    src: url("../src/assets/fonts/open-sans-v27-latin/open-sans-v27-latin-regular.eot"); /* IE9 Compat Modes */
+    src: local(""),
+        url("../src/assets/fonts/open-sans-v27-latin/open-sans-v27-latin-regular.eot?#iefix")
+            format("embedded-opentype"),
+        /* IE6-IE8 */
+            url("../src/assets/fonts/open-sans-v27-latin/open-sans-v27-latin-regular.woff2")
+            format("woff2"),
+        /* Super Modern Browsers */
+            url("../src/assets/fonts/open-sans-v27-latin/open-sans-v27-latin-regular.woff")
+            format("woff"),
+        /* Modern Browsers */
+            url("../src/assets/fonts/open-sans-v27-latin/open-sans-v27-latin-regular.ttf")
+            format("truetype"),
+        /* Safari, Android, iOS */
+            url("../src/assets/fonts/open-sans-v27-latin/open-sans-v27-latin-regular.svg#OpenSans")
+            format("svg"); /* Legacy iOS */
+}
 
-@import "@fortawesome/fontawesome-free/css/all.css";
-/* @font-face {
-    font-family: Delivery;
-    src: url('assets/fonts/Delivery/Latin_Greek_Cyrillic/Web/WOFF/Delivery_W_Rg.woff');
-  } */
+* {
+    font-family: "Open Sans";
+}
 
 html,
 body {
     height: 100%;
 }
-/* body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; } */
-body {
-    background-color: #121212;
-    font-size: 0.9em !important;
-}
+
 .card {
     padding-left: 20px;
     width: 100%;
     padding-right: 20px;
-    /* padding: 0 !important; */
-    /* min-height: 400px; */
     background-color: #121212 !important;
 }
 
@@ -30,7 +40,11 @@ body {
     font-size: 1em;
 }
 
-p,
+.content {
+    background-color: #e2e2e2;
+}
+
+/* p,
 h1,
 h3,
 h2,
@@ -38,4 +52,4 @@ h4,
 label,
 td {
     color: #e2e2e2;
-}
+} */

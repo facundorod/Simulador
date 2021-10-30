@@ -1,11 +1,11 @@
 import { Component, Input, OnInit } from "@angular/core";
 
 @Component({
-    selector: "app-navbar",
-    templateUrl: "./navbar.component.html",
-    styleUrls: ["./navbar.component.css"],
+    selector: "app-sidebar",
+    templateUrl: "./sidebar.component.html",
+    styleUrls: ["./sidebar.component.css"],
 })
-export class NavbarComponent implements OnInit {
+export class SidebarComponent implements OnInit {
     @Input() type: string;
     @Input() sidebarOpen: boolean;
     constructor() {

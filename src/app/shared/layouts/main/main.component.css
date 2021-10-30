@@ -1,38 +1,39 @@
 .navbar {
-    background-color: #262424;
-    height: 60px;
+    background-color: #8e7cc3;
+    height: 1%;
+    flex-direction: row;
 }
 
-.content {
-    width: 100%;
-    height: 100%;
-    background-color: #121212 !important;
-    margin-left: 1rem !important;
-    margin-right: 1rem !important;
+.desktop {
+    display: none;
 }
 
-.template {
-    padding: 2rem 0;
-    width: 100%;
+.mobile {
+    display: block;
+}
+
+.toogle {
+    width: 10%;
+}
+
+.container-text {
+    padding-top: 2%;
+    width: 80%;
 }
 
 .fs-1 {
     font-size: 1.6em;
-    padding-top: 18px;
-    text-align: center;
-    width: 100%;
     color: #fff;
+    width: 100%;
 }
 
 .navbar__toogle {
     background: transparent;
+    height: 1.5rem;
     border: 0.15rem solid #fff;
     border-left: 0;
     border-right: 0;
     cursor: pointer;
-    font-size: 0;
-    height: 1.5rem;
-    margin-right: 1rem;
     position: relative;
     width: 2rem;
 }
@@ -48,7 +49,20 @@
     width: 100%;
 }
 
-#sidebar {
-    padding: 0px;
-    margin: 0;
+@media (min-width: 1024px) {
+    .mobile {
+        display: none;
+    }
+
+    .desktop {
+        display: block;
+    }
+    .fs-1 {
+        padding-top: 1%;
+    }
+
+    .container-text {
+        padding-top: 0%;
+        width: 80%;
+    }
 }

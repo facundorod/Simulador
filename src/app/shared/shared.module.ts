@@ -5,7 +5,7 @@ import { MainTitleComponent } from "./layouts/main-title/main-title.component";
 import { ApiService } from "./services/api.service";
 import { RouterModule } from "@angular/router";
 import { FormsModule } from "@angular/forms";
-import { NavbarComponent } from "@app/shared/navbar/navbar.component";
+import { SidebarComponent } from "@app/shared/sidebar/sidebar.component";
 import { NgModule } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { SidebarModule } from "ng-sidebar";
@@ -16,7 +16,7 @@ import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
 
 @NgModule({
     declarations: [
-        NavbarComponent,
+        SidebarComponent,
         MainTitleComponent,
         MessageComponent,
         ConfirmModalComponent,
@@ -31,7 +31,7 @@ import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
         NgbModule,
     ],
     exports: [
-        NavbarComponent,
+        SidebarComponent,
         MainTitleComponent,
         MessageComponent,
         ConfirmModalComponent,
