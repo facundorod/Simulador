@@ -1,22 +1,64 @@
-/*
-.wrapper {
-  display: flex;
-  float: left;
-  width: 70%;
-  align-items: stretch;
-} */
+.card {
+    margin-top: 10%;
+    min-height: 530px;
+    background-color: #fff;
+}
 
-/* ---------------------------------------------------
-  CONTENT STYLE
------------------------------------------------------ */
-/*
-#content {
-  width: 100%;
-  padding: 20px;
-  min-height: 100vh;
-  transition: all 0.3s;
-} */
-/*
-.wrapper {
-    background-color: #121212;
-} */
+.profile-img {
+    width: 70%;
+    margin-left: 15%;
+    position: relative;
+    bottom: 40%;
+}
+
+.card-header {
+    display: flex;
+    justify-content: center;
+    background-color: #fff;
+    border-bottom: none;
+}
+
+.text-header {
+    position: absolute;
+    margin-top: 20%;
+}
+
+.text-header h3 {
+    font-size: 1em;
+}
+
+.card-body {
+    position: absolute;
+    top: 5%;
+}
+
+.form-login {
+    margin-top: 30%;
+}
+
+@media (min-width: 1024px) {
+    .profile-img {
+        width: auto;
+        margin-left: auto;
+    }
+
+    .card {
+        margin-top: 3%;
+        min-height: 550px;
+        max-height: 600px;
+    }
+
+    .text-header {
+        position: absolute;
+        margin-top: 8%;
+    }
+
+    .text-header h3 {
+        font-size: 1.5em;
+    }
+
+    .card-body {
+        top: 0%;
+        width: 50%;
+    }
+}

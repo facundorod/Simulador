@@ -30,23 +30,9 @@ body {
     background-color: rgba(228, 222, 222, 0.39);
 }
 
-.card {
-    padding-left: 20px;
-    width: 100%;
-    padding-right: 20px;
-    background-color: #121212 !important;
+.fs-1 {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 }
-
-.form-control .readonly {
-    font-size: 1em;
-}
-
-/* p,
-h1,
-h3,
-h2,
-h4,
-label,
-td {
-    color: #e2e2e2;
-} */

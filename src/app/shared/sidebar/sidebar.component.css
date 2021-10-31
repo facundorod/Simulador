@@ -42,6 +42,10 @@
 .sidebar .sidebar-header h3 {
     font-size: 1.8em;
     letter-spacing: 2px;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 }
 
 .sub-header h4 {
