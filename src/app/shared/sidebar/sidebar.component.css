@@ -60,6 +60,10 @@
     font-size: 1.5em;
     display: block;
     color: #fff;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 }
 
 .dock li a {

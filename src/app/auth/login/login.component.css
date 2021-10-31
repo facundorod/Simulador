@@ -1,7 +1,7 @@
 .card {
     margin-top: 10%;
     min-height: 530px;
-    background-color: #fff;
+    background-color: #f3f1f5;
 }
 
 .profile-img {
@@ -14,8 +14,12 @@
 .card-header {
     display: flex;
     justify-content: center;
-    background-color: #fff;
     border-bottom: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    background-color: #f3f1f5;
 }
 
 .text-header {
@@ -36,6 +40,23 @@
     margin-top: 30%;
 }
 
+.btn-login {
+    background-color: #8e7cc3;
+    border-color: #8e7cc3;
+}
+
+.btn-login img {
+    margin-right: 2%;
+}
+
+.btn-login:hover,
+.btn-login:focus,
+.btn-login:link,
+.btn-login:active,
+.btn-login:visited {
+    background-color: #f3f1f5;
+    color: #8e7cc3;
+}
 @media (min-width: 1024px) {
     .profile-img {
         width: auto;
