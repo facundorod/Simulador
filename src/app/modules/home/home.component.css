@@ -1,20 +1,64 @@
-.wrapper {
-  display: flex;
-  align-items: stretch;
-  height: 100%;
+.title-text {
+    text-align: left;
+    font-weight: bold;
+    letter-spacing: 0.1rem;
+    font-size: 1.7em;
+    padding-top: 10%;
 }
 
-.sidebar {
-  height: 100%;
+.subtitle-text {
+    text-align: left;
+    font-size: 1.3em;
+    padding-top: 10%;
 }
 
-/* ---------------------------------------------------
-  CONTENT STYLE
------------------------------------------------------ */
+.img-central {
+    width: 100%;
+    padding-top: 5%;
+    height: 50%;
+}
 
-#content {
-  width: 100%;
-  padding: 20px;
-  min-height: 100vh;
-  transition: all 0.3s;
+.intro-text {
+    margin-top: 5%;
+}
+
+.title-text,
+.subtitle-text {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+@media (min-width: 1024px) {
+    .title-text {
+        text-align: center;
+        margin-top: 3%;
+        padding-top: 0%;
+        letter-spacing: 0.1rem;
+        font-size: 3.5em;
+    }
+
+    .subtitle-text {
+        font-size: 2em;
+        padding-top: 5%;
+    }
+
+    .content {
+        display: flex;
+        flex-direction: row;
+    }
+
+    .content-img {
+        max-width: 50%;
+    }
+
+    .content-subtitle {
+        max-width: 50%;
+    }
+
+    .img-central {
+        height: auto;
+        padding-top: 5%;
+    }
 }

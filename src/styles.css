@@ -27,6 +27,7 @@
 html,
 body {
     height: 100%;
+    background-color: rgba(228, 222, 222, 0.39);
 }
 
 .card {
@@ -38,10 +39,6 @@ body {
 
 .form-control .readonly {
     font-size: 1em;
-}
-
-.content {
-    background-color: #e2e2e2;
 }
 
 /* p,
