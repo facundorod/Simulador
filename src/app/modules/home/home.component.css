@@ -22,7 +22,8 @@
 }
 
 .title-text,
-.subtitle-text {
+.subtitle-text,
+h2 {
     -webkit-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
@@ -60,5 +61,10 @@
     .img-central {
         height: auto;
         padding-top: 5%;
+    }
+
+    .content-info h2 {
+        font-size: 3em;
+        margin-top: 5%;
     }
 }

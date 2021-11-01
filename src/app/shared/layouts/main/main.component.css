@@ -17,12 +17,14 @@ h3 a {
 }
 
 h3,
-.navbar ul li a {
+.navbar ul li a,
+h3 a {
     -webkit-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
 }
+
 @media (min-width: 1024px) {
     .fs-1 {
         padding-top: 1%;
