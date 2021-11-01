@@ -1,6 +1,7 @@
 .card {
     margin-top: 10%;
-    min-height: 530px;
+    min-height: 450px;
+    max-height: 80%;
     background-color: #f3f1f5;
 }
 
@@ -65,7 +66,6 @@
 
     .card {
         margin-top: 3%;
-        min-height: 550px;
         max-height: 600px;
     }
 

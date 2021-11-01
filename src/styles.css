@@ -1,33 +1,35 @@
 @font-face {
-    font-family: "Open Sans";
+    font-family: "Delivery";
     font-style: normal;
     font-weight: 400;
-    src: url("../src/assets/fonts/open-sans-v27-latin/open-sans-v27-latin-regular.eot"); /* IE9 Compat Modes */
+    src: url("../src/assets/fonts/Delivery/Latin_Greek_Cyrillic/Web/EOT/Delivery_W_Rg.eot"); /* IE9 Compat Modes */
     src: local(""),
-        url("../src/assets/fonts/open-sans-v27-latin/open-sans-v27-latin-regular.eot?#iefix")
+        url("../src/assets/fonts/Delivery/Latin_Greek_Cyrillic/Web/EOT/Delivery_W_Rg.eot")
             format("embedded-opentype"),
         /* IE6-IE8 */
-            url("../src/assets/fonts/open-sans-v27-latin/open-sans-v27-latin-regular.woff2")
+            url("../src/assets/fonts/Delivery/Latin_Greek_Cyrillic/Web/WOFF2/Delivery_W_Rg.woff2")
             format("woff2"),
         /* Super Modern Browsers */
-            url("../src/assets/fonts/open-sans-v27-latin/open-sans-v27-latin-regular.woff")
+            url("../src/assets/fonts/Delivery/Latin_Greek_Cyrillic/Web/WOFF/Delivery_W_Rg.woff")
             format("woff"),
         /* Modern Browsers */
-            url("../src/assets/fonts/open-sans-v27-latin/open-sans-v27-latin-regular.ttf")
+            url("../src/assets/fonts/Delivery/Latin_Greek_Cyrillic/App/Delivery_A_Rg.ttf")
             format("truetype"),
         /* Safari, Android, iOS */
-            url("../src/assets/fonts/open-sans-v27-latin/open-sans-v27-latin-regular.svg#OpenSans")
+            url("../src/assets/fonts/Delivery/Latin_Greek_Cyrillic/Web/SVG/Delivery_W_Rg.svg")
             format("svg"); /* Legacy iOS */
 }
 
 * {
-    font-family: "Open Sans";
+    font-family: "Delivery";
 }
 
-html,
+body {
+    background-color: rgba(228, 222, 222, 0.39);
+}
+
 body {
     height: 100%;
-    background-color: rgba(228, 222, 222, 0.39);
 }
 
 .fs-1 {
