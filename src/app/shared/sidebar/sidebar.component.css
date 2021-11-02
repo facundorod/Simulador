@@ -1,4 +1,4 @@
-.sidebar {
+/* .sidebar {
     text-align: center;
     background-color: #8e7cc3;
     color: #fff;
@@ -70,20 +70,10 @@
     margin-top: 30%;
 }
 
-.dock .first {
-    padding-top: 30%;
-}
 
-.sidebar ul li a:hover,
-.sidebar ul li a:hover {
-    color: #fff;
-    background: #545555;
-}
 
-ul ul a {
-    font-size: 0.9em;
-    background: #6d7fcc;
-}
+
+
 
 .container {
     overflow: hidden;
@@ -99,4 +89,33 @@ ul ul a {
 
 .dockNav {
     width: 60px;
+} */
+
+.sidebar {
+    background-color: #8e7cc3;
+    height: 100%;
+}
+
+.sidebar-header {
+    color: #292d30;
+    padding-top: 10%;
+}
+
+.sub-header h4 {
+    padding-top: 5%;
+    margin: 0%;
+}
+
+ul li a {
+    color: #292d30;
+}
+
+.sidebar ul li a:hover,
+.sidebar ul li a:hover {
+    color: #fff;
+    background: #545555;
+}
+
+.dock li:first-child {
+    padding-top: 100%;
 }
