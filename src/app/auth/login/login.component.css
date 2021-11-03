@@ -66,7 +66,7 @@
 
     .card {
         margin-top: 3%;
-        max-height: 600px;
+        /* max-height: 600px; */
     }
 
     .text-header {
