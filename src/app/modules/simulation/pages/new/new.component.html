@@ -1,21 +1,32 @@
-<div class = "container col-md-6 divCenter">
-  <h1 class="text-center">New simulation</h1>
-  <h3 class="font-italic" >Choose how do you want to initiate your new simulation</h3>
-  <form class="form-group" #form="ngForm">
-    <div class="form-check">
-    <input class="form-check-input" type="radio" value="blank"  name="blank" [(ngModel)]="option" checked>
-    <label class="form-check-label" for="exampleRadios1">
-      Blank simulation
-    </label>
-  </div>
-  <div class="form-check">
-    <input class="form-check-input" type="radio"  name="previous" value="previous" [(ngModel)]="option">
-    <label class="form-check-label" for="exampleRadios2">
-      Initiate with previous simulation
-    </label>
-  </div>
+<div class="container">
+    <div class="header">
+        <h2 class="text-center">New simulation</h2>
+    </div>
+    <div class="card">
+        <div class="card-header">
+            <h3 class="font-italic">How do you want to initiate your new simulation?</h3>
+        </div>
+        <div class="card-body">
+            <form class="form-group" #form="ngForm">
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" value="blank" name="blank" [(ngModel)]="option"
+                        checked>
+                    <label class="form-check-label" for="exampleRadios1">
+                        Blank simulation
+                    </label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="previous" value="previous" [(ngModel)]="option">
+                    <label class="form-check-label" for="exampleRadios2">
+                        Initiate with previous simulation
+                    </label>
+                </div>
 
-  <br>
-  <button type="submit" class= "btn btn-primary btn-block" (click)="initiateSimulation()" [disabled]="!form.form.valid" > INITIATE SIMULATION </button>
-  </form>
+                <button type="submit" class="btn btn-primary btn-block btn-new" (click)="initiateSimulation()"
+                    [disabled]="!form.form.valid"> INITIATE SIMULATION </button>
+            </form>
+        </div>
+    </div>
+
+
 </div>

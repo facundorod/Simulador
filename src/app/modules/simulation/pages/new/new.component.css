@@ -1,3 +1,39 @@
-.divCenter {
-  margin-top: 50px;
+.header {
+    margin-top: 8%;
+}
+
+h3 {
+    text-align: center;
+    font-size: 1em;
+}
+
+h2 {
+    font-size: 2.5em;
+}
+
+.card {
+    border-radius: 10px;
+    display: flex;
+    justify-content: center;
+}
+
+.btn-new {
+    margin-top: 5%;
+}
+
+label,
+input {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+@media (min-width: 1024px) {
+    .container {
+        width: 75%;
+    }
+
+    h3 {
+        font-size: 2em;
+    }
 }
