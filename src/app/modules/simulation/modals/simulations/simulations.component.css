@@ -1,12 +1,19 @@
-.title {
-    font-size: 1.1em;
+.title h3 {
+    font-size: 1.5em;
     font-weight: bold;
+    color: #212529;
+    text-align: center;
+    width: 100%;
 }
 
 .modal-header,
 .modal-body {
     background-color: #b7a9e2;
-    min-width: 650px !important;
+    width: 100%;
+}
+
+.updated-at {
+    visibility: collapse;
 }
 
 .modal-header {
@@ -16,5 +23,23 @@
 }
 
 .table-hover tbody tr:hover {
-    background-color: #616161 !important;
+    background-color: #616161;
+}
+
+.btn-submit {
+    background-color: #42336e;
+}
+
+.row .submit {
+    max-width: 10px;
+}
+
+@media (min-width: 1024px) {
+    .updated-at {
+        visibility: initial;
+    }
+    .modal-header,
+    .modal-body {
+        min-width: 600px;
+    }
 }

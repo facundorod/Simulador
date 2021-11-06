@@ -5,6 +5,7 @@ import { Routes, RouterModule } from "@angular/router";
 import { AuthGuard } from "@guards/auth.guard";
 import { SimulationLayoutComponent } from "./shared/layouts/simulationLayout/simulation-layout.component";
 import { LoginGuard } from "./guards/login.guard";
+import { NewComponent } from "./shared/layouts/new/new.component";
 
 const routes: Routes = [
     { path: "", redirectTo: "/home", pathMatch: "full" },
@@ -49,7 +50,7 @@ const routes: Routes = [
     },
     {
         path: "simulation",
-        component: PanelLayoutComponent,
+        component: NewComponent,
         canActivate: [AuthGuard],
         children: [
             {
