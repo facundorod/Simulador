@@ -6,7 +6,7 @@ import { ActivatedRoute, Router } from "@angular/router";
 import { BaseComponent } from "@app/shared/components/base.component";
 import { FormBuilder } from "@angular/forms";
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
-import { AnimalSpeciesEditComponent } from "../../modals/animal-specie-edit/animal-specie-edit.component";
+import { ModalEditComponentMed } from "../../modals/medications/modal-edit/modal-edit.component";
 import { MedicationsService } from "../../services/medications.service";
 @Component({
     selector: "app-medications",
@@ -84,7 +84,7 @@ export class MedicationsComponent extends BaseComponent implements OnInit {
             );
     }
 
-    public onAddAnimalSpecie() {}
+    public onAddAnimalSpecie() { }
 
     private initFormGroup() {
         this.formGroup = this.fb.group({
@@ -115,10 +115,10 @@ export class MedicationsComponent extends BaseComponent implements OnInit {
     }
 
     public onEdit(index: number = null) {
-        const modal = this.modal.open(AnimalSpeciesEditComponent);
+        const modal = this.modal.open(ModalEditComponentMed);
 
         if (index !== null) {
-            modal.componentInstance.setAnimalSpecie(this.medications[index]);
+            modal.componentInstance.setMedication(this.medications[index]);
 
             modal.result.then((result: MedicationI) => {
                 if (result) {

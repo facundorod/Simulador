@@ -45,9 +45,7 @@ h3 {
     height: 35px;
 }
 
-.panel-content {
-    /* fallback for old browsers */
-    /* Chrome 10-25, Safari 5.1-6 */
-    background: -webkit-linear-gradient(to right, #dae2f8, #b7a9e2);
-    background: linear-gradient(to right, #dae2f8, #b7a9e2);
+.panel-content,
+.content .rounded {
+    height: 100%;
 }

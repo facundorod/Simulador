@@ -356,7 +356,7 @@ export class MonitorComponent
      */
     private updateChart(chartDataset: ApexAxisChartSeries, index: number, animate: boolean = true): void {
         const chart: ChartComponent = this.charts.toArray()[index];
-        if (chart) chart.updateSeries(chartDataset, true);
+        if (chart) chart.updateSeries(chartDataset, false);
     }
 
 

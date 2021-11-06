@@ -7,7 +7,7 @@ import { ActivatedRoute, Router } from "@angular/router";
 import { BaseComponent } from "@app/shared/components/base.component";
 import { FormBuilder } from "@angular/forms";
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
-import { AnimalSpeciesEditComponent } from "../../modals/animal-specie-edit/animal-specie-edit.component";
+import { ModalEditComponentPath } from "../../modals/pathologies/modal-edit/modal-edit.component";
 @Component({
     selector: "app-pathologies",
     templateUrl: "./pathologies.component.html",
@@ -113,10 +113,10 @@ export class PathologiesComponent extends BaseComponent implements OnInit {
     }
 
     public onEdit(index: number = null) {
-        const modal = this.modal.open(AnimalSpeciesEditComponent);
+        const modal = this.modal.open(ModalEditComponentPath);
 
         if (index !== null) {
-            modal.componentInstance.setAnimalSpecie(this.pathologies[index]);
+            modal.componentInstance.setPathology(this.pathologies[index]);
 
             modal.result.then((result: PathologyI) => {
                 if (result) {

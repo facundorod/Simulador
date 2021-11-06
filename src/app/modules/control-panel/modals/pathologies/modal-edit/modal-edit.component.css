@@ -1,11 +1,11 @@
 .modal-header,
-.modal-body,
-.modal-footer {
+.modal-body {
     background-color: #b7a9e2;
 }
 
-.title {
+.modal-header h3 {
     font-size: 1.5em;
+    color: #212529;
 }
 
 .btn-save {

@@ -3,7 +3,7 @@ h3 {
     text-align: left;
 }
 
-.path-header {
+.animal-header {
     margin-top: 3%;
 }
 
@@ -11,8 +11,8 @@ h3 {
     background-color: #616161;
 }
 
-.table-path,
-.table-path tr {
+.table-animals,
+.table-animals tr {
     border: 2px solid #272626;
 }
 

@@ -1,3 +1,58 @@
 .table-hover tbody tr:hover {
-    background-color: #616161 !important;
+    background-color: #616161;
+}
+
+.table-scenarios {
+    margin-top: 1%;
+}
+
+.row-2 {
+    margin-top: 2%;
+}
+
+.table-scenarios,
+.table-scenarios tr {
+    border: 2px solid #272626;
+}
+
+.table-med tr,
+.table-path tr,
+.table-arr tr {
+    border: 2px solid #272626;
+}
+
+.btn-activate {
+    padding: 0;
+    margin: 0;
+}
+
+.btn-edit {
+    padding-left: 5%;
+}
+
+.save-changes,
+.btn-add {
+    margin-left: 2%;
+    background-color: #59478d;
+    border-color: #59478d;
+    color: #fff;
+}
+
+.save-changes:hover,
+.btn-add:hover {
+    color: #59478d;
+    border-color: #fff;
+    background-color: #fff;
+}
+
+.td-icons {
+    min-width: 95px;
+    max-width: 95px;
+}
+
+.td-arr,
+.td-path,
+.td-med {
+    max-width: 200px;
+    overflow-x: hidden;
 }

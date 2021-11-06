@@ -9,7 +9,7 @@
             </p>
         </div>
         <div class="col-lg-5">
-            <p class="text-right" *ngIf="animalSpecie">ANIMAL CLINIC</p>
+            <p class="text-right text-animal-clinic" *ngIf="animalSpecie">ANIMAL CLINIC</p>
         </div>
     </div>
 
@@ -19,11 +19,13 @@
         </app-audio>
         <div class="container-fluid">
             <ng-template [ngIf]="currentState?.action === 'stop'">
-                <h4 class="text-center"><i class="fas fa-stop icon-stopped"></i>Simulation
+                <h4 class="text-center"><img src="https://img.icons8.com/fluency/24/000000/stop.png"
+                        class="img-status" />Simulation
                     stopped</h4>
             </ng-template>
             <ng-template [ngIf]="currentState?.action === 'pause'">
-                <h4 class="text-center"><i class=" fas fa-pause icon-pause"></i>Simulation
+                <h4 class="text-center"><img src="https://img.icons8.com/fluency/24/000000/pause.png"
+                        title="Freeze simulation" class="img-status" />Simulation
                     paused</h4>
             </ng-template>
             <div id="charts" class="row" *ngFor="let chart of chartsOptions; let i = index">
@@ -83,6 +85,6 @@
 <ng-template #noDataset class="mt-4 no-simulation">
 
     <div class="container row no-simulation">
-        NO SIMULATION
+        <p>NO SIMULATION </p>
     </div>
 </ng-template>

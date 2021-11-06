@@ -2,14 +2,14 @@
     width: 100%;
 }
 
-.textSimulation {
-    float: left;
-    width: 90%;
-    text-align: center;
-}
-
 .bar-separator {
     width: 100%;
+}
+
+.textSimulation {
+    text-align: center;
+    font-size: 2em;
+    margin-left: 4%;
 }
 
 .textScenario {
@@ -19,13 +19,8 @@
 }
 
 .visualizationHeader {
-    overflow: auto;
-}
-
-.saveChanges {
-    float: right;
-    margin-top: 15px;
-    width: 10%;
+    margin-top: 2%;
+    width: 100%;
 }
 
 .scenarios {
@@ -41,7 +36,7 @@
 .footer {
     width: 100%;
     bottom: 0%;
-    background-color: #000;
+    background-color: #212122;
     margin-top: 2%;
     position: sticky;
 }
@@ -52,9 +47,16 @@
 .param-configuration,
 .curves-configuration {
     border-radius: 10px;
-    border: 2px solid #fff;
+    border: 2px solid #000;
     max-height: 300px;
     margin-top: 20px;
+}
+.param-configuration {
+    margin-left: 2%;
+}
+
+.curves-configuration {
+    margin-left: 4%;
 }
 
 .form-parameters {
@@ -63,6 +65,50 @@
 
 .rate-value {
     font-size: 1.5rem;
-    color: white;
     padding-left: 12%;
+}
+
+.saveChanges-top {
+    display: none;
+}
+
+@media (min-width: 1024px) {
+    .textSimulation {
+        text-align: center;
+        padding-left: 15%;
+        font-size: 2em;
+    }
+
+    .container-form {
+        margin-top: 4%;
+    }
+
+    .saveChanges-top {
+        display: block;
+        background-color: #59478d;
+        border-color: #59478d;
+        color: #fff;
+        height: 60px;
+    }
+
+    .saveChanges-top:hover {
+        color: #59478d;
+        border-color: #fff;
+        background-color: #fff;
+    }
+
+    .scenario-configuration,
+    .curves-configuration-text {
+        width: 100%;
+        margin-top: 2%;
+    }
+
+    .text-scenario,
+    .text-curves {
+        font-size: 2em;
+    }
+
+    .footerBtn .btn :hover img {
+        width: 30px;
+    }
 }
