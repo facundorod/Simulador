@@ -3,8 +3,7 @@
 }
 
 .no-simulation {
-    max-height: 300px;
-    height: 300px;
+    height: 100%;
 }
 
 .icon-pause {
@@ -72,4 +71,18 @@
     100% {
         background-color: #f42922;
     }
+}
+
+p,
+h3,
+h4 {
+    color: #fff;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.img-status {
+    margin-right: 2%;
 }

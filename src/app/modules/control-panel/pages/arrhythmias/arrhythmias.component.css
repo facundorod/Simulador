@@ -1,0 +1,29 @@
+h3 {
+    font-size: 2em;
+    text-align: left;
+}
+
+.arr-header {
+    margin-top: 3%;
+}
+
+.table-hover tbody tr:hover {
+    background-color: #616161;
+}
+
+.table-arr,
+.table-arr tr {
+    border: 2px solid #272626;
+}
+
+.btn-search,
+.btn-add {
+    background-color: #42336e;
+    border: 1px solid #42336e;
+}
+
+.btn-search:hover,
+.btn-add:hover {
+    background-color: #fff;
+    color: #42336e;
+}

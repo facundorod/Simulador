@@ -19,7 +19,12 @@ import { MedicationsComponent } from "./pages/medications/medications.component"
 import { ArrhythmiasComponent } from "./pages/arrhythmias/arrhythmias.component";
 import { SharedModule } from "@app/shared/shared.module";
 import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
-import { AnimalSpeciesEditComponent } from "./modals/animal-specie-edit/animal-specie-edit.component";
+import { ModalEditComponent } from "./modals/animalSpecies/modal-edit/modal-edit.component";
+import { ModalEditComponentArr } from "./modals/arrhythmias/modal-edit/modal-edit.component";
+import { ModalEditComponentPath } from "./modals/pathologies/modal-edit/modal-edit.component";
+import { ModalEditComponentMed } from "./modals/medications/modal-edit/modal-edit.component";
+
+
 import { CurvesService } from "./services/curves.service";
 import { SimulationModule } from "../simulation/simulation.module";
 import { MonitorService } from "../monitor/services/monitor.service";
@@ -32,7 +37,10 @@ import { MonitorService } from "../monitor/services/monitor.service";
         PathologiesComponent,
         MedicationsComponent,
         ArrhythmiasComponent,
-        AnimalSpeciesEditComponent,
+        ModalEditComponent,
+        ModalEditComponentArr,
+        ModalEditComponentPath,
+        ModalEditComponentMed,
         ScenariosComponent,
     ],
     imports: [

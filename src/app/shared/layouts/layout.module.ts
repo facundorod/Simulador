@@ -7,6 +7,7 @@ import { FlexLayoutModule } from "@angular/flex-layout";
 import { PanelLayoutComponent } from "./panelLayout/panel-layout.component";
 import { SidebarModule } from "ng-sidebar";
 import { SimulationLayoutComponent } from "./simulationLayout/simulation-layout.component";
+import { NewComponent } from './new/new.component';
 
 @NgModule({
     imports: [
@@ -21,6 +22,7 @@ import { SimulationLayoutComponent } from "./simulationLayout/simulation-layout.
         MainComponent,
         PanelLayoutComponent,
         SimulationLayoutComponent,
+        NewComponent,
     ],
 })
 export class LayoutModule { }

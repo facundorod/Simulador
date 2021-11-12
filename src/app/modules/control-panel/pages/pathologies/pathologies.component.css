@@ -1,44 +1,29 @@
-.form-control {
-    font-size: 1em;
-}
-.search-form {
-    margin-left: 0.2rem !important;
-    margin-right: 0.2rem !important;
+h3 {
+    font-size: 2em;
+    text-align: left;
 }
 
-.title {
-    margin-left: 0.2rem !important;
-}
-
-.search-form .col,
-.col-1,
-.col-1,
-.col-3,
-.col-4,
-.col-6,
-.col-8,
-.col-10,
-.col-12 {
-    padding-left: 0px !important;
-    padding-right: 0px !important;
-}
-.table-bg {
-    background-color: #1e1e1e;
-    padding: 0 !important;
-    margin-left: 1rem !important;
+.path-header {
+    margin-top: 3%;
 }
 
 .table-hover tbody tr:hover {
-    background-color: #616161 !important;
+    background-color: #616161;
 }
 
-.btn-trash {
-    margin-left: 5px;
-    padding-left: 10px;
-    border: none;
+.table-path,
+.table-path tr {
+    border: 2px solid #272626;
 }
 
-ngb-pagination .pagination {
-    margin-top: 10px;
-    margin-bottom: 0;
+.btn-search,
+.btn-add {
+    background-color: #42336e;
+    border: 1px solid #42336e;
+}
+
+.btn-search:hover,
+.btn-add:hover {
+    background-color: #fff;
+    color: #42336e;
 }

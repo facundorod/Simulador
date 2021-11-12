@@ -1,16 +1,83 @@
-.wrapper {
-  display: flex;
-  align-items: stretch;
+.card-header {
+    display: flex;
+    justify-content: center;
+    border-bottom: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    background-color: #f3f1f5;
 }
 
+.card {
+    margin-top: 10%;
+    min-height: 670px;
+    background-color: #f3f1f5;
+}
 
-/* ---------------------------------------------------
-  CONTENT STYLE
------------------------------------------------------ */
+.profile-img {
+    width: 70%;
+    margin-left: 15%;
+    position: relative;
+    bottom: 40%;
+}
 
-#content {
-  width: 100%;
-  padding: 20px;
-  min-height: 100vh;
-  transition: all 0.3s;
+.text-header {
+    position: absolute;
+    margin-top: 20%;
+}
+
+.text-header h3 {
+    font-size: 1.5em;
+}
+
+.form-register {
+    margin-top: 20%;
+    width: 100%;
+}
+
+.card-body {
+    position: absolute;
+    top: 5%;
+}
+
+.btn-register {
+    background-color: #8e7cc3;
+    border-color: #8e7cc3;
+}
+
+.btn-register:hover,
+.btn-register:focus,
+.btn-register:link,
+.btn-register:active,
+.btn-register:visited {
+    background-color: #f3f1f5;
+    color: #8e7cc3;
+}
+
+@media (min-width: 1024px) {
+    .profile-img {
+        width: auto;
+        margin-left: auto;
+    }
+
+    .card {
+        margin-top: 3%;
+        max-height: 660px;
+        min-height: 630px;
+    }
+
+    .text-header {
+        position: absolute;
+        margin-top: 8%;
+    }
+
+    .text-header h3 {
+        font-size: 2em;
+    }
+
+    .card-body {
+        top: 0%;
+        width: 70%;
+    }
 }

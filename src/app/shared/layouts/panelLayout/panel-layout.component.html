@@ -1,19 +1,29 @@
-<ng-sidebar-container>
+<ng-sidebar-container class="sidebar">
 
     <!-- Sidebar -->
-    <ng-sidebar #sidebar [mode]="'push'" [animate]="true" [showBackdrop]="true" [trapFocus]="true" [autoFocus]="true"
+    <ng-sidebar #sidebar [mode]="'over'" [animate]="true" [showBackdrop]="true" [trapFocus]="true" [autoFocus]="true"
         [keyClose]="true" [closeOnClickBackdrop]="true" [closeOnClickOutside]="true" [dock]="true" [dockedSize]="'60px'"
         [animate]="true" (onClosed)="onClosed()">
-        <app-navbar [type]="'user'" [sidebarOpen]="sidebarOpen" class="sidebarS"></app-navbar>
+        <app-sidebar [type]="'user'" [sidebarOpen]="sidebarOpen" class="sidebarS"></app-sidebar>
     </ng-sidebar>
 
     <!-- Page content -->
-    <div ng-sidebar-content>
+    <div ng-sidebar-content class="panel-content">
         <nav class="navbar navbar-expand-lg">
-            <button (click)="openSidebar(sidebar)" class="navbar__toogle">Open sidebar</button>
-            <h1 class="fs-1 text-center"> SIMVET - Vital Signs Monitor Simulator </h1>
+            <div class="container-fluid">
+                <div class="row row-navbar">
+                    <div class="col-6">
+                        <button (click)="openSidebar(sidebar)" class="navbar__toogle"></button>
+                    </div>
+                    <div class="col-6">
+                        <h3><a class="navbar-brand" href="#">SIMVet</a></h3>
+
+                    </div>
+                </div>
+
+            </div>
         </nav>
-        <main role="main" class="container">
+        <main role="main">
             <div class="template">
                 <div class="content rounded">
                     <router-outlet></router-outlet>

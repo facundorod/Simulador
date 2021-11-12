@@ -1,9 +1,19 @@
-.title {
-    font-size: 1.1em;
-    font-weight: bold;
-}
-
+.modal-header,
 .modal-body,
 .modal-footer {
-    background-color: #121212;
+    background-color: #b7a9e2;
+}
+
+.title {
+    font-size: 1.5em;
+}
+
+.btn-save {
+    background-color: #42336e;
+    border: 1px solid #42336e;
+}
+
+.btn-save:hover {
+    background-color: #fff;
+    color: #42336e;
 }

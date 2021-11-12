@@ -1,0 +1,165 @@
+<nav class="sidebar" [ngClass]="{'dockNav': !sidebarOpen}">
+
+    <div *ngIf="sidebarOpen else userDock">
+        <div class="sidebar-header">
+            <h3 class="font-weight-bold text-center"> Welcome! </h3>
+        </div>
+        <section class="container sub-header">
+            <h4 class="font-weight-bold text-align-center"> Simulation </h4>
+        </section>
+
+        <ul class="list-unstyled components">
+
+            <li class="nav-item active">
+                <a class="nav-link" [routerLink]="['/simulation/new']"> <img
+                        src="https://img.icons8.com/doodle/28/000000/play-button-circled.png" /> New Simulation</a>
+            </li>
+
+            <li class="nav-item">
+
+                <a class="nav-link" [routerLink]="['/panel']"> <img
+                        src="https://img.icons8.com/dusk/28/000000/admin-settings-male.png" /> Manage simulations
+                </a>
+            </li>
+
+        </ul>
+
+        <section #manageDatabase class="container sub-header">
+            <h4 class="font-weight-bold text-align-center"> Scenarios </h4>
+        </section>
+
+        <ul class="list-group">
+            <li class="nav-item">
+
+                <a class="nav-link" [routerLink]="['/panel/animalSpecie']"> <img
+                        src="https://img.icons8.com/color/28/000000/dog.png" /> Animal Species</a>
+            </li>
+
+            <li class="nav-item">
+
+                <a class="nav-link" [routerLink]="['/panel/pathologies']"> <img
+                        src="https://img.icons8.com/color/28/000000/microorganisms.png" /> Pathologies </a>
+            </li>
+
+            <li class="nav-item">
+
+                <a class="nav-link" [routerLink]="['/panel/medications']"> <img
+                        src="https://img.icons8.com/color/28/000000/pills.png" /> Medications</a>
+            </li>
+
+            <li class="nav-item">
+
+                <a class="nav-link" [routerLink]="['/panel/arrhythmias']"> <img
+                        src="https://img.icons8.com/color/28/000000/pulse.png" /> Arrhythmias </a>
+            </li>
+
+            <!-- <li class="nav-item">
+
+                <a class="nav-link" [routerLink]="['/panel/scenarios']"> <img
+                        src="https://img.icons8.com/plasticine/28/000000/hospital-gown.png" /> Scenarios</a> -->
+
+            <!-- </li> -->
+
+            <li class="nav-item">
+
+                <a class="nav-link" [routerLink]="['/auth/logout']"> <img
+                        src="https://img.icons8.com/emoji/28/000000/waving-hand-emoji.png" /> Logout</a>
+            </li>
+
+        </ul>
+
+        <section class="container sub-header">
+
+            <h4 class="font-weight-bold text-align-center">
+                My Profile </h4>
+        </section>
+        <ul class="list-group">
+            <li class="nav-item">
+
+                <a class="nav-link" [routerLink]="['/profile']">
+                    <img src="https://img.icons8.com/fluency/28/000000/test-account.png" /> Update Profile
+                </a>
+            </li>
+        </ul>
+
+
+
+
+    </div>
+
+
+</nav>
+
+
+
+
+<ng-template #userDock>
+
+    <ul class="list-unstyled components dock">
+
+        <li class="nav-item active">
+            <a class="nav-link" [routerLink]="['/simulation/new']"> <img
+                    src="https://img.icons8.com/doodle/28/000000/play-button-circled.png" /> </a>
+        </li>
+
+        <li class="nav-item">
+
+            <a class="nav-link" [routerLink]="['/panel']">
+                <img src="https://img.icons8.com/dusk/28/000000/admin-settings-male.png" />
+            </a>
+        </li>
+
+    </ul>
+
+    <ul class="list-unstyled components list-group">
+        <li class="nav-item">
+
+            <a class="nav-link" [routerLink]="['/panel/animalSpecie']"> <img
+                    src="https://img.icons8.com/color/28/000000/dog.png" /> </a>
+        </li>
+
+        <li class="nav-item">
+
+            <a class="nav-link" [routerLink]="['/panel/pathologies']"> <img
+                    src="https://img.icons8.com/color/28/000000/microorganisms.png" />
+            </a>
+        </li>
+
+        <li class="nav-item">
+
+            <a class="nav-link" [routerLink]="['/panel/medications']"> <img
+                    src="https://img.icons8.com/color/28/000000/pills.png" /> </a>
+        </li>
+
+        <li class="nav-item">
+
+            <a class="nav-link" [routerLink]="['/panel/arrhythmias']">
+                <img src="https://img.icons8.com/color/28/000000/pulse.png" /> </a>
+        </li>
+
+        <!-- <li class="nav-item">
+
+            <a class="nav-link" [routerLink]="['/panel/scenarios']"> <img
+                    src="https://img.icons8.com/plasticine/28/000000/hospital-gown.png" /> </a>
+
+        </li> -->
+
+    </ul>
+    <ul class="list-group">
+
+        <li class="nav-item">
+
+            <a class="nav-link" [routerLink]="['/auth/logout']"> <img
+                    src="https://img.icons8.com/emoji/28/000000/waving-hand-emoji.png" /> </a>
+        </li>
+
+        <li class="nav-item">
+
+            <a class="nav-link" [routerLink]="['/profile']"><img
+                    src="https://img.icons8.com/fluency/28/000000/test-account.png" /> </a>
+        </li>
+
+    </ul>
+
+
+</ng-template>

@@ -1,22 +1,85 @@
-/*
-.wrapper {
-  display: flex;
-  float: left;
-  width: 70%;
-  align-items: stretch;
-} */
+.card {
+    margin-top: 10%;
+    min-height: 450px;
+    max-height: 80%;
+    background-color: #f3f1f5;
+}
 
-/* ---------------------------------------------------
-  CONTENT STYLE
------------------------------------------------------ */
-/*
-#content {
-  width: 100%;
-  padding: 20px;
-  min-height: 100vh;
-  transition: all 0.3s;
-} */
-/*
-.wrapper {
-    background-color: #121212;
-} */
+.profile-img {
+    width: 70%;
+    margin-left: 15%;
+    position: relative;
+    bottom: 40%;
+}
+
+.card-header {
+    display: flex;
+    justify-content: center;
+    border-bottom: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    background-color: #f3f1f5;
+}
+
+.text-header {
+    position: absolute;
+    margin-top: 20%;
+}
+
+.text-header h3 {
+    font-size: 1em;
+}
+
+.card-body {
+    position: absolute;
+    top: 5%;
+}
+
+.form-login {
+    margin-top: 30%;
+}
+
+.btn-login {
+    background-color: #8e7cc3;
+    border-color: #8e7cc3;
+}
+
+.btn-login img {
+    margin-right: 2%;
+}
+
+.btn-login:hover,
+.btn-login:focus,
+.btn-login:link,
+.btn-login:active,
+.btn-login:visited {
+    background-color: #f3f1f5;
+    color: #8e7cc3;
+}
+@media (min-width: 1024px) {
+    .profile-img {
+        width: auto;
+        margin-left: auto;
+    }
+
+    .card {
+        margin-top: 3%;
+        /* max-height: 600px; */
+    }
+
+    .text-header {
+        position: absolute;
+        margin-top: 8%;
+    }
+
+    .text-header h3 {
+        font-size: 1.5em;
+    }
+
+    .card-body {
+        top: 0%;
+        width: 50%;
+    }
+}

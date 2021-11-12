@@ -1,39 +1,56 @@
+<div class="card">
+    <div class="card-header">
+        <div class="img-header">
+            <img class="profile-img" src="https://img.icons8.com/color/100/000000/test-account.png" alt="Profile Img"
+                title="Profile Img" />
+        </div>
+        <div class="text-header">
+            <h3 class="text-center">
+                Please, login with your credentials
+            </h3>
+        </div>
+        <div class="card-body">
+            <div class="form-login">
+                <form #loginForm="ngForm">
+                    <div class="form-group">
 
-<div class="wrapper" >
+                        <label for="usuario"> User </label>
+                        <div class="input-group">
+                            <div class="input-group-text"><img
+                                    src="https://img.icons8.com/fluency/24/000000/username.png" />
+                            </div>
 
-  <div id="content">
+                            <input type="text" class="form-control" name="email" required [(ngModel)]="email"
+                                #user="ngModel">
+                        </div>
 
-    <!-- <div [hidden]="submit" class="row"> -->
-      <div class="col-md-6 mx-auto mt-5">
-          <!-- <div class="card">
-              <div class="card-body"> -->
-                  <h1 class="text-center"> Sign In </h1>
-                  <form  #loginForm="ngForm">
-                      <div class="form-group">
-                          <label for="usuario"> User </label>
-                          <input type="text" class="form-control" name="email" required [(ngModel)]="email" #user="ngModel">
-                          <div [hidden]="user.valid" class="alert alert-danger">
-                              E_mail is required.
-                          </div>
-                      </div>
-                      <div class="form-group">
-                          <label for="psw"> Password </label>
-                          <input type="password" class="form-control" name="password" required [(ngModel)]="password" #psw="ngModel">
-                          <div [hidden]="psw.valid" class="alert alert-danger">
-                              Password is required
-                          </div>
-                      </div>
-                      <button type="submit" class="btn btn-primary btn-block" (click)="login()" [disabled]="!loginForm.form.valid"> Sign In </button>
-                  </form>
-                  <div class="form-group mt-3">
-                      <p> You do not have an account? <a [routerLink]="['/auth/register']"> Register </a></p>
-                  </div>
-              </div>
-          <!-- </div>
-      </div> -->
-  <!-- </div> -->
+                        <!-- <div [hidden]="user.valid" class="alert alert-danger">
+                            E_mail is required.
+                        </div> -->
+                    </div>
+                    <div class="form-group">
+                        <label for="psw"> Password </label>
+                        <div class="input-group">
+                            <div class="input-group-text"><img
+                                    src="https://img.icons8.com/fluency/24/000000/lock-2.png" /></div>
+                            <input type="password" class="form-control" name="password" required [(ngModel)]="password"
+                                #psw="ngModel">
+                        </div>
+                        <!-- <div [hidden]="psw.valid" class="alert alert-danger">
+                            Password is required
+                        </div> -->
 
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-block btn-login" (click)="login()"
+                        [disabled]="!loginForm.form.valid"> <img
+                            src="https://img.icons8.com/color-glass/24/000000/login-rounded-right.png" alt="signIn"
+                            title="SignIn" />Sign In </button>
+                </form>
+                <div class="form-group mt-3">
+                    <p> Do you not have an account? <a [routerLink]="['/auth/register']"> Register here.</a></p>
+                </div>
+            </div>
+        </div>
 
+    </div>
 </div>
-
-

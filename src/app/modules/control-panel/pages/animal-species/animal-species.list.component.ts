@@ -7,11 +7,11 @@ import { BaseComponent } from "@app/shared/components/base.component";
 import { AnimalSpeciesService } from "../../services/animalSpecies.service";
 import { FormBuilder } from "@angular/forms";
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
-import { AnimalSpeciesEditComponent } from "../../modals/animal-specie-edit/animal-specie-edit.component";
+import { ModalEditComponent } from "../../modals/animalSpecies/modal-edit/modal-edit.component";
 @Component({
     selector: "app-animal-species",
     templateUrl: "./animal-species.list.component.html",
-    styleUrls: ["./animal-species.list.component.scss"],
+    styleUrls: ["./animal-species.list.component.css"],
 })
 export class AnimalSpeciesListComponent
     extends BaseComponent
@@ -87,7 +87,7 @@ export class AnimalSpeciesListComponent
             );
     }
 
-    public onAddAnimalSpecie() {}
+    public onAddAnimalSpecie() { }
 
     private initFormGroup() {
         this.formGroup = this.fb.group({
@@ -118,7 +118,7 @@ export class AnimalSpeciesListComponent
     }
 
     public onEdit(index: number = null) {
-        const modal = this.modal.open(AnimalSpeciesEditComponent);
+        const modal = this.modal.open(ModalEditComponent);
 
         if (index !== null) {
             modal.componentInstance.setAnimalSpecie(this.animalSpecies[index]);

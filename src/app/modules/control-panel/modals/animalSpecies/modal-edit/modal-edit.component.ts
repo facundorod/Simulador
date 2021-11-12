@@ -1,14 +1,14 @@
-import { AnimalSpeciesI } from "../../../../shared/models/animal-speciesI";
+import { AnimalSpeciesI } from "../../../../../shared/models/animal-speciesI";
 import { Component, OnInit } from "@angular/core";
 import { FormBuilder, Validators } from "@angular/forms";
 import { BaseComponent } from "@app/shared/components/base.component";
 import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
 
 @Component({
-    templateUrl: "./animal-specie-edit.component.html",
-    styleUrls: ["./animal-specie-edit.component.css"],
+    templateUrl: "./modal-edit.component.html",
+    styleUrls: ["./modal-edit.component.css"],
 })
-export class AnimalSpeciesEditComponent
+export class ModalEditComponent
     extends BaseComponent
     implements OnInit {
     public animalSpecie: AnimalSpeciesI;

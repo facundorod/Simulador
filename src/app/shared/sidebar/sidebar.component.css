@@ -1,0 +1,37 @@
+.sidebar {
+    background-color: #8e7cc3;
+    height: 100%;
+}
+
+.sidebar-header {
+    color: #292d30;
+    padding-top: 10%;
+}
+
+.sub-header h4 {
+    padding-top: 5%;
+    margin: 0%;
+}
+
+ul li a {
+    color: #292d30;
+}
+
+.sidebar ul li a:hover,
+.sidebar ul li a:hover {
+    color: #fff;
+    background: #545555;
+}
+
+.dock li:first-child {
+    padding-top: 100%;
+}
+
+h3,
+h4,
+ul li a {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}

@@ -1,11 +1,14 @@
-.title {
-    font-size: 1.1em;
+.title h3 {
+    font-size: 1.5em;
     font-weight: bold;
+    color: #212529;
+    text-align: center;
+    width: 100%;
 }
 
 .modal-header,
 .modal-body {
-    background-color: #121212;
+    background-color: #b7a9e2;
     min-width: 650px !important;
 }
 
@@ -13,6 +16,11 @@
     font-size: 1.1em;
     font-weight: bold;
     color: #fff;
+}
+
+.btn-submit {
+    background-color: #42336e;
+    border: 1px solid #42336e;
 }
 
 .table-hover tbody tr:hover {

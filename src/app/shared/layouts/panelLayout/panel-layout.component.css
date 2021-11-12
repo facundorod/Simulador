@@ -1,29 +1,3 @@
-.navbar {
-    background-color: #262424;
-    height: 60px;
-}
-
-.content {
-    width: 100%;
-    height: 100%;
-    background-color: #121212;
-    margin-left: 1rem !important;
-    margin-right: 1rem !important;
-}
-
-.template {
-    padding: 2rem 0;
-    width: 100%;
-}
-
-.fs-1 {
-    font-size: 1.6em;
-    padding-top: 18px;
-    text-align: center;
-    width: 100%;
-    color: #fff;
-}
-
 .navbar__toogle {
     background: transparent;
     border: 0.15rem solid #fff;
@@ -46,4 +20,32 @@
     position: absolute;
     top: 50%;
     width: 100%;
+}
+
+.navbar {
+    background-color: #8e7cc3;
+}
+
+.sidebar {
+    position: fixed;
+}
+
+h3 a {
+    padding-top: 0%;
+    font-size: 1em;
+    color: #05263c;
+}
+
+h3 {
+    text-align: left;
+}
+
+.row-navbar {
+    width: 100%;
+    height: 35px;
+}
+
+.panel-content,
+.content .rounded {
+    height: 100%;
 }
