@@ -6,6 +6,7 @@ import { PathologiesComponent } from "./pages/pathologies/pathologies.component"
 import { MedicationsComponent } from "./pages/medications/medications.component";
 import { ArrhythmiasComponent } from "./pages/arrhythmias/arrhythmias.component";
 import { ScenarioParamsComponent } from "./pages/scenario-params/scenario-params.component";
+import { ScenarioParamsCreateComponent } from "./pages/scenario-params-create/scenario-params-create.component";
 
 const routes: Routes = [
     { path: "", component: PanelComponent },
@@ -14,6 +15,8 @@ const routes: Routes = [
     { path: "medications", component: MedicationsComponent },
     { path: "arrhythmias", component: ArrhythmiasComponent },
     { path: "scenarios", component: ScenarioParamsComponent },
+    { path: "scenarios/create", component: ScenarioParamsCreateComponent },
+    { path: "scenarios/create/:id", component: ScenarioParamsCreateComponent },
 ];
 
 @NgModule({

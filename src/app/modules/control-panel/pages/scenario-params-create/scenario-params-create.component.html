@@ -1,0 +1,146 @@
+<div class="container">
+    <div class="scenario-header">
+        <div class="row">
+            <div class="col">
+                <h3 class="title"> New Scenario </h3>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="container container-form">
+    <form>
+        <div class="row justify-content-between">
+            <div class="col-3">
+                <label for="scenario-name" class="form-label">Scenario Name</label>
+                <input type="text" class="form-control">
+            </div>
+
+            <div class="col-5">
+                <label for="scenario-description" class="form-label">Scenario description</label>
+                <textarea class="form-control" rows="3"></textarea>
+            </div>
+
+            <div class="col-4">
+                <label for="animal-specie">Animal Specie</label>
+                <select class="form-select form-control" name="animal-specie" id="animal-specie"
+                    aria-label="Default select example">
+                    <option selected>Choose Animal</option>
+                    <ng-template [ngIf]="getAnimals().length">
+                        <option *ngFor="let animal of getAnimals()">
+                            {{animal.name}}
+                        </option>
+                    </ng-template>
+
+                </select>
+
+            </div>
+        </div>
+
+        <div class="row second-row justify-content-between">
+
+            <div class="col-5">
+                <label for="medications" class="form-label">Medications</label>
+                <table class="table table-med table-hover">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th scope="col">
+                                Medication
+                            </th>
+                            <th scope="col">
+                                dose
+                            </th>
+                            <th scope="col">
+                                [unit]
+                            </th>
+                            <th scope="col">
+                                <!-- Delete -->
+                            </th>
+                        </tr>
+
+
+                    </thead>
+                    <tbody>
+
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="col-3">
+                <label for="pathologies" class="form-label">Pathologies</label>
+                <table class="table table-path table-hover">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th scope="col">
+                                Pathology
+                            </th>
+                            <th scope="col-sm">
+                                <!-- Delete -->
+                            </th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="col-3">
+                <label for="arrhythmias" class="form-label">Arrhythmias</label>
+                <table class="table-arr table table-hover">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th scope="col">
+                                Arrhythmia
+                            </th>
+                            <th scope="col-sm">
+                                <!-- Delete -->
+                            </th>
+                        </tr>
+
+
+                    </thead>
+
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="row parameters">
+            <div class="col-12">
+                <label for="parameters" class="form-label">Parameters</label>
+                <table class="table table-hover table-params">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th scope="col" class="col-param">
+                                Physiological Parameter
+                            </th>
+                            <th scope="col">
+                                Value
+                            </th>
+                            <th scope="col" class="col-configuration">
+                                Special Configuration
+                            </th>
+                            <th scope="col">
+                                Alerts
+                            </th>
+                            <th scope="col"></th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+
+        </div>
+
+
+        <div class="row file-row">
+            <div class="col-auto">
+                <label for="curves-dataset" class="form-label">Curves Dataset</label>
+                <input class="form-control curves-dataset-input" id="formFile" type="file" accept=".csv">
+
+            </div>
+        </div>
+    </form>
+</div>

@@ -2,8 +2,9 @@ import { ScenarioI } from "@models/scenarioI";
 import { ApiService } from "../../../shared/services/api.service";
 import { HelperService } from "@app/shared/services/helper.service";
 import { environment } from "@environments/environment";
-import { Subject } from "rxjs";
+import { Observable, Subject } from "rxjs";
 import { Injectable } from "@angular/core";
+import { ScenarioParamsI } from "@app/shared/models/scenarioParamsI";
 
 @Injectable()
 export class ScenarioService {
@@ -56,6 +57,26 @@ export class ScenarioService {
         this.api.httpGet(endpoint).subscribe(
             (data: any) => {
                 subject.next(data);
+            },
+            (err: any) => {
+                subject.error(err);
+            },
+            () => {
+                subject.complete();
+            }
+        );
+
+        return subject.asObservable();
+    }
+
+    public listByIdWithParams(scenarioId: number): Observable<ScenarioParamsI> {
+        const subject = new Subject<ScenarioParamsI>();
+
+        let endpoint = environment.api.scenariosParams + "/" + scenarioId;
+
+        this.api.httpGet(endpoint).subscribe(
+            (data: any) => {
+                if (data && data.data) subject.next(data.data);
             },
             (err: any) => {
                 subject.error(err);

@@ -1,0 +1,25 @@
+h3 {
+    font-size: 2em;
+    text-align: left;
+}
+
+.scenario-header {
+    margin-top: 3%;
+}
+
+.container-form,
+.second-row,
+.parameters,
+.file-row {
+    margin-top: 2%;
+}
+
+.col-param,
+.col-configuration {
+    max-width: 100px;
+}
+
+.curves-dataset-input {
+    background-color: transparent;
+    padding-left: 0;
+}

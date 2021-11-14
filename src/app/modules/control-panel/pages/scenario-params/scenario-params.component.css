@@ -16,13 +16,11 @@ h3 {
     border: 2px solid #272626;
 }
 
-.btn-search,
 .btn-add {
     background-color: #42336e;
     border: 1px solid #42336e;
 }
 
-.btn-search:hover,
 .btn-add:hover {
     background-color: #fff;
     color: #42336e;

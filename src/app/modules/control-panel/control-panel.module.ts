@@ -29,6 +29,7 @@ import { CurvesService } from "./services/curves.service";
 import { SimulationModule } from "../simulation/simulation.module";
 import { MonitorService } from "../monitor/services/monitor.service";
 import { ScenarioParamsComponent } from './pages/scenario-params/scenario-params.component';
+import { ScenarioParamsCreateComponent } from './pages/scenario-params-create/scenario-params-create.component';
 
 @NgModule({
     declarations: [
@@ -44,6 +45,7 @@ import { ScenarioParamsComponent } from './pages/scenario-params/scenario-params
         ModalEditComponentMed,
         ScenariosComponent,
         ScenarioParamsComponent,
+        ScenarioParamsCreateComponent,
     ],
     imports: [
         CommonModule,
