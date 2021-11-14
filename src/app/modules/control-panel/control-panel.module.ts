@@ -28,6 +28,7 @@ import { ModalEditComponentMed } from "./modals/medications/modal-edit/modal-edi
 import { CurvesService } from "./services/curves.service";
 import { SimulationModule } from "../simulation/simulation.module";
 import { MonitorService } from "../monitor/services/monitor.service";
+import { ScenarioParamsComponent } from './pages/scenario-params/scenario-params.component';
 
 @NgModule({
     declarations: [
@@ -42,6 +43,7 @@ import { MonitorService } from "../monitor/services/monitor.service";
         ModalEditComponentPath,
         ModalEditComponentMed,
         ScenariosComponent,
+        ScenarioParamsComponent,
     ],
     imports: [
         CommonModule,

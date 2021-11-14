@@ -1,4 +1,3 @@
-import { ScenariosComponent } from "./pages/scenarios/scenarios.component";
 import { NgModule } from "@angular/core";
 import { Routes, RouterModule } from "@angular/router";
 import { PanelComponent } from "@panel/pages/panel/panel.component";
@@ -6,6 +5,7 @@ import { AnimalSpeciesListComponent } from "./pages/animal-species/animal-specie
 import { PathologiesComponent } from "./pages/pathologies/pathologies.component";
 import { MedicationsComponent } from "./pages/medications/medications.component";
 import { ArrhythmiasComponent } from "./pages/arrhythmias/arrhythmias.component";
+import { ScenarioParamsComponent } from "./pages/scenario-params/scenario-params.component";
 
 const routes: Routes = [
     { path: "", component: PanelComponent },
@@ -13,7 +13,7 @@ const routes: Routes = [
     { path: "pathologies", component: PathologiesComponent },
     { path: "medications", component: MedicationsComponent },
     { path: "arrhythmias", component: ArrhythmiasComponent },
-    { path: "scenarios", component: ScenariosComponent },
+    { path: "scenarios", component: ScenarioParamsComponent },
 ];
 
 @NgModule({

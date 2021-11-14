@@ -41,6 +41,33 @@ export class ScenarioService {
         return subject.asObservable();
     }
 
+    public listWithParams(query: any = null, order: any = null) {
+        const subject = new Subject<any>();
+
+        let endpoint = environment.api.scenariosParams;
+
+        if (query) endpoint += `?${HelperService.getQueryString(query)}`;
+        if (order) {
+            const queryParams = HelperService.getOrderQueryString(order);
+            if (endpoint.indexOf("?") >= 0) endpoint += `&${queryParams}`;
+            else endpoint += `?${queryParams}`;
+        }
+
+        this.api.httpGet(endpoint).subscribe(
+            (data: any) => {
+                subject.next(data);
+            },
+            (err: any) => {
+                subject.error(err);
+            },
+            () => {
+                subject.complete();
+            }
+        );
+
+        return subject.asObservable();
+    }
+
     /**
      * Find scenario by id.
      * @param scenarioId

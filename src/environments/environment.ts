@@ -11,6 +11,7 @@ export const environment = {
         medications: "/medication/",
         pathologies: "/pathology/",
         scenarios: "/scenario/",
+        scenariosParams: "/scenario/parameters",
         login: "/auth/login",
         register: "/auth/register",
         simulations: "/simulation/",
