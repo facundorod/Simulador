@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup } from "@angular/forms";
 import { ActivatedRoute } from "@angular/router";
 import { AnimalSpeciesResponseI } from "@app/shared/models/animal-specieResponse";
 import { AnimalSpeciesI } from "@app/shared/models/animal-speciesI";
+import { AnimalParametersI } from "@app/shared/models/animaParametersI";
 import { ArrhythmiaI } from "@app/shared/models/arrhythmiaI";
 import { ArrhythmiaResponseI } from "@app/shared/models/arrhythmiasResponse";
 import { MedicationI } from "@app/shared/models/medicationI";
@@ -30,6 +31,7 @@ export class ScenarioParamsCreateComponent implements OnInit {
     private scenario: ScenarioParamsI;
     private formGroupScenario: FormGroup;
     private params: { id: number };
+
     constructor(
         private animalSpecieService: AnimalSpeciesService,
         private medicationService: MedicationsService,
@@ -40,7 +42,7 @@ export class ScenarioParamsCreateComponent implements OnInit {
         private activatedRoute: ActivatedRoute
     ) {
         const params = activatedRoute.snapshot.params;
-        if (params && params.id) this.params.id = Number(params.id);
+        if (params && params.id) this.params = { id: Number(params.id) };
     }
 
     ngOnInit(): void {
@@ -60,8 +62,9 @@ export class ScenarioParamsCreateComponent implements OnInit {
 
     private loadScenario(): void {
         this.scenarioService.listByIdWithParams(this.params.id).subscribe(
-            (scenario: ScenarioParamsI) => {
-                this.scenario = scenario;
+            (scenario: ScenarioParamsI[]) => {
+                [this.scenario] = scenario;
+                this.initForm();
             },
             (error: Error) => {
                 console.error(error);
@@ -134,8 +137,25 @@ export class ScenarioParamsCreateComponent implements OnInit {
     }
 
     private initForm(): void {
+        const animalParameters: AnimalParametersI =
+            this.scenario?.parametersScenario[0]?.animalParameters;
         this.formGroupScenario = this.fb.group({
-            scenarioName: [],
+            scenarioName: [this.scenario ? this.scenario.name : ""],
+            scenarioDescription: [
+                this.scenario ? this.scenario.description : "",
+            ],
+            animalSpecie: [
+                animalParameters ? animalParameters.animalSpecie.name : null,
+            ],
         });
+        this.loading = false;
+    }
+
+    public getForm(): FormGroup {
+        return this.formGroupScenario;
+    }
+
+    public isLoading(): boolean {
+        return this.loading;
     }
 }

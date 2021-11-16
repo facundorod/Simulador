@@ -69,8 +69,10 @@ export class ScenarioService {
         return subject.asObservable();
     }
 
-    public listByIdWithParams(scenarioId: number): Observable<ScenarioParamsI> {
-        const subject = new Subject<ScenarioParamsI>();
+    public listByIdWithParams(
+        scenarioId: number
+    ): Observable<ScenarioParamsI[]> {
+        const subject = new Subject<ScenarioParamsI[]>();
 
         let endpoint = environment.api.scenariosParams + "/" + scenarioId;
 

@@ -9,26 +9,26 @@
 </div>
 
 
-<div class="container container-form">
-    <form>
+<div class="container container-form" *ngIf="!isLoading()">
+    <form [formGroup]="getForm()">
         <div class="row justify-content-between">
             <div class="col-3">
                 <label for="scenario-name" class="form-label">Scenario Name</label>
-                <input type="text" class="form-control">
+                <input type="text" class="form-control" formControlName="scenarioName">
             </div>
 
             <div class="col-5">
                 <label for="scenario-description" class="form-label">Scenario description</label>
-                <textarea class="form-control" rows="3"></textarea>
+                <textarea class="form-control" rows="3" formControlName="scenarioDescription"></textarea>
             </div>
 
             <div class="col-4">
                 <label for="animal-specie">Animal Specie</label>
                 <select class="form-select form-control" name="animal-specie" id="animal-specie"
-                    aria-label="Default select example">
-                    <option selected>Choose Animal</option>
+                    aria-label="Select animal specie" formControlName="animalSpecie">
+                    <option [ngValue]="null" disabled>Choose Animal</option>
                     <ng-template [ngIf]="getAnimals().length">
-                        <option *ngFor="let animal of getAnimals()">
+                        <option *ngFor="let animal of getAnimals()" [ngValue]="animal.name">
                             {{animal.name}}
                         </option>
                     </ng-template>
@@ -129,6 +129,9 @@
                             <th scope="col"></th>
                         </tr>
                     </thead>
+                    <tbody>
+
+                    </tbody>
                 </table>
             </div>
 
