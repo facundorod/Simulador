@@ -1,5 +1,5 @@
 import { Component, OnInit } from "@angular/core";
-import { FormBuilder, FormGroup } from "@angular/forms";
+import { FormArray, FormBuilder, FormGroup } from "@angular/forms";
 import { ActivatedRoute } from "@angular/router";
 import { AnimalSpeciesResponseI } from "@app/shared/models/animal-specieResponse";
 import { AnimalSpeciesI } from "@app/shared/models/animal-speciesI";
@@ -7,6 +7,7 @@ import { AnimalParametersI } from "@app/shared/models/animaParametersI";
 import { ArrhythmiaI } from "@app/shared/models/arrhythmiaI";
 import { ArrhythmiaResponseI } from "@app/shared/models/arrhythmiasResponse";
 import { MedicationI } from "@app/shared/models/medicationI";
+import { MedicationScenarioI } from "@app/shared/models/medicationScenarioI";
 import { MedicationResponseI } from "@app/shared/models/medicationsResponse";
 import { PathologiesResponseI } from "@app/shared/models/pathologiesResponse";
 import { PathologyI } from "@app/shared/models/pathologyI";
@@ -145,9 +146,14 @@ export class ScenarioParamsCreateComponent implements OnInit {
                 this.scenario ? this.scenario.description : "",
             ],
             animalSpecie: [
-                animalParameters ? animalParameters.animalSpecie.name : null,
+                animalParameters ? animalParameters.animalSpecie : null,
             ],
+            medications: new FormArray([]),
+            arrhythmias: new FormArray([]),
+            pathologies: new FormArray([]),
         });
+
+        this.loadMedicationForm();
         this.loading = false;
     }
 
@@ -157,5 +163,21 @@ export class ScenarioParamsCreateComponent implements OnInit {
 
     public isLoading(): boolean {
         return this.loading;
+    }
+
+    private loadMedicationForm(): void {
+        const medication: MedicationScenarioI[] = this.scenario?.medications;
+        if (medication && medication.length) {
+            medication.forEach((medication: MedicationScenarioI) => {
+                this.formGroupScenario.value["medications"].push(medication);
+            });
+        }
+        console.log("test", this.formGroupScenario);
+    }
+
+    public compareAnimals(a1: AnimalSpeciesI, a2: AnimalSpeciesI): boolean {
+        if (a1 && a2) return a1.id_as == a2.id_as;
+        if (!a1 && !a2) return true;
+        return false;
     }
 }
