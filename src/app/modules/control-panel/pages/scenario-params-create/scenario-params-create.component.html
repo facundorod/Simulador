@@ -62,6 +62,41 @@
 
                     </thead>
                     <tbody>
+                        <ng-container formArrayName="medications"
+                            *ngFor="let group of getMedicationsForm().controls; let i = index">
+
+                            <tr [formGroupName]="i">
+
+                                <td scope="row">
+                                    <select class="form-select form-control" formControlName="medication">
+                                        <option *ngIf="! group.value.medication" value="" selected>Choose Medication
+                                        </option>
+                                        <option *ngIf=" group.value.medication " [ngValue]="group.value.medication"
+                                            selected>
+                                            {{group.value.medication.name}}
+                                        </option>
+                                        <option *ngFor="let medication of getMedications()" [ngValue]="medication">
+                                            {{ medication.name }}
+                                        </option>
+                                    </select>
+                                </td>
+                                <td scope="row">
+                                    <input type="text" class="form-control" formControlName="dose">
+                                </td>
+                                <td scope="row">
+                                    <input type="text" class="form-control" formControlName="unit">
+                                </td>
+                                <td scope="row">
+                                    <button class="btn btn-trash btn-light" (click)="deleteRowMedication(i)">
+                                        <img src="https://img.icons8.com/color/26/000000/trash--v1.png" />
+
+                                    </button>
+
+                                </td>
+
+                            </tr>
+
+                        </ng-container>
 
                     </tbody>
                 </table>

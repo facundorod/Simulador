@@ -167,17 +167,32 @@ export class ScenarioParamsCreateComponent implements OnInit {
 
     private loadMedicationForm(): void {
         const medication: MedicationScenarioI[] = this.scenario?.medications;
+        const control = this.formGroupScenario.get("medications") as FormArray;
         if (medication && medication.length) {
             medication.forEach((medication: MedicationScenarioI) => {
-                this.formGroupScenario.value["medications"].push(medication);
+                control.push(
+                    this.fb.group({
+                        dose: medication.dose,
+                        unit: medication.unit,
+                        medication: medication.medication,
+                    })
+                );
             });
         }
-        console.log("test", this.formGroupScenario);
+    }
+
+    public getMedicationsForm(): FormArray {
+        return this.formGroupScenario.get("medications") as FormArray;
     }
 
     public compareAnimals(a1: AnimalSpeciesI, a2: AnimalSpeciesI): boolean {
         if (a1 && a2) return a1.id_as == a2.id_as;
         if (!a1 && !a2) return true;
         return false;
+    }
+
+    public deleteRowMedication(index: number) {
+        const control = this.formGroupScenario.get("medications") as FormArray;
+        control.removeAt(index);
     }
 }
