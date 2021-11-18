@@ -63,17 +63,15 @@
                     </thead>
                     <tbody>
                         <ng-container formArrayName="medications"
-                            *ngFor="let group of getMedicationsForm().controls; let i = index">
+                            *ngFor="let medication of getMedicationsForm().controls; let i = index">
 
                             <tr [formGroupName]="i">
 
                                 <td scope="row">
-                                    <select class="form-select form-control" formControlName="medication">
-                                        <option *ngIf="! group.value.medication" value="" selected>Choose Medication
-                                        </option>
-                                        <option *ngIf=" group.value.medication " [ngValue]="group.value.medication"
-                                            selected>
-                                            {{group.value.medication.name}}
+                                    <select class="form-select form-control" formControlName="medication"
+                                        [compareWith]="compareMedications">
+                                        <option value="null" disabled>Choose
+                                            Medication
                                         </option>
                                         <option *ngFor="let medication of getMedications()" [ngValue]="medication">
                                             {{ medication.name }}
@@ -98,6 +96,10 @@
 
                         </ng-container>
 
+                        <button class="btn btn-add mt-2 ml-1" (click)="addRowMedication()">
+                            + Medication
+                        </button>
+
                     </tbody>
                 </table>
             </div>
@@ -117,6 +119,34 @@
                     </thead>
 
                     <tbody>
+                        <ng-container formArrayName="pathologies"
+                            *ngFor="let pat of getPathologiesForm().controls; let i = index">
+                            <tr [formGroupName]="i">
+
+                                <td scope="row">
+                                    <select class="form-select form-control" formControlName="pathology"
+                                        [compareWith]="comparePathologies">
+                                        <option value="null" disabled>Choose
+                                            Pathology
+                                        </option>
+                                        <option *ngFor="let pathology of getPathologies()" [ngValue]="pathology">
+                                            {{ pathology.name }}
+                                        </option>
+                                    </select>
+                                </td>
+                                <td scope="row">
+                                    <button class="btn btn-trash btn-light" (click)="deleteRowPathology(i)">
+                                        <img src="https://img.icons8.com/color/26/000000/trash--v1.png" />
+
+                                    </button>
+
+                                </td>
+                            </tr>
+                        </ng-container>
+
+                        <button class="btn btn-add mt-2 ml-1" (click)="addRowPathology()">
+                            + Pathology
+                        </button>
                     </tbody>
                 </table>
             </div>
@@ -137,7 +167,33 @@
 
                     </thead>
 
-                    <tbody>
+                    <tbody *ngIf="!isLoading() && existsArrhythmias()">
+                        <ng-container formArrayName="arrhythmias"
+                            *ngFor="let arr of getArrhythmiasForm().controls; let i = index">
+                            <tr [formGroupName]="i">
+
+                                <td scope="row">
+                                    <select class="form-select form-control" formControlName="arrhythmia"
+                                        [compareWith]="compareArrhythmias">
+                                        <option value="null" disabled>Choose
+                                            Arrhythmia
+                                        </option>
+                                        <option *ngFor="let arrhythmia of getArrhythmias()" [ngValue]="arrhythmia">
+                                            {{ arrhythmia.name }}
+                                        </option>
+                                    </select>
+                                </td>
+                                <td scope="row">
+                                    <button class="btn btn-trash btn-light" (click)="deleteRowArrhythmia(i)">
+                                        <img src="https://img.icons8.com/color/26/000000/trash--v1.png" />
+                                    </button>
+
+                                </td>
+                            </tr>
+                        </ng-container>
+                        <button class="btn btn-add mt-2 ml-1" (click)="addRowArrhythmia()">
+                            + Arrhythmia
+                        </button>
                     </tbody>
                 </table>
             </div>
@@ -161,10 +217,52 @@
                             <th scope="col">
                                 Alerts
                             </th>
+                            <th scope="col">
+                                Color line
+                            </th>
                             <th scope="col"></th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody *ngIf="!isLoading() && getParameters().length > 0">
+                        <tr *ngFor="let parameter of getParameters(); let i=index">
+                            <td scope="col" class="col-param">
+                                <p>{{parameter.animalParameters.physiologicalParameter.name}}</p>
+                            </td>
+                            <td scope="row" class="col-value">
+                                <p>{{parameter.value}}</p>
+                            </td>
+                            <td scope="row" class="col-configuration">
+                                <p>{{parameter.animalParameters.physiologicalParameter.specialConfiguration}}</p>
+                            </td>
+                            <td scope="row">
+                                <p>Alert low: {{parameter.animalParameters.alert_low}}
+                                    <br>
+                                    Alert high: {{parameter.animalParameters.alert_high}}
+                                </p>
+                            </td>
+                            <td scope="row">
+                                <ng-template [ngIf]="parameter.animalParameters.physiologicalParameter.colorLine"><input
+                                        type="color" class="form-control form-control-color color-picker"
+                                        value="{{parameter.animalParameters.physiologicalParameter.colorLine}}"
+                                        title="Color line" disabled></ng-template>
+                                <ng-template [ngIf]="!parameter.animalParameters.physiologicalParameter.colorLine">
+                                    <p class="text-color">-</p>
+                                </ng-template>
+
+                            </td>
+                            <td scope="row" class="text-right">
+                                <button class="btn btn-light">
+                                    <img
+                                        src="https://img.icons8.com/external-kiranshastry-lineal-color-kiranshastry/26/000000/external-pencil-interface-kiranshastry-lineal-color-kiranshastry-1.png" />
+                                </button>
+                                <span>
+                                    <button class="btn btn-trash btn-light ml-2" (click)="onDeleteParameter(i)">
+                                        <img src="https://img.icons8.com/color/26/000000/trash--v1.png" />
+                                    </button>
+                                </span>
+                            </td>
+                        </tr>
+
 
                     </tbody>
                 </table>
@@ -182,3 +280,12 @@
         </div>
     </form>
 </div>
+
+
+<ng-template #noElements let-colspan='colspan'>
+    <tr>
+        <td colspan="7">
+            Nothing to show you.
+        </td>
+    </tr>
+</ng-template>

@@ -11,7 +11,9 @@ import { MedicationScenarioI } from "@app/shared/models/medicationScenarioI";
 import { MedicationResponseI } from "@app/shared/models/medicationsResponse";
 import { PathologiesResponseI } from "@app/shared/models/pathologiesResponse";
 import { PathologyI } from "@app/shared/models/pathologyI";
+import { PhysiologicalParamaterI } from "@app/shared/models/physiologicalParamaterI";
 import { ScenarioParamsI } from "@app/shared/models/scenarioParamsI";
+import { SPPI } from "@app/shared/models/SPPI";
 import { AnimalSpeciesService } from "../../services/animalSpecies.service";
 import { ArrhythmiasService } from "../../services/arrhythmias.service";
 import { MedicationsService } from "../../services/medications.service";
@@ -28,6 +30,7 @@ export class ScenarioParamsCreateComponent implements OnInit {
     private medications: MedicationI[] = [];
     private arrhythmias: ArrhythmiaI[] = [];
     private pathologies: PathologyI[] = [];
+    private parameters: SPPI[] = [];
     private loading: boolean = true;
     private scenario: ScenarioParamsI;
     private formGroupScenario: FormGroup;
@@ -65,6 +68,7 @@ export class ScenarioParamsCreateComponent implements OnInit {
         this.scenarioService.listByIdWithParams(this.params.id).subscribe(
             (scenario: ScenarioParamsI[]) => {
                 [this.scenario] = scenario;
+                this.parameters = this.scenario.parametersScenario;
                 this.initForm();
             },
             (error: Error) => {
@@ -117,6 +121,10 @@ export class ScenarioParamsCreateComponent implements OnInit {
         );
     }
 
+    public getParameters(): SPPI[] {
+        return this.parameters;
+    }
+
     public getArrhythmias(): ArrhythmiaI[] {
         return this.arrhythmias;
     }
@@ -151,9 +159,12 @@ export class ScenarioParamsCreateComponent implements OnInit {
             medications: new FormArray([]),
             arrhythmias: new FormArray([]),
             pathologies: new FormArray([]),
+            parameters: new FormArray([]),
         });
 
         this.loadMedicationForm();
+        this.loadPathologiesForm();
+        this.loadArrhythmiasForm();
         this.loading = false;
     }
 
@@ -167,16 +178,48 @@ export class ScenarioParamsCreateComponent implements OnInit {
 
     private loadMedicationForm(): void {
         const medication: MedicationScenarioI[] = this.scenario?.medications;
-        const control = this.formGroupScenario.get("medications") as FormArray;
+        const medControl: FormArray = this.formGroupScenario.get(
+            "medications"
+        ) as FormArray;
         if (medication && medication.length) {
             medication.forEach((medication: MedicationScenarioI) => {
-                control.push(
+                medControl.push(
                     this.fb.group({
                         dose: medication.dose,
                         unit: medication.unit,
-                        medication: medication.medication,
+                        medication: medication.medication
+                            ? medication.medication
+                            : null,
                     })
                 );
+            });
+        }
+    }
+
+    private loadPathologiesForm(): void {
+        const pathologies: PathologyI[] = this.scenario?.pathologies;
+        const pathControl: FormArray = this.formGroupScenario.get(
+            "pathologies"
+        ) as FormArray;
+        if (pathologies && pathologies.length) {
+            pathologies.forEach((pat: PathologyI) => {
+                pathControl.push(
+                    this.fb.group({
+                        pathology: pat,
+                    })
+                );
+            });
+        }
+    }
+
+    private loadArrhythmiasForm(): void {
+        const arrhythmias: ArrhythmiaI[] = this.scenario?.arrhythmias;
+        const arrhythmiaControl: FormArray = this.formGroupScenario.get(
+            "arrhythmias"
+        ) as FormArray;
+        if (arrhythmias && arrhythmias.length) {
+            arrhythmias.forEach((arr: ArrhythmiaI) => {
+                arrhythmiaControl.push(this.fb.group({ arrhythmia: arr }));
             });
         }
     }
@@ -185,14 +228,104 @@ export class ScenarioParamsCreateComponent implements OnInit {
         return this.formGroupScenario.get("medications") as FormArray;
     }
 
+    public getPathologiesForm(): FormArray {
+        return this.formGroupScenario.get("pathologies") as FormArray;
+    }
+
+    public getArrhythmiasForm(): FormArray {
+        return this.formGroupScenario.get("arrhythmias") as FormArray;
+    }
+
+    public deleteRowMedication(index: number): void {
+        const control = this.formGroupScenario.get("medications") as FormArray;
+        control.removeAt(index);
+    }
+
+    public addRowMedication(): void {
+        const medControl: FormArray = this.formGroupScenario.get(
+            "medications"
+        ) as FormArray;
+
+        medControl.push(
+            this.fb.group({ dose: "", unit: "", medication: null })
+        );
+    }
+
+    public addRowPathology(): void {
+        const pathControl: FormArray = this.formGroupScenario.get(
+            "pathologies"
+        ) as FormArray;
+
+        pathControl.push(this.fb.group({ pathology: null }));
+    }
+
+    public deleteRowPathology(index: number): void {
+        const control = this.formGroupScenario.get("pathologies") as FormArray;
+        control.removeAt(index);
+    }
+
+    public addRowArrhythmia(): void {
+        const arrControl: FormArray = this.formGroupScenario.get(
+            "arrhythmias"
+        ) as FormArray;
+        arrControl.push(this.fb.group({ arrhythmia: null }));
+    }
+
+    public deleteRowArrhythmia(index: number): void {
+        const control = this.formGroupScenario.get("arrhythmias") as FormArray;
+        control.removeAt(index);
+    }
+
+    // Compare Objects in select //
+
     public compareAnimals(a1: AnimalSpeciesI, a2: AnimalSpeciesI): boolean {
         if (a1 && a2) return a1.id_as == a2.id_as;
         if (!a1 && !a2) return true;
         return false;
     }
 
-    public deleteRowMedication(index: number) {
-        const control = this.formGroupScenario.get("medications") as FormArray;
-        control.removeAt(index);
+    public compareMedications(m1: MedicationI, m2: MedicationI): boolean {
+        if (m1 && m2) return m1.id_medication == m2.id_medication;
+        if (!m1 && !m2) return true;
+        return false;
+    }
+
+    public comparePathologies(p1: PathologyI, p2: PathologyI): boolean {
+        if (p1 && p2) return p1.id_pat == p2.id_pat;
+        if (!p1 && !p2) return true;
+        return false;
+    }
+
+    public compareArrhythmias(a1: ArrhythmiaI, a2: ArrhythmiaI): boolean {
+        if (a1 && a2) return a1.id_arr == a2.id_arr;
+        if (!a1 && !a2) return true;
+        return false;
+    }
+
+    // End compare Objects in select //
+
+    public existsMedications(): boolean {
+        const medControl: FormArray = this.formGroupScenario.get(
+            "medications"
+        ) as FormArray;
+        return medControl && medControl.length > 0;
+    }
+
+    public existsArrhythmias(): boolean {
+        const arrControl: FormArray = this.formGroupScenario.get(
+            "arrhythmias"
+        ) as FormArray;
+        return arrControl && arrControl.length > 0;
+    }
+
+    public existsPathologies(): boolean {
+        const pathControl: FormArray = this.formGroupScenario.get(
+            "pathologies"
+        ) as FormArray;
+        return pathControl && pathControl.length > 0;
+    }
+
+    public onDeleteParameter(index: number): void {
+        this.parameters.splice(index, 1);
     }
 }

@@ -16,10 +16,43 @@ h3 {
 
 .col-param,
 .col-configuration {
-    max-width: 100px;
+    max-width: 150px;
+}
+
+.col-alerts {
+    width: 200px;
 }
 
 .curves-dataset-input {
     background-color: transparent;
     padding-left: 0;
+}
+
+.save-changes,
+.btn-add {
+    margin-left: 2%;
+    background-color: #59478d;
+    border-color: #59478d;
+    color: #fff;
+}
+
+.save-changes:hover,
+.btn-add:hover {
+    color: #59478d;
+    border-color: #fff;
+    background-color: #fff;
+}
+
+.col-value p,
+.text-color {
+    padding-left: 3%;
+}
+
+.table-hover tbody tr:hover {
+    background-color: #616161;
+}
+
+.color-picker {
+    width: 50px;
+    padding: 0;
 }
