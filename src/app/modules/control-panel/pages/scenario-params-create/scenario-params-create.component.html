@@ -209,7 +209,7 @@
                     <thead class="thead-dark">
                         <tr>
                             <th scope="col" class="col-param">
-                                Physiological Parameter
+                                Parameter
                             </th>
                             <th scope="col">
                                 Value
@@ -262,14 +262,24 @@
                                 </ng-template>
 
                             </td>
-                            <td scope="row" [formArrayName]="'curves'">
-                                <div [formGroupName]="i">
+                            <td scope="row">
+                                <ng-template [ngIf]="changeCurves(i)">
                                     <label class="custom-file-upload">
                                         <input class="form-control curves-dataset-input" id="formFile" type="file"
-                                            accept=".csv">
-                                        + Curves
+                                            accept=".csv" (change)="onFileChange($event, i)">
+                                        Change Curves
                                     </label>
-                                </div>
+                                    <button class="btn btn-link" (click)="onDeleteCurves(i)"> <img
+                                            src="https://img.icons8.com/external-kiranshastry-lineal-color-kiranshastry/20/000000/external-close-banking-and-finance-kiranshastry-lineal-color-kiranshastry.png" />
+                                    </button>
+                                </ng-template>
+                                <ng-template [ngIf]="!changeCurves(i)">
+                                    <label class="custom-file-upload">
+                                        <input class="form-control curves-dataset-input" id="formFile" type="file"
+                                            accept=".csv" (change)="onFileChange($event, i)">
+                                        Add Curves
+                                    </label>
+                                </ng-template>
 
                             </td>
                             <td scope="row" class="text-right">

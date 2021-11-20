@@ -35,6 +35,7 @@ export class ScenarioParamsCreateComponent implements OnInit {
     private scenario: ScenarioParamsI;
     private formGroupScenario: FormGroup;
     private params: { id: number };
+    private fileNames: string[] = [];
 
     constructor(
         private animalSpecieService: AnimalSpeciesService,
@@ -155,13 +156,12 @@ export class ScenarioParamsCreateComponent implements OnInit {
             medications: new FormArray([]),
             arrhythmias: new FormArray([]),
             pathologies: new FormArray([]),
-            curves: new FormArray([]),
         });
 
         this.loadMedicationForm();
         this.loadPathologiesForm();
         this.loadArrhythmiasForm();
-        this.loadCurvesForm();
+        this.loadCurves();
         this.loading = false;
     }
 
@@ -225,12 +225,9 @@ export class ScenarioParamsCreateComponent implements OnInit {
         }
     }
 
-    public loadCurvesForm(): void {
-        const curvesControl: FormArray = this.formGroupScenario.get(
-            "curves"
-        ) as FormArray;
+    public loadCurves(): void {
         this.parameters.forEach(() => {
-            curvesControl.push(this.fb.group({ file: null }));
+            this.fileNames.push("");
         });
     }
 
@@ -337,5 +334,24 @@ export class ScenarioParamsCreateComponent implements OnInit {
 
     public onDeleteParameter(index: number): void {
         this.parameters.splice(index, 1);
+    }
+
+    public changeCurves(index: number) {
+        return (
+            this.fileNames[index] !== "" ||
+            this.parameters[index].curves.length > 0
+        );
+    }
+
+    public onDeleteCurves(index: number) {
+        this.parameters[index].curves = [];
+        this.fileNames[index] = "";
+    }
+
+    public onFileChange(event: any, index: number): void {
+        if (event.target.files && event.target.files.length) {
+            const [file] = event.target.files;
+            this.fileNames[index] = file.name;
+        }
     }
 }
