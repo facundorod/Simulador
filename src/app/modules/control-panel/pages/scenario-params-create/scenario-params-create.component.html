@@ -1,8 +1,11 @@
 <div class="container">
     <div class="scenario-header">
-        <div class="row">
-            <div class="col">
+        <div class="row justify-content-between">
+            <div class="col-4">
                 <h3 class="title"> New Scenario </h3>
+            </div>
+            <div class="col-2">
+                <button class="btn btn-primary btn-save" (click)="onAddScenario()"> Save Changes</button>
             </div>
         </div>
     </div>
@@ -220,10 +223,15 @@
                             <th scope="col">
                                 Color line
                             </th>
+                            <th scope="col">
+                                Curves &nbsp;
+                                <img src="https://img.icons8.com/color/24/000000/export-csv.png" />
+
+                            </th>
                             <th scope="col"></th>
                         </tr>
                     </thead>
-                    <tbody *ngIf="!isLoading() && getParameters().length > 0">
+                    <tbody *ngIf="!isLoading() && getParameters().length > 0 else noElements">
                         <tr *ngFor="let parameter of getParameters(); let i=index">
                             <td scope="col" class="col-param">
                                 <p>{{parameter.animalParameters.physiologicalParameter.name}}</p>
@@ -232,7 +240,11 @@
                                 <p>{{parameter.value}}</p>
                             </td>
                             <td scope="row" class="col-configuration">
-                                <p>{{parameter.animalParameters.physiologicalParameter.specialConfiguration}}</p>
+                                <p *ngIf="parameter.animalParameters.physiologicalParameter.specialConfiguration">
+                                    {{parameter.animalParameters.physiologicalParameter.specialConfiguration}}</p>
+
+                                <p *ngIf="!parameter.animalParameters.physiologicalParameter.specialConfiguration">
+                                    -</p>
                             </td>
                             <td scope="row">
                                 <p>Alert low: {{parameter.animalParameters.alert_low}}
@@ -248,6 +260,16 @@
                                 <ng-template [ngIf]="!parameter.animalParameters.physiologicalParameter.colorLine">
                                     <p class="text-color">-</p>
                                 </ng-template>
+
+                            </td>
+                            <td scope="row" [formArrayName]="'curves'">
+                                <div [formGroupName]="i">
+                                    <label class="custom-file-upload">
+                                        <input class="form-control curves-dataset-input" id="formFile" type="file"
+                                            accept=".csv">
+                                        + Curves
+                                    </label>
+                                </div>
 
                             </td>
                             <td scope="row" class="text-right">
@@ -268,15 +290,6 @@
                 </table>
             </div>
 
-        </div>
-
-
-        <div class="row file-row">
-            <div class="col-auto">
-                <label for="curves-dataset" class="form-label">Curves Dataset</label>
-                <input class="form-control curves-dataset-input" id="formFile" type="file" accept=".csv">
-
-            </div>
         </div>
     </form>
 </div>

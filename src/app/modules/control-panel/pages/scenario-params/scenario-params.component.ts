@@ -1,5 +1,6 @@
 import { Component, OnInit } from "@angular/core";
 import { FormBuilder, FormGroup } from "@angular/forms";
+import { Router } from "@angular/router";
 import { ScenarioService } from "../../services/scenario.service";
 
 @Component({
@@ -10,7 +11,8 @@ import { ScenarioService } from "../../services/scenario.service";
 export class ScenarioParamsComponent implements OnInit {
     constructor(
         private scenarioService: ScenarioService,
-        private fb: FormBuilder
+        private fb: FormBuilder,
+        private router: Router
     ) {}
     public scenarios: any;
     private formGroup: FormGroup;
@@ -91,5 +93,13 @@ export class ScenarioParamsComponent implements OnInit {
         this.formGroup.get("q").reset();
         this.loading = true;
         this.loadData();
+    }
+
+    public onAddScenario(): void {
+        this.router.navigateByUrl("/panel/scenarios/create");
+    }
+
+    public onEdit(index: number): void {
+        this.router.navigateByUrl(`/panel/scenarios/create/${index}`);
     }
 }

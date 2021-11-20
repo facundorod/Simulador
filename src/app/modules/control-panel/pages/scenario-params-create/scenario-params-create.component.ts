@@ -141,10 +141,6 @@ export class ScenarioParamsCreateComponent implements OnInit {
         return this.medications;
     }
 
-    public isLoadint(): boolean {
-        return this.loading;
-    }
-
     private initForm(): void {
         const animalParameters: AnimalParametersI =
             this.scenario?.parametersScenario[0]?.animalParameters;
@@ -159,12 +155,13 @@ export class ScenarioParamsCreateComponent implements OnInit {
             medications: new FormArray([]),
             arrhythmias: new FormArray([]),
             pathologies: new FormArray([]),
-            parameters: new FormArray([]),
+            curves: new FormArray([]),
         });
 
         this.loadMedicationForm();
         this.loadPathologiesForm();
         this.loadArrhythmiasForm();
+        this.loadCurvesForm();
         this.loading = false;
     }
 
@@ -174,6 +171,10 @@ export class ScenarioParamsCreateComponent implements OnInit {
 
     public isLoading(): boolean {
         return this.loading;
+    }
+
+    public onAddScenario(): void {
+        console.log("", this.parameters);
     }
 
     private loadMedicationForm(): void {
@@ -222,6 +223,15 @@ export class ScenarioParamsCreateComponent implements OnInit {
                 arrhythmiaControl.push(this.fb.group({ arrhythmia: arr }));
             });
         }
+    }
+
+    public loadCurvesForm(): void {
+        const curvesControl: FormArray = this.formGroupScenario.get(
+            "curves"
+        ) as FormArray;
+        this.parameters.forEach(() => {
+            curvesControl.push(this.fb.group({ file: null }));
+        });
     }
 
     public getMedicationsForm(): FormArray {

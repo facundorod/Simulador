@@ -29,7 +29,8 @@ h3 {
 }
 
 .save-changes,
-.btn-add {
+.btn-add,
+.btn-save {
     margin-left: 2%;
     background-color: #59478d;
     border-color: #59478d;
@@ -37,10 +38,18 @@ h3 {
 }
 
 .save-changes:hover,
-.btn-add:hover {
+.btn-add:hover,
+.btn-save:hover {
     color: #59478d;
     border-color: #fff;
     background-color: #fff;
+}
+
+.btn-save {
+    width: 150px;
+    height: 60px;
+    border-radius: 6px;
+    font-size: 1.2em;
 }
 
 .col-value p,
@@ -55,4 +64,17 @@ h3 {
 .color-picker {
     width: 50px;
     padding: 0;
+}
+
+.custom-file-upload {
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    display: inline-block;
+    padding: 6px 12px;
+    cursor: pointer;
+    background-color: #fff;
+}
+
+input[type="file"] {
+    display: none;
 }
