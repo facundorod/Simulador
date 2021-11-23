@@ -5,11 +5,11 @@ import { PathologyI } from "./pathologyI";
 import { PPperAsI } from "./ppPerAsI";
 
 export interface ScenarioParamsI {
-    id_scenario: number;
+    id_scenario?: number;
     name: string;
     description: string;
-    created_at: Date;
-    updated_at: Date;
+    created_at?: Date;
+    updated_at?: Date;
     arrhythmias?: ArrhythmiaI[];
     pathologies?: PathologyI[];
     medications?: MedicationScenarioI[];

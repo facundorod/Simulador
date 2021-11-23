@@ -5,7 +5,7 @@
                 <h3 class="title"> New Scenario </h3>
             </div>
             <div class="col-2">
-                <button class="btn btn-primary btn-save" (click)="onAddScenario()"> Save Changes</button>
+                <button class="btn btn-primary btn-save" (click)="onSaveChanges()"> Save Changes</button>
             </div>
         </div>
     </div>
@@ -170,7 +170,7 @@
 
                     </thead>
 
-                    <tbody *ngIf="!isLoading() && existsArrhythmias()">
+                    <tbody>
                         <ng-container formArrayName="arrhythmias"
                             *ngFor="let arr of getArrhythmiasForm().controls; let i = index">
                             <tr [formGroupName]="i">
@@ -223,15 +223,10 @@
                             <th scope="col">
                                 Color line
                             </th>
-                            <th scope="col">
-                                Curves &nbsp;
-                                <img src="https://img.icons8.com/color/24/000000/export-csv.png" />
-
-                            </th>
                             <th scope="col"></th>
                         </tr>
                     </thead>
-                    <tbody *ngIf="!isLoading() && getParameters().length > 0 else noElements">
+                    <tbody *ngIf="getParameters().length > 0 else noElements">
                         <tr *ngFor="let parameter of getParameters(); let i=index">
                             <td scope="col" class="col-param">
                                 <p>{{parameter.animalParameters.physiologicalParameter.name}}</p>
@@ -262,28 +257,8 @@
                                 </ng-template>
 
                             </td>
-                            <td scope="row">
-                                <ng-template [ngIf]="changeCurves(i)">
-                                    <label class="custom-file-upload">
-                                        <input class="form-control curves-dataset-input" id="formFile" type="file"
-                                            accept=".csv" (change)="onFileChange($event, i)">
-                                        Change Curves
-                                    </label>
-                                    <button class="btn btn-link" (click)="onDeleteCurves(i)"> <img
-                                            src="https://img.icons8.com/external-kiranshastry-lineal-color-kiranshastry/20/000000/external-close-banking-and-finance-kiranshastry-lineal-color-kiranshastry.png" />
-                                    </button>
-                                </ng-template>
-                                <ng-template [ngIf]="!changeCurves(i)">
-                                    <label class="custom-file-upload">
-                                        <input class="form-control curves-dataset-input" id="formFile" type="file"
-                                            accept=".csv" (change)="onFileChange($event, i)">
-                                        Add Curves
-                                    </label>
-                                </ng-template>
-
-                            </td>
                             <td scope="row" class="text-right">
-                                <button class="btn btn-light">
+                                <button class="btn btn-light" (click)="editParameter(i)">
                                     <img
                                         src="https://img.icons8.com/external-kiranshastry-lineal-color-kiranshastry/26/000000/external-pencil-interface-kiranshastry-lineal-color-kiranshastry-1.png" />
                                 </button>

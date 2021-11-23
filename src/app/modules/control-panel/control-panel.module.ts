@@ -24,12 +24,13 @@ import { ModalEditComponentArr } from "./modals/arrhythmias/modal-edit/modal-edi
 import { ModalEditComponentPath } from "./modals/pathologies/modal-edit/modal-edit.component";
 import { ModalEditComponentMed } from "./modals/medications/modal-edit/modal-edit.component";
 
-
 import { CurvesService } from "./services/curves.service";
 import { SimulationModule } from "../simulation/simulation.module";
 import { MonitorService } from "../monitor/services/monitor.service";
-import { ScenarioParamsComponent } from './pages/scenario-params/scenario-params.component';
-import { ScenarioParamsCreateComponent } from './pages/scenario-params-create/scenario-params-create.component';
+import { ScenarioParamsComponent } from "./pages/scenario-params/scenario-params.component";
+import { ScenarioParamsCreateComponent } from "./pages/scenario-params-create/scenario-params-create.component";
+import { ParametersCreateComponent } from "./modals/parameters-create/parameters-create.component";
+import { ParametersService } from "./services/parameters.service";
 
 @NgModule({
     declarations: [
@@ -46,6 +47,7 @@ import { ScenarioParamsCreateComponent } from './pages/scenario-params-create/sc
         ScenariosComponent,
         ScenarioParamsComponent,
         ScenarioParamsCreateComponent,
+        ParametersCreateComponent,
     ],
     imports: [
         CommonModule,
@@ -68,6 +70,7 @@ import { ScenarioParamsCreateComponent } from './pages/scenario-params-create/sc
         SimulationService,
         CurvesService,
         MonitorService,
+        ParametersService,
     ],
 })
-export class ControlPanelModule { }
+export class ControlPanelModule {}

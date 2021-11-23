@@ -14,11 +14,14 @@ import { PathologyI } from "@app/shared/models/pathologyI";
 import { PhysiologicalParamaterI } from "@app/shared/models/physiologicalParamaterI";
 import { ScenarioParamsI } from "@app/shared/models/scenarioParamsI";
 import { SPPI } from "@app/shared/models/SPPI";
+import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
 import { AnimalSpeciesService } from "../../services/animalSpecies.service";
 import { ArrhythmiasService } from "../../services/arrhythmias.service";
 import { MedicationsService } from "../../services/medications.service";
 import { PathologiesService } from "../../services/pathologies.service";
 import { ScenarioService } from "../../services/scenario.service";
+import { ParametersCreateComponent } from "../../modals/parameters-create/parameters-create.component";
+import { ToastrService } from "ngx-toastr";
 
 @Component({
     selector: "app-scenario-params-create",
@@ -35,7 +38,6 @@ export class ScenarioParamsCreateComponent implements OnInit {
     private scenario: ScenarioParamsI;
     private formGroupScenario: FormGroup;
     private params: { id: number };
-    private fileNames: string[] = [];
 
     constructor(
         private animalSpecieService: AnimalSpeciesService,
@@ -44,7 +46,9 @@ export class ScenarioParamsCreateComponent implements OnInit {
         private arrhythmiasService: ArrhythmiasService,
         private scenarioService: ScenarioService,
         private fb: FormBuilder,
-        private activatedRoute: ActivatedRoute
+        private activatedRoute: ActivatedRoute,
+        private toast: ToastrService,
+        private modal: NgbModal
     ) {
         const params = activatedRoute.snapshot.params;
         if (params && params.id) this.params = { id: Number(params.id) };
@@ -161,7 +165,6 @@ export class ScenarioParamsCreateComponent implements OnInit {
         this.loadMedicationForm();
         this.loadPathologiesForm();
         this.loadArrhythmiasForm();
-        this.loadCurves();
         this.loading = false;
     }
 
@@ -173,8 +176,77 @@ export class ScenarioParamsCreateComponent implements OnInit {
         return this.loading;
     }
 
-    public onAddScenario(): void {
-        console.log("", this.parameters);
+    public onSaveChanges(): void {
+        let arrhythmias: ArrhythmiaI[] = [];
+        let pathologies: PathologyI[] = [];
+        let medications: MedicationScenarioI[] = [];
+        if (this.formGroupScenario.get("arrhythmias")) {
+            const auxArrh = this.formGroupScenario.get("arrhythmias").value;
+            auxArrh.forEach((arr: any) => {
+                arrhythmias.push({
+                    id_arr: arr.arrhythmia.id_arr,
+                    name: arr.arrhythmia.name,
+                    description: arr.arrhythmia.description,
+                });
+            });
+        }
+
+        if (this.formGroupScenario.get("medications"))
+            medications = this.formGroupScenario.get("medications").value;
+
+        if (this.formGroupScenario.get("pathologies")) {
+            const auxPat = this.formGroupScenario.get("pathologies").value;
+            auxPat.forEach((pat: any) => {
+                pathologies.push({
+                    id_pat: pat.pathology.id_pat,
+                    name: pat.pathology.name,
+                    description: pat.pathology.description,
+                });
+            });
+        }
+
+        const parameters: SPPI[] = this.parameters;
+        const scenarioName: string =
+            this.formGroupScenario.get("scenarioName").value;
+        const scenarioDescription: string = this.formGroupScenario.get(
+            "scenarioDescription"
+        ).value;
+        this.scenario = {
+            name: scenarioName,
+            description: scenarioDescription,
+            arrhythmias: arrhythmias,
+            pathologies: pathologies,
+            medications: medications,
+            parametersScenario: parameters,
+        };
+        if (this.params && this.params.id) {
+            this.scenario.id_scenario = this.params.id;
+            this.scenarioService
+                .updateById(this.params.id, this.scenario)
+                .subscribe(
+                    () => {
+                        this.toast.toastrConfig.timeOut = 1000;
+                        this.toast.toastrConfig.positionClass =
+                            "toast-bottom-full-width";
+                        this.toast.success("Scenario updated successfully");
+                    },
+                    (error: Error) => {
+                        console.error(error);
+                    }
+                );
+        } else {
+            this.scenarioService.create(this.scenario).subscribe(
+                () => {
+                    this.toast.toastrConfig.timeOut = 1000;
+                    this.toast.toastrConfig.positionClass =
+                        "toast-bottom-full-width";
+                    this.toast.success("Scenario created successfully");
+                },
+                (error: Error) => {
+                    console.error(error);
+                }
+            );
+        }
     }
 
     private loadMedicationForm(): void {
@@ -223,12 +295,6 @@ export class ScenarioParamsCreateComponent implements OnInit {
                 arrhythmiaControl.push(this.fb.group({ arrhythmia: arr }));
             });
         }
-    }
-
-    public loadCurves(): void {
-        this.parameters.forEach(() => {
-            this.fileNames.push("");
-        });
     }
 
     public getMedicationsForm(): FormArray {
@@ -336,22 +402,17 @@ export class ScenarioParamsCreateComponent implements OnInit {
         this.parameters.splice(index, 1);
     }
 
-    public changeCurves(index: number) {
-        return (
-            this.fileNames[index] !== "" ||
-            this.parameters[index].curves.length > 0
-        );
-    }
-
-    public onDeleteCurves(index: number) {
-        this.parameters[index].curves = [];
-        this.fileNames[index] = "";
-    }
-
-    public onFileChange(event: any, index: number): void {
-        if (event.target.files && event.target.files.length) {
-            const [file] = event.target.files;
-            this.fileNames[index] = file.name;
-        }
+    public editParameter(index: number): void {
+        const modal: NgbModalRef = this.modal.open(ParametersCreateComponent);
+        modal.componentInstance.setParameter(this.parameters[index]);
+        modal.result
+            .then((value: SPPI) => {
+                if (value) {
+                    this.parameters[index] = value;
+                }
+            })
+            .catch((error: Error) => {
+                console.error(error);
+            });
     }
 }

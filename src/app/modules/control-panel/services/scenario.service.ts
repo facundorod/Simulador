@@ -119,14 +119,14 @@ export class ScenarioService {
      * Create a new Scenario
      * @param scenario
      */
-    public create(scenario: ScenarioI) {
+    public create(scenario: ScenarioParamsI) {
         const subject = new Subject<any>();
 
         let endpoint = environment.api.scenarios;
 
-        this.api.httpPost(endpoint, scenario).subscribe(
-            (scenario) => {
-                subject.next([scenario]);
+        this.api.httpPost(endpoint, { scenario }).subscribe(
+            () => {
+                subject.next();
             },
             (err: any) => {
                 subject.error(err);
@@ -139,16 +139,16 @@ export class ScenarioService {
         return subject.asObservable();
     }
 
-    public updateById(scenarioId: number, scenario: any) {
+    public updateById(scenarioId: number, scenario: ScenarioParamsI) {
         const subject = new Subject<any>();
 
         let endpoint = environment.api.scenarios + scenarioId;
 
-        this.api.httpPut(endpoint, scenario).subscribe(
-            (scenario: ScenarioI) => {
-                subject.next(scenario);
+        this.api.httpPut(endpoint, { scenario }).subscribe(
+            () => {
+                subject.next();
             },
-            (err: any) => {
+            (err: Error) => {
                 subject.error(err);
             },
             () => {
