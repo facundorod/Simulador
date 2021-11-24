@@ -30,16 +30,21 @@ h3 {
 
 .save-changes,
 .btn-add,
-.btn-save {
+.btn-save,
+.btn-param {
     margin-left: 2%;
     background-color: #59478d;
     border-color: #59478d;
     color: #fff;
 }
+.btn-param {
+    margin-left: 18%;
+}
 
 .save-changes:hover,
 .btn-add:hover,
-.btn-save:hover {
+.btn-save:hover,
+.btn-param:hover {
     color: #59478d;
     border-color: #fff;
     background-color: #fff;
@@ -59,6 +64,11 @@ h3 {
 
 .table-hover tbody tr:hover {
     background-color: #616161;
+}
+
+.parameter-configuration-text {
+    width: 100%;
+    margin-top: 2%;
 }
 
 .color-picker {

@@ -1,10 +1,12 @@
 import { Component, OnInit } from "@angular/core";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
+import { AnimalSpeciesI } from "@app/shared/models/animal-speciesI";
 import { CurveValues } from "@app/shared/models/curveValues";
 import { CurveValuesI } from "@app/shared/models/curveValuesI";
 import { PhysiologicalParamaterI } from "@app/shared/models/physiologicalParamaterI";
 import { SPPI } from "@app/shared/models/SPPI";
 import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
+import { ParametersService } from "../../services/parameters.service";
 
 @Component({
     selector: "app-parameters-create",
@@ -17,15 +19,24 @@ export class ParametersCreateComponent implements OnInit {
     private physiologicalParameter: PhysiologicalParamaterI;
     private loading: boolean = true;
     private fileContent: CurveValuesI[] = [];
+    private animalSpecie: AnimalSpeciesI;
     private formGroup: FormGroup;
-    constructor(private fb: FormBuilder, private activeModal: NgbActiveModal) {}
+    constructor(
+        private fb: FormBuilder,
+        private activeModal: NgbActiveModal,
+        private paramsService: ParametersService
+    ) {}
 
     ngOnInit(): void {
-        this.initFormGroup();
+        this.loadParameters();
     }
 
     public setParameter(parameter: SPPI) {
-        this.parameter = parameter;
+        if (parameter) {
+            this.parameter = parameter;
+            this.physiologicalParameter =
+                parameter.animalParameters.physiologicalParameter;
+        }
     }
 
     public getParameter(): SPPI {
@@ -34,8 +45,28 @@ export class ParametersCreateComponent implements OnInit {
 
     public onSubmit(): void {
         const value: number = this.formGroup.get("value").value;
+        const alert_low: number = this.formGroup.get("alert_low").value;
+        const alert_high: number = this.formGroup.get("alert_high").value;
+        const parameter: PhysiologicalParamaterI =
+            this.formGroup.get("parameter").value;
+        if (this.parameter?.animalParameters) {
+            this.parameter.animalParameters.alert_low = alert_low;
+            this.parameter.animalParameters.alert_high = alert_high;
+            this.parameter.value = value;
+            this.parameter.curves = this.fileContent;
+        } else {
+            this.parameter = {
+                animalParameters: {
+                    alert_high: alert_high,
+                    alert_low: alert_low,
+                    animalSpecie: this.animalSpecie,
+                    physiologicalParameter: parameter,
+                },
+                value: value,
+                curves: this.fileContent,
+            };
+        }
 
-        this.parameter.curves = this.fileContent;
         this.activeModal.close(this.parameter);
     }
 
@@ -45,14 +76,15 @@ export class ParametersCreateComponent implements OnInit {
 
     public initFormGroup(): void {
         const physiologicalParameter: PhysiologicalParamaterI = this.parameter
-            ? this.parameter.animalParameters.physiologicalParameter
+            ? this.parameter?.animalParameters?.physiologicalParameter
             : this.physiologicalParameter;
+        this.fileContent = this.parameter?.curves;
         this.formGroup = this.fb.group({
             parameter: [null],
             name: [
                 {
-                    value: physiologicalParameter.name
-                        ? physiologicalParameter.name
+                    value: physiologicalParameter?.name
+                        ? physiologicalParameter?.name
                         : "",
                     disabled: true,
                 },
@@ -60,8 +92,8 @@ export class ParametersCreateComponent implements OnInit {
             ],
             description: [
                 {
-                    value: physiologicalParameter.description
-                        ? physiologicalParameter.description
+                    value: physiologicalParameter?.description
+                        ? physiologicalParameter?.description
                         : "",
                     disabled: true,
                 },
@@ -78,11 +110,17 @@ export class ParametersCreateComponent implements OnInit {
                     ? this.parameter.animalParameters.alert_high
                     : 0,
             ],
-            value: [this.parameter.value ? this.parameter.value : 0],
+            value: [this.parameter?.value ? this.parameter?.value : 0],
         });
         this.loading = false;
         this.formGroup.get("parameter").valueChanges.subscribe((value) => {
             this.physiologicalParameter = value;
+            this.formGroup
+                .get("name")
+                .setValue(this.physiologicalParameter.name);
+            this.formGroup
+                .get("description")
+                .setValue(this.physiologicalParameter.description);
         });
     }
 
@@ -99,7 +137,7 @@ export class ParametersCreateComponent implements OnInit {
     }
 
     public changeCurves() {
-        return this.parameter.curves?.length > 0;
+        return this.parameter?.curves?.length > 0;
     }
 
     public onDeleteCurves() {
@@ -163,6 +201,22 @@ export class ParametersCreateComponent implements OnInit {
     }
 
     public editForm(): boolean {
-        return !this.physiologicalParameter;
+        return this.physiologicalParameter != null;
+    }
+
+    public setAnimalSpecie(animal: AnimalSpeciesI): void {
+        this.animalSpecie = animal;
+    }
+
+    public loadParameters(): void {
+        this.paramsService.findAll().subscribe(
+            (value: PhysiologicalParamaterI[]) => {
+                this.parameters = value;
+                this.initFormGroup();
+            },
+            (error: Error) => {
+                console.error(error);
+            }
+        );
     }
 }

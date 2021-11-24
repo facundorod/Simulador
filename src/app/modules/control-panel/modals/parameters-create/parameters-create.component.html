@@ -7,7 +7,22 @@
             <h3>Add Parameter</h3>
         </ng-template>
     </div>
-    <div class="modal-body" *ngIf="getParameter() != null else addParameter">
+    <div class="modal-body">
+        <div class="form-group row" *ngIf="!editForm()">
+            <label for="parameter" class="col-sm-3 col-form-label">Parameter</label>
+            <div class="col-sm-8">
+                <select class="form-select form-control" name="parameter" id="parameter" aria-label="Select Parameter"
+                    formControlName="parameter" [compareWith]="compareParams">
+                    <option [ngValue]="null" disabled>Choose Parameter</option>
+                    <ng-template [ngIf]="getParameters()?.length">
+                        <option *ngFor="let param of getParameters()" [ngValue]="param">
+                            {{param.name}}
+                        </option>
+                    </ng-template>
+
+                </select>
+            </div>
+        </div>
 
         <ng-template [ngIf]="editForm()">
 
@@ -70,22 +85,3 @@
 
     </div>
 </form>
-
-
-<ng-template #addParameter>
-    <div class="form-group row">
-        <label for="name" class="col-sm-3 col-form-label">Parameter</label>
-        <div class="col-sm-8">
-            <select class="form-select form-control" name="parameter" id="parameter" aria-label="Select Parameter"
-                formControlName="parameter" [compareWith]="compareParams">
-                <option [ngValue]="null" disabled>Choose Parameter</option>
-                <ng-template [ngIf]="getParameters().length">
-                    <option *ngFor="let param of getParameters()" [ngValue]="param">
-                        {{param.name}}
-                    </option>
-                </ng-template>
-
-            </select>
-        </div>
-    </div>
-</ng-template>

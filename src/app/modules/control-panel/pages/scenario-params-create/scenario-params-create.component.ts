@@ -420,4 +420,21 @@ export class ScenarioParamsCreateComponent implements OnInit {
                 console.error(error);
             });
     }
+
+    public onAddParameter(): void {
+        const modal: NgbModalRef = this.modal.open(ParametersCreateComponent);
+        const animalSpecie: AnimalSpeciesI =
+            this.formGroupScenario.get("animalSpecie").value;
+        modal.componentInstance.setParameter(null);
+        modal.componentInstance.setAnimalSpecie(animalSpecie);
+        modal.result
+            .then((value: SPPI) => {
+                if (value) {
+                    this.parameters.push(value);
+                }
+            })
+            .catch((error: Error) => {
+                console.error(error);
+            });
+    }
 }

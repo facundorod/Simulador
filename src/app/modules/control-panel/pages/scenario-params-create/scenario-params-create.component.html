@@ -203,8 +203,18 @@
         </div>
 
         <div class="row parameters">
+            <div class="parameter-configuration-text">
+                <h3 class="text-params text-center">Parameters Configuration</h3>
+            </div>
             <div class="col-12">
-                <label for="parameters" class="form-label">Parameters</label>
+                <div class="row justify-content-between mb-1">
+                    <div class="col-4">
+                    </div>
+                    <div class="col-2">
+                        <button class="btn btn-primary btn-param" (click)="onAddParameter()">Add parameter</button>
+                    </div>
+                </div>
+
                 <table class="table table-hover table-params">
                     <thead class="thead-dark">
                         <tr>
@@ -226,7 +236,7 @@
                             <th scope="col"></th>
                         </tr>
                     </thead>
-                    <tbody *ngIf="getParameters().length > 0 else noElements">
+                    <tbody *ngIf="getParameters()?.length > 0 else noElements">
                         <tr *ngFor="let parameter of getParameters(); let i=index">
                             <td scope="col" class="col-param">
                                 <p>{{parameter.animalParameters.physiologicalParameter.name}}</p>
@@ -248,10 +258,11 @@
                                 </p>
                             </td>
                             <td scope="row">
-                                <ng-template [ngIf]="parameter.animalParameters.physiologicalParameter.colorLine"><input
-                                        type="color" class="form-control form-control-color color-picker"
+                                <ng-template [ngIf]="parameter.animalParameters.physiologicalParameter.colorLine">
+                                    <input type="color" class="form-control form-control-color color-picker"
                                         value="{{parameter.animalParameters.physiologicalParameter.colorLine}}"
-                                        title="Color line" disabled></ng-template>
+                                        title="Color line" disabled>
+                                </ng-template>
                                 <ng-template [ngIf]="!parameter.animalParameters.physiologicalParameter.colorLine">
                                     <p class="text-color">-</p>
                                 </ng-template>
