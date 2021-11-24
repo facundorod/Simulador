@@ -22,6 +22,7 @@ import { PathologiesService } from "../../services/pathologies.service";
 import { ScenarioService } from "../../services/scenario.service";
 import { ParametersCreateComponent } from "../../modals/parameters-create/parameters-create.component";
 import { ToastrService } from "ngx-toastr";
+import { ParametersService } from "../../services/parameters.service";
 
 @Component({
     selector: "app-scenario-params-create",
@@ -34,6 +35,7 @@ export class ScenarioParamsCreateComponent implements OnInit {
     private arrhythmias: ArrhythmiaI[] = [];
     private pathologies: PathologyI[] = [];
     private parameters: SPPI[] = [];
+
     private loading: boolean = true;
     private scenario: ScenarioParamsI;
     private formGroupScenario: FormGroup;
@@ -45,6 +47,7 @@ export class ScenarioParamsCreateComponent implements OnInit {
         private pathologiesService: PathologiesService,
         private arrhythmiasService: ArrhythmiasService,
         private scenarioService: ScenarioService,
+        private parameterService: ParametersService,
         private fb: FormBuilder,
         private activatedRoute: ActivatedRoute,
         private toast: ToastrService,
@@ -114,6 +117,8 @@ export class ScenarioParamsCreateComponent implements OnInit {
             }
         );
     }
+
+    private loadParameters(): void {}
 
     private laodPathologies(): void {
         this.pathologiesService.list().subscribe(

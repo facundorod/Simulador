@@ -100,6 +100,6 @@ export class ScenarioParamsComponent implements OnInit {
     }
 
     public onEdit(index: number): void {
-        this.router.navigateByUrl(`/panel/scenarios/create/${index}`);
+        this.router.navigateByUrl(`/panel/scenarios/edit/${index}`);
     }
 }

@@ -14,6 +14,7 @@ import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
 export class ParametersCreateComponent implements OnInit {
     private parameter: SPPI;
     private parameters: PhysiologicalParamaterI[];
+    private physiologicalParameter: PhysiologicalParamaterI;
     private loading: boolean = true;
     private fileContent: CurveValuesI[] = [];
     private formGroup: FormGroup;
@@ -32,8 +33,9 @@ export class ParametersCreateComponent implements OnInit {
     }
 
     public onSubmit(): void {
+        const value: number = this.formGroup.get("value").value;
+
         this.parameter.curves = this.fileContent;
-        debugger;
         this.activeModal.close(this.parameter);
     }
 
@@ -42,9 +44,11 @@ export class ParametersCreateComponent implements OnInit {
     }
 
     public initFormGroup(): void {
-        const physiologicalParameter: PhysiologicalParamaterI =
-            this.parameter.animalParameters.physiologicalParameter;
+        const physiologicalParameter: PhysiologicalParamaterI = this.parameter
+            ? this.parameter.animalParameters.physiologicalParameter
+            : this.physiologicalParameter;
         this.formGroup = this.fb.group({
+            parameter: [null],
             name: [
                 {
                     value: physiologicalParameter.name
@@ -65,18 +69,21 @@ export class ParametersCreateComponent implements OnInit {
             ],
 
             alert_low: [
-                this.parameter.animalParameters.alert_low
-                    ? this.parameter.animalParameters.alert_low
+                this.parameter?.animalParameters?.alert_low
+                    ? this.parameter.animalParameters?.alert_low
                     : 0,
             ],
             alert_high: [
-                this.parameter.animalParameters.alert_high
+                this.parameter?.animalParameters?.alert_high
                     ? this.parameter.animalParameters.alert_high
                     : 0,
             ],
             value: [this.parameter.value ? this.parameter.value : 0],
         });
         this.loading = false;
+        this.formGroup.get("parameter").valueChanges.subscribe((value) => {
+            this.physiologicalParameter = value;
+        });
     }
 
     public onCancel(): void {
@@ -144,5 +151,18 @@ export class ParametersCreateComponent implements OnInit {
             console.error(error);
             throw error;
         }
+    }
+
+    public compareParams(
+        p1: PhysiologicalParamaterI,
+        p2: PhysiologicalParamaterI
+    ): boolean {
+        if (p1 && p2) return p1.id_pp === p2.id_pp;
+        if (!p1 && !p2) return true;
+        return false;
+    }
+
+    public editForm(): boolean {
+        return !this.physiologicalParameter;
     }
 }

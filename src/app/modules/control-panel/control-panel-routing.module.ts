@@ -16,7 +16,7 @@ const routes: Routes = [
     { path: "arrhythmias", component: ArrhythmiasComponent },
     { path: "scenarios", component: ScenarioParamsComponent },
     { path: "scenarios/create", component: ScenarioParamsCreateComponent },
-    { path: "scenarios/create/:id", component: ScenarioParamsCreateComponent },
+    { path: "scenarios/edit/:id", component: ScenarioParamsCreateComponent },
 ];
 
 @NgModule({
