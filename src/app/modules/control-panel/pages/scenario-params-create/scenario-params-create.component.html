@@ -12,9 +12,14 @@
 </div>
 
 
-<div class="container container-form" *ngIf="!isLoading()">
-    <form [formGroup]="getForm()">
-        <div class="row justify-content-between">
+
+<div class="container container-form">
+    <button class="btn btn-primary btn-spinner" type="button" disabled *ngIf="isLoading()">
+        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+        Loading...
+    </button>
+    <form [formGroup]="getForm()" *ngIf="!isLoading()">
+        <div class=" row justify-content-between">
             <div class="col-3">
                 <label for="scenario-name" class="form-label">Scenario Name</label>
                 <input type="text" class="form-control" formControlName="scenarioName">

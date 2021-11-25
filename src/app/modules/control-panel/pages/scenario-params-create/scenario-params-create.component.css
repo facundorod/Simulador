@@ -30,6 +30,7 @@ h3 {
 
 .save-changes,
 .btn-add,
+.btn-spinner,
 .btn-save,
 .btn-param {
     margin-left: 2%;
@@ -39,6 +40,10 @@ h3 {
 }
 .btn-param {
     margin-left: 18%;
+}
+
+.btn-spinner {
+    margin-left: 0;
 }
 
 .save-changes:hover,
@@ -87,4 +92,12 @@ h3 {
 
 input[type="file"] {
     display: none;
+}
+
+.spinner-border {
+    color: #fff;
+}
+
+.spinner-border:hover {
+    color: #59478d;
 }

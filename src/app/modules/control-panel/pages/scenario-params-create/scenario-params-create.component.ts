@@ -58,9 +58,9 @@ export class ScenarioParamsCreateComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        if (this.params && this.params.id) this.loadScenario();
         this.loadData();
-        this.initForm();
+        if (this.params && this.params.id) this.loadScenario();
+        else this.initForm();
     }
 
     private loadData(): void {
@@ -69,7 +69,6 @@ export class ScenarioParamsCreateComponent implements OnInit {
         this.loadArrhythmias();
         this.loadMedications();
         this.laodPathologies();
-        this.loading = false;
     }
 
     private loadScenario(): void {
@@ -425,8 +424,15 @@ export class ScenarioParamsCreateComponent implements OnInit {
         const modal: NgbModalRef = this.modal.open(ParametersCreateComponent);
         const animalSpecie: AnimalSpeciesI =
             this.formGroupScenario.get("animalSpecie").value;
+        const parameters: PhysiologicalParamaterI[] = this.parameters.map(
+            (value: SPPI) => {
+                return value.animalParameters.physiologicalParameter;
+            }
+        );
         modal.componentInstance.setParameter(null);
         modal.componentInstance.setAnimalSpecie(animalSpecie);
+        modal.componentInstance.setCurrentParameters(parameters);
+
         modal.result
             .then((value: SPPI) => {
                 if (value) {

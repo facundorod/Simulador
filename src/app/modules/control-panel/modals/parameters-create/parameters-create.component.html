@@ -9,19 +9,25 @@
     </div>
     <div class="modal-body">
         <div class="form-group row" *ngIf="!editForm()">
-            <label for="parameter" class="col-sm-3 col-form-label">Parameter</label>
-            <div class="col-sm-8">
-                <select class="form-select form-control" name="parameter" id="parameter" aria-label="Select Parameter"
-                    formControlName="parameter" [compareWith]="compareParams">
-                    <option [ngValue]="null" disabled>Choose Parameter</option>
-                    <ng-template [ngIf]="getParameters()?.length">
-                        <option *ngFor="let param of getParameters()" [ngValue]="param">
-                            {{param.name}}
-                        </option>
-                    </ng-template>
+            <ng-template [ngIf]="getParameters().length == 0">
+                <h4 class="text-center text-param-configured">All parameters have been configured before.</h4>
+            </ng-template>
+            <ng-template [ngIf]="getParameters().length > 0">
+                <label for="parameter" class="col-sm-3 col-form-label">Parameter</label>
+                <div class="col-sm-8">
+                    <select class="form-select form-control" name="parameter" id="parameter"
+                        aria-label="Select Parameter" formControlName="parameter" [compareWith]="compareParams">
+                        <option [ngValue]="null" disabled>Choose Parameter</option>
+                        <ng-template [ngIf]="getParameters()?.length">
+                            <option *ngFor="let param of getParameters()" [ngValue]="param">
+                                {{param.name}}
+                            </option>
+                        </ng-template>
 
-                </select>
-            </div>
+                    </select>
+                </div>
+            </ng-template>
+
         </div>
 
         <ng-template [ngIf]="editForm()">
@@ -66,6 +72,7 @@
                         Change Curves
                     </label>
                     <button class="btn btn-link" (click)="onDeleteCurves()" title="Delete curves"> <img
+                            class="img-delete"
                             src="https://img.icons8.com/external-kiranshastry-lineal-color-kiranshastry/26/000000/external-close-banking-and-finance-kiranshastry-lineal-color-kiranshastry.png" />
                     </button>
                 </ng-template>
@@ -77,11 +84,11 @@
                     </label>
                 </ng-template>
             </div>
-            <div class="modal-footer">
-                <button type="submit" class="btn btn-primary btn-save">Save changes</button>
-                <button type="button" class="btn btn-danger" (click)="onCancel()">Cancel</button>
-            </div>
-        </ng-template>
 
+        </ng-template>
+        <div class="modal-footer">
+            <button type="submit" class="btn btn-primary btn-save" *ngIf="editForm()">Save changes</button>
+            <button type="button" class="btn btn-danger" (click)="onCancel()">Cancel</button>
+        </div>
     </div>
 </form>

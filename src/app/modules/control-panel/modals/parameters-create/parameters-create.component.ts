@@ -20,6 +20,7 @@ export class ParametersCreateComponent implements OnInit {
     private loading: boolean = true;
     private fileContent: CurveValuesI[] = [];
     private animalSpecie: AnimalSpeciesI;
+    private currentParameters: PhysiologicalParamaterI[] = [];
     private formGroup: FormGroup;
     constructor(
         private fb: FormBuilder,
@@ -211,12 +212,27 @@ export class ParametersCreateComponent implements OnInit {
     public loadParameters(): void {
         this.paramsService.findAll().subscribe(
             (value: PhysiologicalParamaterI[]) => {
-                this.parameters = value;
+                const values: PhysiologicalParamaterI[] = [];
+                value.forEach((_param: PhysiologicalParamaterI) => {
+                    if (
+                        !this.currentParameters.some(
+                            (param: PhysiologicalParamaterI) => {
+                                return (param.id_pp = _param.id_pp);
+                            }
+                        )
+                    )
+                        values.push(_param);
+                });
+                this.parameters = values;
                 this.initFormGroup();
             },
             (error: Error) => {
                 console.error(error);
             }
         );
+    }
+
+    public setCurrentParameters(parameters: PhysiologicalParamaterI[]) {
+        this.currentParameters = parameters;
     }
 }
