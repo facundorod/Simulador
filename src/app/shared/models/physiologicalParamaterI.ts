@@ -4,6 +4,9 @@ export interface PhysiologicalParamaterI {
     description: string;
     label: string;
     unit: string;
+    colorLine?: string;
+    specialConfiguration?: JSON;
     updated_at?: Date;
     created_at?: Date;
+    source?: PhysiologicalParamaterI;
 }

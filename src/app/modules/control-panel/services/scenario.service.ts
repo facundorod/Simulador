@@ -2,8 +2,9 @@ import { ScenarioI } from "@models/scenarioI";
 import { ApiService } from "../../../shared/services/api.service";
 import { HelperService } from "@app/shared/services/helper.service";
 import { environment } from "@environments/environment";
-import { Subject } from "rxjs";
+import { Observable, Subject } from "rxjs";
 import { Injectable } from "@angular/core";
+import { ScenarioParamsI } from "@app/shared/models/scenarioParamsI";
 
 @Injectable()
 export class ScenarioService {
@@ -29,6 +30,55 @@ export class ScenarioService {
         this.api.httpGet(endpoint).subscribe(
             (data: any) => {
                 subject.next(data);
+            },
+            (err: any) => {
+                subject.error(err);
+            },
+            () => {
+                subject.complete();
+            }
+        );
+
+        return subject.asObservable();
+    }
+
+    public listWithParams(query: any = null, order: any = null) {
+        const subject = new Subject<any>();
+
+        let endpoint = environment.api.scenariosParams;
+
+        if (query) endpoint += `?${HelperService.getQueryString(query)}`;
+        if (order) {
+            const queryParams = HelperService.getOrderQueryString(order);
+            if (endpoint.indexOf("?") >= 0) endpoint += `&${queryParams}`;
+            else endpoint += `?${queryParams}`;
+        }
+
+        this.api.httpGet(endpoint).subscribe(
+            (data: any) => {
+                subject.next(data);
+            },
+            (err: any) => {
+                subject.error(err);
+            },
+            () => {
+                subject.complete();
+            }
+        );
+
+        return subject.asObservable();
+    }
+
+    public listByIdWithParams(
+        scenarioId: number
+    ): Observable<ScenarioParamsI[]> {
+        const subject = new Subject<ScenarioParamsI[]>();
+
+        let endpoint = environment.api.scenariosParams + "/" + scenarioId;
+
+        this.api.httpGet(endpoint).subscribe(
+            (data: any) => {
+                if (data && data.data) subject.next(data.data);
             },
             (err: any) => {
                 subject.error(err);
@@ -69,14 +119,14 @@ export class ScenarioService {
      * Create a new Scenario
      * @param scenario
      */
-    public create(scenario: ScenarioI) {
+    public create(scenario: ScenarioParamsI) {
         const subject = new Subject<any>();
 
         let endpoint = environment.api.scenarios;
 
-        this.api.httpPost(endpoint, scenario).subscribe(
-            (scenario) => {
-                subject.next([scenario]);
+        this.api.httpPost(endpoint, { scenario }).subscribe(
+            () => {
+                subject.next();
             },
             (err: any) => {
                 subject.error(err);
@@ -89,16 +139,16 @@ export class ScenarioService {
         return subject.asObservable();
     }
 
-    public updateById(scenarioId: number, scenario: any) {
+    public updateById(scenarioId: number, scenario: ScenarioParamsI) {
         const subject = new Subject<any>();
 
         let endpoint = environment.api.scenarios + scenarioId;
 
-        this.api.httpPut(endpoint, scenario).subscribe(
-            (scenario: ScenarioI) => {
-                subject.next(scenario);
+        this.api.httpPut(endpoint, { scenario }).subscribe(
+            () => {
+                subject.next();
             },
-            (err: any) => {
+            (err: Error) => {
                 subject.error(err);
             },
             () => {

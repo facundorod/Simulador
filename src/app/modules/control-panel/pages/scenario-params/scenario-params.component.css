@@ -3,7 +3,7 @@ h3 {
     text-align: left;
 }
 
-.path-header {
+.scenario-header {
     margin-top: 3%;
 }
 
@@ -11,24 +11,23 @@ h3 {
     background-color: #616161;
 }
 
-.table-path,
-.table-path tr {
+.table-scenarios,
+.table-scenarios tr {
     border: 2px solid #272626;
 }
 
-.btn-search,
 .btn-add {
     background-color: #42336e;
     border: 1px solid #42336e;
 }
 
-.btn-search:hover,
 .btn-add:hover {
     background-color: #fff;
     color: #42336e;
 }
 
-.row-descr {
-    max-width: 200px;
-    overflow: auto;
+.row-arrh,
+.row-pat,
+.row-med {
+    max-width: 250px;
 }
