@@ -209,7 +209,6 @@ export class ScenarioParamsCreateComponent implements OnInit {
             });
         }
 
-        const parameters: SPPI[] = this.parameters;
         const scenarioName: string =
             this.formGroupScenario.get("scenarioName").value;
         const scenarioDescription: string = this.formGroupScenario.get(
@@ -221,7 +220,7 @@ export class ScenarioParamsCreateComponent implements OnInit {
             arrhythmias: arrhythmias,
             pathologies: pathologies,
             medications: medications,
-            parametersScenario: parameters,
+            parametersScenario: this.parameters,
         };
         if (this.params && this.params.id) {
             this.scenario.id_scenario = this.params.id;
@@ -435,6 +434,7 @@ export class ScenarioParamsCreateComponent implements OnInit {
 
         modal.result
             .then((value: SPPI) => {
+                debugger;
                 if (value) {
                     this.parameters.push(value);
                 }

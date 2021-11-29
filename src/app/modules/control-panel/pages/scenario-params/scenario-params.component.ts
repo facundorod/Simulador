@@ -1,7 +1,10 @@
 import { Component, OnInit } from "@angular/core";
 import { FormBuilder, FormGroup } from "@angular/forms";
 import { Router } from "@angular/router";
+import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
+import { ToastrService } from "ngx-toastr";
 import { ScenarioService } from "../../services/scenario.service";
+import { ConfirmModalComponent } from "../../../../shared/modals/confirm/confirm-modal.component";
 
 @Component({
     selector: "app-scenario-params",
@@ -12,7 +15,9 @@ export class ScenarioParamsComponent implements OnInit {
     constructor(
         private scenarioService: ScenarioService,
         private fb: FormBuilder,
-        private router: Router
+        private router: Router,
+        private toast: ToastrService,
+        private modal: NgbModal
     ) {}
     public scenarios: any;
     private formGroup: FormGroup;
@@ -99,7 +104,33 @@ export class ScenarioParamsComponent implements OnInit {
         this.router.navigateByUrl("/panel/scenarios/create");
     }
 
-    public onEdit(index: number): void {
-        this.router.navigateByUrl(`/panel/scenarios/edit/${index}`);
+    public onEdit(id: number): void {
+        this.router.navigateByUrl(`/panel/scenarios/edit/${id}`);
+    }
+
+    public onDelete(id: number, index: number): void {
+        const modal = this.modal.open(ConfirmModalComponent);
+        modal.componentInstance.setTitle(
+            `You will delete the scenario ${this.scenarios[index].name}`
+        );
+        modal.componentInstance.setContent("Are you sure?");
+        modal.result.then((result) => {
+            if (result) {
+                this.loading = true;
+                this.scenarioService.delete(id).subscribe(
+                    () => {
+                        this.toast.toastrConfig.timeOut = 1000;
+                        this.toast.toastrConfig.positionClass =
+                            "toast-bottom-full-width";
+                        this.toast.success("Scenario deleted successfully");
+                        this.loading = false;
+                        this.loadData();
+                    },
+                    (error: Error) => {
+                        console.error(error);
+                    }
+                );
+            }
+        });
     }
 }

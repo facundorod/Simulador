@@ -158,14 +158,14 @@ export class ScenarioService {
         return subject.asObservable();
     }
 
-    public delete(scenarioId: number) {
-        const subject = new Subject<any>();
+    public delete(scenarioId: number): Observable<void> {
+        const subject = new Subject<void>();
 
         let endpoint = environment.api.scenarios + scenarioId;
 
         this.api.httpDelete(endpoint).subscribe(
-            (data: any) => {
-                subject.next(data);
+            () => {
+                subject.next();
             },
             (err: any) => {
                 subject.error(err);

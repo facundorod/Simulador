@@ -217,11 +217,12 @@ export class ParametersCreateComponent implements OnInit {
                     if (
                         !this.currentParameters.some(
                             (param: PhysiologicalParamaterI) => {
-                                return (param.id_pp = _param.id_pp);
+                                return param.id_pp == _param.id_pp;
                             }
                         )
-                    )
+                    ) {
                         values.push(_param);
+                    }
                 });
                 this.parameters = values;
                 this.initFormGroup();
