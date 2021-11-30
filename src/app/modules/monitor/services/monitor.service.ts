@@ -9,13 +9,15 @@ export class MonitorService {
 
     constructor() {
         setInterval(() => {
-            const lastStatus: StatesI = JSON.parse(localStorage.getItem("simulationState"));
+            const lastStatus: StatesI = JSON.parse(
+                localStorage.getItem("simulationState")
+            );
 
             if (!this.currentState || this.isDiff(lastStatus)) {
                 this.currentState = lastStatus;
                 this.values.next(this.currentState);
             }
-        }, 1000)
+        }, 1000);
     }
 
     /**
@@ -28,8 +30,11 @@ export class MonitorService {
     }
 
     private isDiff(state: StatesI): boolean {
-        return ((!state && this.currentState != null) ||
-            (state.state !== this.currentState.state) ||
-            (state.action !== this.currentState.action));
+        return (
+            (!state && this.currentState != null) ||
+            state.state !== this.currentState.state ||
+            state.action !== this.currentState.action ||
+            state.muteAlarms !== this.currentState.muteAlarms
+        );
     }
 }

@@ -1,6 +1,6 @@
 <div class="container-fluid" *ngIf="currentState?.curves.length > 0 else noSimulation">
     <div class="row">
-        <div class="col-lg-6">
+        <div class="col-lg-4">
             <p class="text-left">
                 {{ today | date: "medium" }}
                 <span *ngIf="animalSpecie" class="text-animal-specie">
@@ -8,18 +8,25 @@
                 </span>
             </p>
         </div>
-        <div class="col-lg-5">
-            <p class="text-right text-animal-clinic" *ngIf="animalSpecie">ANIMAL CLINIC</p>
+        <div class="col-lg-4 alarms-off">
+            <ng-template [ngIf]="!enableSoundAlarm">
+                <p class="text-center"><img
+                        src="https://img.icons8.com/external-kiranshastry-lineal-color-kiranshastry/20/000000/external-mute-multimedia-kiranshastry-lineal-color-kiranshastry.png" />
+                    &nbsp;Alarms
+                    off</p>
+            </ng-template>
+        </div>
+        <div class="col-lg-4">
+            <p class="text-center text-animal-clinic" *ngIf="animalSpecie">ANIMAL CLINIC</p>
         </div>
     </div>
 
     <div class="row" *ngIf="existDataset() else noDataset">
         <app-audio [play]="true" [src]="'/assets/sounds/monitor.mp3'" [playRate]=calculatePlayRate()></app-audio>
         <app-audio [play]="enableSoundAlarm" [src]="'/assets/sounds/alarmLimit.mp3'" [playRate]=1>
-            <ng-template [ngIf]="currentState?.muteAlarms">
-                <p style="border: 2px solid red">Alarms off</p>
-            </ng-template>
         </app-audio>
+
+
         <div class="container-fluid">
 
             <ng-template [ngIf]="currentState?.action === 'stop'">
