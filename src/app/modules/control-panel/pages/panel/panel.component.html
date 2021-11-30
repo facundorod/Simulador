@@ -147,17 +147,21 @@
 
 <footer class="footer">
     <div class="container footerBtn">
-        <button class="btn btn-link" (click)="onPlaySimulation()"> <img
-                src="https://img.icons8.com/fluency/40/000000/play.png" title="Play simulation" />&nbsp;Play</button>
-        <button class="btn btn-link" (click)="onPauseSimulation()"> <img
-                src="https://img.icons8.com/fluency/40/000000/pause.png"
+        <button class="btn" (click)="onPlaySimulation()"> <img src="https://img.icons8.com/fluency/40/000000/play.png"
+                title="Play simulation" />&nbsp;Play</button>
+        <button class="btn" (click)="onPauseSimulation()"> <img src="https://img.icons8.com/fluency/40/000000/pause.png"
                 title="Freeze simulation" />&nbsp;Freeze</button>
-        <button class="btn btn-link" (click)="onStopSimulation()" title="Stop simulation"><img
+        <button class="btn" (click)="onStopSimulation()" title="Stop simulation"><img
                 src="https://img.icons8.com/fluency/40/000000/stop.png" />&nbsp;Stop</button>
-        <button class="btn btn-link"> <img
+        <button class="btn" (click)="onUnmuteAlarms()" *ngIf="muteAlarms"> <img
                 src="https://img.icons8.com/external-kiranshastry-lineal-color-kiranshastry/40/000000/external-mute-multimedia-kiranshastry-lineal-color-kiranshastry.png" />
-            &nbsp; Mute
+            &nbsp; Unmute
             alarms</button>
+        <button class="btn" (click)="onMuteAlarms()" *ngIf="!muteAlarms">
+            <img
+                src="https://img.icons8.com/external-kiranshastry-lineal-color-kiranshastry/40/000000/external-volume-multimedia-kiranshastry-lineal-color-kiranshastry.png" />
+            &nbsp; Mute alarms
+        </button>
         <a [routerLink]="['/monitor']" target="_blank">
             <img
                 src="https://img.icons8.com/external-icongeek26-flat-icongeek26/40/000000/external-ecg-pregnancy-amp-maternity-icongeek26-flat-icongeek26.png" />

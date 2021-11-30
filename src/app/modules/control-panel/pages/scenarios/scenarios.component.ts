@@ -1,13 +1,9 @@
-import { ScenarioService } from "./../../services/scenario.service";
 import { Component, Input, OnInit, Output, EventEmitter } from "@angular/core";
 import { BaseComponent } from "@app/shared/components/base.component";
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import { ScenariosModalComponent } from "@app/modules/simulation/modals/scenarios-modal/scenarios-modal.component";
 import { ScenariosCreateComponent } from "../../modals/scenarios-create/scenarios-create.component";
-import { MedicationsService } from "../../services/medications.service";
-import { PathologiesService } from "../../services/pathologies.service";
-import { ArrhythmiasService } from "../../services/arrhythmias.service";
-import { SimulationService } from "@app/modules/simulation/services/simulation.service";
+
 import { Router } from "@angular/router";
 @Component({
     selector: "app-scenarios",
@@ -19,22 +15,8 @@ export class ScenariosComponent extends BaseComponent implements OnInit {
     @Output() returnScenarios: EventEmitter<any[]> = new EventEmitter<any[]>();
     @Output() posScenarios: EventEmitter<any> = new EventEmitter<any>();
 
-    scenarios: any[];
-    indexScenarioActive: number;
-    indexScenarioEdit: number;
-    arrhythmias: any[] = []; // Arrhythmias to populate the dropdown
-    arrhythmiasScenario: any[] = []; // Arrhythmias from scenario
-    pathologies: any[] = [];
-    pathologiesScenario: any[] = []; // Pathologies from scenario
-    medications: any[] = [];
-    medicationsScenario: any[] = [];
-    tempValue: number;
-    cardiacCycleValue: number;
-    repRateValue: number;
-    scenariosSimulation: any[];
-    activeScenario: any;
-    simulationsNumber: number = 0;
-    curves: any[] = [];
+    public indexScenarioActive: number;
+    public indexScenarioEdit: number;
 
     private isScenariosPanelRoute: boolean = false;
     constructor(private modal: NgbModal, private router: Router) {
@@ -46,37 +28,7 @@ export class ScenariosComponent extends BaseComponent implements OnInit {
             this.router.url === "/panel" ? true : false;
     }
 
-    ngOnInit(): void {
-        this.loadData();
-    }
-
-    loadData() {}
-
-    onAddScenario(): void {
-        const modal = this.modal.open(ScenariosCreateComponent);
-        modal.result.then(
-            (data: any) => {
-                if (data) {
-                    if (this.scenariosSelected.length > 0)
-                        this.scenariosSelected =
-                            this.scenariosSelected.concat(data);
-                    else {
-                        this.scenariosSelected = data;
-                    }
-                    if (this.isScenariosPanelRoute) {
-                        this.posScenarios.emit({
-                            indexEdit: this.indexScenarioEdit,
-                            indexActive: this.indexScenarioActive,
-                        });
-                        this.returnScenarios.emit(this.scenariosSelected);
-                    }
-                }
-            },
-            (error: any) => {
-                console.log(error);
-            }
-        );
-    }
+    ngOnInit(): void {}
 
     /**
      * Load scenarios from db

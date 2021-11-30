@@ -18,6 +18,7 @@ import { StatesI } from "@app/shared/models/stateI";
 import { environment } from "@environments/environment";
 import { Monitor } from "@app/shared/models/monitor";
 import { ParameterInfoI } from "@app/shared/models/parameterInfoI";
+import { ScenarioParamsI } from "@app/shared/models/scenarioParamsI";
 
 @Component({
     selector: "app-panel",
@@ -25,10 +26,10 @@ import { ParameterInfoI } from "@app/shared/models/parameterInfoI";
     styleUrls: ["./panel.component.css"],
 })
 export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
-    private activeScenario: any; // Scenario active for simulation
+    private activeScenario: ScenarioParamsI; // Scenario active for simulation
 
-    public scenariosSimulation: any[] = [];
-    public animalSpecies: any[] = []; // Animal Species to populate the dropdown
+    public scenariosSimulation: ScenarioParamsI[] = [];
+    public animalSpecies: AnimalSpeciesI[] = []; // Animal Species to populate the dropdown
     public animalSpecie: any = {}; // Animal Specie from simulation
     public simulation: any = {}; // Simulation from localStorage
     public indexActive: number = 0; // Index for scenario edit Active
@@ -40,8 +41,8 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
     public breathRate: number = 0;
     public temperature: number = 0;
     public spo2: number = 0;
+    public muteAlarms: boolean = false;
     public monitorConfiguration: Monitor = new Monitor();
-
 
     constructor(
         private animalSpecieService: AnimalSpeciesService,
@@ -49,10 +50,9 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
         private toast: ToastrService,
         private simulationService: SimulationService,
         private curvesService: CurvesService,
-        private localStorageService: LocalStorageService,
+        private localStorageService: LocalStorageService
     ) {
         super();
-        // window.open(environment.simulation, "_blank");
     }
 
     ngOnInit(): void {
@@ -79,7 +79,7 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
             (animalSpecies: any) => {
                 this.animalSpecies = animalSpecies.data;
             },
-            (error: any) => {
+            (error: Error) => {
                 console.log(error);
             }
         );
@@ -125,7 +125,7 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
             animalSpecie: [
                 this.animalSpecie ? this.animalSpecie : "",
                 Validators.required,
-            ]
+            ],
         });
     }
 
@@ -134,24 +134,21 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
         this.breathRate = 0;
         this.temperature = 0;
         this.spo2 = 0;
-        this.fromGroupParameters.setValue({ heartRate: 0, breathRate: 0, temperature: 0, spo2: 0 })
+        this.fromGroupParameters.setValue({
+            heartRate: 0,
+            breathRate: 0,
+            temperature: 0,
+            spo2: 0,
+        });
     }
 
     private initFormParameters(): void {
         this.fromGroupParameters = this.fb.group({
-            heartRate: [
-                this.heartRate ? this.heartRate : 0
-            ],
-            breathRate: [
-                this.breathRate ? this.breathRate : 0
-            ],
-            temperature: [
-                this.temperature ? this.temperature : 0
-            ],
-            spo2: [
-                this.spo2 ? this.spo2 : 0
-            ]
-        })
+            heartRate: [this.heartRate ? this.heartRate : 0],
+            breathRate: [this.breathRate ? this.breathRate : 0],
+            temperature: [this.temperature ? this.temperature : 0],
+            spo2: [this.spo2 ? this.spo2 : 0],
+        });
     }
 
     /**
@@ -170,27 +167,32 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
             this.onLoadCurves(val);
             this.updateState();
         });
-        this.fromGroupParameters.get("heartRate").valueChanges.subscribe((val) => {
-            this.heartRate = val;
-            this.saveParameterInfo();
-            this.updateState();
-        });
-        this.fromGroupParameters.get("breathRate").valueChanges.subscribe((val) => {
-            this.breathRate = val;
-            this.saveParameterInfo();
-            this.updateState();
-        });
-        this.fromGroupParameters.get("temperature").valueChanges.subscribe((val) => {
-            this.temperature = val;
-            this.saveParameterInfo();
-            this.updateState();
-        });
+        this.fromGroupParameters
+            .get("heartRate")
+            .valueChanges.subscribe((val) => {
+                this.heartRate = val;
+                this.saveParameterInfo();
+                this.updateState();
+            });
+        this.fromGroupParameters
+            .get("breathRate")
+            .valueChanges.subscribe((val) => {
+                this.breathRate = val;
+                this.saveParameterInfo();
+                this.updateState();
+            });
+        this.fromGroupParameters
+            .get("temperature")
+            .valueChanges.subscribe((val) => {
+                this.temperature = val;
+                this.saveParameterInfo();
+                this.updateState();
+            });
         this.fromGroupParameters.get("spo2").valueChanges.subscribe((val) => {
             this.spo2 = val;
             this.saveParameterInfo();
             this.updateState();
         });
-
     }
 
     /**
@@ -206,13 +208,25 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
                 .subscribe(
                     (state: StatesI) => {
                         if (state) {
+                            let action: string = "stop";
+                            let newScenario: boolean = false;
+                            if (this.currentState) {
+                                action = "play";
+                                newScenario = true;
+                            }
                             this.currentState = state;
-                            this.currentState.action = 'stop';
+                            this.currentState.action = action;
+                            this.currentState.newScenario = newScenario;
                             this.onLoadParameters();
-                            this.localStorageService.saveValue("simulationState", JSON.stringify(this.currentState));
+                            this.localStorageService.saveValue(
+                                "simulationState",
+                                JSON.stringify(this.currentState)
+                            );
                         } else {
                             this.currentState = null;
-                            this.localStorageService.removeValue("simulationState");
+                            this.localStorageService.removeValue(
+                                "simulationState"
+                            );
                         }
                     },
                     (error: any) => {
@@ -230,24 +244,26 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
      * @param state
      */
     private onLoadParameters(): void {
-        this.currentState.curves = this.currentState.curves.filter((value: CurvesI) => {
-            switch (value.curveConfiguration.label.toUpperCase()) {
-                case 'RESP':
-                    this.breathRate = value.curveConfiguration.refValue;
-                    break;
-                case 'CAR':
-                    this.heartRate = value.curveConfiguration.refValue;
-                    break;
-                case 'TEMP':
-                    this.temperature = value.curveConfiguration.refValue;
-                    break;
-                case 'SPO2':
-                    this.spo2 = value.curveConfiguration.refValue;
-                    return value;
-                default:
-                    return value;
+        this.currentState.curves = this.currentState.curves.filter(
+            (value: CurvesI) => {
+                switch (value.curveConfiguration.label.toUpperCase()) {
+                    case "RESP":
+                        this.breathRate = value.curveConfiguration.refValue;
+                        break;
+                    case "CAR":
+                        this.heartRate = value.curveConfiguration.refValue;
+                        break;
+                    case "TEMP":
+                        this.temperature = value.curveConfiguration.refValue;
+                        break;
+                    case "SPO2":
+                        this.spo2 = value.curveConfiguration.refValue;
+                        return value;
+                    default:
+                        return value;
+                }
             }
-        })
+        );
         this.saveParameterInfo();
     }
 
@@ -256,11 +272,13 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
             temperature: this.temperature,
             heartRate: this.heartRate,
             breathRate: this.breathRate,
-            spO2: this.spo2
-        }
-        this.localStorageService.saveValue('parameterState', JSON.stringify(parameterInfo));
+            spO2: this.spo2,
+        };
+        this.localStorageService.saveValue(
+            "parameterState",
+            JSON.stringify(parameterInfo)
+        );
     }
-
 
     /**
      * Save simulation
@@ -320,8 +338,12 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
 
     public getScenarios(scenarios: any): void {
         this.scenariosSimulation = scenarios;
-        if (this.activeScenario != this.scenariosSimulation[this.indexSimulationActive]) {
-            this.activeScenario = this.scenariosSimulation[this.indexSimulationActive];
+        if (
+            this.activeScenario !=
+            this.scenariosSimulation[this.indexSimulationActive]
+        ) {
+            this.activeScenario =
+                this.scenariosSimulation[this.indexSimulationActive];
             this.currentState = null;
             this.initFormValues();
             this.onLoadCurves(this.formGroup.value.animalSpecie);
@@ -337,10 +359,8 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
         this.indexActive = pos.indexEdit;
     }
 
-
     public onPlaySimulation(): void {
-        if (this.currentState)
-            this.currentState.action = 'play';
+        if (this.currentState) this.currentState.action = "play";
         this.localStorageService.saveValue(
             "simulationState",
             JSON.stringify(this.currentState)
@@ -348,8 +368,25 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
     }
 
     public onPauseSimulation(): void {
-        if (this.currentState)
-            this.currentState.action = 'pause';
+        if (this.currentState) this.currentState.action = "pause";
+        this.localStorageService.saveValue(
+            "simulationState",
+            JSON.stringify(this.currentState)
+        );
+    }
+
+    public onMuteAlarms(): void {
+        if (this.currentState) this.currentState.muteAlarms = true;
+        this.muteAlarms = true;
+        this.localStorageService.saveValue(
+            "simulationState",
+            JSON.stringify(this.currentState)
+        );
+    }
+
+    public onUnmuteAlarms(): void {
+        if (this.currentState) this.currentState.muteAlarms = false;
+        this.muteAlarms = false;
         this.localStorageService.saveValue(
             "simulationState",
             JSON.stringify(this.currentState)
@@ -357,14 +394,21 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
     }
 
     public onStopSimulation(): void {
-        if (this.currentState) this.currentState.action = 'stop';
-        this.localStorageService.saveValue("simulationState", JSON.stringify(this.currentState));
+        if (this.currentState) this.currentState.action = "stop";
+        this.localStorageService.saveValue(
+            "simulationState",
+            JSON.stringify(this.currentState)
+        );
     }
 
     private updateState(): void {
         if (this.currentState) {
             this.currentState.state++;
-            this.localStorageService.saveValue("simulationState", JSON.stringify(this.currentState));
+            this.currentState.newScenario = false;
+            this.localStorageService.saveValue(
+                "simulationState",
+                JSON.stringify(this.currentState)
+            );
         }
     }
 

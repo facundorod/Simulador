@@ -1,5 +1,5 @@
 import { Component, OnInit } from "@angular/core";
-import { FormArray, FormBuilder, FormGroup } from "@angular/forms";
+import { FormArray, FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { ActivatedRoute } from "@angular/router";
 import { AnimalSpeciesResponseI } from "@app/shared/models/animal-specieResponse";
 import { AnimalSpeciesI } from "@app/shared/models/animal-speciesI";
@@ -117,8 +117,6 @@ export class ScenarioParamsCreateComponent implements OnInit {
         );
     }
 
-    private loadParameters(): void {}
-
     private laodPathologies(): void {
         this.pathologiesService.list().subscribe(
             (pathologies: PathologiesResponseI) => {
@@ -154,12 +152,17 @@ export class ScenarioParamsCreateComponent implements OnInit {
         const animalParameters: AnimalParametersI =
             this.scenario?.parametersScenario[0]?.animalParameters;
         this.formGroupScenario = this.fb.group({
-            scenarioName: [this.scenario ? this.scenario.name : ""],
+            scenarioName: [
+                this.scenario ? this.scenario.name : "",
+                Validators.required,
+            ],
             scenarioDescription: [
                 this.scenario ? this.scenario.description : "",
+                Validators.required,
             ],
             animalSpecie: [
                 animalParameters ? animalParameters.animalSpecie : null,
+                Validators.required,
             ],
             medications: new FormArray([]),
             arrhythmias: new FormArray([]),
@@ -214,6 +217,14 @@ export class ScenarioParamsCreateComponent implements OnInit {
         const scenarioDescription: string = this.formGroupScenario.get(
             "scenarioDescription"
         ).value;
+
+        const animalSpecie: AnimalSpeciesI =
+            this.formGroupScenario.get("animalSpecie").value;
+
+        this.parameters.forEach((value: SPPI) => {
+            value.animalParameters.animalSpecie = animalSpecie;
+        });
+
         this.scenario = {
             name: scenarioName,
             description: scenarioDescription,
@@ -434,7 +445,6 @@ export class ScenarioParamsCreateComponent implements OnInit {
 
         modal.result
             .then((value: SPPI) => {
-                debugger;
                 if (value) {
                     this.parameters.push(value);
                 }

@@ -72,6 +72,10 @@
     display: none;
 }
 
+.btn {
+    color: #0954ae;
+}
+
 @media (min-width: 1024px) {
     .textSimulation {
         text-align: center;
