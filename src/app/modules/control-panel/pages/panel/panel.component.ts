@@ -412,6 +412,20 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
         }
     }
 
+    public getRate(index: number): number {
+        const curve: CurvesI = this.currentState.curves[index];
+        if (curve.curveConfiguration.label.toLowerCase() === "etco2")
+            return this.breathRate;
+        return this.heartRate;
+    }
+
+    public breathCurve(index: number): boolean {
+        const curve: CurvesI = this.currentState.curves[index];
+        if (curve.curveConfiguration.label.toLowerCase() === "etco2")
+            return true;
+        return false;
+    }
+
     /**
      *  TrackByFn: Define como rastrear los cambios en los ítems utilizados en el *ngFor.
      *  Aumenta el rendimiento, ya que solo se vuelven a representar en el DOM los nodos

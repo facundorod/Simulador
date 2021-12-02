@@ -85,14 +85,14 @@
     <div class="curves-configuration-text">
         <h3 class="text-curves text-center">Curves Configuration</h3>
     </div>
-    <div class="row" *ngFor="let curve of currentState.curves">
+    <div class="row" *ngFor="let curve of currentState.curves; let i=index">
         <ng-template [ngIf]="curve.curveValues.length > 0">
             <div class="col-md-3 param-configuration">
                 <p> {{ curve?.curveConfiguration.label }}</p>
-
             </div>
-            <div class="col-md-8 curves-configuration">
-
+            <div class="col-md-8 curves-configuration mini-monitor">
+                <app-mini-monitor [curves]="curve" [rate]="getRate(i)" [breathCurve]="breathCurve(i)">
+                </app-mini-monitor>
             </div>
         </ng-template>
 
