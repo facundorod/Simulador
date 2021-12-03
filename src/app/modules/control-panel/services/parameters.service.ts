@@ -34,8 +34,8 @@ export class ParametersService {
     }
 
     public updateParameter(
-        parameterId: string,
-        parameterData: SPPI
+        parameterId: number,
+        parameterData: PhysiologicalParamaterI
     ): Observable<void> {
         const subject = new Subject<void>();
         this.api
@@ -51,6 +51,24 @@ export class ParametersService {
                     subject.complete();
                 }
             );
+        return subject.asObservable();
+    }
+
+    public createParameter(
+        parameter: PhysiologicalParamaterI
+    ): Observable<void> {
+        const subject = new Subject<void>();
+        this.api.httpPost(`${this.baseUrl}`, parameter).subscribe(
+            () => {
+                subject.next();
+            },
+            (error: Error) => {
+                subject.error(error);
+            },
+            () => {
+                subject.complete();
+            }
+        );
         return subject.asObservable();
     }
 }

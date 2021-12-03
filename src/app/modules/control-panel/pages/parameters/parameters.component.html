@@ -1,0 +1,152 @@
+<div class="container">
+    <div class="parameters-header">
+        <div class="row">
+            <div class="col">
+                <h3 class="title"> Physiological Parameters </h3>
+            </div>
+            <div class="col text-right">
+                <button class="btn btn-primary btn-add" (click)="onAddParameter()"> + Parameter </button>
+            </div>
+        </div>
+    </div>
+    <div class="search-form row">
+        <div class="col-10">
+            <form class="form mt-3" [formGroup]="getFormGroup()">
+                <div class="form-row">
+                    <div class="form-group col-md-8">
+
+                        <label for="name">Search</label>
+                        <div class="input-group">
+                            <input type="text" id="q" class="form-control" formControlName="q">
+                            <div class="input-group-text">
+                                <img src="https://img.icons8.com/color/24/000000/search--v1.png" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group col-md-4 d-flex align-items-end">
+                        <button class="btn btn-link btn-clear" (click)="clearSearch()"><i class="fa fa-times"
+                                aria-hidden="true"></i></button>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+    </div>
+</div>
+
+<div class="container">
+    <div class="row">
+        <div class="col table-bg">
+            <table class="table table-hover table-parameters">
+                <thead class="thead-dark">
+                    <tr>
+                        <th scope="col">
+                            Name
+                        </th>
+                        <th scope="col">
+                            Description
+                        </th>
+                        <th scope="col">
+                            ColorLine
+                        </th>
+                        <th scope="col">
+                            Source Param
+                        </th>
+                        <th scope="col">
+                            Label
+                        </th>
+                        <th scope="col">
+                            Unit
+                        </th>
+                        <th scope="col">
+
+                        </th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Loading -->
+                <tbody *ngIf="isLoading()">
+                    <tr>
+                        <td colspan="7">
+                            Loading...
+                        </td>
+                        <!-- / Loading -->
+                    </tr>
+
+                </tbody>
+                <tbody *ngIf="!isLoading() && getParameters()">
+                    <tr *ngFor="let param of getParameters(); let i=index">
+                        <td scope="row" class="row-name">
+                            {{param.name}}
+                        </td>
+
+                        <td scope="row" class="row-description">
+                            <p>{{param.description}}</p>
+
+                        </td>
+
+                        <td scope="row" class="row-color">
+                            <ng-template [ngIf]="param.colorLine">
+                                <input type="color" class="form-control form-control-color color-picker"
+                                    value="{{param.colorLine}}" title="Color line" disabled>
+                            </ng-template>
+                            <ng-template [ngIf]="!param.colorLine">
+                                <p class="text-center">-</p>
+                            </ng-template>
+
+                        </td>
+
+                        <td scope="row" class="row-source">
+                            <ng-template [ngIf]="param.source?.name">
+                                <p class="text-center">{{param.source.name}}</p>
+
+                            </ng-template>
+                            <ng-template [ngIf]="!param.source?.name">
+                                <p class="text-center">-</p>
+                            </ng-template>
+                        </td>
+                        <td scope="row" class="row-label">
+                            <ng-template [ngIf]="param.label">
+                                {{param.label}}
+                            </ng-template>
+                            <ng-template [ngIf]="!param.label">
+                                <p class=" text-center">-</p>
+                            </ng-template>
+                        </td>
+
+                        <td scope="row" class="row-unit">
+                            <ng-template [ngIf]="param.unit">
+                                {{param.unit}}
+                            </ng-template>
+                            <ng-template [ngIf]="!param.unit">
+                                <p class=" text-center">-</p>
+                            </ng-template>
+                        </td>
+
+                        <td scope="row" class="text-right">
+                            <button class="btn btn-light" (click)="onEditParameter(i)">
+                                <img
+                                    src="https://img.icons8.com/external-kiranshastry-lineal-color-kiranshastry/18/000000/external-pencil-interface-kiranshastry-lineal-color-kiranshastry-1.png" />
+                            </button>
+                            <span>
+                                <button class="btn btn-trash btn-light ml-2" (click)="onDeleteParameter(i)">
+                                    <img src="https://img.icons8.com/color/18/000000/trash--v1.png" />
+                                </button>
+                            </span>
+                        </td>
+
+                    </tr>
+                </tbody>
+                <tbody *ngIf="!isLoading() && (!getParameters() || getParameters().length === 0)">
+                    <tr>
+                        <td colspan="7">
+                            Nothing to show you.
+                        </td>
+                    </tr>
+                </tbody>
+
+            </table>
+        </div>
+    </div>
+</div>
