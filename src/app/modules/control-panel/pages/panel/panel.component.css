@@ -76,6 +76,10 @@
     color: #0954ae;
 }
 
+.mini-monitor {
+    background-color: #000;
+}
+
 @media (min-width: 1024px) {
     .textSimulation {
         text-align: center;

@@ -52,7 +52,6 @@ export class MonitorComponent
     private maxValues: number[];
     public chartsOptions: Partial<ChartOptions>[];
     private curvesHelper: CurvesHelper = new CurvesHelper();
-    public stopCurves: StatesI | any = {};
     private simulationTimer: NodeJS.Timeout;
     private enableAlerts: boolean[] = [];
     public monitorConfiguration: Monitor = new Monitor();

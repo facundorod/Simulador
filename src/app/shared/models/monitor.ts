@@ -2,13 +2,13 @@ import { MonitorI } from "./monitorI";
 
 export class Monitor {
     private monitorConfiguration: MonitorI = {
-        clockTimer: 50,
-        freqSampleHeart: 50,
+        clockTimer: 60,
+        freqSampleHeart: 45,
         freqSampleBreath: 30,
-        maxSamples: 6
+        maxSamples: 6,
     };
 
-    public constructor() { }
+    public constructor() {}
 
     public setMonitorConfiguration(monitor: MonitorI): void {
         this.monitorConfiguration = monitor;

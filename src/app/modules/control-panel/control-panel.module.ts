@@ -31,6 +31,7 @@ import { ScenarioParamsComponent } from "./pages/scenario-params/scenario-params
 import { ScenarioParamsCreateComponent } from "./pages/scenario-params-create/scenario-params-create.component";
 import { ParametersCreateComponent } from "./modals/parameters-create/parameters-create.component";
 import { ParametersService } from "./services/parameters.service";
+import { MonitorModule } from "../monitor/monitor.module";
 
 @NgModule({
     declarations: [
@@ -59,6 +60,7 @@ import { ParametersService } from "./services/parameters.service";
         SharedModule,
         NgbModule,
         SimulationModule,
+        MonitorModule,
     ],
     exports: [],
     providers: [
