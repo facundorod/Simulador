@@ -42,7 +42,10 @@
             </div>
         </div>
         <div class="modal-footer">
-            <button type="submit" class="btn btn-primary btn-save">Save changes</button>
+            <button type="submit" class="btn btn-primary btn-save" *ngIf="formGroup.valid">Save changes</button>
+            <button type="submit" class="btn btn-primary btn-save" *ngIf="!formGroup.valid" disabled>Save
+                changes</button>
+
             <button type="button" class="btn btn-danger" (click)="onCancel()">Cancel</button>
         </div>
 
