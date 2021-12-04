@@ -16,17 +16,19 @@ import { MedicationsService } from "../../services/medications.service";
 export class MedicationsComponent extends BaseComponent implements OnInit {
     public medication: MedicationI;
     public medications: MedicationI[];
-    public count: number;
-    public page: number;
-    public totalPages: number;
 
     public order = {
         orderBy: "name",
         order: "asc",
     };
 
+    public paginatorData: {
+        totalPages: number;
+        itemsPerPage: number;
+    };
+
     public queryOptions = {
-        pageSize: 15,
+        pageSize: 5,
         page: 1,
     };
 
@@ -34,8 +36,6 @@ export class MedicationsComponent extends BaseComponent implements OnInit {
         private fb: FormBuilder,
         private medicationsService: MedicationsService,
         private toast: ToastrService,
-        private router: Router,
-        private route: ActivatedRoute,
         private modal: NgbModal
     ) {
         super();
@@ -44,16 +44,9 @@ export class MedicationsComponent extends BaseComponent implements OnInit {
     ngOnInit(): void {
         this.initFormGroup();
         this.loadData();
-        this.loadURLParams();
     }
 
-    private loadData() {
-        this.updateRouteParams(this.router, {
-            ...this.queryOptions,
-            ...this.formGroup.value,
-            ...this.order,
-        });
-
+    private loadData(q: string = null) {
         this.setLoading(true);
 
         this.medicationsService
@@ -61,9 +54,7 @@ export class MedicationsComponent extends BaseComponent implements OnInit {
                 {
                     page: this.queryOptions.page,
                     pageSize: this.queryOptions.pageSize,
-                    q: this.formGroup.value.q,
-                    name: this.formGroup.value.name,
-                    description: this.formGroup.value.description,
+                    q: q ? q : this.formGroup.value.q,
                 },
                 this.order
             )
@@ -72,9 +63,10 @@ export class MedicationsComponent extends BaseComponent implements OnInit {
                     this.setLoading(false);
                     if (data) {
                         this.medications = data.data;
-                        this.count = data.total;
-                        this.page = data.currentPage;
-                        this.totalPages = data.to;
+                        this.paginatorData = {
+                            totalPages: data.total,
+                            itemsPerPage: data.per_page,
+                        };
                     }
                 },
                 (err: any) => {
@@ -84,25 +76,14 @@ export class MedicationsComponent extends BaseComponent implements OnInit {
             );
     }
 
-    public onAddAnimalSpecie() { }
-
     private initFormGroup() {
         this.formGroup = this.fb.group({
             q: [""],
-            name: [""],
-            description: [""],
         });
-    }
-
-    private loadURLParams() {
-        this.formGroup.setValue(
-            this.readFromRouteParams(this.route, this.formGroup.value)
-        );
-        this.queryOptions = this.readFromRouteParams(
-            this.route,
-            this.queryOptions
-        );
-        this.order = this.readFromRouteParams(this.route, this.order);
+        this.formGroup.get("q").valueChanges.subscribe((newValue) => {
+            this.setLoading(true);
+            this.loadData(newValue);
+        });
     }
 
     public onPageChange() {
