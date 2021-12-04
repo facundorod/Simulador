@@ -8,9 +8,7 @@ import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
     templateUrl: "./modal-edit.component.html",
     styleUrls: ["./modal-edit.component.css"],
 })
-export class ModalEditComponent
-    extends BaseComponent
-    implements OnInit {
+export class ModalEditComponent extends BaseComponent implements OnInit {
     public animalSpecie: AnimalSpeciesI;
 
     constructor(private fb: FormBuilder, private activeModal: NgbActiveModal) {
@@ -29,6 +27,12 @@ export class ModalEditComponent
             ],
             description: [
                 this.animalSpecie ? this.animalSpecie.description : "",
+                Validators.required,
+            ],
+            height: [this.animalSpecie ? this.animalSpecie.height : null],
+            weight: [this.animalSpecie ? this.animalSpecie.weight : null],
+            extraInformation: [
+                this.animalSpecie ? this.animalSpecie.extraInformation : null,
             ],
         });
     }

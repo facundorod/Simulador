@@ -13,17 +13,17 @@
         <div class="col-10">
             <form class="form mt-3" [formGroup]="formGroup" (ngSubmit)="onSearch()">
                 <div class="form-row">
-                    <div class="form-group col-md-auto">
-                        <label for="name">Name</label>
-                        <input type="text" id="name" class="form-control mr-1" formControlName="name">
-                    </div>
+                    <div class="form-group col-md-8">
 
-                    <div class="form-group col-md-auto">
-                        <label for="description">Description</label>
-                        <input type="text" id="description" class="form-control mr-1" formControlName="description">
+                        <label for="name">Search</label>
+                        <div class="input-group">
+                            <input type="text" id="q" class="form-control" formControlName="q">
+                            <div class="input-group-text">
+                                <img src="https://img.icons8.com/color/24/000000/search--v1.png" />
+                            </div>
+                        </div>
                     </div>
                     <div class="form-group col-md-4 d-flex align-items-end">
-                        <button type="submit" class="btn btn-primary btn-large btn-search">Search</button>
                         <button class="btn btn-link btn-clear" (click)="onClearSearch()"><i class="fa fa-times"
                                 aria-hidden="true"></i></button>
                     </div>
@@ -48,14 +48,21 @@
                             Description
                         </th>
                         <th scope="col">
+                            Weigth
+                        </th>
+                        <th scope="col">
+                            Heigth
+                        </th>
+                        <th scope="col">
+                            Extra information
+                        </th>
+                        <th scope="col">
                             Last update
                         </th>
                         <th scope="col">
                             <!-- For edit -->
                         </th>
-                        <!-- <th scope="col">
-                             For delete -->
-                        <!-- </th> -->
+
 
                     </tr>
                 </thead>
@@ -78,6 +85,19 @@
                         </td>
                         <td scope="row">
                             {{animalSpecie.description}}
+                        </td>
+                        <td scope="row">
+                            <p *ngIf="animalSpecie.weight">{{animalSpecie.weight}}</p>
+                            <p class="ml-2" *ngIf="!animalSpecie.weight">-</p>
+                        </td>
+                        <td scope="row">
+                            <p *ngIf="animalSpecie.height">{{animalSpecie.height}}</p>
+                            <p class="ml-2" *ngIf="!animalSpecie.height">-</p>
+
+                        </td>
+                        <td scope="row">
+                            <p *ngIf="animalSpecie.extraInformation">{{animalSpecie.extraInformation}}</p>
+                            <p class="ml-2" *ngIf="!animalSpecie.extraInformation">-</p>
                         </td>
                         <td scope="row">
                             {{animalSpecie.updated_at | date}}
