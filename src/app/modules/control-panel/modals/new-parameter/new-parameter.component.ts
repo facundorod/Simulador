@@ -40,13 +40,18 @@ export class NewParameterComponent implements OnInit {
                 this.parameter ? this.parameter.label : "",
                 Validators.required,
             ],
+            specialConfiguration: [
+                this.parameter ? this.parameter.specialConfiguration : null,
+            ],
             unit: [
                 this.parameter ? this.parameter.unit : "",
                 Validators.required,
             ],
             source: [
-                this.parameter && this.parameter?.source
-                    ? this.parameter.source
+                this.parameter
+                    ? this.parameter?.source
+                        ? this.parameter.source
+                        : "noSource"
                     : null,
             ],
         });
@@ -54,6 +59,8 @@ export class NewParameterComponent implements OnInit {
 
     public onSubmit(): void {
         if (this.formGroup.valid) {
+            if (this.formGroup.get("source").value === "noSource")
+                this.formGroup.value.source = null;
             this.activeModal.close(this.formGroup.value);
         }
     }

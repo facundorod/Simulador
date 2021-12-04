@@ -1,5 +1,6 @@
 import { Component, OnInit } from "@angular/core";
 import { FormBuilder, FormGroup } from "@angular/forms";
+import { ConfirmModalComponent } from "@app/shared/modals/confirm/confirm-modal.component";
 import { PhysiologicalParamaterI } from "@app/shared/models/physiologicalParamaterI";
 import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
 import { ToastrService } from "ngx-toastr";
@@ -123,5 +124,34 @@ export class ParametersComponent implements OnInit {
         return this.parameters;
     }
 
-    public onDeleteParameter(index: number) {}
+    public onDeleteParameter(index: number) {
+        const id: number = this.parameters[index].id_pp;
+        if (id) {
+            const modal = this.modal.open(ConfirmModalComponent);
+            modal.componentInstance.setTitle(
+                `You will delete the scenario ${this.parameters[index].name}`
+            );
+            modal.componentInstance.setContent("Are you sure?");
+            modal.result.then((result) => {
+                if (result) {
+                    this.loading = true;
+                    this.parameterSvc.deleteParameter(id).subscribe(
+                        () => {
+                            this.toast.toastrConfig.timeOut = 1000;
+                            this.toast.toastrConfig.positionClass =
+                                "toast-bottom-full-width";
+                            this.toast.success(
+                                "Parameter deleted successfully"
+                            );
+                            this.loading = true;
+                            this.loadData();
+                        },
+                        (error: Error) => {
+                            console.error(error);
+                        }
+                    );
+                }
+            });
+        }
+    }
 }

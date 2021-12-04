@@ -39,7 +39,9 @@ export class ParametersService {
     ): Observable<void> {
         const subject = new Subject<void>();
         this.api
-            .httpPut(`${this.baseUrl}/${parameterId}`, parameterData)
+            .httpPut(`${this.baseUrl}/${parameterId}`, {
+                parameter: parameterData,
+            })
             .subscribe(
                 () => {
                     subject.next();
@@ -58,7 +60,23 @@ export class ParametersService {
         parameter: PhysiologicalParamaterI
     ): Observable<void> {
         const subject = new Subject<void>();
-        this.api.httpPost(`${this.baseUrl}`, parameter).subscribe(
+        this.api.httpPost(`${this.baseUrl}`, { parameter }).subscribe(
+            () => {
+                subject.next();
+            },
+            (error: Error) => {
+                subject.error(error);
+            },
+            () => {
+                subject.complete();
+            }
+        );
+        return subject.asObservable();
+    }
+
+    public deleteParameter(id: number): Observable<void> {
+        const subject = new Subject<void>();
+        this.api.httpDelete(`${this.baseUrl}/${id}`).subscribe(
             () => {
                 subject.next();
             },
