@@ -37,7 +37,7 @@ h3 a {
 }
 
 h3 {
-    text-align: left;
+    text-align: center;
 }
 
 .row-navbar {
@@ -49,4 +49,27 @@ h3 {
 .new-content {
     background-color: rgb(202, 200, 200);
     height: 100%;
+}
+
+.dropdown-toggle,
+.dropdown-toggle:hover,
+.dropdown-toggle:active,
+.dropdown-toggle:link,
+.dropdown-toggle:focus,
+.dropdown-toggle:focus-visible {
+    background-color: transparent !important;
+    border: 0px !important;
+    margin-left: 15%;
+}
+
+.dropdown-menu {
+    margin-left: 15%;
+    background-color: #8e7cc3;
+}
+.dropdown-menu a {
+    color: #fff;
+}
+
+.dropdown-menu a:hover {
+    color: #616161;
 }

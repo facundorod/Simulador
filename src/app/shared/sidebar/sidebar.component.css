@@ -5,7 +5,7 @@
 
 .sidebar-header {
     color: #292d30;
-    padding-top: 10%;
+    padding-top: 40%;
 }
 
 .sub-header h4 {
@@ -21,6 +21,10 @@ ul li a {
 .sidebar ul li a:hover {
     color: #fff;
     background: #545555;
+}
+
+.dock {
+    padding-top: 50%;
 }
 
 .dock li:first-child {

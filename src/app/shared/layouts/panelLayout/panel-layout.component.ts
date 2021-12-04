@@ -8,8 +8,14 @@ import { Sidebar } from "ng-sidebar";
 })
 export class PanelLayoutComponent implements OnInit {
     public sidebarOpen: boolean = false;
+    public user: any;
+    public toggleFlag = false;
 
-    ngOnInit(): void { }
+    ngOnInit(): void {
+        const user = JSON.parse(localStorage.getItem("authToken"));
+        this.user = user.user;
+        console.log(this.user);
+    }
 
     onClosed(): void {
         this.sidebarOpen = false;
@@ -18,6 +24,9 @@ export class PanelLayoutComponent implements OnInit {
     openSidebar(sidebar: Sidebar): void {
         sidebar.open();
         this.sidebarOpen = true;
+    }
 
+    public showMenu(): void {
+        this.toggleFlag = !this.toggleFlag;
     }
 }
