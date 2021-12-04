@@ -3,4 +3,7 @@ export interface AnimalSpeciesI {
     name: string;
     description?: string;
     updated_at?: Date;
+    height?: number;
+    weight?: number;
+    extraInformation?: string;
 }
