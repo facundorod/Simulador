@@ -1,0 +1,41 @@
+h3 {
+    font-size: 2em;
+    text-align: left;
+}
+
+.parameters-header {
+    margin-top: 3%;
+}
+
+.table-hover tbody tr:hover {
+    background-color: #616161;
+}
+
+.table-parameters,
+.table-parameters tr {
+    border: 2px solid #272626;
+}
+
+.btn-add {
+    background-color: #42336e;
+    border: 1px solid #42336e;
+}
+
+.btn-add:hover {
+    background-color: #fff;
+    color: #42336e;
+}
+
+.color-picker {
+    width: 50px;
+    padding: 0;
+    margin-left: 22%;
+}
+
+.row-description {
+    max-width: 200px;
+}
+
+.row-name {
+    max-width: 150px;
+}

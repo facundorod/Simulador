@@ -24,9 +24,11 @@
 
         </ul>
 
-        <section #manageDatabase class="container sub-header">
+        <!-- <section #manageDatabase class="container sub-header">
             <h4 class="font-weight-bold text-align-center"> Scenarios </h4>
-        </section>
+        </section> -->
+
+
 
         <ul class="list-group">
             <li class="nav-item">
@@ -52,12 +54,17 @@
                 <a class="nav-link" [routerLink]="['/panel/arrhythmias']"> <img
                         src="https://img.icons8.com/color/28/000000/pulse.png" /> Arrhythmias </a>
             </li>
+            <li class="nav-item">
+                <a class="nav-link" [routerLink]="['/panel/parameters']"><img
+                        src="https://img.icons8.com/external-flat-chattapat-/28/000000/external-ecg-medical-flat-chattapat-.png" />
+                    Parameters
+                </a>
+            </li>
 
             <li class="nav-item">
 
                 <a class="nav-link" [routerLink]="['/panel/scenarios']"> <img
                         src="https://img.icons8.com/plasticine/28/000000/hospital-gown.png" /> Scenarios</a>
-
             </li>
 
             <li class="nav-item">
@@ -136,7 +143,11 @@
             <a class="nav-link" [routerLink]="['/panel/arrhythmias']">
                 <img src="https://img.icons8.com/color/28/000000/pulse.png" /> </a>
         </li>
-
+        <li class="nav-item">
+            <a class="nav-link" [routerLink]="['/panel/parameters']"><img
+                    src="https://img.icons8.com/external-flat-chattapat-/28/000000/external-ecg-medical-flat-chattapat-.png" />
+            </a>
+        </li>
         <li class="nav-item">
 
             <a class="nav-link" [routerLink]="['/panel/scenarios']"> <img

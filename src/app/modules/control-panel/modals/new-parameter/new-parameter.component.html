@@ -1,0 +1,74 @@
+<form [formGroup]="getFormGroup()" (ngSubmit)="onSubmit()">
+    <div class="modal-header">
+        <ng-template [ngIf]="getParameter()">
+            <h3>Edit Parameter</h3>
+        </ng-template>
+        <ng-template [ngIf]="!getParameter()">
+            <h3>Create Parameter</h3>
+        </ng-template>
+    </div>
+    <div class="modal-body">
+        <div class="form-group row">
+            <label for="name" class="col-sm-3 col-form-label">Name</label>
+            <div class="col-sm-8">
+                <input type="text" class="form-control" id="name" formControlName="name">
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="description" class="col-sm-3 col-form-label">Description</label>
+            <div class="col-sm-8">
+                <input type="text" class="form-control" id="description" formControlName="description">
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="label" class="col-sm-3 col-form-label">Label</label>
+            <div class="col-sm-8">
+                <input type="text" class="form-control" id="label" formControlName="label">
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="unit" class="col-sm-3 col-form-label">Unit</label>
+            <div class="col-sm-8">
+                <input type="text" class="form-control" id="unit" formControlName="unit">
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="color-line" class="col-sm-3 col-form-label">Color Line</label>
+            <div class="col-sm-8">
+                <input type="color" class="form-control form-control-color color-picker" formControlName="colorLine"
+                    title="Color line">
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-sm-3 col-form-label" for="source">Source</label>
+            <div class="col-sm-8">
+                <select class="form-select form-control" name="source" id="source" aria-label="Select animal specie"
+                    formControlName="source" [compareWith]="compareParameters">
+                    <option [ngValue]="null" disabled>Choose Source</option>
+                    <option [ngValue]="'noSource'">No Source</option>
+
+                    <ng-template [ngIf]="getParameters().length">
+                        <option *ngFor="let param of getParameters()" [ngValue]="param">
+                            {{param.name}}
+                        </option>
+                    </ng-template>
+                </select>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="specialConfiguration" class="col-sm-3 col-form-label">Special Configuration</label>
+            <div class="col-sm-8">
+                <input type="text" class="form-control" formControlName="specialConfiguration"
+                    title="Special Configuration">
+            </div>
+        </div>
+        <div class=" modal-footer">
+            <button type="submit" class="btn btn-primary btn-save" *ngIf="getFormGroup().valid">Save changes</button>
+            <button type="submit" class="btn btn-primary btn-save" *ngIf="!getFormGroup().valid" disabled>Save
+                changes</button>
+            <button type="button" class="btn btn-danger" (click)="onCancel()">Cancel</button>
+        </div>
+
+    </div>
+
+</form>

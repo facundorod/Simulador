@@ -7,6 +7,7 @@ import { MedicationsComponent } from "./pages/medications/medications.component"
 import { ArrhythmiasComponent } from "./pages/arrhythmias/arrhythmias.component";
 import { ScenarioParamsComponent } from "./pages/scenario-params/scenario-params.component";
 import { ScenarioParamsCreateComponent } from "./pages/scenario-params-create/scenario-params-create.component";
+import { ParametersComponent } from "./pages/parameters/parameters.component";
 
 const routes: Routes = [
     { path: "", component: PanelComponent },
@@ -17,6 +18,7 @@ const routes: Routes = [
     { path: "scenarios", component: ScenarioParamsComponent },
     { path: "scenarios/create", component: ScenarioParamsCreateComponent },
     { path: "scenarios/edit/:id", component: ScenarioParamsCreateComponent },
+    { path: "parameters", component: ParametersComponent },
 ];
 
 @NgModule({
