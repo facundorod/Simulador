@@ -21,6 +21,10 @@ export class AnimalSpeciesListComponent
     public count: number;
     public page: number;
     public totalPages: number;
+    public paginatorData: {
+        totalPages: number;
+        itemsPerPage: number;
+    };
 
     public order = {
         orderBy: "name",
@@ -28,7 +32,7 @@ export class AnimalSpeciesListComponent
     };
 
     public queryOptions = {
-        pageSize: 15,
+        pageSize: 5,
         page: 1,
     };
 
@@ -59,9 +63,10 @@ export class AnimalSpeciesListComponent
                 (data: any) => {
                     if (data) {
                         this.animalSpecies = data.data;
-                        this.count = data.total;
-                        this.page = data.currentPage;
-                        this.totalPages = data.to;
+                        this.paginatorData = {
+                            totalPages: data.total,
+                            itemsPerPage: data.per_page,
+                        };
                     }
                     this.setLoading(false);
                 },
@@ -121,7 +126,6 @@ export class AnimalSpeciesListComponent
         } else {
             modal.result.then((result: AnimalSpeciesI) => {
                 if (result) {
-                    console.log(result);
                     this.animalSpeciesService.create(result).subscribe(
                         () => {
                             this.toast.toastrConfig.timeOut = 1000;
