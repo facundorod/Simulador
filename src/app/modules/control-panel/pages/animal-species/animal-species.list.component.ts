@@ -18,9 +18,7 @@ export class AnimalSpeciesListComponent
 {
     public animal: AnimalSpeciesI;
     public animalSpecies: AnimalSpeciesI[];
-    public count: number;
-    public page: number;
-    public totalPages: number;
+
     public paginatorData: {
         totalPages: number;
         itemsPerPage: number;

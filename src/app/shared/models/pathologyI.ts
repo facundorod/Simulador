@@ -2,5 +2,6 @@ export interface PathologyI {
     id_pat: number;
     name: string;
     description?: string;
-    latest_update?: Date;
+    extraInformation?: string;
+    updated_at?: Date;
 }
