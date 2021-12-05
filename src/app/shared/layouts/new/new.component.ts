@@ -13,7 +13,6 @@ export class NewComponent implements OnInit {
     ngOnInit(): void {
         const user = JSON.parse(localStorage.getItem("authToken"));
         this.user = user.user;
-        console.log(this.user);
     }
 
     onClosed(): void {

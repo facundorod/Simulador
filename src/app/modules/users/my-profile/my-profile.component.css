@@ -1,0 +1,31 @@
+h3 {
+    font-size: 2em;
+    text-align: left;
+}
+
+.profile-header {
+    margin-top: 3%;
+}
+
+.form-data {
+    margin-top: 3%;
+}
+
+.btn-register:hover,
+.btn-register:focus,
+.btn-register:link,
+.btn-register:active,
+.btn-register:visited {
+    background-color: #f3f1f5;
+    color: #8e7cc3;
+}
+
+.btn-register {
+    background-color: #8e7cc3;
+    border-color: #8e7cc3;
+}
+
+.password-eye {
+    /* margin-left: -30px; */
+    cursor: pointer;
+}
