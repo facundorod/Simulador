@@ -12,7 +12,7 @@
 <div class="container form-data">
 
 
-    <form class="form-register">
+    <form [formGroup]="getForm()" (ngSubmit)="onSubmit()">
         <div class="form-row">
             <div class="form-group col-md-6">
                 <label for="inputEmail4">Email</label>
@@ -21,19 +21,22 @@
                         <img
                             src="https://img.icons8.com/external-itim2101-flat-itim2101/24/000000/external-email-digital-marketing-itim2101-flat-itim2101.png" />
                     </div>
-                    <input type="email" class="form-control" id="inputEmail4" name="email">
+                    <input type="email" class="form-control" id="email" name="email" formControlName="email">
                 </div>
             </div>
             <div class="form-group col-md-6">
                 <label for="inputPassword4">Password</label>
                 <div class="input-group">
+                    <button class="btn btn-primary btn-register">Change password</button>
+                </div>
+                <!-- <div class="input-group">
                     <div class="input-group-text"><img src="https://img.icons8.com/fluency/24/000000/lock-2.png" />
                     </div>
                     <input type="password" #pwd class="form-control" id="pwd" name="password">
                     <div class="input-group-text">
                         <img src="https://img.icons8.com/office/24/000000/visible.png" (click)="toogleInput()" />
                     </div>
-                </div>
+                </div> -->
             </div>
         </div>
         <div class="form-group">
@@ -42,7 +45,7 @@
                 <div class="input-group-text">
                     <img src="https://img.icons8.com/fluency/24/000000/employee-card.png" />
                 </div>
-                <input type="text" class="form-control" id="inputName" name="name">
+                <input type="text" class="form-control" id="inputName" name="name" formControlName="name">
             </div>
         </div>
         <div class="form-group">
@@ -51,7 +54,7 @@
                 <div class="input-group-text">
                     <img src="https://img.icons8.com/fluency/24/000000/employee-card.png" />
                 </div>
-                <input type="text" class="form-control" id="inputSurname" name="surname">
+                <input type="text" class="form-control" id="inputSurname" name="surname" formControlName="surname">
             </div>
         </div>
         <div class="form-group">
@@ -60,10 +63,14 @@
                 <div class="input-group-text">
                     <img src="https://img.icons8.com/office/24/000000/organization.png" />
                 </div>
-                <input type="text" class="form-control" id="inputInstitution" name="institution">
+                <input type="text" class="form-control" id="inputInstitution" formControlName="institution">
             </div>
         </div>
-        <button type="submit" class="btn btn-primary btn-block btn-register"> Update profile
+        <button type="submit" class="btn btn-primary btn-block btn-register" *ngIf="getForm().valid"> Update
+            profile</button>
+        <button type="submit" class="btn btn-primary btn-block btn-register" *ngIf="!getForm().valid" disabled>
+            Update profile
+
         </button>
     </form>
 </div>

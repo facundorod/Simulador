@@ -17,8 +17,8 @@ export const environment = {
         simulations: "/simulation/",
         curves: "/curves/",
         parameters: "/parameters/",
+        user: "/auth/user",
     },
-    apiUsers: "http://localhost:8001/api/auth",
     simulation: "http://localhost:4200/monitor",
 };
 
