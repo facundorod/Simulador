@@ -35,8 +35,6 @@ export class PathologiesComponent extends BaseComponent implements OnInit {
         private fb: FormBuilder,
         private pathologiesService: PathologiesService,
         private toast: ToastrService,
-        private router: Router,
-        private route: ActivatedRoute,
         private modal: NgbModal
     ) {
         super();

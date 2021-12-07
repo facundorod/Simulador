@@ -1,7 +1,7 @@
 <ng-sidebar-container class="sidebar">
 
     <!-- Sidebar -->
-    <ng-sidebar #sidebar [mode]="'over'" [animate]="true" [showBackdrop]="true" [trapFocus]="true" [autoFocus]="true"
+    <ng-sidebar #sidebar [mode]="'push'" [animate]="true" [showBackdrop]="true" [trapFocus]="true" [autoFocus]="true"
         [keyClose]="true" [closeOnClickBackdrop]="true" [closeOnClickOutside]="true" [dock]="true" [dockedSize]="'60px'"
         [animate]="true" (onClosed)="onClosed()">
         <app-sidebar [type]="'user'" [sidebarOpen]="sidebarOpen" class="sidebarS"></app-sidebar>
@@ -27,7 +27,7 @@
                             </button>
                             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton"
                                 [ngClass]="{'show': toggleFlag}">
-                                <a class="dropdown-item" [routerLink]="['/my-profile']">My Profile</a>
+                                <a class="dropdown-item" [routerLink]="['/users/my-profile']">My Profile</a>
                                 <a class="dropdown-item" [routerLink]="['/auth/logout']">Logout</a>
                             </div>
                         </div>

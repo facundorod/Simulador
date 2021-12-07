@@ -54,7 +54,8 @@ h3 {
 .dropdown-toggle:active,
 .dropdown-toggle:link,
 .dropdown-toggle:focus,
-.dropdown-toggle:focus-visible {
+.dropdown-toggle:focus-visible,
+.dropdown-toggle:visited {
     background-color: transparent !important;
     border: 0px !important;
     margin-left: 15%;
@@ -68,6 +69,8 @@ h3 {
     color: #fff;
 }
 
-.dropdown-menu a:hover {
+.dropdown-menu a:hover,
+.dropdown-menu a:active,
+.dropdown-menu a:link {
     color: #616161;
 }

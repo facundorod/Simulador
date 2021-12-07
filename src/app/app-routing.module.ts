@@ -49,6 +49,20 @@ const routes: Routes = [
         ],
     },
     {
+        path: "users",
+        canActivate: [AuthGuard],
+        component: PanelLayoutComponent,
+        children: [
+            {
+                path: "",
+                loadChildren: () =>
+                    import("../app/modules/users/users.module").then(
+                        (m) => m.UsersModule
+                    ),
+            },
+        ],
+    },
+    {
         path: "simulation",
         component: NewComponent,
         canActivate: [AuthGuard],
@@ -81,4 +95,4 @@ const routes: Routes = [
     imports: [RouterModule.forRoot(routes)],
     exports: [RouterModule],
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}
