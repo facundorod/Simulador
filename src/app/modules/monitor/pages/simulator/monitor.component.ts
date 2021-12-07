@@ -239,10 +239,10 @@ export class MonitorComponent
                 this.updateCharts();
                 this.heartTimer +=
                     this.monitorConfiguration.getMonitorConfiguration()
-                        .freqSampleHeart / 1000;
+                        .freqHeart / 1000;
                 this.breathTimer +=
                     this.monitorConfiguration.getMonitorConfiguration()
-                        .freqSampleBreath / 1000;
+                        .freqBreath / 1000;
                 this.today = new Date();
             }, this.monitorConfiguration.getMonitorConfiguration().clockTimer);
         }
@@ -258,7 +258,7 @@ export class MonitorComponent
                     this.curvesHelper.calculateRate(
                         this.parameterInfo.heartRate,
                         this.monitorConfiguration.getMonitorConfiguration()
-                            .freqSampleHeart
+                            .freqHeart
                     )
             );
         }
@@ -268,7 +268,7 @@ export class MonitorComponent
                     this.curvesHelper.calculateRate(
                         this.parameterInfo.breathRate,
                         this.monitorConfiguration.getMonitorConfiguration()
-                            .freqSampleBreath
+                            .freqBreath
                     )
             );
     }

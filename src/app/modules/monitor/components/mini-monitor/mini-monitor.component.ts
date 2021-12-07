@@ -85,18 +85,18 @@ export class MiniMonitorComponent implements OnInit, OnDestroy {
             this.initiateSimulation();
             this.timer += this.breathCurve
                 ? this.monitorConfiguration.getMonitorConfiguration()
-                      .freqSampleBreath / 1000
+                      .freqBreath / 1000
                 : this.monitorConfiguration.getMonitorConfiguration()
-                      .freqSampleHeart / 1000;
+                      .freqHeart / 1000;
             this.curveTimer = this.roundTimer(
                 this.curveTimer +
                     this.curvesHelper.calculateRate(
                         this.rate,
                         this.breathCurve
                             ? this.monitorConfiguration.getMonitorConfiguration()
-                                  .freqSampleBreath
+                                  .freqBreath
                             : this.monitorConfiguration.getMonitorConfiguration()
-                                  .freqSampleHeart
+                                  .freqHeart
                     )
             );
             this.updateChart(this.chartComponent.series);

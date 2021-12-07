@@ -6,11 +6,12 @@ import { RegisterComponent } from "./register/register.component";
 import { AuthRoutingModule } from "./auth-routing.module";
 import { LogoutComponent } from "./logout/logout.component";
 import { SharedModule } from "@app/shared/shared.module";
+import { MonitorConfigurationService } from "@app/shared/services/monitor.service";
 
 @NgModule({
     declarations: [LoginComponent, RegisterComponent, LogoutComponent],
     imports: [AuthRoutingModule, SharedModule, FormsModule],
     exports: [LogoutComponent],
-    providers: [AuthService],
+    providers: [AuthService, MonitorConfigurationService],
 })
 export class AuthorizationModule {}

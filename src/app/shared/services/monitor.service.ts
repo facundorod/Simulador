@@ -8,11 +8,23 @@ import { Observable, Subject } from "rxjs";
 export class MonitorConfigurationService {
     constructor(private api: ApiService) {}
 
-    public getMonitorConfiguration(): Promise<MonitorI> {
-        const endpoint: string = environment.api.simulations + "monitor";
-        const value: Promise<MonitorI> = this.api.httpGet(endpoint).toPromise();
+    public getMonitorConfiguration(): Observable<MonitorI> {
+        const subject = new Subject<MonitorI>();
 
-        return value;
+        const endpoint: string = environment.api.simulations + "monitor";
+        this.api.httpGet(endpoint).subscribe(
+            (value: MonitorI) => {
+                subject.next(value);
+            },
+            (error: Error) => {
+                console.error(error);
+            },
+            () => {
+                subject.complete();
+            }
+        );
+
+        return subject.asObservable();
     }
 
     public updateMonitorConfiguration(monitor: MonitorI): Observable<void> {

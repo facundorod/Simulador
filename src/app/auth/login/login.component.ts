@@ -3,6 +3,8 @@ import { Router } from "@angular/router";
 import { Component, OnInit } from "@angular/core";
 
 import { ToastrService } from "ngx-toastr";
+import { MonitorConfigurationService } from "@app/shared/services/monitor.service";
+import { MonitorI } from "@app/shared/models/monitorI";
 
 @Component({
     selector: "app-login",
@@ -16,7 +18,8 @@ export class LoginComponent implements OnInit {
     constructor(
         private authService: AuthService,
         private toast: ToastrService,
-        private router: Router
+        private router: Router,
+        private monitorConfiguration: MonitorConfigurationService
     ) {}
 
     login() {
@@ -24,11 +27,12 @@ export class LoginComponent implements OnInit {
         this.toast.toastrConfig.positionClass = "toast-bottom-left";
         this.toast.toastrConfig.closeButton = true;
         this.authService.login(this.email, this.password).subscribe(
-            (res) => {
+            () => {
                 // Logueo exitoso
                 this.router.navigateByUrl("/simulation/new");
                 this.submit = true;
                 this.toast.success("Login successful... Welcome");
+                this.loadMonitorConfiguration();
                 // En caso de error lo intercepta el servicio Interceptor.
             },
             (error: any) => {
@@ -38,4 +42,18 @@ export class LoginComponent implements OnInit {
     }
 
     ngOnInit() {}
+
+    private loadMonitorConfiguration(): void {
+        debugger;
+        this.monitorConfiguration.getMonitorConfiguration().subscribe(
+            (value: MonitorI) => {
+                if (value) {
+                    localStorage.setItem("monitor", JSON.stringify(value));
+                }
+            },
+            (error: Error) => {
+                console.error(error);
+            }
+        );
+    }
 }
