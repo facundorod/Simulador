@@ -1,7 +1,9 @@
 import { Component, ElementRef, OnInit, ViewChild } from "@angular/core";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { UserI } from "@app/shared/models/userI";
+import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
 import { ToastrService } from "ngx-toastr";
+import { ChangePasswordComponent } from "../modals/change-password/change-password.component";
 import { UserService } from "../services/user.service";
 
 @Component({
@@ -10,14 +12,14 @@ import { UserService } from "../services/user.service";
     styleUrls: ["./my-profile.component.css"],
 })
 export class MyProfileComponent implements OnInit {
-    @ViewChild("pwd") password: ElementRef;
     private formGroup: FormGroup;
     private user: UserI;
 
     constructor(
         private userService: UserService,
         private fb: FormBuilder,
-        private toast: ToastrService
+        private toast: ToastrService,
+        private modal: NgbModal
     ) {
         this.loadUser();
         this.initFormGroup();
@@ -36,14 +38,20 @@ export class MyProfileComponent implements OnInit {
 
     ngOnInit(): void {}
 
-    public toogleInput(): void {
-        const type = this.password.nativeElement.type;
-        const newType = type === "password" ? "text" : "password";
-        this.password.nativeElement.type = newType;
-    }
-
     public getForm(): FormGroup {
         return this.formGroup;
+    }
+
+    public onChangePassword(): void {
+        const changePasswordModal: NgbModalRef = this.modal.open(
+            ChangePasswordComponent
+        );
+
+        changePasswordModal.result.then((newPassword: string | null) => {
+            if (newPassword) {
+                this.user.password = newPassword;
+            }
+        });
     }
 
     private initFormGroup(): void {

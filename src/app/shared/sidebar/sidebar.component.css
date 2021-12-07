@@ -5,7 +5,11 @@
 
 .sidebar-header {
     color: #292d30;
-    padding-top: 40%;
+}
+
+.img-logo {
+    padding-top: 10%;
+    padding-left: 15%;
 }
 
 .sub-header h4 {

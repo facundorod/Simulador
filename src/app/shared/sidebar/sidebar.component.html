@@ -1,6 +1,10 @@
 <nav class="sidebar" [ngClass]="{'dockNav': !sidebarOpen}">
 
     <div *ngIf="sidebarOpen else userDock">
+        <div class="container img-logo">
+            <img src="../../../assets/images/logo transparente.png" height="70">
+
+        </div>
         <div class="sidebar-header">
             <h3 class="font-weight-bold text-center"> Welcome! </h3>
         </div>

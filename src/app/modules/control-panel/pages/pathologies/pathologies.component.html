@@ -50,11 +50,12 @@
                         <th scope="col">
                             Description
                         </th>
-                        <th scope="col">
-                            Last update
-                        </th>
+
                         <th scope="col">
                             Extra information
+                        </th>
+                        <th scope="col">
+                            Last update
                         </th>
                         <th scope="col">
                             <!-- For edit -->
@@ -86,9 +87,7 @@
                         <td scope="row" class="row-descr">
                             {{pathology.description}}
                         </td>
-                        <td scope="row">
-                            {{pathology.updated_at | date}}
-                        </td>
+
                         <td scope="row">
                             <p *ngIf="pathology.extraInformation">
                                 {{pathology.extraInformation}}
@@ -97,6 +96,9 @@
                             <p class="ml-2" *ngIf="!pathology.extraInformation">
                                 -
                             </p>
+                        </td>
+                        <td scope="row">
+                            {{pathology.updated_at | date}}
                         </td>
                         <td scope="row" class="text-right">
                             <button class="btn btn-light" (click)="onEdit(i)">
