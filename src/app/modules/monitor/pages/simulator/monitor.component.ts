@@ -629,8 +629,7 @@ export class MonitorComponent
                     this.currentState.action !== "stop" &&
                     curveConfiguration.label == "etCO2"
                 )
-                    debugger;
-                charts[i].updateOptions(options);
+                    charts[i].updateOptions(options);
             }
         }
     }

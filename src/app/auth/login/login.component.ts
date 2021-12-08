@@ -44,7 +44,6 @@ export class LoginComponent implements OnInit {
     ngOnInit() {}
 
     private loadMonitorConfiguration(): void {
-        debugger;
         this.monitorConfiguration.getMonitorConfiguration().subscribe(
             (value: MonitorI) => {
                 if (value) {
