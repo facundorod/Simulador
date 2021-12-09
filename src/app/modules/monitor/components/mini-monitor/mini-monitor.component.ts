@@ -27,6 +27,7 @@ export class MiniMonitorComponent implements OnInit, OnDestroy {
     @ViewChild("chart") chartComponent: ChartComponent;
     @Input() curves: CurvesI;
     @Input() breathCurve: boolean = false;
+    @Input() action: string = "stop";
     @Input() rate: number;
     private simulationTimer: NodeJS.Timeout;
     private curveTimer: number;
@@ -61,15 +62,20 @@ export class MiniMonitorComponent implements OnInit, OnDestroy {
                 colorLine: this.curves.curveConfiguration.colorLine,
                 height: 100,
                 minX: 0,
-                maxX: this.monitorConfiguration.getMonitorConfiguration()
-                    .maxSamples,
+                maxX: 3,
                 minY: minY,
                 maxY: maxY,
                 toolbar: false,
             });
             let type: ChartType = null;
 
-            if (this.curves.curveConfiguration.label == "etCO2") type = "area";
+            if (
+                this.action != "stop" &&
+                (this.curves.curveConfiguration.label.toUpperCase() ==
+                    "ETCO2" ||
+                    this.curves.curveConfiguration.label.toUpperCase() == "CO2")
+            )
+                type = "area";
 
             chart.setChart([], type);
 
@@ -82,25 +88,28 @@ export class MiniMonitorComponent implements OnInit, OnDestroy {
 
         this.simulationTimer = setInterval(() => {
             this.updateTimer();
-            this.initiateSimulation();
-            this.timer += this.breathCurve
-                ? this.monitorConfiguration.getMonitorConfiguration()
-                      .freqBreath / 1000
-                : this.monitorConfiguration.getMonitorConfiguration()
-                      .freqHeart / 1000;
-            this.curveTimer = this.roundTimer(
-                this.curveTimer +
-                    this.curvesHelper.calculateRate(
-                        this.rate,
-                        this.breathCurve
-                            ? this.monitorConfiguration.getMonitorConfiguration()
-                                  .freqBreath
-                            : this.monitorConfiguration.getMonitorConfiguration()
-                                  .freqHeart
-                    )
-            );
+            if (this.action !== "pause") {
+                this.initiateSimulation();
+                this.timer += this.breathCurve
+                    ? this.monitorConfiguration.getMonitorConfiguration()
+                          .freqBreath / 1000
+                    : this.monitorConfiguration.getMonitorConfiguration()
+                          .freqHeart / 1000;
+                this.curveTimer = this.roundTimer(
+                    this.curveTimer +
+                        this.curvesHelper.calculateRate(
+                            this.rate,
+                            this.breathCurve
+                                ? this.monitorConfiguration.getMonitorConfiguration()
+                                      .freqBreath
+                                : this.monitorConfiguration.getMonitorConfiguration()
+                                      .freqHeart
+                        )
+                );
+            }
+
             this.updateChart(this.chartComponent.series);
-        }, this.monitorConfiguration.getMonitorConfiguration().clockTimer);
+        }, 30);
     }
 
     public getChart(): Partial<ChartOptions> {
@@ -118,10 +127,7 @@ export class MiniMonitorComponent implements OnInit, OnDestroy {
 
     private updateTimer(): void {
         if (this.firstSimulation) {
-            if (
-                this.timer >=
-                this.monitorConfiguration.getMonitorConfiguration().maxSamples
-            ) {
+            if (this.timer >= 3) {
                 this.timer = 0.0;
                 this.firstSimulation = false;
                 // At this point, the first simulation end, so we create a new dataset for all curves where
@@ -129,10 +135,7 @@ export class MiniMonitorComponent implements OnInit, OnDestroy {
                 this.createSimulationDataset();
             }
         } else {
-            if (
-                this.timer >=
-                this.monitorConfiguration.getMonitorConfiguration().maxSamples
-            ) {
+            if (this.timer >= 3) {
                 this.timer = 0.0;
                 // At this point, the clock timer overcomes monitor max samples, so we need to
                 // "restart" simulation
@@ -188,19 +191,27 @@ export class MiniMonitorComponent implements OnInit, OnDestroy {
         const currentDataset: any = this.chart?.series.slice();
         if (currentDataset) {
             const curveTimer: number = this.curveTimer;
-            let closestIndex: ClosestPoint = this.curvesHelper.getClosestIndex(
-                this.curves.curveValues,
-                curveTimer
-            );
-            const interpolationNumber: number =
-                this.curvesHelper.linealInterpolation(
-                    closestIndex.lessValue[0],
-                    closestIndex.greaterValue[0],
-                    curveTimer,
-                    closestIndex.lessValue[1],
-                    closestIndex.lessValue[1]
-                );
-            currentDataset[0].data.push([this.timer, interpolationNumber]);
+            if (this.action === "stop") {
+                const minY: number | any = this.chart.yaxis.min;
+                const maxY: number | any = this.chart.yaxis.max;
+
+                currentDataset[0].data.push([this.timer, (minY + maxY) / 2]);
+            } else {
+                let closestIndex: ClosestPoint =
+                    this.curvesHelper.getClosestIndex(
+                        this.curves.curveValues,
+                        curveTimer
+                    );
+                const interpolationNumber: number =
+                    this.curvesHelper.linealInterpolation(
+                        closestIndex.lessValue[0],
+                        closestIndex.greaterValue[0],
+                        curveTimer,
+                        closestIndex.lessValue[1],
+                        closestIndex.lessValue[1]
+                    );
+                currentDataset[0].data.push([this.timer, interpolationNumber]);
+            }
         }
     }
 
@@ -213,19 +224,25 @@ export class MiniMonitorComponent implements OnInit, OnDestroy {
         let curveValues = currentDataset[0].data;
         let curveValuesSimulation = currentDataset[1].data;
         const originalDataset: [number, number][] = this.curves.curveValues;
-        let closestIndex: ClosestPoint = this.curvesHelper.getClosestIndex(
-            originalDataset,
-            this.curveTimer
-        );
-        const interpolationNumber: number =
-            this.curvesHelper.linealInterpolation(
-                closestIndex.lessValue[0],
-                closestIndex.greaterValue[0],
-                this.curveTimer,
-                closestIndex.lessValue[1],
-                closestIndex.lessValue[1]
+        if (this.action === "stop") {
+            const minY: number | any = this.chart.yaxis.min;
+            const maxY: number | any = this.chart.yaxis.max;
+            curveValuesSimulation.push([this.timer, (minY + maxY) / 2]);
+        } else {
+            let closestIndex: ClosestPoint = this.curvesHelper.getClosestIndex(
+                originalDataset,
+                this.curveTimer
             );
-        curveValuesSimulation.push([this.timer, interpolationNumber]);
+            const interpolationNumber: number =
+                this.curvesHelper.linealInterpolation(
+                    closestIndex.lessValue[0],
+                    closestIndex.greaterValue[0],
+                    this.curveTimer,
+                    closestIndex.lessValue[1],
+                    closestIndex.lessValue[1]
+                );
+            curveValuesSimulation.push([this.timer, interpolationNumber]);
+        }
         this.deleteOldPoints(curveValues, this.timer);
         currentDataset[0].data = curveValues;
         currentDataset[1].data = curveValuesSimulation;

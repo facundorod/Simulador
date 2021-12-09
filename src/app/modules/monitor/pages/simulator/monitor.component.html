@@ -9,15 +9,28 @@
             </p>
         </div>
         <div class="col-lg-4 alarms-off">
-            <ng-template [ngIf]="!enableSoundAlarm">
-                <p class="text-center"><img
-                        src="https://img.icons8.com/external-kiranshastry-lineal-color-kiranshastry/20/000000/external-mute-multimedia-kiranshastry-lineal-color-kiranshastry.png" />
-                    &nbsp;Alarms
-                    off</p>
+            <ng-template [ngIf]="currentState?.action === 'stop'">
+                <h4 class="text-center"><img src="https://img.icons8.com/fluency/24/000000/stop.png"
+                        class="img-status" />Simulation
+                    stopped
+                    <span *ngIf="!enableSoundAlarm">
+                        &nbsp; <img
+                            src="https://img.icons8.com/external-kiranshastry-lineal-color-kiranshastry/30/000000/external-mute-multimedia-kiranshastry-lineal-color-kiranshastry.png" />
+                        &nbsp;Alarms off
+                    </span>
+                </h4>
+
             </ng-template>
+            <ng-template [ngIf]="!enableSoundAlarm && currentState?.action !== 'stop'">
+                <h4 class="text-center"><img
+                        src="https://img.icons8.com/external-kiranshastry-lineal-color-kiranshastry/30/000000/external-mute-multimedia-kiranshastry-lineal-color-kiranshastry.png" />
+                    &nbsp;Alarms
+                    off</h4>
+            </ng-template>
+
         </div>
         <div class="col-lg-4">
-            <p class="text-center text-animal-clinic" *ngIf="animalSpecie">ANIMAL CLINIC</p>
+            <p class="text-center" *ngIf="animalSpecie">ANIMAL CLINIC</p>
         </div>
     </div>
 
@@ -28,58 +41,108 @@
 
 
         <div class="container-fluid">
-
-            <ng-template [ngIf]="currentState?.action === 'stop'">
-                <h4 class="text-center"><img src="https://img.icons8.com/fluency/24/000000/stop.png"
-                        class="img-status" />Simulation
-                    stopped</h4>
-            </ng-template>
             <ng-template [ngIf]="currentState?.action === 'pause'">
                 <h4 class="text-center"><img src="https://img.icons8.com/fluency/24/000000/pause.png"
                         title="Freeze simulation" class="img-status" />Simulation
                     paused</h4>
             </ng-template>
-            <div id="charts" class="row" *ngFor="let chart of chartsOptions; let i = index">
-                <div class="col-9">
-                    <apx-chart #chart [series]="chart.series" [stroke]="chart.stroke" [xaxis]="chart.xaxis"
-                        [yaxis]="chart.yaxis" [markers]="chart.markers" [dataLabels]="chart.dataLabels"
-                        [chart]="chart.chart" [grid]="chart.grid" [tooltip]="chart.tooltip" [autoUpdateSeries]=true
-                        [legend]="chart.legend" [fill]="chart.fill">
-                    </apx-chart>
+            <div class="row">
+                <div class="container-fluid col-lg-9">
+                    <div class="row" *ngFor="let curves of curvesAndParams; let i = index">
+                        <div class="col-1"
+                            [ngClass]="{'curve-label curve-label-left': curves.chart && curves.chart.series,
+                                                                            'no-curves-label': !curves.chart || !curves.chart.series}">
+                            <p class=" text-label">
+                                <ng-template [ngIf]="curves.chart && curves.chart.series">
+                                    {{curves.curveConfiguration.label.toUpperCase()}}
+                                </ng-template>
+                            </p>
+                        </div>
+                        <div class="col-lg-11"
+                            [ngClass]="{'curves': curves.chart && curves.chart.series,
+                                                                            'no-curves': !curves.chart || !curves.chart.series}">
+                            <ng-template [ngIf]="curves.chart && curves.chart.series">
+                                <apx-chart #chart [series]="curves.chart.series" [stroke]="curves.chart.stroke"
+                                    [xaxis]="curves.chart.xaxis" [yaxis]="curves.chart.yaxis"
+                                    [markers]="curves.chart.markers" [dataLabels]="curves.chart.dataLabels"
+                                    [chart]="curves.chart.chart" [grid]="curves.chart.grid"
+                                    [tooltip]="curves.chart.tooltip" [autoUpdateSeries]=true
+                                    [legend]="curves.chart.legend" [fill]="curves.chart.fill">
+                                </apx-chart>
+                            </ng-template>
+                        </div>
+
+                    </div>
                 </div>
-                <div class="col-2 curve-configuration" [ngClass]="{'alert-enabled': getAlerts()[i]}">
-                    <div class="row">
-                        <div class="col-3">
+
+                <div class="col-3">
+                    <div class="row" *ngFor="let curves of curvesAndParams; let i = index">
+
+                        <div class="col-11 curve-configuration" [ngClass]="{'alert-enabled': getAlerts()[i]}"
+                            *ngIf="curves.curveConfiguration?.label.toUpperCase() != 'CAR' &&
+                                                                curves.curveConfiguration?.label.toUpperCase() != 'RESP'">
+                            <div class="row">
+                                <div class="col-3">
+                                    <ng-template [ngIf]="curves.curveConfiguration?.label.toUpperCase() == 'SPO2'">
+                                        <div class="progress progress-bar-vertical">
+                                            <div class="progress-bar" role="progressbar" aria-valuenow="0"
+                                                aria-valuemin="0" aria-valuemax="100"
+                                                [style.height.%]="(curveTimers[i] / 1) * 100"
+                                                [style.background-color]="getColor(curves)">
+                                                <span class="sr-only" [style.background-color]="getColor(curves)">60%
+                                                    Complete</span>
+                                            </div>
+                                        </div>
+
+
+                                    </ng-template>
+                                </div>
+                                <div class="col-5">
+                                    <p class="text-rate" [style.color]="getColor(curves)">
+                                        {{getSourceRateValue(curves)}}
+                                    </p>
+
+                                </div>
+                                <div class="col-4 parameter-box-var">
+                                    <p class="first-var" [style.color]="getColor(curves)">
+                                        {{curves.curveConfiguration?.alert_high}}
+                                    </p>
+                                    <p [style.color]="getColor(curves)">
+                                        {{curves.curveConfiguration?.alert_low}}</p>
+                                    <p [style.color]="getColor(curves)">
+                                        {{curves.curveConfiguration?.source?.label}}</p>
+                                    <p [style.color]="getColor(curves)">
+                                        {{curves.curveConfiguration?.unit}}</p>
+                                </div>
+                            </div>
 
                         </div>
-                        <div class="col-5">
-                            <p class="text-rate" [style.color]="getColor(currentState.curves[i])">
-                                {{getSourceRateValue(currentState.curves[i])}}</p>
-                        </div>
-                        <div class="col-4 parameter-box-var">
-                            <p class="first-var" [style.color]="getColor(currentState.curves[i])">
-                                {{currentState.curves[i]?.curveConfiguration?.alert_high}}
+                        <div class="col-xs-1 curve-label" [ngClass]="{'alert-enabled': getAlerts()[i]}"
+                            *ngIf="curves.curveConfiguration?.label.toUpperCase() != 'CAR' &&
+                                                                curves.curveConfiguration?.label.toUpperCase() != 'RESP'">
+                            <p class=" text-label" [style.color]="getColor(curves)">
+                                {{curves.curveConfiguration?.label}}
                             </p>
-                            <p [style.color]="getColor(currentState.curves[i])">
-                                {{currentState.curves[i]?.curveConfiguration?.alert_low}}</p>
-                            <p [style.color]="getColor(currentState.curves[i])">
-                                {{currentState.curves[i]?.curveConfiguration?.source.label}}</p>
-                            <p [style.color]="getColor(currentState.curves[i])">
-                                {{currentState.curves[i]?.curveConfiguration?.unit}}</p>
                         </div>
                     </div>
 
                 </div>
-                <div class="col-1 curve-label">
-                    <p class="text-label" [style.color]="getColor(currentState.curves[i])">
-                        {{currentState.curves[i]?.curveConfiguration?.label}}
-                    </p>
-                </div>
             </div>
 
+
+
+
+
         </div>
+
+
+
+
     </div>
+
 </div>
+
+
 
 <ng-template #noSimulation class="mt-4 no-simulation">
 

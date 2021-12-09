@@ -55,7 +55,7 @@ export function commonOptions(
             },
 
             axisBorder: {
-                show: false,
+                show: true,
             },
             max: maxX,
             min: minX,
@@ -63,7 +63,7 @@ export function commonOptions(
         chart: {
             id: "curves",
             type: type ? type : "line",
-            height: 100,
+            height: 140,
 
             zoom: {
                 enabled: toolbarEnabled,
@@ -81,7 +81,7 @@ export function commonOptions(
             },
             show: false,
             max: maxY,
-            min: minY,
+            min: 0,
         },
         dataLabels: {
             enabled: false,
@@ -132,7 +132,7 @@ export class ChartConfigurer {
                 max: this.chartOptions.maxX,
                 min: this.chartOptions.minX,
                 axisBorder: {
-                    show: false,
+                    show: true,
                 },
             },
             chart: {
@@ -155,7 +155,7 @@ export class ChartConfigurer {
                 },
                 show: false,
                 max: this.chartOptions.maxY,
-                min: this.chartOptions.minY,
+                min: 0,
             },
             dataLabels: {
                 enabled: false,

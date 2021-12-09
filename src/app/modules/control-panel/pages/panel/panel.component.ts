@@ -249,13 +249,13 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
                 switch (value.curveConfiguration.label.toUpperCase()) {
                     case "RESP":
                         this.breathRate = value.curveConfiguration.refValue;
-                        break;
+                        return value;
                     case "CAR":
                         this.heartRate = value.curveConfiguration.refValue;
-                        break;
+                        return value;
                     case "TEMP":
                         this.temperature = value.curveConfiguration.refValue;
-                        break;
+                        return value;
                     case "SPO2":
                         this.spo2 = value.curveConfiguration.refValue;
                         return value;
@@ -414,14 +414,20 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
 
     public getRate(index: number): number {
         const curve: CurvesI = this.currentState.curves[index];
-        if (curve.curveConfiguration.label.toLowerCase() === "etco2")
+        if (
+            curve.curveConfiguration.label.toUpperCase() === "ETCO2" ||
+            curve.curveConfiguration.label.toUpperCase() === "CO2"
+        )
             return this.breathRate;
         return this.heartRate;
     }
 
     public breathCurve(index: number): boolean {
         const curve: CurvesI = this.currentState.curves[index];
-        if (curve.curveConfiguration.label.toLowerCase() === "etco2")
+        if (
+            curve.curveConfiguration.label.toUpperCase() === "ETCO2" ||
+            curve.curveConfiguration.label.toUpperCase() === "CO2"
+        )
             return true;
         return false;
     }
