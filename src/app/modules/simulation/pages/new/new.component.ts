@@ -18,9 +18,8 @@ export class NewComponent implements OnInit {
     constructor(
         private router: Router,
         private modal: NgbModal,
-        private simulationService: SimulationService,
-        private scenarioService: ScenarioService
-    ) { }
+        private simulationService: SimulationService
+    ) {}
 
     ngOnInit(): void {
         // window.open(environment.simulation, "_blank");
@@ -31,7 +30,7 @@ export class NewComponent implements OnInit {
         const simulation = localStorage.getItem("Simulation");
 
         if (this.option === "blank") {
-            this.router.navigateByUrl("/panel");
+            this.router.navigateByUrl("/panel/scenarios");
 
             if (simulation) localStorage.removeItem("Simulation");
         } else {
@@ -63,6 +62,8 @@ export class NewComponent implements OnInit {
                         console.log(error);
                     }
                 );
+            } else {
+                this.router.navigateByUrl("/panel");
             }
         }
     }

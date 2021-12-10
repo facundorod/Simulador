@@ -1,5 +1,6 @@
 import {
     Component,
+    Inject,
     OnDestroy,
     OnInit,
     QueryList,
@@ -29,6 +30,7 @@ import {
 } from "@app/modules/simulation/helpers/curvesHelper";
 import { commonOptions } from "@app/modules/simulation/helpers/chartConfigurer";
 import { CurvesConfigurationI } from "@app/shared/models/curvesConfigurationI";
+import { DOCUMENT } from "@angular/common";
 @Component({
     selector: "app-monitor",
     templateUrl: "./monitor.component.html",
@@ -64,8 +66,10 @@ export class MonitorComponent
         enabled: true,
     };
     private noDataset: boolean = false;
-
-    constructor(private monitorService: MonitorService) {
+    constructor(
+        private monitorService: MonitorService,
+        @Inject(DOCUMENT) private document: any
+    ) {
         super();
         this.initVariables();
     }
@@ -85,6 +89,23 @@ export class MonitorComponent
                 curve.curveValues[curve.curveValues.length - 1][0];
             this.maxValues.push(maxValue);
         }
+    }
+
+    public openFullscreen(): void {
+        if (!document.fullscreenElement) {
+            document.documentElement.requestFullscreen();
+        }
+    }
+
+    /* Close fullscreen */
+    public closeFullscreen(): void {
+        if (document.fullscreenElement) {
+            document.exitFullscreen();
+        }
+    }
+
+    public isFullScren(): boolean {
+        return document.fullscreenElement != null;
     }
 
     /**
@@ -203,7 +224,7 @@ export class MonitorComponent
                 minX: 0,
                 maxX: this.monitorConfiguration.getMonitorConfiguration()
                     .maxSamples,
-                minY: 0,
+                minY: minY,
                 maxY:
                     curve.curveConfiguration.label.toUpperCase() == "CO2" ||
                     curve.curveConfiguration.label.toUpperCase() == "ETCO2"
@@ -263,8 +284,8 @@ export class MonitorComponent
 
     private updateCurveTimers(index: number, curve: CurvesI) {
         if (
-            curve.curveConfiguration.source.label.toUpperCase() == "CAR" ||
-            curve.curveConfiguration.source.label.toUpperCase() == "SPO2"
+            curve.curveConfiguration?.source?.label.toUpperCase() == "CAR" ||
+            curve.curveConfiguration?.source?.label.toUpperCase() == "SPO2"
         ) {
             this.curveTimers[index] = this.roundTimer(
                 this.curveTimers[index] +
@@ -275,7 +296,7 @@ export class MonitorComponent
                     )
             );
         }
-        if (curve.curveConfiguration.source.label.toUpperCase() == "RESP")
+        if (curve.curveConfiguration?.source?.label?.toUpperCase() == "RESP")
             this.curveTimers[index] = this.roundTimer(
                 this.curveTimers[index] +
                     this.curvesHelper.calculateRate(
@@ -650,11 +671,7 @@ export class MonitorComponent
                         ? "area"
                         : currentOptions.chart.type
                 );
-                if (
-                    this.currentState.action !== "stop" &&
-                    (curveConfiguration.label.toUpperCase() == "ETCO2" ||
-                        curveConfiguration.label.toUpperCase() == "CO2")
-                )
+                if (this.currentState.action !== "stop")
                     charts[i].updateOptions(options);
             }
         }

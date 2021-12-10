@@ -56,6 +56,8 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
+        this.localStorageService.removeValue("simulationState");
+
         this.setSubmitForm(false);
         this.setLoading(true);
         this.loadData();
@@ -171,27 +173,19 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
             .get("heartRate")
             .valueChanges.subscribe((val) => {
                 this.heartRate = val;
-                this.saveParameterInfo();
-                this.updateState();
             });
         this.fromGroupParameters
             .get("breathRate")
             .valueChanges.subscribe((val) => {
                 this.breathRate = val;
-                this.saveParameterInfo();
-                this.updateState();
             });
         this.fromGroupParameters
             .get("temperature")
             .valueChanges.subscribe((val) => {
                 this.temperature = val;
-                this.saveParameterInfo();
-                this.updateState();
             });
         this.fromGroupParameters.get("spo2").valueChanges.subscribe((val) => {
             this.spo2 = val;
-            this.saveParameterInfo();
-            this.updateState();
         });
     }
 
@@ -216,12 +210,10 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
                             }
                             this.currentState = state;
                             this.currentState.action = action;
+                            this.currentState.muteAlarms = false;
                             this.currentState.newScenario = newScenario;
                             this.onLoadParameters();
-                            this.localStorageService.saveValue(
-                                "simulationState",
-                                JSON.stringify(this.currentState)
-                            );
+                            this.applyChanges();
                         } else {
                             this.currentState = null;
                             this.localStorageService.removeValue(
@@ -237,6 +229,15 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
             this.currentState = null;
             this.localStorageService.removeValue("simulationState");
         }
+    }
+
+    public applyChanges(): void {
+        this.localStorageService.saveValue(
+            "simulationState",
+            JSON.stringify(this.currentState)
+        );
+        this.saveParameterInfo();
+        this.updateState();
     }
 
     /**
@@ -264,7 +265,6 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
                 }
             }
         );
-        this.saveParameterInfo();
     }
 
     private saveParameterInfo(): void {
@@ -378,19 +378,13 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
     public onMuteAlarms(): void {
         if (this.currentState) this.currentState.muteAlarms = true;
         this.muteAlarms = true;
-        this.localStorageService.saveValue(
-            "simulationState",
-            JSON.stringify(this.currentState)
-        );
+        this.updateState();
     }
 
     public onUnmuteAlarms(): void {
         if (this.currentState) this.currentState.muteAlarms = false;
         this.muteAlarms = false;
-        this.localStorageService.saveValue(
-            "simulationState",
-            JSON.stringify(this.currentState)
-        );
+        this.updateState();
     }
 
     public onStopSimulation(): void {

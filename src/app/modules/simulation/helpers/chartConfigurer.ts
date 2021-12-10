@@ -37,10 +37,11 @@ export function commonOptions(
     minY: number,
     type?: ChartType
 ): Partial<ChartOptions> {
+    console.log(toolbarEnabled);
     return {
         stroke: {
             curve: "smooth",
-            width: 1.8,
+            width: 2,
         },
         markers: {
             size: 0,
@@ -63,7 +64,7 @@ export function commonOptions(
         chart: {
             id: "curves",
             type: type ? type : "line",
-            height: 140,
+            height: toolbarEnabled ? 130 : 143,
 
             zoom: {
                 enabled: toolbarEnabled,
@@ -116,7 +117,7 @@ export class ChartConfigurer {
             ],
             stroke: {
                 curve: "smooth",
-                width: 1.8,
+                width: 2,
             },
             markers: {
                 size: 0,

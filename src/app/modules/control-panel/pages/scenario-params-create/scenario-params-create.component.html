@@ -35,6 +35,9 @@
 
             <div class="col-4">
                 <label for="animal-specie">Animal Specie</label>
+                <!-- <button class="btn btn-link btn-add btn-add-animal" [routerLink]="'/panel/animalSpecie'"> New Animal
+                    Specie</button> -->
+
                 <select class="form-select form-control" name="animal-specie" id="animal-specie"
                     aria-label="Select animal specie" formControlName="animalSpecie" [compareWith]="compareAnimals">
                     <option [ngValue]="null" disabled>Choose Animal</option>

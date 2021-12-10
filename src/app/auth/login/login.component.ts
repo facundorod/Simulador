@@ -32,7 +32,9 @@ export class LoginComponent implements OnInit {
                 this.router.navigateByUrl("/simulation/new");
                 this.submit = true;
                 this.toast.success("Login successful... Welcome");
-                this.loadMonitorConfiguration();
+                const auth = JSON.parse(localStorage.getItem("authToken"));
+                if (auth.user.roles.includes("admin"))
+                    this.loadMonitorConfiguration();
                 // En caso de error lo intercepta el servicio Interceptor.
             },
             (error: any) => {
