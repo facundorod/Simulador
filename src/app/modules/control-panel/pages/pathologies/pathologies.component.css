@@ -27,3 +27,17 @@ h3 {
     background-color: #fff;
     color: #42336e;
 }
+
+.row-descr {
+    max-width: 200px;
+    overflow: auto;
+}
+
+ngb-pagination ::ng-deep ul > li:not(.active) > a {
+    background-color: #42336e !important;
+    color: #fff;
+}
+ngb-pagination ::ng-deep ul > li.active > a {
+    background-color: #fff !important;
+    color: #42336e !important;
+}

@@ -1,0 +1,8 @@
+<div class="container" *ngIf="getChart()">
+    <apx-chart #chart [series]="getChart().series" [stroke]="getChart().stroke" [xaxis]="getChart().xaxis"
+        [yaxis]="getChart().yaxis" [markers]="getChart().markers" [dataLabels]="getChart().dataLabels"
+        [chart]="getChart().chart" [grid]="getChart().grid" [tooltip]="getChart().tooltip" [legend]="getChart().legend"
+        [fill]="getChart().fill">
+    </apx-chart>
+
+</div>

@@ -1,0 +1,311 @@
+<div class="container">
+    <div class="scenario-header">
+        <div class="row justify-content-between">
+            <div class="col-4">
+                <h3 class="title"> New Scenario </h3>
+            </div>
+            <div class="col-2" *ngIf="!isLoading()">
+                <button class="btn btn-primary btn-save" *ngIf="getForm().valid" (click)="onSaveChanges()"> Save
+                    Changes</button>
+                <button class="btn btn-primary btn-save" *ngIf="!getForm().valid" disabled> Save
+                    Changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="container container-form">
+    <button class="btn btn-primary btn-spinner" type="button" disabled *ngIf="isLoading()">
+        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+        Loading...
+    </button>
+    <form [formGroup]="getForm()" *ngIf="!isLoading()">
+        <div class=" row justify-content-between">
+            <div class="col-3">
+                <label for="scenario-name" class="form-label">Scenario Name</label>
+                <input type="text" class="form-control" formControlName="scenarioName">
+            </div>
+
+            <div class="col-5">
+                <label for="scenario-description" class="form-label">Scenario description</label>
+                <textarea class="form-control" rows="3" formControlName="scenarioDescription"></textarea>
+            </div>
+
+            <div class="col-4">
+                <label for="animal-specie">Animal Specie</label>
+                <!-- <button class="btn btn-link btn-add btn-add-animal" [routerLink]="'/panel/animalSpecie'"> New Animal
+                    Specie</button> -->
+
+                <select class="form-select form-control" name="animal-specie" id="animal-specie"
+                    aria-label="Select animal specie" formControlName="animalSpecie" [compareWith]="compareAnimals">
+                    <option [ngValue]="null" disabled>Choose Animal</option>
+                    <ng-template [ngIf]="getAnimals().length">
+                        <option *ngFor="let animal of getAnimals()" [ngValue]="animal">
+                            {{animal.name}}
+                        </option>
+                    </ng-template>
+
+                </select>
+
+            </div>
+        </div>
+
+        <div class="row second-row justify-content-between">
+
+            <div class="col-5">
+                <label for="medications" class="form-label">Medications</label>
+                <table class="table table-med table-hover">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th scope="col">
+                                Medication
+                            </th>
+                            <th scope="col">
+                                dose
+                            </th>
+                            <th scope="col">
+                                [unit]
+                            </th>
+                            <th scope="col">
+                                <!-- Delete -->
+                            </th>
+                        </tr>
+
+
+                    </thead>
+                    <tbody>
+                        <ng-container formArrayName="medications"
+                            *ngFor="let medication of getMedicationsForm().controls; let i = index">
+
+                            <tr [formGroupName]="i">
+
+                                <td scope="row">
+                                    <select class="form-select form-control" formControlName="medication"
+                                        [compareWith]="compareMedications">
+                                        <option value="null" disabled>Choose
+                                            Medication
+                                        </option>
+                                        <option *ngFor="let medication of getMedications()" [ngValue]="medication">
+                                            {{ medication.name }}
+                                        </option>
+                                    </select>
+                                </td>
+                                <td scope="row">
+                                    <input type="text" class="form-control" formControlName="dose">
+                                </td>
+                                <td scope="row">
+                                    <input type="text" class="form-control" formControlName="unit">
+                                </td>
+                                <td scope="row">
+                                    <button class="btn btn-trash btn-light" (click)="deleteRowMedication(i)">
+                                        <img src="https://img.icons8.com/color/26/000000/trash--v1.png" />
+
+                                    </button>
+
+                                </td>
+
+                            </tr>
+
+                        </ng-container>
+
+                        <button class="btn btn-add mt-2 ml-1" (click)="addRowMedication()">
+                            + Medication
+                        </button>
+
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="col-3">
+                <label for="pathologies" class="form-label">Pathologies</label>
+                <table class="table table-path table-hover">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th scope="col">
+                                Pathology
+                            </th>
+                            <th scope="col-sm">
+                                <!-- Delete -->
+                            </th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        <ng-container formArrayName="pathologies"
+                            *ngFor="let pat of getPathologiesForm().controls; let i = index">
+                            <tr [formGroupName]="i">
+
+                                <td scope="row">
+                                    <select class="form-select form-control" formControlName="pathology"
+                                        [compareWith]="comparePathologies">
+                                        <option value="null" disabled>Choose
+                                            Pathology
+                                        </option>
+                                        <option *ngFor="let pathology of getPathologies()" [ngValue]="pathology">
+                                            {{ pathology.name }}
+                                        </option>
+                                    </select>
+                                </td>
+                                <td scope="row">
+                                    <button class="btn btn-trash btn-light" (click)="deleteRowPathology(i)">
+                                        <img src="https://img.icons8.com/color/26/000000/trash--v1.png" />
+
+                                    </button>
+
+                                </td>
+                            </tr>
+                        </ng-container>
+
+                        <button class="btn btn-add mt-2 ml-1" (click)="addRowPathology()">
+                            + Pathology
+                        </button>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="col-3">
+                <label for="arrhythmias" class="form-label">Arrhythmias</label>
+                <table class="table-arr table table-hover">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th scope="col">
+                                Arrhythmia
+                            </th>
+                            <th scope="col-sm">
+                                <!-- Delete -->
+                            </th>
+                        </tr>
+
+
+                    </thead>
+
+                    <tbody>
+                        <ng-container formArrayName="arrhythmias"
+                            *ngFor="let arr of getArrhythmiasForm().controls; let i = index">
+                            <tr [formGroupName]="i">
+
+                                <td scope="row">
+                                    <select class="form-select form-control" formControlName="arrhythmia"
+                                        [compareWith]="compareArrhythmias">
+                                        <option value="null" disabled>Choose
+                                            Arrhythmia
+                                        </option>
+                                        <option *ngFor="let arrhythmia of getArrhythmias()" [ngValue]="arrhythmia">
+                                            {{ arrhythmia.name }}
+                                        </option>
+                                    </select>
+                                </td>
+                                <td scope="row">
+                                    <button class="btn btn-trash btn-light" (click)="deleteRowArrhythmia(i)">
+                                        <img src="https://img.icons8.com/color/26/000000/trash--v1.png" />
+                                    </button>
+
+                                </td>
+                            </tr>
+                        </ng-container>
+                        <button class="btn btn-add mt-2 ml-1" (click)="addRowArrhythmia()">
+                            + Arrhythmia
+                        </button>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="row parameters">
+            <div class="parameter-configuration-text">
+                <h3 class="text-params text-center">Parameters Configuration</h3>
+            </div>
+            <div class="col-12">
+                <div class="row justify-content-between mb-1">
+                    <div class="col-4">
+                    </div>
+                    <div class="col-2">
+                        <button class="btn btn-primary btn-param" (click)="onAddParameter()">Add parameter</button>
+                    </div>
+                </div>
+
+                <table class="table table-hover table-params">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th scope="col" class="col-param">
+                                Parameter
+                            </th>
+                            <th scope="col">
+                                Value
+                            </th>
+                            <th scope="col" class="col-configuration">
+                                Special Configuration
+                            </th>
+                            <th scope="col">
+                                Alerts
+                            </th>
+                            <th scope="col">
+                                Color line
+                            </th>
+                            <th scope="col"></th>
+                        </tr>
+                    </thead>
+                    <tbody *ngIf="getParameters()?.length > 0 else noElements">
+                        <tr *ngFor="let parameter of getParameters(); let i=index">
+                            <td scope="col" class="col-param">
+                                <p>{{parameter.animalParameters.physiologicalParameter.name}}</p>
+                            </td>
+                            <td scope="row" class="col-value">
+                                <p>{{parameter.value}}</p>
+                            </td>
+                            <td scope="row" class="col-configuration">
+                                <p *ngIf="parameter.animalParameters.physiologicalParameter.specialConfiguration">
+                                    {{parameter.animalParameters.physiologicalParameter.specialConfiguration}}</p>
+
+                                <p *ngIf="!parameter.animalParameters.physiologicalParameter.specialConfiguration">
+                                    -</p>
+                            </td>
+                            <td scope="row">
+                                <p>Alert low: {{parameter.animalParameters.alert_low}}
+                                    <br>
+                                    Alert high: {{parameter.animalParameters.alert_high}}
+                                </p>
+                            </td>
+                            <td scope="row">
+                                <ng-template [ngIf]="parameter.animalParameters.physiologicalParameter.colorLine">
+                                    <input type="color" class="form-control form-control-color color-picker"
+                                        value="{{parameter.animalParameters.physiologicalParameter.colorLine}}"
+                                        title="Color line" disabled>
+                                </ng-template>
+                                <ng-template [ngIf]="!parameter.animalParameters.physiologicalParameter.colorLine">
+                                    <p class="text-color">-</p>
+                                </ng-template>
+
+                            </td>
+                            <td scope="row" class="text-right">
+                                <button class="btn btn-light" (click)="editParameter(i)">
+                                    <img
+                                        src="https://img.icons8.com/external-kiranshastry-lineal-color-kiranshastry/26/000000/external-pencil-interface-kiranshastry-lineal-color-kiranshastry-1.png" />
+                                </button>
+                                <span>
+                                    <button class="btn btn-trash btn-light ml-2" (click)="onDeleteParameter(i)">
+                                        <img src="https://img.icons8.com/color/26/000000/trash--v1.png" />
+                                    </button>
+                                </span>
+                            </td>
+                        </tr>
+
+
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+    </form>
+</div>
+
+
+<ng-template #noElements let-colspan='colspan'>
+    <tr>
+        <td colspan="7">
+            Nothing to show you.
+        </td>
+    </tr>
+</ng-template>

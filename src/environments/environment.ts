@@ -11,12 +11,14 @@ export const environment = {
         medications: "/medication/",
         pathologies: "/pathology/",
         scenarios: "/scenario/",
+        scenariosParams: "/scenario/parameters",
         login: "/auth/login",
         register: "/auth/register",
         simulations: "/simulation/",
         curves: "/curves/",
+        parameters: "/parameters/",
+        user: "/auth/user",
     },
-    apiUsers: "http://localhost:8001/api/auth",
     simulation: "http://localhost:4200/monitor",
 };
 

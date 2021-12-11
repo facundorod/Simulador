@@ -27,9 +27,9 @@ export class ScenariosModalComponent extends BaseComponent implements OnInit {
 
     async loadData(): Promise<any> {
         return new Promise((resolve, reject) => {
-            this.scenariosService.list().subscribe(
+            this.scenariosService.listWithParams().subscribe(
                 (data: any) => {
-                    resolve(data);
+                    if (data) resolve(data);
                 },
                 (error: any) => {
                     reject(error);
@@ -57,6 +57,7 @@ export class ScenariosModalComponent extends BaseComponent implements OnInit {
     }
 
     initFormGroup() {
+        this.setLoading(true);
         this.formGroup = this.fb.group({
             scenarioSelected: this.fb.array([]),
         });
@@ -76,6 +77,7 @@ export class ScenariosModalComponent extends BaseComponent implements OnInit {
                         });
                     }
                 }
+                this.setLoading(false);
             })
             .catch((error: any) => {
                 console.log(error);

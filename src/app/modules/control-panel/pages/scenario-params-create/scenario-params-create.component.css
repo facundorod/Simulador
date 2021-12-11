@@ -1,0 +1,108 @@
+h3 {
+    font-size: 2em;
+    text-align: left;
+}
+
+.scenario-header {
+    margin-top: 3%;
+}
+
+.container-form,
+.second-row,
+.parameters,
+.file-row {
+    margin-top: 2%;
+}
+
+.col-param,
+.col-configuration {
+    max-width: 150px;
+}
+
+.col-alerts {
+    width: 200px;
+}
+
+.curves-dataset-input {
+    background-color: transparent;
+    padding-left: 0;
+}
+
+.save-changes,
+.btn-add,
+.btn-spinner,
+.btn-save,
+.btn-param {
+    margin-left: 2%;
+    background-color: #59478d;
+    border-color: #59478d;
+    color: #fff;
+}
+
+.btn-param {
+    margin-left: 18%;
+}
+
+.btn-spinner {
+    margin-left: 0;
+}
+
+.save-changes:hover,
+.btn-add:hover,
+.btn-save:hover,
+.btn-param:hover {
+    color: #59478d;
+    border-color: #fff;
+    background-color: #fff;
+}
+
+.btn-save {
+    width: 150px;
+    height: 60px;
+    border-radius: 6px;
+    font-size: 1.2em;
+}
+
+.col-value p,
+.text-color {
+    padding-left: 3%;
+}
+
+.table-hover tbody tr:hover {
+    background-color: #616161;
+}
+
+.parameter-configuration-text {
+    width: 100%;
+    margin-top: 2%;
+}
+
+.color-picker {
+    width: 50px;
+    padding: 0;
+}
+
+.custom-file-upload {
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    display: inline-block;
+    padding: 6px 12px;
+    cursor: pointer;
+    background-color: #fff;
+}
+
+input[type="file"] {
+    display: none;
+}
+
+.spinner-border {
+    color: #fff;
+}
+
+.spinner-border:hover {
+    color: #59478d;
+}
+
+.btn-add-animal {
+    margin-left: 20%;
+}

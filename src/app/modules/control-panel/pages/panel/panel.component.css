@@ -72,6 +72,15 @@
     display: none;
 }
 
+.btn,
+a {
+    color: #fff;
+}
+
+.mini-monitor {
+    background-color: #000;
+}
+
 @media (min-width: 1024px) {
     .textSimulation {
         text-align: center;

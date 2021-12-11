@@ -24,10 +24,17 @@ import { ModalEditComponentArr } from "./modals/arrhythmias/modal-edit/modal-edi
 import { ModalEditComponentPath } from "./modals/pathologies/modal-edit/modal-edit.component";
 import { ModalEditComponentMed } from "./modals/medications/modal-edit/modal-edit.component";
 
-
 import { CurvesService } from "./services/curves.service";
 import { SimulationModule } from "../simulation/simulation.module";
 import { MonitorService } from "../monitor/services/monitor.service";
+import { ScenarioParamsComponent } from "./pages/scenario-params/scenario-params.component";
+import { ScenarioParamsCreateComponent } from "./pages/scenario-params-create/scenario-params-create.component";
+import { ParametersCreateComponent } from "./modals/parameters-create/parameters-create.component";
+import { ParametersService } from "./services/parameters.service";
+import { MonitorModule } from "../monitor/monitor.module";
+import { ParametersComponent } from './pages/parameters/parameters.component';
+import { NewParameterComponent } from './modals/new-parameter/new-parameter.component';
+import { MonitorConfigsComponent } from './modals/monitor-configs/monitor-configs.component';
 
 @NgModule({
     declarations: [
@@ -42,6 +49,12 @@ import { MonitorService } from "../monitor/services/monitor.service";
         ModalEditComponentPath,
         ModalEditComponentMed,
         ScenariosComponent,
+        ScenarioParamsComponent,
+        ScenarioParamsCreateComponent,
+        ParametersCreateComponent,
+        ParametersComponent,
+        NewParameterComponent,
+        MonitorConfigsComponent,
     ],
     imports: [
         CommonModule,
@@ -53,6 +66,7 @@ import { MonitorService } from "../monitor/services/monitor.service";
         SharedModule,
         NgbModule,
         SimulationModule,
+        MonitorModule,
     ],
     exports: [],
     providers: [
@@ -64,6 +78,7 @@ import { MonitorService } from "../monitor/services/monitor.service";
         SimulationService,
         CurvesService,
         MonitorService,
+        ParametersService,
     ],
 })
-export class ControlPanelModule { }
+export class ControlPanelModule {}

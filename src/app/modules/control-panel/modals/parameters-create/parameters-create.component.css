@@ -1,0 +1,42 @@
+.modal-header,
+.modal-body {
+    background-color: #b7a9e2;
+}
+
+.modal-header h3 {
+    font-size: 1.5em;
+    color: #212529;
+}
+
+.btn-save {
+    background-color: #42336e;
+    border: 1px solid #42336e;
+}
+
+.btn-save:hover {
+    background-color: #fff;
+    color: #42336e;
+}
+
+.custom-file-upload {
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    display: inline-block;
+    padding: 6px 12px;
+    margin-left: 3%;
+    cursor: pointer;
+    background-color: #fff;
+}
+
+input[type="file"] {
+    display: none;
+}
+
+.text-param-configured {
+    padding: 3%;
+    font-size: 1.5em;
+}
+
+.img-delete {
+    margin-bottom: 30%;
+}

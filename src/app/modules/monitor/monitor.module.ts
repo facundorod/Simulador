@@ -8,9 +8,10 @@ import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { MonitorService } from "./services/monitor.service";
 import { SharedModule } from "@app/shared/shared.module";
 import { NgApexchartsModule } from "ng-apexcharts";
+import { MiniMonitorComponent } from "./components/mini-monitor/mini-monitor.component";
 
 @NgModule({
-    declarations: [MonitorComponent],
+    declarations: [MonitorComponent, MiniMonitorComponent],
     imports: [
         CommonModule,
         SimulationModule,
@@ -18,9 +19,9 @@ import { NgApexchartsModule } from "ng-apexcharts";
         FormsModule,
         SharedModule,
         ReactiveFormsModule,
-        NgApexchartsModule
-
+        NgApexchartsModule,
     ],
     providers: [CurvesService, MonitorService],
+    exports: [MiniMonitorComponent],
 })
-export class MonitorModule { }
+export class MonitorModule {}

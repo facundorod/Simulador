@@ -1,0 +1,24 @@
+.modal-header,
+.modal-body {
+    background-color: #b7a9e2;
+}
+
+.modal-header h3 {
+    font-size: 1.5em;
+    color: #212529;
+}
+
+.btn-save {
+    background-color: #42336e;
+    border: 1px solid #42336e;
+}
+
+.btn-save:hover {
+    background-color: #fff;
+    color: #42336e;
+}
+
+.color-picker {
+    padding: 0;
+    width: 50px;
+}

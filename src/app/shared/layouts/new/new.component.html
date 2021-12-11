@@ -1,7 +1,7 @@
 <ng-sidebar-container class="sidebar">
 
     <!-- Sidebar -->
-    <ng-sidebar #sidebar [mode]="'over'" [animate]="true" [showBackdrop]="true" [trapFocus]="true" [autoFocus]="true"
+    <ng-sidebar #sidebar [mode]="'push'" [animate]="true" [showBackdrop]="true" [trapFocus]="true" [autoFocus]="true"
         [keyClose]="true" [closeOnClickBackdrop]="true" [closeOnClickOutside]="true" [dock]="true" [dockedSize]="'60px'"
         [animate]="true" (onClosed)="onClosed()">
         <app-sidebar [type]="'user'" [sidebarOpen]="sidebarOpen" class="sidebarS"></app-sidebar>
@@ -12,12 +12,26 @@
         <nav class="navbar navbar-expand-lg">
             <div class="container-fluid">
                 <div class="row row-navbar">
-                    <div class="col-6">
+                    <div class="col-3">
                         <button (click)="openSidebar(sidebar)" class="navbar__toogle"></button>
                     </div>
-                    <div class="col-6">
+                    <div class="col-5">
                         <h3><a class="navbar-brand" href="#">SIMVet</a></h3>
 
+                    </div>
+                    <div class="col-3 offset-md-1">
+                        <div class="dropdown">
+                            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton"
+                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" (click)="showMenu()">
+                                <img src="https://img.icons8.com/color/30/000000/veterinarian-male-skin-type-2.png" />
+                                &nbsp; Hi, {{user.name}}
+                            </button>
+                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton"
+                                [ngClass]="{'show': toggleFlag}">
+                                <a class="dropdown-item" [routerLink]="['/users/my-profile']">My Profile</a>
+                                <a class="dropdown-item" [routerLink]="['/auth/logout']">Logout</a>
+                            </div>
+                        </div>
                     </div>
                 </div>
 

@@ -53,3 +53,17 @@ body {
     -ms-user-select: none;
     user-select: none;
 }
+
+::-webkit-scrollbar {
+    width: 15px;
+}
+
+::-webkit-scrollbar-track {
+    background: #8e7cc3;
+    border-radius: 50px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #fff;
+    border-radius: 50px;
+}

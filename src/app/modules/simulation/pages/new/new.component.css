@@ -14,7 +14,6 @@ h2 {
     background-color: #b7a9e2;
     padding-left: 3%;
     padding-right: 3%;
-    margin-top: 50%;
 }
 
 .card-header {
@@ -58,7 +57,7 @@ button img {
     }
 
     .card {
-        margin-top: 15%;
+        margin-top: 10%;
     }
 
     h3 {

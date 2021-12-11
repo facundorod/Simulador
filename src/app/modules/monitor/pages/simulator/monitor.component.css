@@ -18,46 +18,71 @@
 
 /* Simulation */
 .curves {
-    /* max-height: 120px; */
+    min-height: 20vh;
+    max-height: 20vh;
     margin-right: 0px;
 }
 
 .curve-configuration {
     border: 2px solid #fff;
     border-radius: 10px;
-    max-height: 120px;
+    max-height: 14vh;
+    min-width: 250px;
     animation: none;
-    padding: 0px;
+    margin-left: 0%;
 }
 
 .curve-label {
     border: 2px solid #fff;
     border-radius: 10px;
-    margin: 0px;
     max-width: 20px;
-    max-height: 120px;
+    max-height: 14vh;
 }
 
 .text-label {
-    writing-mode: vertical-lr;
-    /* width: 10px; */
-    padding: 25px 0px 25px;
-    font-size: 20px;
-    margin-left: -13px;
-    /* margin-left: 10px; */
+    writing-mode: vertical-rl;
+    padding: 10px 0px 25px;
+    font-size: 16px;
+    margin-left: -4px;
+}
+
+.no-curves,
+.no-curves-label {
+    display: hidden;
+    max-height: 0px;
+}
+
+.no-curves-label {
+    padding-left: 0%;
+    margin-left: 0%;
+}
+
+.curve-label-left {
+    border: none !important;
+    max-width: 15px;
+    padding-top: 5%;
+    max-height: 50px;
+    padding-left: 0.5%;
+}
+
+.label-left {
+    letter-spacing: 4px;
 }
 
 .text-rate {
-    padding: 1rem;
     font-size: 3rem;
 }
 
+.container-configuration {
+    width: 15%;
+}
+
 .parameter-box-var p {
-    line-height: 0.4em;
+    line-height: 0.1em;
 }
 
 .parameter-box-var .first-var {
-    padding-top: 1.3rem;
+    padding-top: 0.7rem;
 }
 
 .alert-enabled {
@@ -66,10 +91,10 @@
 }
 @keyframes pulse {
     0% {
-        background-color: #bfbdb5;
+        background-color: #8b2e3e;
     }
     100% {
-        background-color: #f42922;
+        background-color: #d81812;
     }
 }
 
@@ -86,3 +111,39 @@ h4 {
 .img-status {
     margin-right: 2%;
 }
+
+.curves {
+    min-width: 980px;
+}
+
+@media all and (display-mode: fullscreen) {
+    .curves {
+        max-height: 20vh;
+        margin: 0%;
+        padding: 0%;
+    }
+    .no-curves,
+    .no-curves-label {
+        display: hidden;
+        max-height: 0px;
+    }
+
+    .curve-label {
+        min-height: 13vh;
+    }
+    .curve-label-left {
+        min-height: 20vh;
+    }
+    .curve-configuration {
+        min-height: 14vh;
+    }
+}
+
+.btn-link {
+    padding: 0;
+    margin: 0;
+}
+
+/* .margin-negative {
+    margin-top: -50px;
+} */

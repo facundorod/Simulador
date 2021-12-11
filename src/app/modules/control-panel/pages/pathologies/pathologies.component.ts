@@ -15,10 +15,11 @@ import { ModalEditComponentPath } from "../../modals/pathologies/modal-edit/moda
 })
 export class PathologiesComponent extends BaseComponent implements OnInit {
     public pathology: PathologyI;
-    public pathologies: any[];
-    public count: number;
-    public page: number;
-    public totalPages: number;
+    public pathologies: PathologyI[];
+    public paginatorData: {
+        totalPages: number;
+        itemsPerPage: number;
+    };
 
     public order = {
         orderBy: "name",
@@ -26,7 +27,7 @@ export class PathologiesComponent extends BaseComponent implements OnInit {
     };
 
     public queryOptions = {
-        pageSize: 15,
+        pageSize: 5,
         page: 1,
     };
 
@@ -34,8 +35,6 @@ export class PathologiesComponent extends BaseComponent implements OnInit {
         private fb: FormBuilder,
         private pathologiesService: PathologiesService,
         private toast: ToastrService,
-        private router: Router,
-        private route: ActivatedRoute,
         private modal: NgbModal
     ) {
         super();
@@ -44,16 +43,9 @@ export class PathologiesComponent extends BaseComponent implements OnInit {
     ngOnInit(): void {
         this.initFormGroup();
         this.loadData();
-        this.loadURLParams();
     }
 
-    private loadData() {
-        this.updateRouteParams(this.router, {
-            ...this.queryOptions,
-            ...this.formGroup.value,
-            ...this.order,
-        });
-
+    private loadData(q: string = null) {
         this.setLoading(true);
 
         this.pathologiesService
@@ -61,9 +53,7 @@ export class PathologiesComponent extends BaseComponent implements OnInit {
                 {
                     page: this.queryOptions.page,
                     pageSize: this.queryOptions.pageSize,
-                    q: this.formGroup.value.q,
-                    name: this.formGroup.value.name,
-                    description: this.formGroup.value.description,
+                    q: q ? q : this.formGroup.value.q,
                 },
                 this.order
             )
@@ -72,12 +62,13 @@ export class PathologiesComponent extends BaseComponent implements OnInit {
                     this.setLoading(false);
                     if (data) {
                         this.pathologies = data.data;
-                        this.count = data.total;
-                        this.page = data.currentPage;
-                        this.totalPages = data.to;
+                        this.paginatorData = {
+                            totalPages: data.total,
+                            itemsPerPage: data.per_page,
+                        };
                     }
                 },
-                (err: any) => {
+                (err: Error) => {
                     this.setLoading(false);
                     console.error(err);
                 }
@@ -87,28 +78,21 @@ export class PathologiesComponent extends BaseComponent implements OnInit {
     private initFormGroup() {
         this.formGroup = this.fb.group({
             q: [""],
-            name: [""],
-            description: [""],
+        });
+        this.formGroup.get("q").valueChanges.subscribe((newValue) => {
+            this.setLoading(true);
+            this.loadData(newValue);
         });
     }
 
-    private loadURLParams() {
-        this.formGroup.setValue(
-            this.readFromRouteParams(this.route, this.formGroup.value)
-        );
-        this.queryOptions = this.readFromRouteParams(
-            this.route,
-            this.queryOptions
-        );
-        this.order = this.readFromRouteParams(this.route, this.order);
-    }
-
-    public onPageChange() {
+    public onPageChange(): void {
+        this.setLoading(true);
         this.loadData();
     }
 
     public onSearch() {
         this.queryOptions.page = 1;
+        this.setLoading(true);
         this.loadData();
     }
 
