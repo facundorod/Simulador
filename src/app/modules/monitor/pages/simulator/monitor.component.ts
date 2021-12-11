@@ -66,10 +66,7 @@ export class MonitorComponent
         enabled: true,
     };
     private noDataset: boolean = false;
-    constructor(
-        private monitorService: MonitorService,
-        @Inject(DOCUMENT) private document: any
-    ) {
+    constructor(private monitorService: MonitorService) {
         super();
         this.initVariables();
     }

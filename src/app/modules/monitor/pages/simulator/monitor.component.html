@@ -63,7 +63,7 @@
             <div class="row">
                 <div class="container-fluid col-9">
                     <div class="row" *ngFor="let curves of curvesAndParams; let i = index">
-                        <div class="col-xs-1 curve-label-left-col"
+                        <!-- <div class="col-xs-1 curve-label-left-col"
                             [ngClass]="{'curve-label curve-label-left': curves.chart && curves.chart.series,
                                                                             'no-curves-label': !curves.chart || !curves.chart.series}">
                             <p class=" text-label">
@@ -71,7 +71,7 @@
                                     {{curves.curveConfiguration.label.toUpperCase()}}
                                 </ng-template>
                             </p>
-                        </div>
+                        </div> -->
                         <div class="col-11"
                             [ngClass]="{'curves': curves.chart && curves.chart.series,
                                                                             'no-curves': !curves.chart || !curves.chart.series}">
