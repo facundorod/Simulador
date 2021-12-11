@@ -102,3 +102,7 @@ input[type="file"] {
 .spinner-border:hover {
     color: #59478d;
 }
+
+.btn-add-animal {
+    margin-left: 20%;
+}

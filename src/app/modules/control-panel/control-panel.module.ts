@@ -34,6 +34,7 @@ import { ParametersService } from "./services/parameters.service";
 import { MonitorModule } from "../monitor/monitor.module";
 import { ParametersComponent } from './pages/parameters/parameters.component';
 import { NewParameterComponent } from './modals/new-parameter/new-parameter.component';
+import { MonitorConfigsComponent } from './modals/monitor-configs/monitor-configs.component';
 
 @NgModule({
     declarations: [
@@ -53,6 +54,7 @@ import { NewParameterComponent } from './modals/new-parameter/new-parameter.comp
         ParametersCreateComponent,
         ParametersComponent,
         NewParameterComponent,
+        MonitorConfigsComponent,
     ],
     imports: [
         CommonModule,

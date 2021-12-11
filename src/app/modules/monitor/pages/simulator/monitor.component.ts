@@ -1,5 +1,6 @@
 import {
     Component,
+    Inject,
     OnDestroy,
     OnInit,
     QueryList,
@@ -29,6 +30,7 @@ import {
 } from "@app/modules/simulation/helpers/curvesHelper";
 import { commonOptions } from "@app/modules/simulation/helpers/chartConfigurer";
 import { CurvesConfigurationI } from "@app/shared/models/curvesConfigurationI";
+import { DOCUMENT } from "@angular/common";
 @Component({
     selector: "app-monitor",
     templateUrl: "./monitor.component.html",
@@ -41,7 +43,7 @@ export class MonitorComponent
     public currentState: StatesI;
     public animalSpecie: AnimalSpeciesI;
     @ViewChildren("chart") charts: QueryList<ChartComponent>;
-    private curveTimers: number[] = [];
+    public curveTimers: number[] = [];
     public today: Date = new Date();
     private heartTimer: number;
     private breathTimer: number;
@@ -50,6 +52,7 @@ export class MonitorComponent
     // Max values for each curve. This value contains the last element (in seconds) for
     // the curve on the interval [0-100%]
     private maxValues: number[];
+    public curvesAndParams: any[] = [];
     public chartsOptions: Partial<ChartOptions>[];
     private curvesHelper: CurvesHelper = new CurvesHelper();
     private simulationTimer: NodeJS.Timeout;
@@ -63,7 +66,6 @@ export class MonitorComponent
         enabled: true,
     };
     private noDataset: boolean = false;
-
     constructor(private monitorService: MonitorService) {
         super();
         this.initVariables();
@@ -84,6 +86,23 @@ export class MonitorComponent
                 curve.curveValues[curve.curveValues.length - 1][0];
             this.maxValues.push(maxValue);
         }
+    }
+
+    public openFullscreen(): void {
+        if (!document.fullscreenElement) {
+            document.documentElement.requestFullscreen();
+        }
+    }
+
+    /* Close fullscreen */
+    public closeFullscreen(): void {
+        if (document.fullscreenElement) {
+            document.exitFullscreen();
+        }
+    }
+
+    public isFullScren(): boolean {
+        return document.fullscreenElement != null;
     }
 
     /**
@@ -125,6 +144,7 @@ export class MonitorComponent
         this.firstSimulationBreath = true;
         this.curveTimers = [];
         this.maxValues = [];
+        this.curvesAndParams = [];
         this.chartsOptions = [];
         this.breathTimer = 0.0;
         this.heartTimer = 0.0;
@@ -135,6 +155,7 @@ export class MonitorComponent
         this.noDataset = false;
         this.currentState = simulationState;
         this.animalSpecie = simulationState.animalSpecie;
+
         this.initCharts(simulationState.newScenario);
         // If there were changes in the state then clear the previous timer
         clearInterval(this.simulationTimer);
@@ -165,20 +186,18 @@ export class MonitorComponent
                 this.initCurveTimers(curve);
                 this.createDynamicChart(curve);
             }
-            if (curve.curveValues.length != 0) {
-                if (enableAlert == undefined) {
-                    const alert: boolean = this.enableAlert(
-                        curve.curveConfiguration
-                    );
-                    this.enableAlerts.push(alert);
-                } else
-                    this.enableAlerts[index] = this.enableAlert(
-                        curve.curveConfiguration
-                    );
-                this.enableSoundAlarm =
-                    this.enableAlerts.includes(true) &&
-                    !this.currentState.muteAlarms;
-            }
+            if (enableAlert == undefined) {
+                const alert: boolean = this.enableAlert(
+                    curve.curveConfiguration
+                );
+                this.enableAlerts.push(alert);
+            } else
+                this.enableAlerts[index] = this.enableAlert(
+                    curve.curveConfiguration
+                );
+            this.enableSoundAlarm =
+                this.enableAlerts.includes(true) &&
+                !this.currentState.muteAlarms;
         });
 
         if (emptyDataset == this.currentState.curves.length) {
@@ -198,24 +217,36 @@ export class MonitorComponent
                 this.curvesHelper.getMinY(curve.curveValues) - 1;
             const chart: ChartConfigurer = new ChartConfigurer({
                 colorLine: curve.curveConfiguration.colorLine,
-                height: 100,
+                height: 143,
                 minX: 0,
                 maxX: this.monitorConfiguration.getMonitorConfiguration()
                     .maxSamples,
                 minY: minY,
-                maxY: maxY,
+                maxY:
+                    curve.curveConfiguration.label.toUpperCase() == "CO2" ||
+                    curve.curveConfiguration.label.toUpperCase() == "ETCO2"
+                        ? maxY * 2
+                        : maxY,
                 toolbar: false,
             });
             let type: ChartType = null;
-
             if (
-                curve.curveConfiguration.label == "etCO2" &&
+                (curve.curveConfiguration.label.toUpperCase() == "ETCO2" ||
+                    curve.curveConfiguration.label.toUpperCase() == "CO2") &&
                 this.currentState.action !== "stop"
             )
                 type = "area";
 
             chart.setChart([], type);
             this.chartsOptions.push(chart.getChart());
+            this.curvesAndParams.push({
+                chart: chart.getChart(),
+                curveConfiguration: curve.curveConfiguration,
+            });
+        } else {
+            this.curvesAndParams.push({
+                curveConfiguration: curve.curveConfiguration,
+            });
         }
     }
 
@@ -239,10 +270,10 @@ export class MonitorComponent
                 this.updateCharts();
                 this.heartTimer +=
                     this.monitorConfiguration.getMonitorConfiguration()
-                        .freqSampleHeart / 1000;
+                        .freqHeart / 1000;
                 this.breathTimer +=
                     this.monitorConfiguration.getMonitorConfiguration()
-                        .freqSampleBreath / 1000;
+                        .freqBreath / 1000;
                 this.today = new Date();
             }, this.monitorConfiguration.getMonitorConfiguration().clockTimer);
         }
@@ -250,25 +281,25 @@ export class MonitorComponent
 
     private updateCurveTimers(index: number, curve: CurvesI) {
         if (
-            curve.curveConfiguration.source.label.toUpperCase() == "CAR" ||
-            curve.curveConfiguration.source.label.toUpperCase() == "SPO2"
+            curve.curveConfiguration?.source?.label.toUpperCase() == "CAR" ||
+            curve.curveConfiguration?.source?.label.toUpperCase() == "SPO2"
         ) {
             this.curveTimers[index] = this.roundTimer(
                 this.curveTimers[index] +
                     this.curvesHelper.calculateRate(
                         this.parameterInfo.heartRate,
                         this.monitorConfiguration.getMonitorConfiguration()
-                            .freqSampleHeart
+                            .freqHeart
                     )
             );
         }
-        if (curve.curveConfiguration.source.label.toUpperCase() == "RESP")
+        if (curve.curveConfiguration?.source?.label?.toUpperCase() == "RESP")
             this.curveTimers[index] = this.roundTimer(
                 this.curveTimers[index] +
                     this.curvesHelper.calculateRate(
                         this.parameterInfo.breathRate,
                         this.monitorConfiguration.getMonitorConfiguration()
-                            .freqSampleBreath
+                            .freqBreath
                     )
             );
     }
@@ -276,14 +307,18 @@ export class MonitorComponent
     private simulateCurve(curve: CurvesI, index: number): void {
         this.updateCurveTimer(index);
         if (
-            (this.firstSimulationHeart && !this.isBreathCurve(index)) ||
-            (this.firstSimulationBreath && this.isBreathCurve(index))
+            ((this.firstSimulationHeart && !this.isBreathCurve(index)) ||
+                (this.firstSimulationBreath && this.isBreathCurve(index))) &&
+            curve.curveValues.length > 0
         ) {
             this.updateDataset(index, curve.curveValues);
         } else {
-            if (this.chartsOptions[index]?.series) {
+            if (
+                curve.curveValues.length > 0 &&
+                this.curvesAndParams[index]?.chart?.series
+            ) {
                 const currentDataset: any =
-                    this.chartsOptions[index].series.slice();
+                    this.curvesAndParams[index]?.chart?.series.slice();
                 this.updateDatasetSimulation(currentDataset, index);
             }
         }
@@ -324,18 +359,18 @@ export class MonitorComponent
         index: number,
         curveValues: [number, number][]
     ): void {
-        const currentDataset: any = this.chartsOptions[index]?.series.slice();
+        const currentDataset: any =
+            this.curvesAndParams[index]?.chart?.series?.slice();
         if (currentDataset) {
             const curveTimer: number = this.curveTimers[index];
             let isBreathCurve: boolean = this.isBreathCurve(index);
             if (this.currentState.action == "stop") {
                 const chart: any = this.charts.toArray()[index];
-                const minY: number = chart.yaxis.min;
-                if (minY)
-                    currentDataset[0].data.push([
-                        isBreathCurve ? this.breathTimer : this.heartTimer,
-                        minY,
-                    ]);
+                const maxY: number = chart.yaxis.max;
+                currentDataset[0].data.push([
+                    isBreathCurve ? this.breathTimer : this.heartTimer,
+                    maxY / 2,
+                ]);
             } else {
                 let closestIndex: ClosestPoint =
                     this.curvesHelper.getClosestIndex(curveValues, curveTimer);
@@ -367,11 +402,12 @@ export class MonitorComponent
         if (this.currentState.action == "stop") {
             const chart: any = this.charts.toArray()[index];
             const minY: number = chart.yaxis.min;
-            if (minY)
-                curveValuesSimulation.push([
-                    isBreathCurve ? this.breathTimer : this.heartTimer,
-                    minY,
-                ]);
+            const maxY: number = chart.yaxis.max;
+
+            curveValuesSimulation.push([
+                isBreathCurve ? this.breathTimer : this.heartTimer,
+                (maxY + minY) / 2,
+            ]);
         } else {
             const originalDataset: [number, number][] =
                 this.currentState.curves[index].curveValues;
@@ -404,7 +440,7 @@ export class MonitorComponent
         return (
             this.currentState.curves[
                 index
-            ].curveConfiguration.source.label.toUpperCase() == "RESP"
+            ].curveConfiguration?.source?.label?.toUpperCase() == "RESP"
         );
     }
 
@@ -490,10 +526,7 @@ export class MonitorComponent
     }
 
     public getSourceRateValue(curve: CurvesI): number {
-        if (
-            curve?.curveConfiguration &&
-            curve.curveConfiguration?.source?.label
-        )
+        if (curve?.curveConfiguration && curve.curveConfiguration.source) {
             switch (curve.curveConfiguration.source.label.toUpperCase()) {
                 case "CAR":
                     return this.parameterInfo.heartRate;
@@ -504,6 +537,15 @@ export class MonitorComponent
                 default:
                     break;
             }
+        } else {
+            switch (curve.curveConfiguration.label.toUpperCase()) {
+                case "TEMP":
+                    return this.parameterInfo.temperature;
+                default:
+                    return curve.curveConfiguration.refValue;
+            }
+        }
+
         return -1;
     }
 
@@ -513,19 +555,19 @@ export class MonitorComponent
 
     public enableAlert(curve: CurvesConfigurationI): boolean {
         if (
-            curve.source.label.toUpperCase() === "CAR" &&
+            curve.source?.label.toUpperCase() === "CAR" &&
             (curve.alert_high <= this.parameterInfo.heartRate ||
                 curve.alert_low >= this.parameterInfo.heartRate)
         )
             return true;
         if (
-            curve.source.label.toUpperCase() === "RESP" &&
+            curve.source?.label.toUpperCase() === "RESP" &&
             (curve.alert_high <= this.parameterInfo.breathRate ||
                 curve.alert_low >= this.parameterInfo.breathRate)
         )
             return true;
         if (
-            curve.source.label.toUpperCase() === "SPO2" &&
+            curve.source?.label.toUpperCase() === "SPO2" &&
             (curve.alert_high <= this.parameterInfo.spO2 ||
                 curve.alert_low >= this.parameterInfo.spO2)
         )
@@ -596,11 +638,11 @@ export class MonitorComponent
             (breathRate &&
                 this.currentState.curves[
                     index
-                ].curveConfiguration.source.label.toUpperCase() == "RESP") ||
+                ].curveConfiguration?.source?.label?.toUpperCase() == "RESP") ||
             (!breathRate &&
                 this.currentState.curves[
                     index
-                ].curveConfiguration.source.label.toUpperCase() != "RESP")
+                ].curveConfiguration?.source?.label?.toUpperCase() != "RESP")
         );
     }
 
@@ -621,16 +663,13 @@ export class MonitorComponent
                     currentOptions.yaxis.max,
                     currentOptions.yaxis.min,
                     this.currentState.action !== "stop" &&
-                        curveConfiguration.label == "etCO2"
+                        (curveConfiguration.label.toUpperCase() == "ETCO2" ||
+                            curveConfiguration.label.toUpperCase() == "CO2")
                         ? "area"
                         : currentOptions.chart.type
                 );
-                if (
-                    this.currentState.action !== "stop" &&
-                    curveConfiguration.label == "etCO2"
-                )
-                    debugger;
-                charts[i].updateOptions(options);
+                if (this.currentState.action !== "stop")
+                    charts[i].updateOptions(options);
             }
         }
     }

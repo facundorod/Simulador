@@ -25,8 +25,8 @@ export class AuthService {
 
         this.api.httpPost(endpoint, body).subscribe(
             (authUser: any) => {
-                subject.next(authUser);
                 AuthSession.saveAuthToken(JSON.stringify(authUser));
+                subject.next(authUser);
             },
             (error: any) => {
                 subject.error(error);

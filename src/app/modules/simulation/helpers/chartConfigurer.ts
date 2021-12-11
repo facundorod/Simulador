@@ -37,10 +37,11 @@ export function commonOptions(
     minY: number,
     type?: ChartType
 ): Partial<ChartOptions> {
+    console.log(toolbarEnabled);
     return {
         stroke: {
             curve: "smooth",
-            width: 1.8,
+            width: 2,
         },
         markers: {
             size: 0,
@@ -55,7 +56,7 @@ export function commonOptions(
             },
 
             axisBorder: {
-                show: false,
+                show: true,
             },
             max: maxX,
             min: minX,
@@ -63,8 +64,9 @@ export function commonOptions(
         chart: {
             id: "curves",
             type: type ? type : "line",
-            height: 100,
-
+            height: toolbarEnabled ? 130 : 143,
+            redrawOnParentResize: true,
+            redrawOnWindowResize: true,
             zoom: {
                 enabled: toolbarEnabled,
             },
@@ -81,7 +83,7 @@ export function commonOptions(
             },
             show: false,
             max: maxY,
-            min: minY,
+            min: 0,
         },
         dataLabels: {
             enabled: false,
@@ -116,7 +118,7 @@ export class ChartConfigurer {
             ],
             stroke: {
                 curve: "smooth",
-                width: 1.8,
+                width: 2,
             },
             markers: {
                 size: 0,
@@ -132,16 +134,29 @@ export class ChartConfigurer {
                 max: this.chartOptions.maxX,
                 min: this.chartOptions.minX,
                 axisBorder: {
-                    show: false,
+                    show: true,
                 },
             },
             chart: {
                 id: "curves",
+                animations: {
+                    enabled: true,
+                    easing: "linear",
+                    animateGradually: {
+                        enabled: true,
+                    },
+                    dynamicAnimation: {
+                        enabled: true,
+                    },
+                },
+                redrawOnParentResize: true,
+                redrawOnWindowResize: true,
                 height: this.chartOptions.height,
                 type: type ? type : "line",
                 zoom: {
                     enabled: false,
                 },
+                width: "100%",
                 toolbar: {
                     show: this.chartOptions.toolbar,
                 },
@@ -155,7 +170,7 @@ export class ChartConfigurer {
                 },
                 show: false,
                 max: this.chartOptions.maxY,
-                min: this.chartOptions.minY,
+                min: 0,
             },
             dataLabels: {
                 enabled: false,

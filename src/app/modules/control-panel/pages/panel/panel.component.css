@@ -72,8 +72,9 @@
     display: none;
 }
 
-.btn {
-    color: #0954ae;
+.btn,
+a {
+    color: #fff;
 }
 
 .mini-monitor {
