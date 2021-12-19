@@ -38,8 +38,7 @@ import { DOCUMENT } from "@angular/common";
 })
 export class MonitorComponent
     extends BaseComponent
-    implements OnInit, OnDestroy
-{
+    implements OnInit, OnDestroy {
     public currentState: StatesI;
     public animalSpecie: AnimalSpeciesI;
     @ViewChildren("chart") charts: QueryList<ChartComponent>;
@@ -224,7 +223,7 @@ export class MonitorComponent
                 minY: minY,
                 maxY:
                     curve.curveConfiguration.label.toUpperCase() == "CO2" ||
-                    curve.curveConfiguration.label.toUpperCase() == "ETCO2"
+                        curve.curveConfiguration.label.toUpperCase() == "ETCO2"
                         ? maxY * 2
                         : maxY,
                 toolbar: false,
@@ -286,21 +285,21 @@ export class MonitorComponent
         ) {
             this.curveTimers[index] = this.roundTimer(
                 this.curveTimers[index] +
-                    this.curvesHelper.calculateRate(
-                        this.parameterInfo.heartRate,
-                        this.monitorConfiguration.getMonitorConfiguration()
-                            .freqHeart
-                    )
+                this.curvesHelper.calculateRate(
+                    this.parameterInfo.heartRate,
+                    this.monitorConfiguration.getMonitorConfiguration()
+                        .freqHeart
+                )
             );
         }
         if (curve.curveConfiguration?.source?.label?.toUpperCase() == "RESP")
             this.curveTimers[index] = this.roundTimer(
                 this.curveTimers[index] +
-                    this.curvesHelper.calculateRate(
-                        this.parameterInfo.breathRate,
-                        this.monitorConfiguration.getMonitorConfiguration()
-                            .freqBreath
-                    )
+                this.curvesHelper.calculateRate(
+                    this.parameterInfo.breathRate,
+                    this.monitorConfiguration.getMonitorConfiguration()
+                        .freqBreath
+                )
             );
     }
 
@@ -680,5 +679,30 @@ export class MonitorComponent
 
     public existDataset(): boolean {
         return !this.noDataset;
+    }
+
+    public showMinAndMax(curve: CurvesI): boolean {
+        return (curve.curveConfiguration.label.toUpperCase() === 'CO2' ||
+            curve.curveConfiguration.label.toUpperCase() === 'IBP' ||
+            curve.curveConfiguration.label.toUpperCase() === 'NIBP');
+    }
+
+    public getMinValue(curve: any): number | null {
+        if (curve?.chart) {
+            // return this.curvesHelper.getMinY(curve.curveValues);
+        }
+        return null;
+    }
+    // Para calcular el min y el maximo necesito saber cual fue mi ultima curva!
+    public getMaxValue(curve: any): number | null {
+        if (curve?.chart)
+            // return this.curvesHelper.getMaxY(curve.curveValues);
+            return null;
+    }
+
+    public getMediumValue(curve: any): number | null {
+        if (curve?.chart)
+            return (this.getMaxValue(curve) + this.getMinValue(curve)) / 2;
+        return null;
     }
 }

@@ -33,8 +33,8 @@
         <div class="col-3">
             <div class="row justify-content-between">
                 <div class="col-5">
-                    <p class="text-right" *ngIf="animalSpecie">ANIMAL CLINIC
-                    </p>
+                    <!-- <p class="text-right" *ngIf="animalSpecie">ANIMAL CLINIC
+                    </p> -->
                 </div>
                 <div class="col-7">
                     <button class="btn btn-link" (click)="openFullscreen()" *ngIf="!isFullScren()">
@@ -63,7 +63,7 @@
             <div class="row">
                 <div class="container-fluid col-9">
                     <div class="row" *ngFor="let curves of curvesAndParams; let i = index">
-                        <!-- <div class="col-xs-1 curve-label-left-col"
+                        <div class="col-xs-1 curve-label-left-col"
                             [ngClass]="{'curve-label curve-label-left': curves.chart && curves.chart.series,
                                                                             'no-curves-label': !curves.chart || !curves.chart.series}">
                             <p class=" text-label">
@@ -71,7 +71,7 @@
                                     {{curves.curveConfiguration.label.toUpperCase()}}
                                 </ng-template>
                             </p>
-                        </div> -->
+                        </div>
                         <div class="col-11"
                             [ngClass]="{'curves': curves.chart && curves.chart.series,
                                                                             'no-curves': !curves.chart || !curves.chart.series}">
@@ -97,13 +97,44 @@
                                                                 curves.curveConfiguration?.label.toUpperCase() != 'RESP'">
                             <div class="row">
                                 <div class="col-3">
-
+                                    <!-- <p class="" [style.color]="getColor(curves)" *ngIf="showMinAndMax(curves)">
+                                        <ng-template [ngIf]="getMaxValue(curves)">
+                                            {{getMaxValue(curves)}} /
+                                        </ng-template>
+                                        <ng-template [ngIf]="!getMaxValue(curves)">
+                                            -- /
+                                        </ng-template>
+                                    </p> -->
                                 </div>
                                 <div class="col-5">
-                                    <p class="text-rate" [style.color]="getColor(curves)">
+                                    <p class="text-rate" [style.color]="getColor(curves)"
+                                        *ngIf="!showMinAndMax(curves)">
+
                                         {{getSourceRateValue(curves)}}
                                     </p>
 
+                                    <p class="min-max-value" *ngIf="showMinAndMax(curves)"
+                                        [style.color]="getColor(curves)">
+                                        <ng-template [ngIf]="getMaxValue(curves)">
+                                            {{getMaxValue(curves)}} /
+                                            <ng-template [ngIf]="getMinValue(curves)">
+                                                {{getMinValue(curves)}}
+                                            </ng-template>
+                                            <ng-template [ngIf]="!getMinValue(curves)">
+                                                --
+                                            </ng-template>
+                                        </ng-template>
+                                        <ng-template [ngIf]="!getMaxValue(curves)">
+                                            -- / --
+                                        </ng-template>
+                                        <br>
+                                        <ng-template [ngIf]="!getMediumValue(curves)">
+                                            --
+                                        </ng-template>
+                                        <ng-template [ngIf]="getMediumValue(curves)">
+                                            {{getMediumValue(curves)}}
+                                        </ng-template>
+                                    </p>
                                 </div>
                                 <div class="col-4 parameter-box-var">
                                     <p class="first-var" [style.color]="getColor(curves)">
@@ -112,7 +143,7 @@
                                     <p [style.color]="getColor(curves)">
                                         {{curves.curveConfiguration?.alert_low}}</p>
                                     <p [style.color]="getColor(curves)">
-                                        {{curves.curveConfiguration?.source?.label}}</p>
+                                        {{curves.curveConfiguration?.label}}</p>
                                     <p [style.color]="getColor(curves)">
                                         {{curves.curveConfiguration?.unit}}</p>
                                 </div>
@@ -122,7 +153,7 @@
                         <div class="col-xs-1 curve-label" [ngClass]="{'alert-enabled': getAlerts()[i]}"
                             *ngIf="curves.curveConfiguration?.label.toUpperCase() != 'CAR' &&
                                                                 curves.curveConfiguration?.label.toUpperCase() != 'RESP'">
-                            <p class=" text-label" [style.color]="getColor(curves)">
+                            <p class="text-label" [style.color]="getColor(curves)">
                                 {{curves.curveConfiguration?.label}}
                             </p>
                         </div>

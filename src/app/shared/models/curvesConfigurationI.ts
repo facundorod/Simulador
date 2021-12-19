@@ -12,5 +12,8 @@ export interface CurvesConfigurationI {
     colorLine?: string;
     minY?: number;
     maxY?: number;
+    minValue?: number,
+    maxValue?: number,
+    mediumValue?: number;
     refValue?: number;
 }

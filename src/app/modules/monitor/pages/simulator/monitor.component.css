@@ -16,13 +16,6 @@
     margin-right: 2%;
 }
 
-/* Simulation */
-.curves {
-    min-height: 20vh;
-    max-height: 20vh;
-    margin-right: 0px;
-}
-
 .curve-configuration {
     border: 2px solid #fff;
     border-radius: 10px;
@@ -113,7 +106,14 @@ h4 {
 }
 
 .curves {
-    min-width: 980px;
+    width: 100%;
+    min-height: 20vh;
+    max-height: 20vh;
+    margin-right: 0px;
+}
+
+.min-max-value {
+    font-size: 1.8rem;
 }
 
 @media all and (display-mode: fullscreen) {
@@ -139,11 +139,16 @@ h4 {
     }
 }
 
+@media (max-width: 1920px) {
+    .curves {
+        min-width: 910px;
+        min-height: 18vh;
+        max-height: 18vh;
+        margin-right: 0px;
+    }
+}
+
 .btn-link {
     padding: 0;
     margin: 0;
 }
-
-/* .margin-negative {
-    margin-top: -50px;
-} */
