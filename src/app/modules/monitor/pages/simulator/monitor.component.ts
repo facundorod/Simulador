@@ -30,7 +30,6 @@ import {
 } from "@app/modules/simulation/helpers/curvesHelper";
 import { commonOptions } from "@app/modules/simulation/helpers/chartConfigurer";
 import { CurvesConfigurationI } from "@app/shared/models/curvesConfigurationI";
-import { DOCUMENT } from "@angular/common";
 @Component({
     selector: "app-monitor",
     templateUrl: "./monitor.component.html",
@@ -51,6 +50,7 @@ export class MonitorComponent
     // Max values for each curve. This value contains the last element (in seconds) for
     // the curve on the interval [0-100%]
     private maxValues: number[];
+    private burstOfCurve: { min: number, max: number }[] = [];
     public curvesAndParams: any[] = [];
     public chartsOptions: Partial<ChartOptions>[];
     private curvesHelper: CurvesHelper = new CurvesHelper();
@@ -84,6 +84,7 @@ export class MonitorComponent
             const maxValue: number =
                 curve.curveValues[curve.curveValues.length - 1][0];
             this.maxValues.push(maxValue);
+            this.burstOfCurve.push({ min: curve.curveValues[0][1], max: maxValue });
         }
     }
 
@@ -180,9 +181,9 @@ export class MonitorComponent
         }
         this.currentState.curves.forEach((curve: CurvesI, index: number) => {
             const enableAlert: boolean | undefined = this.enableAlerts[index];
+            this.initCurveTimers(curve);
             if (curve.curveValues.length == 0) emptyDataset += 1;
             if (initCharts || changeCurves) {
-                this.initCurveTimers(curve);
                 this.createDynamicChart(curve);
             }
             if (enableAlert == undefined) {
@@ -682,27 +683,31 @@ export class MonitorComponent
     }
 
     public showMinAndMax(curve: CurvesI): boolean {
-        return (curve.curveConfiguration.label.toUpperCase() === 'CO2' ||
+        return (
+            curve.curveConfiguration.label.toUpperCase() === 'CO2' ||
             curve.curveConfiguration.label.toUpperCase() === 'IBP' ||
             curve.curveConfiguration.label.toUpperCase() === 'NIBP');
     }
 
-    public getMinValue(curve: any): number | null {
-        if (curve?.chart) {
-            // return this.curvesHelper.getMinY(curve.curveValues);
-        }
+    public getMinValue(index: number): number | null {
+        const burstOfCurve: { min: number, max: number } = this.burstOfCurve[index];
+        if (burstOfCurve && burstOfCurve.min)
+            return Math.round(burstOfCurve.min);
         return null;
     }
-    // Para calcular el min y el maximo necesito saber cual fue mi ultima curva!
-    public getMaxValue(curve: any): number | null {
-        if (curve?.chart)
-            // return this.curvesHelper.getMaxY(curve.curveValues);
-            return null;
+
+    public getMaxValue(index: number): number | null {
+        const burstOfCurve: { min: number, max: number } = this.burstOfCurve[index];
+        if (burstOfCurve && burstOfCurve.max)
+            return Math.round(burstOfCurve.max);
+        return null;
     }
 
-    public getMediumValue(curve: any): number | null {
-        if (curve?.chart)
-            return (this.getMaxValue(curve) + this.getMinValue(curve)) / 2;
+    public getMediumValue(index: number): number | null {
+        const burstOfCurve: { min: number, max: number } = this.burstOfCurve[index];
+
+        if (burstOfCurve && burstOfCurve.max && burstOfCurve.min)
+            return Math.round((burstOfCurve.max + burstOfCurve.min) / 2);
         return null;
     }
 }

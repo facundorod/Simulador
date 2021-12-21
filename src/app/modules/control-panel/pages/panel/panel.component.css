@@ -68,6 +68,17 @@
     padding-left: 12%;
 }
 
+.rate-value-box {
+    font-size: 1em;
+    width: 30%;
+    margin-left: 12%;
+}
+
+.form-range-box {
+    width: 80%;
+    margin-left: 12%;
+}
+
 .saveChanges-top {
     display: none;
 }

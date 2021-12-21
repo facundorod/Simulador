@@ -15,8 +15,6 @@ import { CurvesI } from "@app/shared/models/curvesI";
 import { CurvesHelper } from "./../../../simulation/helpers/curvesHelper";
 import { LocalStorageService } from "@app/shared/services/localStorage.service";
 import { StatesI } from "@app/shared/models/stateI";
-import { environment } from "@environments/environment";
-import { Monitor } from "@app/shared/models/monitor";
 import { ParameterInfoI } from "@app/shared/models/parameterInfoI";
 import { ScenarioParamsI } from "@app/shared/models/scenarioParamsI";
 
@@ -42,7 +40,8 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
     public temperature: number = 0;
     public spo2: number = 0;
     public muteAlarms: boolean = false;
-    public monitorConfiguration: Monitor = new Monitor();
+    public ibpSystolic: number = 0;
+    public ibpDystolic: number = 0;
 
     constructor(
         private animalSpecieService: AnimalSpeciesService,
@@ -141,6 +140,8 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
             breathRate: 0,
             temperature: 0,
             spo2: 0,
+            ibpSystolic: 0,
+            ibpDystolic: 0
         });
     }
 
@@ -150,6 +151,8 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
             breathRate: [this.breathRate ? this.breathRate : 0],
             temperature: [this.temperature ? this.temperature : 0],
             spo2: [this.spo2 ? this.spo2 : 0],
+            ibpSystolic: [this.ibpSystolic ? this.ibpSystolic : 0],
+            ibpDystolic: [this.ibpDystolic ? this.ibpDystolic : 0]
         });
     }
 
@@ -187,6 +190,15 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
         this.fromGroupParameters.get("spo2").valueChanges.subscribe((val) => {
             this.spo2 = val;
         });
+        this.fromGroupParameters.get('ibpDystolic').valueChanges.subscribe((val) => {
+            this.ibpDystolic = val;
+            this.updateCurveIBP();
+        })
+        this.fromGroupParameters.get('ibpSystolic').valueChanges.subscribe((val) => {
+            this.ibpSystolic = val;
+            this.updateCurveIBP();
+
+        })
     }
 
     /**
@@ -307,6 +319,7 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
                     this.simulation.id_simulation = data.id_simulation;
                 },
                 (error: Error) => {
+                    console.error(error);
                     this.toast.toastrConfig.timeOut = 1000;
                     this.toast.toastrConfig.positionClass = "toast-bottom-left";
                     this.toast.toastrConfig.closeButton = true;
@@ -408,10 +421,7 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
 
     public getRate(index: number): number {
         const curve: CurvesI = this.currentState.curves[index];
-        if (
-            curve.curveConfiguration.label.toUpperCase() === "ETCO2" ||
-            curve.curveConfiguration.label.toUpperCase() === "CO2"
-        )
+        if (curve.curveConfiguration.label.toUpperCase() === "CO2")
             return this.breathRate;
         return this.heartRate;
     }
@@ -433,5 +443,15 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
      */
     public trackByFnAnimalSpecies(index: number, name: AnimalSpeciesI): number {
         return name.id_as;
+    }
+
+
+    private updateCurveIBP(): void {
+        const curves: CurvesI[] = this.currentState?.curves;
+        if (curves) {
+            const [curveIBP] = curves.filter((value: CurvesI) => { return value.curveConfiguration.label == 'IBP' })
+            // @TODO: Transform curves according to min and max values
+        }
+
     }
 }
