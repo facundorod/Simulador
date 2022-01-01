@@ -79,51 +79,6 @@
     </div>
 
 </div>
-
-
-<div class="container" *ngIf="currentState?.curves.length > 0">
-    <div class="curves-configuration-text">
-        <h3 class="text-curves text-center">Curves Configuration</h3>
-    </div>
-    <div class="row" *ngFor="let curve of currentState.curves; let i=index">
-        <ng-template [ngIf]="curve.curveValues.length > 0">
-            <div class="col-md-3 param-configuration">
-                <p> {{ curve?.curveConfiguration.label }}</p>
-                <form [formGroup]="fromGroupParameters">
-                    <div class="row" *ngIf="curve?.curveConfiguration.label == 'IBP'">
-                        <div class="col-sm-4">
-                            <label class="form-label">Dystolic Pressure</label>
-                            <div class="row">
-                                <input type="range" class="form-range form-range-box" min="5" max="100" step="1"
-                                    formControlName="ibpDystolic" value={{ibpDystolic}}>
-                                <span class="rate-value-box">{{ibpDystolic}}</span>
-                            </div>
-                        </div>
-                        <div class="col-sm-4">
-                            <label class="form-label">Systolic Pressure</label>
-                            <div class="row ">
-                                <input type="range" class="form-range form-range-box" min="30" max="250" step="1"
-                                    formControlName="ibpSystolic" value={{ibpSystolic}}>
-                                <span class="rate-value-box">{{ibpSystolic}}</span>
-                            </div>
-                        </div>
-                    </div>
-                </form>
-            </div>
-
-            <div class="col-md-8 curves-configuration mini-monitor">
-                <app-mini-monitor [curves]="curve" [rate]="getRate(i)" [action]="this.currentState.action"
-                    [breathCurve]="breathCurve(i)">
-                </app-mini-monitor>
-            </div>
-        </ng-template>
-
-    </div>
-
-
-</div>
-
-
 <div class="container form-parameters">
     <form [formGroup]="fromGroupParameters">
         <div class="row">
@@ -165,6 +120,51 @@
         </div>
     </form>
 </div>
+
+
+<div class="container" *ngIf="currentState?.curves.length > 0">
+    <div class="curves-configuration-text">
+        <h3 class="text-curves text-center">Curves Configuration</h3>
+    </div>
+    <div class="row" *ngFor="let curve of currentState.curves; let i=index">
+        <ng-template [ngIf]="curve.curveValues.length > 0">
+            <div class="col-md-6 param-configuration">
+                <p> {{ curve?.curveConfiguration.label }}</p>
+                <form [formGroup]="fromGroupParameters">
+                    <div class="row" *ngIf="curve?.curveConfiguration.label == 'IBP'">
+                        <div class="col-sm-4">
+                            <label class="form-label">Dystolic Pressure</label>
+                            <div class="row ml-3">
+                                <input type="range" class="form-range form-range-box" min="0" max="{{systolicIbp - 1}}"
+                                    step="1" formControlName="ibpDystolic" value={{diastolicIbp}}>
+                                <span class="rate-value-box">{{diastolicIbp}}</span>
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                            <label class="form-label">Systolic Pressure</label>
+                            <div class="row ml-3">
+                                <input type="range" class="form-range form-range-box" min="0" max="250" step="1"
+                                    formControlName="ibpSystolic" value={{systolicIbp}}>
+                                <span class="rate-value-box">{{systolicIbp}}</span>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <div class="col-md-5 curves-configuration mini-monitor">
+                <app-mini-monitor [curves]="curve" [rate]="getRate(i)" [action]="this.currentState.action"
+                    [breathCurve]="breathCurve(i)">
+                </app-mini-monitor>
+            </div>
+        </ng-template>
+
+    </div>
+
+
+</div>
+
+
 
 
 <footer class="footer">

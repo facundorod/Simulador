@@ -96,7 +96,7 @@
                             *ngIf="curves.curveConfiguration?.label.toUpperCase() != 'CAR' &&
                                                                 curves.curveConfiguration?.label.toUpperCase() != 'RESP'">
                             <div class="row">
-                                <div class="col-3">
+                                <div class="col-2">
                                     <!-- <p class="" [style.color]="getColor(curves)" *ngIf="showMinAndMax(curves)">
                                         <ng-template [ngIf]="getMaxValue(curves)">
                                             {{getMaxValue(curves)}} /
@@ -106,7 +106,7 @@
                                         </ng-template>
                                     </p> -->
                                 </div>
-                                <div class="col-5">
+                                <div class="col-6">
                                     <p class="text-rate" [style.color]="getColor(curves)"
                                         *ngIf="!showMinAndMax(curves)">
 
@@ -137,11 +137,6 @@
                                     </p>
                                 </div>
                                 <div class="col-4 parameter-box-var">
-                                    <p class="first-var" [style.color]="getColor(curves)">
-                                        {{curves.curveConfiguration?.alert_high}}
-                                    </p>
-                                    <p [style.color]="getColor(curves)">
-                                        {{curves.curveConfiguration?.alert_low}}</p>
                                     <p [style.color]="getColor(curves)">
                                         {{curves.curveConfiguration?.label}}</p>
                                     <p [style.color]="getColor(curves)">

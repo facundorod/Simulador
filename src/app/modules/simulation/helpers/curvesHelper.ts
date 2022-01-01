@@ -55,8 +55,8 @@ export class CurvesHelper {
     }
 
     public linealInterpolation(x1: number, x2: number, x: number, y1: number, y2: number): number {
-        const auxCalcX: number = (x - x1) / (x2 - x1);
-        const auxCalcY: number = y2 - y1;
+        const auxCalcX: number = (x - x1);
+        const auxCalcY: number = (y2 - y1) / (x2 - x1);
         return ((auxCalcX * auxCalcY) + y1);
     }
 
@@ -120,4 +120,6 @@ export class CurvesHelper {
             return (freq / 1000) / period;
         return -1;
     }
+
+
 }

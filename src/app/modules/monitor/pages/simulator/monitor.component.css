@@ -74,7 +74,7 @@
     line-height: 0.1em;
 }
 
-.parameter-box-var .first-var {
+.parameter-box-var {
     padding-top: 0.7rem;
 }
 
@@ -113,7 +113,7 @@ h4 {
 }
 
 .min-max-value {
-    font-size: 1.8rem;
+    font-size: 1.7rem;
 }
 
 @media all and (display-mode: fullscreen) {

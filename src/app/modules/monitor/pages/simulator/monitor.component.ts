@@ -50,7 +50,6 @@ export class MonitorComponent
     // Max values for each curve. This value contains the last element (in seconds) for
     // the curve on the interval [0-100%]
     private maxValues: number[];
-    private burstOfCurve: { min: number, max: number }[] = [];
     public curvesAndParams: any[] = [];
     public chartsOptions: Partial<ChartOptions>[];
     private curvesHelper: CurvesHelper = new CurvesHelper();
@@ -84,7 +83,6 @@ export class MonitorComponent
             const maxValue: number =
                 curve.curveValues[curve.curveValues.length - 1][0];
             this.maxValues.push(maxValue);
-            this.burstOfCurve.push({ min: curve.curveValues[0][1], max: maxValue });
         }
     }
 
@@ -155,7 +153,6 @@ export class MonitorComponent
         this.noDataset = false;
         this.currentState = simulationState;
         this.animalSpecie = simulationState.animalSpecie;
-
         this.initCharts(simulationState.newScenario);
         // If there were changes in the state then clear the previous timer
         clearInterval(this.simulationTimer);
@@ -660,7 +657,7 @@ export class MonitorComponent
                     this.currentState.action == "pause",
                     currentOptions.xaxis.max,
                     currentOptions.xaxis.min,
-                    currentOptions.yaxis.max,
+                    (curveConfiguration.label.toUpperCase() == "IBP") ? 250 : currentOptions.yaxis.max,
                     currentOptions.yaxis.min,
                     this.currentState.action !== "stop" &&
                         (curveConfiguration.label.toUpperCase() == "ETCO2" ||
@@ -690,24 +687,23 @@ export class MonitorComponent
     }
 
     public getMinValue(index: number): number | null {
-        const burstOfCurve: { min: number, max: number } = this.burstOfCurve[index];
-        if (burstOfCurve && burstOfCurve.min)
-            return Math.round(burstOfCurve.min);
+        const curves: CurvesI = this.currentState.curves[index];
+        if (curves && curves.curveValues && curves.curveValues.length > 0)
+            return Math.round(curves.curveValues[0][1]);
         return null;
     }
 
     public getMaxValue(index: number): number | null {
-        const burstOfCurve: { min: number, max: number } = this.burstOfCurve[index];
-        if (burstOfCurve && burstOfCurve.max)
-            return Math.round(burstOfCurve.max);
+        const curves: CurvesI = this.currentState.curves[index];
+        if (curves && curves.curveValues && curves.curveValues.length > 0)
+            return Math.round(this.curvesHelper.getMaxY(curves.curveValues));
         return null;
     }
 
     public getMediumValue(index: number): number | null {
-        const burstOfCurve: { min: number, max: number } = this.burstOfCurve[index];
-
-        if (burstOfCurve && burstOfCurve.max && burstOfCurve.min)
-            return Math.round((burstOfCurve.max + burstOfCurve.min) / 2);
+        const maxValue: number = this.getMaxValue(index);
+        const minValue: number = this.getMinValue(index);
+        if (maxValue && minValue) return Math.round((maxValue + minValue) / 2);
         return null;
     }
 }
