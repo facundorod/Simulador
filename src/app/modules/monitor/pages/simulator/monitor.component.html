@@ -97,25 +97,22 @@
                                                                 curves.curveConfiguration?.label.toUpperCase() != 'RESP'">
                             <div class="row">
                                 <div class="col-2">
-                                    <!-- <p class="" [style.color]="getColor(curves)" *ngIf="showMinAndMax(curves)">
-                                        <ng-template [ngIf]="getMaxValue(curves)">
-                                            {{getMaxValue(curves)}} /
-                                        </ng-template>
-                                        <ng-template [ngIf]="!getMaxValue(curves)">
-                                            -- /
-                                        </ng-template>
-                                    </p> -->
+
                                 </div>
                                 <div class="col-6">
                                     <p class="text-rate" [style.color]="getColor(curves)"
-                                        *ngIf="!showMinAndMax(curves)">
+                                        *ngIf="!showMinAndMax(curves) && currentState?.action !== 'stop'">
 
                                         {{getSourceRateValue(curves)}}
                                     </p>
+                                    <p class="text-rate" [style.color]="getColor(curves)"
+                                        *ngIf="!showMinAndMax(curves) && currentState?.action == 'stop'">
 
+                                        --
+                                    </p>
                                     <p class="min-max-value" *ngIf="showMinAndMax(curves)"
                                         [style.color]="getColor(curves)">
-                                        <ng-template [ngIf]="getMaxValue(i)">
+                                        <ng-template [ngIf]="getMaxValue(i) && currentState?.action !== 'stop'">
                                             {{getMaxValue(i)}} /
                                             <ng-template [ngIf]="getMinValue(i)">
                                                 {{getMinValue(i)}}
@@ -124,19 +121,19 @@
                                                 --
                                             </ng-template>
                                         </ng-template>
-                                        <ng-template [ngIf]="!getMaxValue(i)">
+                                        <ng-template [ngIf]="!getMaxValue(i) || currentState?.action == 'stop'">
                                             -- / --
                                         </ng-template>
                                         <br>
-                                        <ng-template [ngIf]="!getMediumValue(i)">
+                                        <ng-template [ngIf]="!getMeanValue(i) || currentState?.action == 'stop'">
                                             --
                                         </ng-template>
-                                        <ng-template [ngIf]="getMediumValue(i)">
-                                            {{getMediumValue(i)}}
+                                        <ng-template [ngIf]=" getMeanValue(i) && currentState?.action !== 'stop'">
+                                            {{getMeanValue(i)}}
                                         </ng-template>
                                     </p>
                                 </div>
-                                <div class="col-4 parameter-box-var">
+                                <div class=" col-4 parameter-box-var">
                                     <p [style.color]="getColor(curves)">
                                         {{curves.curveConfiguration?.label}}</p>
                                     <p [style.color]="getColor(curves)">
@@ -145,9 +142,8 @@
                             </div>
 
                         </div>
-                        <div class="col-xs-1 curve-label" [ngClass]="{'alert-enabled': getAlerts()[i]}"
-                            *ngIf="curves.curveConfiguration?.label.toUpperCase() != 'CAR' &&
-                                                                curves.curveConfiguration?.label.toUpperCase() != 'RESP'">
+                        <div class="col-xs-1 curve-label" [ngClass]="{'alert-enabled': getAlerts()[i] }" *ngIf="curves.curveConfiguration?.label.toUpperCase() != 'CAR' &&
+                                    curves.curveConfiguration?.label.toUpperCase() != 'RESP' ">
                             <p class="text-label" [style.color]="getColor(curves)">
                                 {{curves.curveConfiguration?.label}}
                             </p>

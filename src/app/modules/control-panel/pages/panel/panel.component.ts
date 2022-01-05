@@ -144,7 +144,7 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
             temperature: 0,
             spo2: 0,
             ibpSystolic: 0,
-            ibpDystolic: 0
+            ibpDiastolic: 0
         });
     }
 
@@ -155,7 +155,7 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
             temperature: [this.temperature ? this.temperature : 0],
             spo2: [this.spo2 ? this.spo2 : 0],
             ibpSystolic: [this.systolicIbp ? this.systolicIbp : 0],
-            ibpDystolic: [this.diastolicIbp ? this.diastolicIbp : 0]
+            ibpDiastolic: [this.diastolicIbp ? this.diastolicIbp : 0]
         });
     }
 
@@ -193,14 +193,14 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
         this.fromGroupParameters.get("spo2").valueChanges.subscribe((val) => {
             this.spo2 = val;
         });
-        this.fromGroupParameters.get('ibpDystolic').valueChanges.subscribe((val) => {
+        this.fromGroupParameters.get('ibpDiastolic').valueChanges.subscribe((val) => {
             this.diastolicIbp = val;
-            // this.updateCurveIBP();
+            this.updateDiastolicIBP();
         })
         this.fromGroupParameters.get('ibpSystolic').valueChanges.pipe(distinctUntilChanged()).subscribe((val) => {
             this.systolicIbp = val;
             this.adjustPressureValues();
-            this.updateCurveIBP();
+            this.updateSystolicIBP();
 
         })
     }
@@ -288,6 +288,15 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
                 }
             }
         );
+        this.fromGroupParameters.setValue({
+            ibpSystolic: this.systolicIbp,
+            ibpDiastolic: this.diastolicIbp,
+            heartRate: this.heartRate,
+            breathRate: this.breathRate,
+            temperature: this.temperature,
+            spo2: this.spo2
+        })
+
     }
 
     private saveParameterInfo(): void {
@@ -457,21 +466,32 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
     }
 
 
-    private updateCurveIBP(): void {
+    private updateSystolicIBP(): void {
         const curves: CurvesI[] = this.originalCurves.slice();
         if (curves && curves.length > 0) {
             const [curveIBP] = curves.filter((value: CurvesI) => { return value.curveConfiguration.label == 'IBP' })
             const previousSystolic: { index: number, value: number } = this.getSystolicPressure(curveIBP.curveValues);
-            const previousDiastolic: number = curveIBP.curveValues[0][1];
             const adjustmentRate: number = this.calculateAdjustRate(previousSystolic.value, this.systolicIbp);
             if (previousSystolic.value > this.systolicIbp) {
                 this.adjustSystIBP(curveIBP.curveValues, adjustmentRate, false);
             } else this.adjustSystIBP(curveIBP.curveValues, adjustmentRate, true);
             curveIBP.curveValues[previousSystolic.index][1] = this.systolicIbp;
+            curves[2] = curveIBP;
             this.currentState.curves = curves;
-            this.stabilizeCurve(curveIBP.curveValues);
         }
+    }
 
+    private updateDiastolicIBP(): void {
+        const curves: CurvesI[] = this.originalCurves.slice();
+        if (curves && curves.length > 0) {
+            const [curveIBP] = curves.filter((value: CurvesI) => { return value.curveConfiguration.label == 'IBP' })
+            if (curveIBP) {
+                this.adjustDiastIBP(curveIBP.curveValues);
+                curves[2] = curveIBP;
+                this.currentState.curves = curves;
+            }
+
+        }
     }
 
     private adjustPressureValues() {
@@ -482,7 +502,7 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
     private adjustSystIBP(curves: [number, number][], adjustmenPerctRate: number, inc: boolean) {
         let i: number = 1;
         while (i < curves.length) {
-            const adjustmentRate: number = (curves[i][1] * adjustmenPerctRate) / 100;
+            const adjustmentRate: number = (curves[i][1] * adjustmenPerctRate);
             if (!inc) curves[i][1] -= adjustmentRate;
             else curves[i][1] += adjustmentRate;
             if (curves[i][1] < 0) curves[i][1] = 0;
@@ -490,27 +510,12 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
         }
     }
 
-    private stabilizeCurve(curves: [number, number][]): void {
-        const firstValue: number = curves[0][1];
-        const [lastValue] = curves.splice(curves.length - 1, 1);
-        const nextToLastValue: number = curves[curves.length - 1][0];
-
-        const diffY: number = Math.round(Math.abs(lastValue[1] - firstValue));
-        const diffX: number = Math.abs(lastValue[0] - nextToLastValue);
-
-        const stepsX: number = diffX / 50;
-        const stepsY: number = diffY / 50;
-
-        let valueToAddY: number = stepsY;
-        let valueToAddX: number = stepsX;
-        let iterator: boolean = true;
-        while (iterator) {
-            curves.push([nextToLastValue + valueToAddX, lastValue[1] - valueToAddY]);
-            valueToAddX += stepsX;
-            valueToAddY += stepsY;
-            iterator = (lastValue[1] - valueToAddY) > firstValue;
+    private adjustDiastIBP(curves: [number, number][]) {
+        curves[0][1] = this.diastolicIbp;
+        const lastIndex: number = curves.length - 1;
+        for (let i = lastIndex; i <= lastIndex - 5; i--) {
+            curves[i][1] = this.diastolicIbp;
         }
-        curves.push([1, firstValue]);
     }
 
     private calculateAdjustRate(currentValue: number, nextValue: number) {
@@ -518,7 +523,7 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
         if (currentValue) {
             result /= currentValue;
         }
-        return result * 100;
+        return result;
     }
 
     private getSystolicPressure(curves: [number, number][]): { index: number, value: number } {

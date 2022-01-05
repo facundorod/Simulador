@@ -186,15 +186,15 @@ export class MonitorComponent
             if (enableAlert == undefined) {
                 const alert: boolean = this.enableAlert(
                     curve.curveConfiguration
-                );
+                ) && this.currentState.action !== 'stop';
                 this.enableAlerts.push(alert);
             } else
                 this.enableAlerts[index] = this.enableAlert(
                     curve.curveConfiguration
-                );
+                ) && this.currentState.action !== 'stop';
             this.enableSoundAlarm =
                 this.enableAlerts.includes(true) &&
-                !this.currentState.muteAlarms;
+                !this.currentState.muteAlarms && this.currentState.action !== 'stop';
         });
 
         if (emptyDataset == this.currentState.curves.length) {
@@ -700,10 +700,10 @@ export class MonitorComponent
         return null;
     }
 
-    public getMediumValue(index: number): number | null {
-        const maxValue: number = this.getMaxValue(index);
-        const minValue: number = this.getMinValue(index);
-        if (maxValue && minValue) return Math.round((maxValue + minValue) / 2);
+    public getMeanValue(index: number): number | null {
+        const systolicIBP: number = this.getMaxValue(index);
+        const diastolicIBP: number = this.getMinValue(index);
+        if (systolicIBP) return Math.round(((2 * diastolicIBP) + systolicIBP) / 3);
         return null;
     }
 }
