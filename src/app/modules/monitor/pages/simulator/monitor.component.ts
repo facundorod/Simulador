@@ -30,7 +30,6 @@ import {
 } from "@app/modules/simulation/helpers/curvesHelper";
 import { commonOptions } from "@app/modules/simulation/helpers/chartConfigurer";
 import { CurvesConfigurationI } from "@app/shared/models/curvesConfigurationI";
-import { DOCUMENT } from "@angular/common";
 @Component({
     selector: "app-monitor",
     templateUrl: "./monitor.component.html",
@@ -154,7 +153,6 @@ export class MonitorComponent
         this.noDataset = false;
         this.currentState = simulationState;
         this.animalSpecie = simulationState.animalSpecie;
-
         this.initCharts(simulationState.newScenario);
         // If there were changes in the state then clear the previous timer
         clearInterval(this.simulationTimer);
@@ -180,23 +178,23 @@ export class MonitorComponent
         }
         this.currentState.curves.forEach((curve: CurvesI, index: number) => {
             const enableAlert: boolean | undefined = this.enableAlerts[index];
+            this.initCurveTimers(curve);
             if (curve.curveValues.length == 0) emptyDataset += 1;
             if (initCharts || changeCurves) {
-                this.initCurveTimers(curve);
                 this.createDynamicChart(curve);
             }
             if (enableAlert == undefined) {
                 const alert: boolean = this.enableAlert(
                     curve.curveConfiguration
-                );
+                ) && this.currentState.action !== 'stop';
                 this.enableAlerts.push(alert);
             } else
                 this.enableAlerts[index] = this.enableAlert(
                     curve.curveConfiguration
-                );
+                ) && this.currentState.action !== 'stop';
             this.enableSoundAlarm =
                 this.enableAlerts.includes(true) &&
-                !this.currentState.muteAlarms;
+                !this.currentState.muteAlarms && this.currentState.action !== 'stop';
         });
 
         if (emptyDataset == this.currentState.curves.length) {
@@ -659,7 +657,7 @@ export class MonitorComponent
                     this.currentState.action == "pause",
                     currentOptions.xaxis.max,
                     currentOptions.xaxis.min,
-                    currentOptions.yaxis.max,
+                    (curveConfiguration.label.toUpperCase() == "IBP") ? 250 : currentOptions.yaxis.max,
                     currentOptions.yaxis.min,
                     this.currentState.action !== "stop" &&
                         (curveConfiguration.label.toUpperCase() == "ETCO2" ||
@@ -682,27 +680,30 @@ export class MonitorComponent
     }
 
     public showMinAndMax(curve: CurvesI): boolean {
-        return (curve.curveConfiguration.label.toUpperCase() === 'CO2' ||
+        return (
+            curve.curveConfiguration.label.toUpperCase() === 'CO2' ||
             curve.curveConfiguration.label.toUpperCase() === 'IBP' ||
             curve.curveConfiguration.label.toUpperCase() === 'NIBP');
     }
 
-    public getMinValue(curve: any): number | null {
-        if (curve?.chart) {
-            // return this.curvesHelper.getMinY(curve.curveValues);
-        }
+    public getMinValue(index: number): number | null {
+        const curves: CurvesI = this.currentState.curves[index];
+        if (curves && curves.curveValues && curves.curveValues.length > 0)
+            return Math.round(curves.curveValues[0][1]);
         return null;
     }
-    // Para calcular el min y el maximo necesito saber cual fue mi ultima curva!
-    public getMaxValue(curve: any): number | null {
-        if (curve?.chart)
-            // return this.curvesHelper.getMaxY(curve.curveValues);
-            return null;
+
+    public getMaxValue(index: number): number | null {
+        const curves: CurvesI = this.currentState.curves[index];
+        if (curves && curves.curveValues && curves.curveValues.length > 0)
+            return Math.round(this.curvesHelper.getMaxY(curves.curveValues));
+        return null;
     }
 
-    public getMediumValue(curve: any): number | null {
-        if (curve?.chart)
-            return (this.getMaxValue(curve) + this.getMinValue(curve)) / 2;
+    public getMeanValue(index: number): number | null {
+        const systolicIBP: number = this.getMaxValue(index);
+        const diastolicIBP: number = this.getMinValue(index);
+        if (systolicIBP) return Math.round(((2 * diastolicIBP) + systolicIBP) / 3);
         return null;
     }
 }

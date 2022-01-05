@@ -37,7 +37,6 @@ export function commonOptions(
     minY: number,
     type?: ChartType
 ): Partial<ChartOptions> {
-    console.log(toolbarEnabled);
     return {
         stroke: {
             curve: "smooth",
@@ -79,9 +78,9 @@ export function commonOptions(
         },
         yaxis: {
             labels: {
-                show: false,
+                show: toolbarEnabled,
             },
-            show: false,
+            show: toolbarEnabled,
             max: maxY,
             min: 0,
         },
