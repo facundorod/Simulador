@@ -53,7 +53,8 @@
     </div>
 
     <div class="row" *ngIf="existDataset() else noDataset">
-        <app-audio [play]="true" [src]="'/assets/sounds/monitor.mp3'" [playRate]=calculatePlayRate()></app-audio>
+        <app-audio *ngIf="currentState?.action !== 'stop'" [play]="true" [src]="'/assets/sounds/monitor.mp3'"
+            [playRate]=calculatePlayRate()></app-audio>
         <app-audio [play]="enableSoundAlarm" [src]="'/assets/sounds/alarmLimit.mp3'" [playRate]=1>
         </app-audio>
 
