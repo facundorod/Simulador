@@ -453,4 +453,9 @@ export class ScenarioParamsCreateComponent implements OnInit {
                 console.error(error);
             });
     }
+
+    public isIBPCurve(parameter: SPPI): boolean {
+        return parameter.animalParameters.physiologicalParameter.label.toUpperCase() === 'IBP'
+            || parameter.animalParameters.physiologicalParameter.label.toUpperCase() === 'NIBP';
+    }
 }
