@@ -1,7 +1,7 @@
 export const environment = {
-    production: true,
+    production: false,
     api: {
-        baseUrl: "",
+        baseUrl: "http://localhost:3000/api",
         animalSpecies: "/animalSpecies/",
         arrhythmias: "/arrhythmia/",
         medications: "/medication/",
@@ -15,5 +15,5 @@ export const environment = {
         parameters: "/parameters/",
         user: "/auth/user",
     },
-    simulation: "",
+    simulation: "http://localhost:4200/monitor",
 };
