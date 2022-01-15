@@ -117,7 +117,7 @@ export class CurvesHelper {
     public calculateRate(rateValue: number, freq: number): number {
         const period: number = 60 / rateValue;
         if (period)
-            return (freq / 1000) / period;
+            return (freq / 1000) * period;
         return -1;
     }
 

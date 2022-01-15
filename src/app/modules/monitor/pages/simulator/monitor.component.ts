@@ -41,15 +41,15 @@ export class MonitorComponent
     public currentState: StatesI;
     public animalSpecie: AnimalSpeciesI;
     @ViewChildren("chart") charts: QueryList<ChartComponent>;
-    public curveTimers: number[] = [];
     public today: Date = new Date();
     private heartTimer: number;
+    private maxSize: number = 51;
     private breathTimer: number;
     private firstSimulationBreath: boolean;
+    private currentIndex: number = 0;
     private parameterInfo: ParameterInfoI;
     // Max values for each curve. This value contains the last element (in seconds) for
     // the curve on the interval [0-100%]
-    private maxValues: number[];
     public curvesAndParams: any[] = [];
     public chartsOptions: Partial<ChartOptions>[];
     private curvesHelper: CurvesHelper = new CurvesHelper();
@@ -77,14 +77,7 @@ export class MonitorComponent
         clearInterval(this.simulationTimer);
     }
 
-    private initCurveTimers(curve: CurvesI): void {
-        if (curve?.curveValues.length > 0) {
-            this.curveTimers.push(0);
-            const maxValue: number =
-                curve.curveValues[curve.curveValues.length - 1][0];
-            this.maxValues.push(maxValue);
-        }
-    }
+
 
     public openFullscreen(): void {
         if (!document.fullscreenElement) {
@@ -140,10 +133,10 @@ export class MonitorComponent
         this.enableAlerts = [];
         this.firstSimulationHeart = true;
         this.firstSimulationBreath = true;
-        this.curveTimers = [];
-        this.maxValues = [];
         this.curvesAndParams = [];
         this.chartsOptions = [];
+        this.currentIndex = 0;
+        this.maxSize = 51;
         this.breathTimer = 0.0;
         this.heartTimer = 0.0;
         clearInterval(this.simulationTimer);
@@ -169,8 +162,6 @@ export class MonitorComponent
             this.chartsOptions = [];
             this.firstSimulationHeart = true;
             this.firstSimulationBreath = true;
-            this.curveTimers = [];
-            this.maxValues = [];
             this.chartsOptions = [];
             this.breathTimer = 0.0;
             this.heartTimer = 0.0;
@@ -178,7 +169,6 @@ export class MonitorComponent
         }
         this.currentState.curves.forEach((curve: CurvesI, index: number) => {
             const enableAlert: boolean | undefined = this.enableAlerts[index];
-            this.initCurveTimers(curve);
             if (curve.curveValues.length == 0) emptyDataset += 1;
             if (initCharts || changeCurves) {
                 this.createDynamicChart(curve);
@@ -253,56 +243,31 @@ export class MonitorComponent
     private simulateCurves() {
         if (this.currentState && !this.noDataset) {
             this.simulationTimer = setInterval(() => {
+                // if the currentIndex is the last element, then the currentIndex = 0.
                 this.updateHeartTimer();
                 this.updateBreathTimer();
+                this.updateCurrentIndex();
                 this.currentState.curves.forEach(
                     (curve: CurvesI, index: number) => {
-                        if (curve.curveValues.length > 0) {
+                        if (curve.curveValues.length > 0)
                             this.simulateCurve(curve, index);
-                            this.updateCurveTimers(index, curve);
-                        }
                     }
                 );
-
                 this.updateCharts();
                 this.heartTimer +=
-                    this.monitorConfiguration.getMonitorConfiguration()
-                        .freqHeart / 1000;
-                this.breathTimer +=
-                    this.monitorConfiguration.getMonitorConfiguration()
-                        .freqBreath / 1000;
+                    (this.monitorConfiguration.getMonitorConfiguration()
+                        .freqHeart / 1000);
+                this.breathTimer += (this.monitorConfiguration.getMonitorConfiguration()
+                    .freqBreath / 1000);
+                this.currentIndex += 1;
                 this.today = new Date();
             }, this.monitorConfiguration.getMonitorConfiguration().clockTimer);
         }
     }
 
-    private updateCurveTimers(index: number, curve: CurvesI) {
-        if (
-            curve.curveConfiguration?.source?.label.toUpperCase() == "CAR" ||
-            curve.curveConfiguration?.source?.label.toUpperCase() == "SPO2"
-        ) {
-            this.curveTimers[index] = this.roundTimer(
-                this.curveTimers[index] +
-                this.curvesHelper.calculateRate(
-                    this.parameterInfo.heartRate,
-                    this.monitorConfiguration.getMonitorConfiguration()
-                        .freqHeart
-                )
-            );
-        }
-        if (curve.curveConfiguration?.source?.label?.toUpperCase() == "RESP")
-            this.curveTimers[index] = this.roundTimer(
-                this.curveTimers[index] +
-                this.curvesHelper.calculateRate(
-                    this.parameterInfo.breathRate,
-                    this.monitorConfiguration.getMonitorConfiguration()
-                        .freqBreath
-                )
-            );
-    }
+
 
     private simulateCurve(curve: CurvesI, index: number): void {
-        this.updateCurveTimer(index);
         if (
             ((this.firstSimulationHeart && !this.isBreathCurve(index)) ||
                 (this.firstSimulationBreath && this.isBreathCurve(index))) &&
@@ -321,27 +286,18 @@ export class MonitorComponent
         }
     }
 
-    /**
-     * Round timer
-     * @param timer
-     * @returns
-     */
-    private roundTimer(timer: number): number {
-        return Math.round(timer * 100) / 100;
-    }
 
     /**
-     * Update curve timer. If the curve timer overcome the last item in the dataset, then
-     * curve timer go back to 0.
+     * Update currentIndex. If the currentIndex overcome the last item in the dataset, then
+     * currentIndex go back to 0.
      * @param curveValues
      */
-    private updateCurveTimer(index: number): void {
-        const curveTimer: number = this.curveTimers[index];
-        const lastItem: number = this.maxValues[index];
-        if (lastItem && curveTimer > lastItem) {
-            this.curveTimers[index] = 0.0;
+    private updateCurrentIndex(): void {
+        if (this.currentIndex >= this.maxSize) {
+            this.currentIndex = 0;
         }
     }
+
 
     public getAlerts(): boolean[] {
         return this.enableAlerts;
@@ -359,7 +315,6 @@ export class MonitorComponent
         const currentDataset: any =
             this.curvesAndParams[index]?.chart?.series?.slice();
         if (currentDataset) {
-            const curveTimer: number = this.curveTimers[index];
             let isBreathCurve: boolean = this.isBreathCurve(index);
             if (this.currentState.action == "stop") {
                 const chart: any = this.charts.toArray()[index];
@@ -368,22 +323,12 @@ export class MonitorComponent
                     isBreathCurve ? this.breathTimer : this.heartTimer,
                     maxY / 2,
                 ]);
-            } else {
-                let closestIndex: ClosestPoint =
-                    this.curvesHelper.getClosestIndex(curveValues, curveTimer);
-                const interpolationNumber: number =
-                    this.curvesHelper.linealInterpolation(
-                        closestIndex.lessValue[0],
-                        closestIndex.greaterValue[0],
-                        curveTimer,
-                        closestIndex.lessValue[1],
-                        closestIndex.lessValue[1]
-                    );
+            } else
                 currentDataset[0].data.push([
                     isBreathCurve ? this.breathTimer : this.heartTimer,
-                    interpolationNumber,
+                    curveValues[this.currentIndex][1],
                 ]);
-            }
+
         }
     }
 
@@ -408,21 +353,10 @@ export class MonitorComponent
         } else {
             const originalDataset: [number, number][] =
                 this.currentState.curves[index].curveValues;
-            let closestIndex: ClosestPoint = this.curvesHelper.getClosestIndex(
-                originalDataset,
-                this.curveTimers[index]
-            );
-            const interpolationNumber: number =
-                this.curvesHelper.linealInterpolation(
-                    closestIndex.lessValue[0],
-                    closestIndex.greaterValue[0],
-                    this.curveTimers[index],
-                    closestIndex.lessValue[1],
-                    closestIndex.lessValue[1]
-                );
+
             curveValuesSimulation.push([
                 isBreathCurve ? this.breathTimer : this.heartTimer,
-                interpolationNumber,
+                originalDataset[this.currentIndex][1],
             ]);
         }
         this.deleteOldPoints(
@@ -672,7 +606,7 @@ export class MonitorComponent
     }
 
     public calculatePlayRate(): number {
-        return this.parameterInfo.heartRate / 60;
+        return this.parameterInfo.heartRate / 1000;
     }
 
     public existDataset(): boolean {
