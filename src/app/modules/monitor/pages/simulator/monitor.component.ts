@@ -254,9 +254,7 @@ export class MonitorComponent
                             this.simulateCurve(curve, index);
                     }
                 );
-                // It should update the currentIndex
                 this.updateCharts();
-
                 this.heartTimer +=
                     (this.monitorConfiguration.getMonitorConfiguration()
                         .freqHeart / 1000);
@@ -306,24 +304,9 @@ export class MonitorComponent
     private updateCurrentIndex(): void {
         if (this.currentIndex >= this.maxSize) {
             this.currentIndex = 0;
-            this.updateMonitorConf();
         }
     }
 
-
-    private updateMonitorConf(): void {
-        const lastConfMonitor: MonitorI = this.monitorConfiguration.getMonitorConfiguration();
-        // const newFreqBreath: number = (60 / this.parameterInfo.breathRate) * 10;
-        // const newFreqHeart: number = (60 / this.parameterInfo.heartRate) * 10;
-        const newMaxSamples: number = Math.ceil(this.parameterInfo.heartRate / 60) + 3;
-        // this.monitorConfiguration.setMonitorConfiguration({
-        //     clockTimer: lastConfMonitor.clockTimer,
-        //     freqBreath: lastConfMonitor.freqBreath,
-        //     freqHeart: lastConfMonitor.freqHeart,
-        //     maxSamples: newMaxSamples
-        // })
-
-    }
 
     public getAlerts(): boolean[] {
         return this.enableAlerts;

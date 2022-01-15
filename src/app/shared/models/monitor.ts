@@ -3,8 +3,8 @@ import { MonitorI } from "./monitorI";
 export class Monitor {
     private monitorConfiguration: MonitorI = {
         clockTimer: 10,
-        freqHeart: 30,
-        freqBreath: 5,
+        freqHeart: 20,
+        freqBreath: 15,
         maxSamples: 5,
     };
 
