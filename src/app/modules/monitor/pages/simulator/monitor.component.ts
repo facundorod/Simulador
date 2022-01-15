@@ -30,7 +30,6 @@ import {
 } from "@app/modules/simulation/helpers/curvesHelper";
 import { commonOptions } from "@app/modules/simulation/helpers/chartConfigurer";
 import { CurvesConfigurationI } from "@app/shared/models/curvesConfigurationI";
-import { MonitorI } from "@app/shared/models/monitorI";
 @Component({
     selector: "app-monitor",
     templateUrl: "./monitor.component.html",
@@ -287,14 +286,6 @@ export class MonitorComponent
         }
     }
 
-    /**
-     * Round timer
-     * @param timer
-     * @returns
-     */
-    private roundTimer(timer: number): number {
-        return Math.round(timer * 100) / 100;
-    }
 
     /**
      * Update currentIndex. If the currentIndex overcome the last item in the dataset, then
@@ -332,13 +323,12 @@ export class MonitorComponent
                     isBreathCurve ? this.breathTimer : this.heartTimer,
                     maxY / 2,
                 ]);
-            } else {
-
+            } else
                 currentDataset[0].data.push([
                     isBreathCurve ? this.breathTimer : this.heartTimer,
                     curveValues[this.currentIndex][1],
                 ]);
-            }
+
         }
     }
 
