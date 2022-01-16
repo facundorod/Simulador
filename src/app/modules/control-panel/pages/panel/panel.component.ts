@@ -303,8 +303,10 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
         const parameterInfo: ParameterInfoI = {
             temperature: this.temperature,
             heartRate: this.heartRate,
+            systolicPressure: this.systolicIbp,
             breathRate: this.breathRate,
             spO2: this.spo2,
+            diastolicPressure: this.diastolicIbp,
         };
         this.localStorageService.saveValue(
             "parameterState",

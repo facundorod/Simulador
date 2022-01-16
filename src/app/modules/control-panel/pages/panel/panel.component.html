@@ -149,7 +149,7 @@
                 <form [formGroup]="fromGroupParameters">
                     <div class="row" *ngIf="curve?.curveConfiguration.label == 'IBP'">
                         <div class="col-sm-4">
-                            <label class="form-label">Dystolic Pressure</label>
+                            <label class="form-label">Diastolic Pressure</label>
                             <div class="row ml-3" *ngIf="currentState?.action !== 'stop'">
                                 <input type="range" class="form-range form-range-box" min="0" max="{{systolicIbp - 1}}"
                                     step="1" formControlName="ibpDiastolic" value={{diastolicIbp}}>
