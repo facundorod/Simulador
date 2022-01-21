@@ -45,6 +45,8 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
     public systolicIbp: number = 0;
     public avgIbp: number = 0;
     public diastolicIbp: number = 0;
+    private meanIBP: number = 0;
+    private curvesHelper: CurvesHelper = new CurvesHelper();
 
     constructor(
         private animalSpecieService: AnimalSpeciesService,
@@ -195,10 +197,12 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
         });
         this.fromGroupParameters.get('ibpDiastolic').valueChanges.subscribe((val) => {
             this.diastolicIbp = val;
+            this.meanIBP = this.curvesHelper.getMeanValue(this.diastolicIbp, val);
             this.updateDiastolicIBP();
         })
         this.fromGroupParameters.get('ibpSystolic').valueChanges.pipe(distinctUntilChanged()).subscribe((val) => {
             this.systolicIbp = val;
+            this.meanIBP = this.curvesHelper.getMeanValue(this.diastolicIbp, val);
             this.adjustPressureValues();
             this.updateSystolicIBP();
 
@@ -282,6 +286,7 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
                     case 'IBP':
                         this.systolicIbp = Math.round(this.getSystolicPressure(value.curveValues).value);
                         this.diastolicIbp = Math.round(value.curveValues[0][1]);
+                        this.meanIBP = this.curvesHelper.getMeanValue(this.diastolicIbp, this.systolicIbp);
                         return value;
                     default:
                         return value;
@@ -469,12 +474,13 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
     private updateSystolicIBP(): void {
         const curves: CurvesI[] = this.originalCurves.slice();
         if (curves && curves.length > 0) {
-            const [curveIBP] = curves.filter((value: CurvesI) => { return value.curveConfiguration.label == 'IBP' })
+            const curveIBP = curves[2];
             const previousSystolic: { index: number, value: number } = this.getSystolicPressure(curveIBP.curveValues);
             const adjustmentRate: number = this.calculateAdjustRate(previousSystolic.value, this.systolicIbp);
+            const newMean: { index: number, value: number } = this.getIndexMean(curveIBP.curveValues, previousSystolic.index);
             if (previousSystolic.value > this.systolicIbp) {
-                this.adjustSystIBP(curveIBP.curveValues, adjustmentRate, false);
-            } else this.adjustSystIBP(curveIBP.curveValues, adjustmentRate, true);
+                this.adjustSystIBP(curveIBP.curveValues, adjustmentRate, false, newMean.index);
+            } else this.adjustSystIBP(curveIBP.curveValues, adjustmentRate, true, newMean.index);
             curveIBP.curveValues[previousSystolic.index][1] = this.systolicIbp;
             curves[2] = curveIBP;
             this.currentState.curves = curves;
@@ -484,13 +490,12 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
     private updateDiastolicIBP(): void {
         const curves: CurvesI[] = this.originalCurves.slice();
         if (curves && curves.length > 0) {
-            const [curveIBP] = curves.filter((value: CurvesI) => { return value.curveConfiguration.label == 'IBP' })
+            const curveIBP = curves[2]
             if (curveIBP) {
                 this.adjustDiastIBP(curveIBP.curveValues);
                 curves[2] = curveIBP;
                 this.currentState.curves = curves;
             }
-
         }
     }
 
@@ -499,15 +504,23 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
             this.diastolicIbp = this.systolicIbp - 1;
     }
 
-    private adjustSystIBP(curves: [number, number][], adjustmenPerctRate: number, inc: boolean) {
+
+
+    private adjustSystIBP(curves: [number, number][], adjustmenPerctRate: number, inc: boolean, indexMean: number) {
         let i: number = 1;
-        while (i < curves.length) {
+        console.log("indexMean", indexMean, this.meanIBP);
+        while (i < indexMean) {
             const adjustmentRate: number = (curves[i][1] * adjustmenPerctRate);
             if (!inc) curves[i][1] -= adjustmentRate;
             else curves[i][1] += adjustmentRate;
             if (curves[i][1] < 0) curves[i][1] = 0;
             i++;
         }
+    }
+
+    private getIndexMean(curves: [number, number][], index: number): { index: number, value: number } {
+        while (index <= curves.length && curves[index][1] < this.meanIBP) index++;
+        return { index, value: curves[index][1] };
     }
 
     private adjustDiastIBP(curves: [number, number][]) {

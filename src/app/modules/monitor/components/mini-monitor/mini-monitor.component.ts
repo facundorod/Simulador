@@ -67,7 +67,7 @@ export class MiniMonitorComponent implements OnInit, OnDestroy {
                 height: 100,
                 minX: 0,
                 maxX: 3,
-                minY: minY,
+                minY: minY >= 0 ? -1 : minY,
                 maxY: maxY,
                 toolbar: false,
             });
