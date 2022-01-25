@@ -195,7 +195,7 @@
 
             <div class="col-md-5 curves-configuration mini-monitor">
                 <app-mini-monitor [curves]="curve" [rate]="getRate(i)" [action]="this.currentState?.action"
-                    [breathCurve]="breathCurve(i)">
+                    [updatedState]="updatedState" [breathCurve]="breathCurve(i)">
                 </app-mini-monitor>
             </div>
         </ng-template>

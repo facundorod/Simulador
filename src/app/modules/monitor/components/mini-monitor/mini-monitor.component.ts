@@ -24,12 +24,13 @@ import {
     templateUrl: "./mini-monitor.component.html",
     styleUrls: ["./mini-monitor.component.css"],
 })
-export class MiniMonitorComponent implements OnInit, OnDestroy {
+export class MiniMonitorComponent implements OnInit, OnDestroy, OnChanges {
     @ViewChild("chart") chartComponent: ChartComponent;
     @Input() curves: CurvesI;
     @Input() breathCurve: boolean = false;
     @Input() action: string = "stop";
     @Input() rate: number;
+    @Input() updatedState: boolean = false;
     private simulationTimer: NodeJS.Timeout;
     private timer: number = 0.0;
     private currentIndex: number = 0;
@@ -39,14 +40,19 @@ export class MiniMonitorComponent implements OnInit, OnDestroy {
     public monitorConfiguration: Monitor = new Monitor();
     private firstSimulation: boolean = true;
 
-    constructor() {}
+    constructor() { }
+
+    ngOnChanges(changes: SimpleChanges): void {
+        if (changes.updatedState) {
+            this.createDynamicChart();
+        }
+    }
 
 
     ngOnInit(): void {
         this.createDynamicChart();
         this.simulateCurve();
     }
-
 
 
     ngOnDestroy() {
@@ -75,7 +81,7 @@ export class MiniMonitorComponent implements OnInit, OnDestroy {
 
             if (
                 this.action !== "stop" &&
-                    this.curves.curveConfiguration.label.toUpperCase() === "CO2")
+                this.curves.curveConfiguration.label.toUpperCase() === "CO2")
                 type = "area";
 
             chart.setChart([], type);
@@ -94,9 +100,9 @@ export class MiniMonitorComponent implements OnInit, OnDestroy {
                 this.initiateSimulation();
                 this.timer += this.breathCurve
                     ? this.monitorConfiguration.getMonitorConfiguration()
-                          .freqBreath / 1000
+                        .freqBreath / 1000
                     : this.monitorConfiguration.getMonitorConfiguration()
-                          .freqHeart / 1000;
+                        .freqHeart / 1000;
             }
             this.currentIndex += 1;
             this.updateChart(this.chartComponent.series);
@@ -222,12 +228,12 @@ export class MiniMonitorComponent implements OnInit, OnDestroy {
         }
     }
 
-     /**
-     * Update currentIndex. If the currentIndex overcome the last item in the dataset, then
-     * currentIndex go back to 0.
-     * @param curveValues
-     */
-      private updateCurrentIndex(): void {
+    /**
+    * Update currentIndex. If the currentIndex overcome the last item in the dataset, then
+    * currentIndex go back to 0.
+    * @param curveValues
+    */
+    private updateCurrentIndex(): void {
         if (this.currentIndex >= this.maxSize) {
             this.currentIndex = 0;
         }
