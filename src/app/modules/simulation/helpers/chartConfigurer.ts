@@ -72,6 +72,9 @@ export function commonOptions(
             toolbar: {
                 show: toolbarEnabled,
             },
+            animations: {
+                enabled: false
+            }
         },
         fill: {
             type: "solid",
