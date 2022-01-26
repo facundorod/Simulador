@@ -1,6 +1,6 @@
 import { SimulationService } from "./../../../simulation/services/simulation.service";
 import { ToastrService } from "ngx-toastr";
-import { Component, OnDestroy, OnInit } from "@angular/core";
+import { Component, OnDestroy, OnInit, QueryList, ViewChildren } from "@angular/core";
 
 // Service
 import { AnimalSpeciesService } from "./../../services/animalSpecies.service";
@@ -18,6 +18,7 @@ import { StatesI } from "@app/shared/models/stateI";
 import { ParameterInfoI } from "@app/shared/models/parameterInfoI";
 import { ScenarioParamsI } from "@app/shared/models/scenarioParamsI";
 import { distinctUntilChanged } from "rxjs/operators";
+import { MiniMonitorComponent } from "@app/modules/monitor/components/mini-monitor/mini-monitor.component";
 
 @Component({
     selector: "app-panel",
@@ -26,7 +27,7 @@ import { distinctUntilChanged } from "rxjs/operators";
 })
 export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
     private activeScenario: ScenarioParamsI; // Scenario active for simulation
-
+    @ViewChildren("miniMonitor") miniMonitors: QueryList<MiniMonitorComponent>;
     public scenariosSimulation: ScenarioParamsI[] = [];
     public animalSpecies: AnimalSpeciesI[] = []; // Animal Species to populate the dropdown
     public animalSpecie: any = {}; // Animal Specie from simulation
@@ -42,12 +43,13 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
     public temperature: number = 0;
     public spo2: number = 0;
     public muteAlarms: boolean = false;
+    public updatedState: boolean = true;
     public systolicIbp: number = 0;
     public avgIbp: number = 0;
     public diastolicIbp: number = 0;
     private meanIBP: number = 0;
     private curvesHelper: CurvesHelper = new CurvesHelper();
-
+    public shiftValues: number[] = [0, 0, 0, 0];
     constructor(
         private animalSpecieService: AnimalSpeciesService,
         private fb: FormBuilder,
@@ -140,13 +142,26 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
         this.breathRate = 0;
         this.temperature = 0;
         this.spo2 = 0;
+        this.shiftValues = [0, 0, 0, 0]
         this.fromGroupParameters.setValue({
             heartRate: 0,
             breathRate: 0,
             temperature: 0,
             spo2: 0,
             ibpSystolic: 0,
-            ibpDiastolic: 0
+            ibpDiastolic: 0,
+            valueToShift: [{
+                value: 0
+            },
+            {
+                value: 0
+            },
+            {
+                value: 0
+            },
+            {
+                value: 0
+            }]
         });
     }
 
@@ -157,8 +172,23 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
             temperature: [this.temperature ? this.temperature : 0],
             spo2: [this.spo2 ? this.spo2 : 0],
             ibpSystolic: [this.systolicIbp ? this.systolicIbp : 0],
-            ibpDiastolic: [this.diastolicIbp ? this.diastolicIbp : 0]
+            ibpDiastolic: [this.diastolicIbp ? this.diastolicIbp : 0],
+            valueToShift: this.fb.array([
+                this.fb.group({
+                    value: 0
+                }),
+                this.fb.group({
+                    value: 0
+                }),
+                this.fb.group({
+                    value: 0
+                }),
+                this.fb.group({
+                    value: 0
+                })
+            ])
         });
+
     }
 
     /**
@@ -181,31 +211,68 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
             .get("heartRate")
             .valueChanges.subscribe((val) => {
                 this.heartRate = val;
+                this.updatedState = true;
             });
         this.fromGroupParameters
             .get("breathRate")
             .valueChanges.subscribe((val) => {
                 this.breathRate = val;
+                this.updatedState = true;
             });
         this.fromGroupParameters
             .get("temperature")
             .valueChanges.subscribe((val) => {
                 this.temperature = val;
+                this.updatedState = true;
+
             });
         this.fromGroupParameters.get("spo2").valueChanges.subscribe((val) => {
             this.spo2 = val;
+            this.updatedState = true;
         });
         this.fromGroupParameters.get('ibpDiastolic').valueChanges.subscribe((val) => {
-            this.diastolicIbp = val;
-            this.meanIBP = this.curvesHelper.getMeanValue(this.diastolicIbp, val);
-            this.updateDiastolicIBP();
+            if (val !== 0) {
+                this.diastolicIbp = val;
+                this.meanIBP = this.curvesHelper.getMeanValue(this.diastolicIbp, val);
+                this.updateDiastolicIBP();
+                this.updatedState = true;
+            }
+
         })
         this.fromGroupParameters.get('ibpSystolic').valueChanges.pipe(distinctUntilChanged()).subscribe((val) => {
-            this.systolicIbp = val;
-            this.meanIBP = this.curvesHelper.getMeanValue(this.diastolicIbp, val);
-            this.adjustPressureValues();
-            this.updateSystolicIBP();
+            if (val !== 0) {
+                this.systolicIbp = val;
+                this.meanIBP = this.curvesHelper.getMeanValue(this.diastolicIbp, val);
+                this.adjustPressureValues();
+                this.updateSystolicIBP();
+                this.updatedState = true;
+            }
+        })
+        this.fromGroupParameters.get('valueToShift').valueChanges.pipe(distinctUntilChanged()).subscribe((val) => {
 
+            val.forEach((value: { value: number }, index: number) => {
+                if (value.value != this.shiftValues[index]) {
+                    if (value.value === 0) {
+                        this.currentState.curves[index].curveValues = JSON.parse(JSON.stringify(this.originalCurves[index].curveValues))
+                        this.updatedState = true;
+                    } else {
+                        this.shiftValues[index] = value.value;
+                        const curveToShift: [number, number][] = this.originalCurves[index].curveValues;
+                        this.curvesService
+                            .shiftCurve(curveToShift, value.value)
+                            .subscribe((newCurve: [number, number][]) => {
+                                if (newCurve)
+                                    this.currentState.curves[index].curveValues = newCurve;
+                                const miniMonitor: MiniMonitorComponent = this.miniMonitors.toArray()[index];
+                                miniMonitor.changeMaxAndMin(this.currentState.curves[index].curveValues);
+                            },
+                                (error: Error) => {
+                                    console.error(error);
+                                })
+                    }
+
+                }
+            });
         })
     }
 
@@ -229,7 +296,7 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
                                 newScenario = true;
                             }
                             this.currentState = state;
-                            this.originalCurves = this.currentState.curves.slice();
+                            this.originalCurves = JSON.parse(JSON.stringify(state.curves));
                             this.currentState.action = action;
                             this.currentState.muteAlarms = false;
                             this.currentState.newScenario = newScenario;
@@ -299,7 +366,19 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
             heartRate: this.heartRate,
             breathRate: this.breathRate,
             temperature: this.temperature,
-            spo2: this.spo2
+            spo2: this.spo2,
+            valueToShift: [{
+                value: 0
+            },
+            {
+                value: 0
+            },
+            {
+                value: 0
+            },
+            {
+                value: 0
+            }]
         })
 
     }
@@ -472,29 +551,30 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
 
 
     private updateSystolicIBP(): void {
-        const curves: CurvesI[] = this.originalCurves.slice();
+        const curves: CurvesI[] = JSON.parse(JSON.stringify(this.originalCurves));
+
         if (curves && curves.length > 0) {
-            const curveIBP = curves[2];
-            const previousSystolic: { index: number, value: number } = this.getSystolicPressure(curveIBP.curveValues);
+            const curveIBP = JSON.parse(JSON.stringify(curves[2].curveValues));
+            const previousSystolic: { index: number, value: number } = this.getSystolicPressure(curveIBP);
             const adjustmentRate: number = this.calculateAdjustRate(previousSystolic.value, this.systolicIbp);
-            const newMean: { index: number, value: number } = this.getIndexMean(curveIBP.curveValues, previousSystolic.index);
+            const newMean: { index: number, value: number } = this.getIndexMean(curveIBP, previousSystolic.index);
             if (previousSystolic.value > this.systolicIbp) {
-                this.adjustSystIBP(curveIBP.curveValues, adjustmentRate, false, newMean.index);
-            } else this.adjustSystIBP(curveIBP.curveValues, adjustmentRate, true, newMean.index);
-            curveIBP.curveValues[previousSystolic.index][1] = this.systolicIbp;
-            curves[2] = curveIBP;
-            this.currentState.curves = curves;
+                this.adjustSystIBP(curveIBP, adjustmentRate, false, newMean.index);
+            } else this.adjustSystIBP(curveIBP, adjustmentRate, true, newMean.index);
+            curveIBP[previousSystolic.index][1] = this.systolicIbp;
+            curves[2].curveValues = curveIBP;
+            this.currentState.curves[2] = JSON.parse(JSON.stringify(curves[2]));
         }
     }
 
     private updateDiastolicIBP(): void {
-        const curves: CurvesI[] = this.originalCurves.slice();
+        const curves: CurvesI[] = JSON.parse(JSON.stringify(this.originalCurves));
         if (curves && curves.length > 0) {
-            const curveIBP = curves[2]
+            const curveIBP = curves[2].curveValues.slice();
             if (curveIBP) {
-                this.adjustDiastIBP(curveIBP.curveValues);
-                curves[2] = curveIBP;
-                this.currentState.curves = curves;
+                this.adjustDiastIBP(curveIBP);
+                curves[2].curveValues = curveIBP;
+                this.currentState.curves[2] = curves[2];
             }
         }
     }
@@ -508,7 +588,6 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
 
     private adjustSystIBP(curves: [number, number][], adjustmenPerctRate: number, inc: boolean, indexMean: number) {
         let i: number = 1;
-        console.log("indexMean", indexMean, this.meanIBP);
         while (i < indexMean) {
             const adjustmentRate: number = (curves[i][1] * adjustmenPerctRate);
             if (!inc) curves[i][1] -= adjustmentRate;
@@ -549,5 +628,17 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
             }
         }
         return { index, value: max };
+    }
+
+    public resetSimulation(): void {
+        this.currentState.curves = JSON.parse(JSON.stringify(this.originalCurves));
+        this.currentState.action = 'stop';
+        this.systolicIbp = Math.round(this.getSystolicPressure(this.currentState.curves[2].curveValues).value);
+        this.diastolicIbp = Math.round(this.currentState.curves[2].curveValues[0][1]);
+        this.meanIBP = this.curvesHelper.getMeanValue(this.diastolicIbp, this.systolicIbp);
+        this.initFormValues();
+        this.initFormParameters();
+        this.onValueChanges();
+
     }
 }

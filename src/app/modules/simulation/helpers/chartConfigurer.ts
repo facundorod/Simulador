@@ -85,7 +85,7 @@ export function commonOptions(
             },
             show: toolbarEnabled,
             max: maxY,
-            min: minY <= 0 ? minY : 0,
+            min: 0,
         },
         dataLabels: {
             enabled: false,
@@ -142,14 +142,7 @@ export class ChartConfigurer {
             chart: {
                 id: "curves",
                 animations: {
-                    enabled: true,
-                    easing: "linear",
-                    animateGradually: {
-                        enabled: true,
-                    },
-                    dynamicAnimation: {
-                        enabled: true,
-                    },
+                    enabled: false
                 },
                 redrawOnParentResize: true,
                 redrawOnWindowResize: true,
@@ -162,6 +155,7 @@ export class ChartConfigurer {
                 toolbar: {
                     show: this.chartOptions.toolbar,
                 },
+
             },
             fill: {
                 type: "solid",
@@ -172,7 +166,7 @@ export class ChartConfigurer {
                 },
                 show: false,
                 max: this.chartOptions.maxY,
-                min: this.chartOptions.minY <= 0 ? this.chartOptions.minY : 0,
+                min: 0,
             },
             dataLabels: {
                 enabled: false,

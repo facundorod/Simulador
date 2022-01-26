@@ -150,12 +150,12 @@
                     <div class="row" *ngIf="curve?.curveConfiguration.label == 'IBP'">
                         <div class="col-sm-4">
                             <label class="form-label">Dystolic Pressure</label>
-                            <div class="row ml-3" *ngIf="currentState?.action !== 'stop'">
+                            <div class="row" *ngIf="currentState?.action !== 'stop'">
                                 <input type="range" class="form-range form-range-box" min="0" max="{{systolicIbp - 1}}"
                                     step="1" formControlName="ibpDiastolic" value={{diastolicIbp}}>
                                 <span class="rate-value-box">{{diastolicIbp}}</span>
                             </div>
-                            <div class="row ml-3" *ngIf="currentState?.action === 'stop'">
+                            <div class="row" *ngIf="currentState?.action === 'stop'">
                                 <input type="range" class="form-range form-range-box" min="0" max="{{systolicIbp - 1}}"
                                     step="1" value=0 disabled>
                                 <span class="rate-value-box">0</span>
@@ -163,14 +163,29 @@
                         </div>
                         <div class="col-sm-4">
                             <label class="form-label">Systolic Pressure</label>
-                            <div class="row ml-3" *ngIf="currentState?.action !== 'stop'">
+                            <div class="row" *ngIf="currentState?.action !== 'stop'">
                                 <input type="range" class="form-range form-range-box" min="0" max="250" step="1"
                                     formControlName="ibpSystolic">
                                 <span class=" rate-value-box">{{systolicIbp}}</span>
                             </div>
-                            <div class="row ml-3" *ngIf="currentState?.action === 'stop'">
+                            <div class="row" *ngIf="currentState?.action === 'stop'">
                                 <input type="range" class="form-range form-range-box" min="0" max="250" step="1"
                                     disabled value=0>
+                                <span class="rate-value-box">0</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row" formArrayName="valueToShift">
+                        <div class="col-sm-4" [formGroupName]="i">
+                            <label class="form-label">Shift Curve</label>
+                            <div class="row" *ngIf="currentState?.action !== 'stop'">
+                                <input type="range" class="form-range form-range-box" min="0" max="4" step="1"
+                                    formControlName="value" value={{i}}>
+                                <span class="rate-value-box">{{shiftValues[i]}}</span>
+                            </div>
+                            <div class="row" *ngIf="currentState?.action === 'stop'">
+                                <input type="range" class="form-range form-range-box" min="0" max="4" step="1" value=0
+                                    disabled>
                                 <span class="rate-value-box">0</span>
                             </div>
                         </div>
@@ -180,7 +195,7 @@
 
             <div class="col-md-5 curves-configuration mini-monitor">
                 <app-mini-monitor [curves]="curve" [rate]="getRate(i)" [action]="this.currentState?.action"
-                    [breathCurve]="breathCurve(i)">
+                    [updatedState]="updatedState" [breathCurve]="breathCurve(i)" #miniMonitor>
                 </app-mini-monitor>
             </div>
         </ng-template>
@@ -213,9 +228,13 @@
                 src="https://img.icons8.com/external-kiranshastry-lineal-color-kiranshastry/40/000000/external-volume-multimedia-kiranshastry-lineal-color-kiranshastry.png" />
             &nbsp; Mute alarms
         </button>
-        <button class="btn"> <img
+        <button class="btn" (click)="resetSimulation()">
+            <img src="https://img.icons8.com/fluency/40/000000/recurring-appointment.png" />
+            &nbsp; Reset Simulation
+        </button>
+        <!-- <button class="btn"> <img
                 src="https://img.icons8.com/external-kiranshastry-lineal-color-kiranshastry/40/000000/external-settings-interface-kiranshastry-lineal-color-kiranshastry.png" />
-            &nbsp; Monitor settings</button>
+            &nbsp; Monitor settings</button> -->
         <a [routerLink]="['/monitor']" target="_blank">
             <img
                 src="https://img.icons8.com/external-icongeek26-flat-icongeek26/40/000000/external-ecg-pregnancy-amp-maternity-icongeek26-flat-icongeek26.png" />

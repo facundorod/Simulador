@@ -48,8 +48,6 @@ export class MonitorComponent
     private firstSimulationBreath: boolean;
     private currentIndex: number = 0;
     private parameterInfo: ParameterInfoI;
-    // Max values for each curve. This value contains the last element (in seconds) for
-    // the curve on the interval [0-100%]
     public curvesAndParams: any[] = [];
     public chartsOptions: Partial<ChartOptions>[];
     private curvesHelper: CurvesHelper = new CurvesHelper();
@@ -63,7 +61,6 @@ export class MonitorComponent
     public tooltipPause: ApexTooltip = {
         enabled: true,
     };
-    private noDataset: boolean = false;
     constructor(private monitorService: MonitorService) {
         super();
         this.initVariables();
@@ -143,36 +140,22 @@ export class MonitorComponent
     }
 
     private updateCurves(simulationState: StatesI): void {
-        this.noDataset = false;
         this.currentState = simulationState;
         this.animalSpecie = simulationState.animalSpecie;
-        this.initCharts(simulationState.newScenario);
+        this.initCharts();
         // If there were changes in the state then clear the previous timer
         clearInterval(this.simulationTimer);
         if (simulationState.action != "pause") this.simulateCurves();
         // Show / Hide toolbar for all curves
-        if (!this.noDataset) this.showToolbar();
+        this.showToolbar();
     }
 
-    private initCharts(changeCurves: boolean = false): void {
+    private initCharts(): void {
         let initCharts: boolean = this.chartsOptions?.length == 0;
-        let emptyDataset = 0;
 
-        if (changeCurves) {
-            this.chartsOptions = [];
-            this.firstSimulationHeart = true;
-            this.firstSimulationBreath = true;
-            this.chartsOptions = [];
-            this.breathTimer = 0.0;
-            this.heartTimer = 0.0;
-            clearInterval(this.simulationTimer);
-        }
         this.currentState.curves.forEach((curve: CurvesI, index: number) => {
             const enableAlert: boolean | undefined = this.enableAlerts[index];
-            if (curve.curveValues.length == 0) emptyDataset += 1;
-            if (initCharts || changeCurves) {
-                this.createDynamicChart(curve);
-            }
+            if (initCharts) this.createDynamicChart(curve);
             if (enableAlert == undefined) {
                 const alert: boolean = this.enableAlert(
                     curve.curveConfiguration
@@ -185,12 +168,24 @@ export class MonitorComponent
             this.enableSoundAlarm =
                 this.enableAlerts.includes(true) &&
                 !this.currentState.muteAlarms && this.currentState.action !== 'stop';
+            this.updateMaxAndMin(curve, index);
         });
+    }
 
-        if (emptyDataset == this.currentState.curves.length) {
-            this.noDataset = true;
-            this.initVariables();
+
+    private updateMaxAndMin(curve: CurvesI, index: number): void {
+        const currentChart: ChartComponent | any = this.charts.toArray()[index];
+        if (currentChart) {
+            this.currentIndex = 0;
+            const maxY: number =
+                this.curvesHelper.getMaxY(curve.curveValues);
+            currentChart.yaxis.max = curve.curveConfiguration.label.toUpperCase() == "CO2" ||
+                curve.curveConfiguration.label.toUpperCase() == "ETCO2"
+                ? maxY * 2
+                : maxY + 1;
+            this.charts.toArray()[index] = currentChart;
         }
+
     }
 
     /**
@@ -213,7 +208,7 @@ export class MonitorComponent
                     curve.curveConfiguration.label.toUpperCase() == "CO2" ||
                         curve.curveConfiguration.label.toUpperCase() == "ETCO2"
                         ? maxY * 2
-                        : maxY,
+                        : maxY + 1,
                 toolbar: false,
             });
             let type: ChartType = null;
@@ -241,7 +236,7 @@ export class MonitorComponent
      * Simulate all curves
      */
     private simulateCurves() {
-        if (this.currentState && !this.noDataset) {
+        if (this.currentState) {
             this.simulationTimer = setInterval(() => {
                 // if the currentIndex is the last element, then the currentIndex = 0.
                 this.updateHeartTimer();
@@ -317,11 +312,9 @@ export class MonitorComponent
         if (currentDataset) {
             let isBreathCurve: boolean = this.isBreathCurve(index);
             if (this.currentState.action == "stop") {
-                const chart: any = this.charts.toArray()[index];
-                const maxY: number = chart.yaxis.max;
                 currentDataset[0].data.push([
                     isBreathCurve ? this.breathTimer : this.heartTimer,
-                    maxY / 2,
+                    0,
                 ]);
             } else
                 currentDataset[0].data.push([
@@ -342,13 +335,9 @@ export class MonitorComponent
         let isBreathCurve: boolean = this.isBreathCurve(index);
         let curveValuesSimulation = currentDataset[1].data;
         if (this.currentState.action == "stop") {
-            const chart: any = this.charts.toArray()[index];
-            const minY: number = chart.yaxis.min;
-            const maxY: number = chart.yaxis.max;
-
             curveValuesSimulation.push([
                 isBreathCurve ? this.breathTimer : this.heartTimer,
-                (maxY + minY) / 2,
+                0,
             ]);
         } else {
             const originalDataset: [number, number][] =
@@ -439,7 +428,6 @@ export class MonitorComponent
     private updateChart(
         chartDataset: ApexAxisChartSeries,
         index: number,
-        animate: boolean = true
     ): void {
         const chart: ChartComponent = this.charts.toArray()[index];
         if (chart) chart.updateSeries(chartDataset, false);
@@ -536,7 +524,7 @@ export class MonitorComponent
                         currentDataset[1].data;
                     currentDataset[0].data = auxDataset;
                     currentDataset[1].data = [];
-                    this.updateChart(currentDataset, index, false);
+                    this.updateChart(currentDataset, index);
                 }
             }
         }
@@ -591,7 +579,7 @@ export class MonitorComponent
                     this.currentState.action == "pause",
                     currentOptions.xaxis.max,
                     currentOptions.xaxis.min,
-                    (curveConfiguration.label.toUpperCase() == "IBP") ? 250 : currentOptions.yaxis.max,
+                    currentOptions.yaxis.max,
                     currentOptions.yaxis.min,
                     this.currentState.action !== "stop" &&
                         (curveConfiguration.label.toUpperCase() == "ETCO2" ||
@@ -607,10 +595,6 @@ export class MonitorComponent
 
     public calculatePlayRate(): number {
         return this.parameterInfo.heartRate / 1000;
-    }
-
-    public existDataset(): boolean {
-        return !this.noDataset;
     }
 
     public showMinAndMax(curve: CurvesI): boolean {
