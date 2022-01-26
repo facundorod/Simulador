@@ -174,28 +174,16 @@ export class MonitorComponent
 
 
     private updateMaxAndMin(curve: CurvesI, index: number): void {
-        const currentChart: ChartComponent = this.charts.toArray()[index];
+        const currentChart: ChartComponent | any = this.charts.toArray()[index];
         if (currentChart) {
             this.currentIndex = 0;
             const maxY: number =
                 this.curvesHelper.getMaxY(curve.curveValues);
-            const minY: number = 0;
-            const options: Partial<ChartOptions> = commonOptions(
-                this.currentState.action == "pause",
-                currentChart.xaxis.max,
-                currentChart.xaxis.min,
-                maxY,
-                minY,
-                this.currentState.action !== "stop" &&
-                    (curve.curveConfiguration.label.toUpperCase() == "ETCO2" ||
-                        curve.curveConfiguration.label.toUpperCase() == "CO2")
-                    ? "area"
-                    : currentChart.chart.type
-            );
-            console.log("OPTIONS", options);
-            currentChart.updateOptions(options);
-            currentChart.updateSeries(currentChart.series, false);
-
+            currentChart.yaxis.max = curve.curveConfiguration.label.toUpperCase() == "CO2" ||
+                curve.curveConfiguration.label.toUpperCase() == "ETCO2"
+                ? maxY * 2
+                : maxY + 1;
+            this.charts.toArray()[index] = currentChart;
         }
 
     }
@@ -220,7 +208,7 @@ export class MonitorComponent
                     curve.curveConfiguration.label.toUpperCase() == "CO2" ||
                         curve.curveConfiguration.label.toUpperCase() == "ETCO2"
                         ? maxY * 2
-                        : maxY,
+                        : maxY + 1,
                 toolbar: false,
             });
             let type: ChartType = null;
@@ -324,11 +312,9 @@ export class MonitorComponent
         if (currentDataset) {
             let isBreathCurve: boolean = this.isBreathCurve(index);
             if (this.currentState.action == "stop") {
-                const chart: any = this.charts.toArray()[index];
-                const maxY: number = chart.yaxis.max;
                 currentDataset[0].data.push([
                     isBreathCurve ? this.breathTimer : this.heartTimer,
-                    maxY / 2,
+                    0,
                 ]);
             } else
                 currentDataset[0].data.push([
@@ -349,13 +335,9 @@ export class MonitorComponent
         let isBreathCurve: boolean = this.isBreathCurve(index);
         let curveValuesSimulation = currentDataset[1].data;
         if (this.currentState.action == "stop") {
-            const chart: any = this.charts.toArray()[index];
-            const minY: number = chart.yaxis.min;
-            const maxY: number = chart.yaxis.max;
-
             curveValuesSimulation.push([
                 isBreathCurve ? this.breathTimer : this.heartTimer,
-                (maxY + minY) / 2,
+                0,
             ]);
         } else {
             const originalDataset: [number, number][] =

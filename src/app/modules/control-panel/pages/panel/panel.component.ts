@@ -264,7 +264,6 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
                                 if (newCurve)
                                     this.currentState.curves[index].curveValues = newCurve;
                                 const miniMonitor: MiniMonitorComponent = this.miniMonitors.toArray()[index];
-                                console.log("MINIMN", this.miniMonitors.toArray());
                                 miniMonitor.changeMaxAndMin(this.currentState.curves[index].curveValues);
                             },
                                 (error: Error) => {
@@ -633,6 +632,7 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
 
     public resetSimulation(): void {
         this.currentState.curves = JSON.parse(JSON.stringify(this.originalCurves));
+        this.currentState.action = 'stop';
         this.systolicIbp = Math.round(this.getSystolicPressure(this.currentState.curves[2].curveValues).value);
         this.diastolicIbp = Math.round(this.currentState.curves[2].curveValues[0][1]);
         this.meanIBP = this.curvesHelper.getMeanValue(this.diastolicIbp, this.systolicIbp);

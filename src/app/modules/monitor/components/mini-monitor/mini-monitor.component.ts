@@ -58,7 +58,7 @@ export class MiniMonitorComponent implements OnInit, OnDestroy {
             this.action == "pause",
             this.chart.xaxis.max,
             this.chart.xaxis.min,
-            maxY,
+            maxY + 1,
             minY,
             this.action !== "stop" &&
                 (this.curves.curveConfiguration.label.toUpperCase() == "ETCO2" ||
@@ -78,15 +78,14 @@ export class MiniMonitorComponent implements OnInit, OnDestroy {
         if (this.curves.curveValues.length > 0) {
             const maxY: number =
                 this.curvesHelper.getMaxY(this.curves.curveValues);
-            const minY: number =
-                this.curvesHelper.getMinY(this.curves.curveValues);
+            const minY: number = 0;
             const chart: ChartConfigurer = new ChartConfigurer({
                 colorLine: this.curves.curveConfiguration.colorLine,
                 height: 100,
                 minX: 0,
                 maxX: 3,
-                minY: minY < 0 ? -1 : 0,
-                maxY: maxY,
+                minY,
+                maxY: maxY + 1,
                 toolbar: false,
             });
             let type: ChartType = null;
@@ -194,7 +193,7 @@ export class MiniMonitorComponent implements OnInit, OnDestroy {
             if (this.action === "stop") {
                 const minY: number | any = this.chart.yaxis.min;
                 const maxY: number | any = this.chart.yaxis.max;
-                currentDataset[0].data.push([this.timer, (minY + maxY) / 2]);
+                currentDataset[0].data.push([this.timer, 0]);
             } else
                 currentDataset[0].data.push([this.timer, this.curves.curveValues[this.currentIndex][1]]);
 
@@ -212,7 +211,7 @@ export class MiniMonitorComponent implements OnInit, OnDestroy {
         if (this.action === "stop") {
             const minY: number | any = this.chart.yaxis.min;
             const maxY: number | any = this.chart.yaxis.max;
-            curveValuesSimulation.push([this.timer, (minY + maxY) / 2]);
+            curveValuesSimulation.push([this.timer, 0]);
         } else {
             curveValuesSimulation.push([this.timer, this.curves.curveValues[this.currentIndex][1]]);
         }

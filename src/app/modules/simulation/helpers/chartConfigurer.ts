@@ -85,7 +85,7 @@ export function commonOptions(
             },
             show: toolbarEnabled,
             max: maxY,
-            min: minY <= 0 ? minY : 0,
+            min: 0,
         },
         dataLabels: {
             enabled: false,
@@ -166,7 +166,7 @@ export class ChartConfigurer {
                 },
                 show: false,
                 max: this.chartOptions.maxY,
-                min: this.chartOptions.minY <= 0 ? this.chartOptions.minY : 0,
+                min: 0,
             },
             dataLabels: {
                 enabled: false,
