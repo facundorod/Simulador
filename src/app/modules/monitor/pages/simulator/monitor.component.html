@@ -52,7 +52,7 @@
 
     </div>
 
-    <div class="row" *ngIf="existDataset() else noDataset">
+    <div class="row">
         <app-audio *ngIf="currentState?.action !== 'stop'" [play]="true" [src]="'/assets/sounds/monitor.mp3'"
             [playRate]=calculatePlayRate()></app-audio>
         <app-audio [play]="enableSoundAlarm" [src]="'/assets/sounds/alarmLimit.mp3'" [playRate]=1>
@@ -177,13 +177,5 @@
         <div class="ml-4">
             <h3 class="text-center">Waiting for simulation</h3>
         </div>
-    </div>
-</ng-template>
-
-
-<ng-template #noDataset class="mt-4 no-simulation">
-
-    <div class="container row no-simulation">
-        <p>NO SIMULATION </p>
     </div>
 </ng-template>

@@ -8,23 +8,17 @@ import {
     ViewChild,
 } from "@angular/core";
 import { ApexAxisChartSeries, ChartComponent, ChartType } from "ng-apexcharts";
-import {
-    ChartConfigurer,
-    ChartOptions,
-} from "@app/modules/simulation/helpers/chartConfigurer";
+import { ChartConfigurer, ChartOptions, commonOptions } from "@app/modules/simulation/helpers/chartConfigurer";
 import { CurvesI } from "@app/shared/models/curvesI";
 import { Monitor } from "@app/shared/models/monitor";
-import {
-    ClosestPoint,
-    CurvesHelper,
-} from "@app/modules/simulation/helpers/curvesHelper";
+import { CurvesHelper } from "@app/modules/simulation/helpers/curvesHelper";
 
 @Component({
     selector: "app-mini-monitor",
     templateUrl: "./mini-monitor.component.html",
     styleUrls: ["./mini-monitor.component.css"],
 })
-export class MiniMonitorComponent implements OnInit, OnDestroy, OnChanges {
+export class MiniMonitorComponent implements OnInit, OnDestroy {
     @ViewChild("chart") chartComponent: ChartComponent;
     @Input() curves: CurvesI;
     @Input() breathCurve: boolean = false;
@@ -42,11 +36,6 @@ export class MiniMonitorComponent implements OnInit, OnDestroy, OnChanges {
 
     constructor() { }
 
-    ngOnChanges(changes: SimpleChanges): void {
-        if (changes.updatedState) {
-            this.createDynamicChart();
-        }
-    }
 
 
     ngOnInit(): void {
@@ -54,9 +43,32 @@ export class MiniMonitorComponent implements OnInit, OnDestroy, OnChanges {
         this.simulateCurve();
     }
 
-
     ngOnDestroy() {
         clearInterval(this.simulationTimer);
+    }
+
+    public changeMaxAndMin(curves: [number, number][]): void {
+        this.curves.curveValues = curves;
+        clearInterval(this.simulationTimer);
+        this.currentIndex = 0;
+        const maxY: number =
+            this.curvesHelper.getMaxY(this.curves.curveValues);
+        const minY: number = 0;
+        const options: Partial<ChartOptions> = commonOptions(
+            this.action == "pause",
+            this.chart.xaxis.max,
+            this.chart.xaxis.min,
+            maxY,
+            minY,
+            this.action !== "stop" &&
+                (this.curves.curveConfiguration.label.toUpperCase() == "ETCO2" ||
+                    this.curves.curveConfiguration.label.toUpperCase() == "CO2")
+                ? "area"
+                : this.chart.chart.type
+        );
+        this.chartComponent.updateOptions(options);
+        this.chartComponent.resetSeries();
+        this.simulateCurve();
     }
 
     /**
@@ -73,7 +85,7 @@ export class MiniMonitorComponent implements OnInit, OnDestroy, OnChanges {
                 height: 100,
                 minX: 0,
                 maxX: 3,
-                minY: minY >= 0 ? -1 : minY,
+                minY: minY < 0 ? -1 : 0,
                 maxY: maxY,
                 toolbar: false,
             });
@@ -85,7 +97,6 @@ export class MiniMonitorComponent implements OnInit, OnDestroy, OnChanges {
                 type = "area";
 
             chart.setChart([], type);
-
             this.chart = chart.getChart();
         }
     }
@@ -112,7 +123,6 @@ export class MiniMonitorComponent implements OnInit, OnDestroy, OnChanges {
     public getChart(): Partial<ChartOptions> {
         return this.chart;
     }
-
 
 
     private updateTimer(): void {
@@ -165,6 +175,8 @@ export class MiniMonitorComponent implements OnInit, OnDestroy, OnChanges {
         if (chart) chart.updateSeries(chartDataset, false);
     }
 
+
+
     private initiateSimulation(): void {
         if (this.firstSimulation) {
             this.updateDataset();
@@ -208,8 +220,6 @@ export class MiniMonitorComponent implements OnInit, OnDestroy, OnChanges {
         currentDataset[0].data = curveValues;
         currentDataset[1].data = curveValuesSimulation;
     }
-
-
 
 
     /**

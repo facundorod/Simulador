@@ -1,6 +1,6 @@
 import { SimulationService } from "./../../../simulation/services/simulation.service";
 import { ToastrService } from "ngx-toastr";
-import { Component, OnDestroy, OnInit } from "@angular/core";
+import { Component, OnDestroy, OnInit, QueryList, ViewChildren } from "@angular/core";
 
 // Service
 import { AnimalSpeciesService } from "./../../services/animalSpecies.service";
@@ -18,6 +18,7 @@ import { StatesI } from "@app/shared/models/stateI";
 import { ParameterInfoI } from "@app/shared/models/parameterInfoI";
 import { ScenarioParamsI } from "@app/shared/models/scenarioParamsI";
 import { distinctUntilChanged } from "rxjs/operators";
+import { MiniMonitorComponent } from "@app/modules/monitor/components/mini-monitor/mini-monitor.component";
 
 @Component({
     selector: "app-panel",
@@ -26,7 +27,7 @@ import { distinctUntilChanged } from "rxjs/operators";
 })
 export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
     private activeScenario: ScenarioParamsI; // Scenario active for simulation
-
+    @ViewChildren("miniMonitor") miniMonitors: QueryList<MiniMonitorComponent>;
     public scenariosSimulation: ScenarioParamsI[] = [];
     public animalSpecies: AnimalSpeciesI[] = []; // Animal Species to populate the dropdown
     public animalSpecie: any = {}; // Animal Specie from simulation
@@ -141,6 +142,7 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
         this.breathRate = 0;
         this.temperature = 0;
         this.spo2 = 0;
+        this.shiftValues = [0, 0, 0, 0]
         this.fromGroupParameters.setValue({
             heartRate: 0,
             breathRate: 0,
@@ -261,7 +263,9 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
                             .subscribe((newCurve: [number, number][]) => {
                                 if (newCurve)
                                     this.currentState.curves[index].curveValues = newCurve;
-                                this.updatedState = true;
+                                const miniMonitor: MiniMonitorComponent = this.miniMonitors.toArray()[index];
+                                console.log("MINIMN", this.miniMonitors.toArray());
+                                miniMonitor.changeMaxAndMin(this.currentState.curves[index].curveValues);
                             },
                                 (error: Error) => {
                                     console.error(error);
