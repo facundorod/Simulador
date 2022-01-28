@@ -56,4 +56,25 @@ export class CurvesService {
 
         return subject.asObservable();
     }
+
+    public normalizeCurve(curve: [number, number][]): Observable<[number, number][]> {
+        const subject = new Subject<[number, number][]>();
+
+        let endpoint = environment.api.curves + 'normalize';
+
+
+        this.api.httpPost(endpoint, { curve }).subscribe(
+            (curves: [number, number][]) => {
+                subject.next(curves);
+            },
+            (error: Error) => {
+                subject.error(error);
+            },
+            () => {
+                subject.complete();
+            }
+        );
+
+        return subject.asObservable();
+    }
 }

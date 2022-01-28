@@ -203,7 +203,7 @@ export class MonitorComponent
                 minX: 0,
                 maxX: this.monitorConfiguration.getMonitorConfiguration()
                     .maxSamples,
-                minY: minY,
+                minY,
                 maxY:
                     curve.curveConfiguration.label.toUpperCase() == "CO2" ||
                         curve.curveConfiguration.label.toUpperCase() == "ETCO2"

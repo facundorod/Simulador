@@ -19,6 +19,8 @@ import { ParameterInfoI } from "@app/shared/models/parameterInfoI";
 import { ScenarioParamsI } from "@app/shared/models/scenarioParamsI";
 import { distinctUntilChanged } from "rxjs/operators";
 import { MiniMonitorComponent } from "@app/modules/monitor/components/mini-monitor/mini-monitor.component";
+import { CurveValues } from "@app/shared/models/curveValues";
+import { CurveValuesI } from "@app/shared/models/curveValuesI";
 
 @Component({
     selector: "app-panel",
@@ -38,6 +40,7 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
     private originalCurves: CurvesI[] = [];
     // Paramaters Physiological without curves
     public fromGroupParameters: FormGroup;
+    private fileContent: CurveValuesI[] = [];
     public heartRate: number = 0;
     public breathRate: number = 0;
     public temperature: number = 0;
@@ -114,6 +117,63 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
 
             if (this.simulation.animalSpecie)
                 this.animalSpecie = this.simulation.animalSpecie;
+        }
+    }
+
+    public onFileChange(event: any, index: number): void {
+        if (event.target.files && event.target.files.length) {
+            const [file] = event.target.files;
+            let reader = new FileReader();
+            reader.readAsText(file);
+            reader.onload = () => {
+                let csvData = reader.result;
+                let csvRecordsArray = (<string>csvData).split(/\r\n|\n/);
+                const records: CurveValues[] = this.getCurvesFromCSV(csvRecordsArray);
+                const auxRecords: [number, number][] = records.map((value: CurveValues) => {
+                    return [value.t, value.value]
+                });
+                this.curvesService.normalizeCurve(auxRecords).subscribe((value) => {
+                    if (value) {
+                        this.currentState.curves[index].curveValues = value;
+                        this.originalCurves[index].curveValues = value;
+                        const miniMonitor: MiniMonitorComponent = this.miniMonitors.toArray()[index];
+                        miniMonitor.changeMaxAndMin(this.currentState.curves[index].curveValues);
+                    }
+
+                })
+            };
+            reader.onerror = function () {
+                console.log("error is occured while reading file!");
+            };
+        }
+    }
+
+    public getCurvesFromCSV(csvRecordsArray: any) {
+        let csvArr = [];
+        try {
+            for (let i = 1; i < csvRecordsArray.length; i++) {
+                let currentRecord = (<string>csvRecordsArray[i]).split(";");
+                if (currentRecord[0] && currentRecord[1]) {
+                    currentRecord[0] = currentRecord[0].replace(",", ".");
+                    currentRecord[1] = currentRecord[1].replace(",", ".");
+                    let csvRecord: CurveValues = new CurveValues();
+                    csvRecord.t = Number(currentRecord[0]);
+                    csvRecord.value = Number(currentRecord[1]);
+                    if (
+                        !csvArr.some((value: CurveValues) => {
+                            return value.t === csvRecord.t;
+                        }) &&
+                        (csvRecord.t != null || csvRecord.value != null)
+                    ) {
+                        csvArr.push(csvRecord);
+                    }
+                }
+            }
+
+            return csvArr;
+        } catch (error) {
+            console.error(error);
+            throw error;
         }
     }
 
