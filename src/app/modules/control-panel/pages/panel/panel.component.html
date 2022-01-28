@@ -141,12 +141,27 @@
 <div class="container" *ngIf="currentState?.curves.length > 0">
     <div class="curves-configuration-text">
         <h3 class="text-curves text-center">Curves Configuration</h3>
+
     </div>
-    <div class="row" *ngFor="let curve of currentState.curves; let i=index">
-        <ng-template [ngIf]="curve.curveValues.length > 0">
-            <div class="col-md-6 param-configuration">
-                <p> {{ curve?.curveConfiguration.label }}</p>
-                <form [formGroup]="fromGroupParameters">
+    <form [formGroup]="fromGroupParameters">
+
+        <div class="row" *ngFor="let curve of currentState.curves; let i=index">
+            <ng-template [ngIf]="curve.curveValues.length > 0">
+                <div class="col-md-6 param-configuration">
+                    <div class="row">
+                        <div class="col-6">
+                            <p class="text-curve-label"> {{ curve?.curveConfiguration.label }}</p>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="custom-file-upload">
+                                <input class="form-control curves-dataset-input" id="formFile" type="file" accept=".csv"
+                                    (change)="onFileChange($event, i)">
+                                Add Curves
+                            </label>
+                        </div>
+                    </div>
+
+
                     <div class="row" *ngIf="curve?.curveConfiguration.label == 'IBP'">
                         <div class="col-sm-4">
                             <label class="form-label">Dystolic Pressure</label>
@@ -190,17 +205,18 @@
                             </div>
                         </div>
                     </div>
-                </form>
-            </div>
 
-            <div class="col-md-5 curves-configuration mini-monitor">
-                <app-mini-monitor [curves]="curve" [rate]="getRate(i)" [action]="this.currentState?.action"
-                    [updatedState]="updatedState" [breathCurve]="breathCurve(i)" #miniMonitor>
-                </app-mini-monitor>
-            </div>
-        </ng-template>
+                </div>
 
-    </div>
+                <div class="col-md-5 curves-configuration mini-monitor">
+                    <app-mini-monitor [curves]="curve" [rate]="getRate(i)" [action]="this.currentState?.action"
+                        [updatedState]="updatedState" [breathCurve]="breathCurve(i)" #miniMonitor>
+                    </app-mini-monitor>
+                </div>
+            </ng-template>
+
+        </div>
+    </form>
 
 
 </div>
