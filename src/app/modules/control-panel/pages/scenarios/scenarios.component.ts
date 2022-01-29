@@ -2,7 +2,6 @@ import { Component, Input, OnInit, Output, EventEmitter } from "@angular/core";
 import { BaseComponent } from "@app/shared/components/base.component";
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import { ScenariosModalComponent } from "@app/modules/simulation/modals/scenarios-modal/scenarios-modal.component";
-import { ScenariosCreateComponent } from "../../modals/scenarios-create/scenarios-create.component";
 
 import { Router } from "@angular/router";
 @Component({
@@ -28,7 +27,7 @@ export class ScenariosComponent extends BaseComponent implements OnInit {
             this.router.url === "/panel" ? true : false;
     }
 
-    ngOnInit(): void {}
+    ngOnInit(): void { }
 
     /**
      * Load scenarios from db

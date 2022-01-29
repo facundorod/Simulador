@@ -5,6 +5,8 @@ import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import { ToastrService } from "ngx-toastr";
 import { ScenarioService } from "../../services/scenario.service";
 import { ConfirmModalComponent } from "../../../../shared/modals/confirm/confirm-modal.component";
+import { ScenarioCloneComponent } from "../../modals/scenario-clone/scenario-clone.component";
+import { ScenarioParamsI } from "@app/shared/models/scenarioParamsI";
 
 @Component({
     selector: "app-scenario-params",
@@ -18,7 +20,7 @@ export class ScenarioParamsComponent implements OnInit {
         private router: Router,
         private toast: ToastrService,
         private modal: NgbModal
-    ) {}
+    ) { }
     public scenarios: any;
     private formGroup: FormGroup;
 
@@ -106,6 +108,31 @@ export class ScenarioParamsComponent implements OnInit {
 
     public onEdit(id: number): void {
         this.router.navigateByUrl(`/panel/scenarios/edit/${id}`);
+    }
+
+    public onClone(index: number): void {
+        let clonedScenario: ScenarioParamsI = this.scenarios[index];
+        delete clonedScenario.id_scenario;
+        if (clonedScenario) {
+            const modal = this.modal.open(ScenarioCloneComponent);
+            modal.componentInstance.setName(clonedScenario.name);
+            modal.result.then((result: { name: string }) => {
+                if (result) {
+                    this.loading = true;
+                    clonedScenario.name = result.name;
+                    this.scenarioService.create(clonedScenario).subscribe(() => {
+                        this.toast.toastrConfig.timeOut = 1000;
+                        this.toast.toastrConfig.positionClass =
+                            "toast-bottom-full-width";
+                        this.toast.success("Scenario cloned successfully");
+                        this.loading = false;
+                        this.loadData();
+                    })
+                }
+            }, (error: Error) => {
+                console.error(error);
+            });
+        }
     }
 
     public onDelete(id: number, index: number): void {

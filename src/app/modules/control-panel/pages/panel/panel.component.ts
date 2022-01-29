@@ -34,13 +34,11 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
     public animalSpecies: AnimalSpeciesI[] = []; // Animal Species to populate the dropdown
     public animalSpecie: any = {}; // Animal Specie from simulation
     public simulation: any = {}; // Simulation from localStorage
-    public indexActive: number = 0; // Index for scenario edit Active
     public indexSimulationActive: number = 0; // Index for scenario simulation Active
     public currentState: StatesI; // Curves for scenario and animalSpecie selected
     private originalCurves: CurvesI[] = [];
     // Paramaters Physiological without curves
     public fromGroupParameters: FormGroup;
-    private fileContent: CurveValuesI[] = [];
     public heartRate: number = 0;
     public breathRate: number = 0;
     public temperature: number = 0;
@@ -361,7 +359,7 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
                             this.currentState.muteAlarms = false;
                             this.currentState.newScenario = newScenario;
                             this.onLoadParameters();
-                            this.applyChanges();
+                            // this.applyChanges();
                         } else {
                             this.currentState = null;
                             this.originalCurves = [];
@@ -530,10 +528,8 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
     public getPosScenarios(pos: any): void {
         if (this.indexSimulationActive != pos.indexActive) {
             this.indexSimulationActive = pos.indexActive;
-            this.initFormValues();
             this.onLoadCurves(this.formGroup.value.animalSpecie);
         }
-        this.indexActive = pos.indexEdit;
     }
 
     public onPlaySimulation(): void {
@@ -614,27 +610,32 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
         const curves: CurvesI[] = JSON.parse(JSON.stringify(this.originalCurves));
 
         if (curves && curves.length > 0) {
-            const curveIBP = JSON.parse(JSON.stringify(curves[2].curveValues));
-            const previousSystolic: { index: number, value: number } = this.getSystolicPressure(curveIBP);
-            const adjustmentRate: number = this.calculateAdjustRate(previousSystolic.value, this.systolicIbp);
-            const newMean: { index: number, value: number } = this.getIndexMean(curveIBP, previousSystolic.index);
-            if (previousSystolic.value > this.systolicIbp) {
-                this.adjustSystIBP(curveIBP, adjustmentRate, false, newMean.index);
-            } else this.adjustSystIBP(curveIBP, adjustmentRate, true, newMean.index);
-            curveIBP[previousSystolic.index][1] = this.systolicIbp;
-            curves[2].curveValues = curveIBP;
-            this.currentState.curves[2] = JSON.parse(JSON.stringify(curves[2]));
+            if (curves[2] && curves[2].curveValues) {
+                const curveIBP = JSON.parse(JSON.stringify(curves[2].curveValues));
+                const previousSystolic: { index: number, value: number } = this.getSystolicPressure(curveIBP);
+                const adjustmentRate: number = this.calculateAdjustRate(previousSystolic.value, this.systolicIbp);
+                const newMean: { index: number, value: number } = this.getIndexMean(curveIBP, previousSystolic.index);
+                if (previousSystolic.value > this.systolicIbp) {
+                    this.adjustSystIBP(curveIBP, adjustmentRate, false, newMean.index);
+                } else this.adjustSystIBP(curveIBP, adjustmentRate, true, newMean.index);
+                curveIBP[previousSystolic.index][1] = this.systolicIbp;
+                curves[2].curveValues = curveIBP;
+                this.currentState.curves[2] = JSON.parse(JSON.stringify(curves[2]));
+            }
+
         }
     }
 
     private updateDiastolicIBP(): void {
         const curves: CurvesI[] = JSON.parse(JSON.stringify(this.originalCurves));
         if (curves && curves.length > 0) {
-            const curveIBP = curves[2].curveValues.slice();
-            if (curveIBP) {
-                this.adjustDiastIBP(curveIBP);
-                curves[2].curveValues = curveIBP;
-                this.currentState.curves[2] = curves[2];
+            if (curves[2] && curves[2].curveValues) {
+                const curveIBP = curves[2].curveValues.slice();
+                if (curveIBP) {
+                    this.adjustDiastIBP(curveIBP);
+                    curves[2].curveValues = curveIBP;
+                    this.currentState.curves[2] = curves[2];
+                }
             }
         }
     }
