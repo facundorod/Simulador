@@ -77,7 +77,7 @@ export class MiniMonitorComponent implements OnInit, OnDestroy {
     private createDynamicChart(): void {
         if (this.curves.curveValues.length > 0) {
             const maxY: number =
-                this.curvesHelper.getMaxY(this.curves.curveValues);
+                this.curvesHelper.getMaxY(this.curves.curveValues) + 1;
             const minY: number = 0;
             const chart: ChartConfigurer = new ChartConfigurer({
                 colorLine: this.curves.curveConfiguration.colorLine,
@@ -85,7 +85,7 @@ export class MiniMonitorComponent implements OnInit, OnDestroy {
                 minX: 0,
                 maxX: 3,
                 minY,
-                maxY: maxY + 1,
+                maxY,
                 toolbar: false,
             });
             let type: ChartType = null;

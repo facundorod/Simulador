@@ -39,6 +39,8 @@ export class MonitorComponent
     extends BaseComponent
     implements OnInit, OnDestroy {
     public currentState: StatesI;
+    // New state after the current beat
+    private newCurrentState: StatesI;
     public animalSpecie: AnimalSpeciesI;
     @ViewChildren("chart") charts: QueryList<ChartComponent>;
     public today: Date = new Date();
@@ -49,6 +51,7 @@ export class MonitorComponent
     private currentIndex: number = 0;
     private parameterInfo: ParameterInfoI;
     public curvesAndParams: any[] = [];
+    private changeCurves: boolean = false;
     public chartsOptions: Partial<ChartOptions>[];
     private curvesHelper: CurvesHelper = new CurvesHelper();
     private simulationTimer: NodeJS.Timeout;
@@ -103,6 +106,9 @@ export class MonitorComponent
             (simulationState: StatesI) => {
                 if (simulationState) {
                     this.updateParameterInfo();
+                    if (this.currentIndex == 0)
+                        this.changeCurves = true;
+                    else this.changeCurves = false;
                     this.updateCurves(simulationState);
                 } else {
                     this.initVariables();
@@ -126,6 +132,7 @@ export class MonitorComponent
      */
     private initVariables() {
         this.currentState = null;
+        this.newCurrentState = null;
         this.animalSpecie = null;
         this.enableAlerts = [];
         this.firstSimulationHeart = true;
@@ -140,7 +147,9 @@ export class MonitorComponent
     }
 
     private updateCurves(simulationState: StatesI): void {
-        this.currentState = simulationState;
+        if (this.changeCurves)
+            this.currentState = simulationState;
+        this.newCurrentState = JSON.parse(JSON.stringify(simulationState));
         this.animalSpecie = simulationState.animalSpecie;
         this.initCharts();
         // If there were changes in the state then clear the previous timer
@@ -152,7 +161,6 @@ export class MonitorComponent
 
     private initCharts(): void {
         let initCharts: boolean = this.chartsOptions?.length == 0;
-
         this.currentState.curves.forEach((curve: CurvesI, index: number) => {
             const enableAlert: boolean | undefined = this.enableAlerts[index];
             if (initCharts) this.createDynamicChart(curve);
@@ -168,21 +176,24 @@ export class MonitorComponent
             this.enableSoundAlarm =
                 this.enableAlerts.includes(true) &&
                 !this.currentState.muteAlarms && this.currentState.action !== 'stop';
-            this.updateMaxAndMin(curve, index);
+            this.updateMaxAndMin(index);
+
         });
     }
 
 
-    private updateMaxAndMin(curve: CurvesI, index: number): void {
+    private updateMaxAndMin(index: number): void {
         const currentChart: ChartComponent | any = this.charts.toArray()[index];
+        const curve: CurvesI = this.newCurrentState.curves[index];
         if (currentChart) {
-            this.currentIndex = 0;
+            // this.currentIndex = 0;
             const maxY: number =
                 this.curvesHelper.getMaxY(curve.curveValues);
             currentChart.yaxis.max = curve.curveConfiguration.label.toUpperCase() == "CO2" ||
                 curve.curveConfiguration.label.toUpperCase() == "ETCO2"
                 ? maxY * 2
                 : maxY + 1;
+
             this.charts.toArray()[index] = currentChart;
         }
 
@@ -208,7 +219,7 @@ export class MonitorComponent
                     curve.curveConfiguration.label.toUpperCase() == "CO2" ||
                         curve.curveConfiguration.label.toUpperCase() == "ETCO2"
                         ? maxY * 2
-                        : maxY + 1,
+                        : maxY,
                 toolbar: false,
             });
             let type: ChartType = null;
@@ -242,10 +253,12 @@ export class MonitorComponent
                 this.updateHeartTimer();
                 this.updateBreathTimer();
                 this.updateCurrentIndex();
+
                 this.currentState.curves.forEach(
                     (curve: CurvesI, index: number) => {
-                        if (curve.curveValues.length > 0)
+                        if (curve.curveValues.length > 0) {
                             this.simulateCurve(curve, index);
+                        }
                     }
                 );
                 this.updateCharts();
@@ -290,6 +303,9 @@ export class MonitorComponent
     private updateCurrentIndex(): void {
         if (this.currentIndex >= this.maxSize) {
             this.currentIndex = 0;
+            if (this.newCurrentState) {
+                this.currentState = JSON.parse(JSON.stringify(this.newCurrentState));
+            }
         }
     }
 
