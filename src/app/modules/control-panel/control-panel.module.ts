@@ -1,5 +1,4 @@
 import { SimulationService } from "./../simulation/services/simulation.service";
-import { ScenariosCreateComponent } from "./modals/scenarios-create/scenarios-create.component";
 import { ScenariosComponent } from "./pages/scenarios/scenarios.component";
 import { ScenarioService } from "./services/scenario.service";
 import { PathologiesService } from "./services/pathologies.service";
@@ -35,11 +34,11 @@ import { MonitorModule } from "../monitor/monitor.module";
 import { ParametersComponent } from './pages/parameters/parameters.component';
 import { NewParameterComponent } from './modals/new-parameter/new-parameter.component';
 import { MonitorConfigsComponent } from './modals/monitor-configs/monitor-configs.component';
+import { ScenarioCloneComponent } from './modals/scenario-clone/scenario-clone.component';
 
 @NgModule({
     declarations: [
         PanelComponent,
-        ScenariosCreateComponent,
         AnimalSpeciesListComponent,
         PathologiesComponent,
         MedicationsComponent,
@@ -55,6 +54,7 @@ import { MonitorConfigsComponent } from './modals/monitor-configs/monitor-config
         ParametersComponent,
         NewParameterComponent,
         MonitorConfigsComponent,
+        ScenarioCloneComponent,
     ],
     imports: [
         CommonModule,
@@ -81,4 +81,4 @@ import { MonitorConfigsComponent } from './modals/monitor-configs/monitor-config
         ParametersService,
     ],
 })
-export class ControlPanelModule {}
+export class ControlPanelModule { }
