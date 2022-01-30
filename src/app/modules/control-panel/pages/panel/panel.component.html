@@ -190,21 +190,40 @@
                             </div>
                         </div>
                     </div>
-                    <div class="row" formArrayName="valueToShift">
-                        <div class="col-sm-4" [formGroupName]="i">
-                            <label class="form-label">Shift Curve</label>
-                            <div class="row" *ngIf="currentState?.action !== 'stop'">
-                                <input type="range" class="form-range form-range-box" min="0" max="4" step="1"
-                                    formControlName="value" value={{i}}>
-                                <span class="rate-value-box">{{shiftValues[i]}}</span>
+                    <div class="row">
+
+                        <div class="col-sm-4" formArrayName="valueToShift">
+                            <div [formGroupName]="i">
+                                <label class="form-label">Shift Curve</label>
+                                <div class="row" *ngIf="currentState?.action !== 'stop'">
+                                    <input type="range" class="form-range form-range-box" min="0" max="4" step="0.5"
+                                        formControlName="value" value={{i}}>
+                                    <span class="rate-value-box">{{shiftValues[i]}}</span>
+                                </div>
+                                <div class="row" *ngIf="currentState?.action === 'stop'">
+                                    <input type="range" class="form-range form-range-box" min="0" max="4" step="0.5"
+                                        value=0 disabled>
+                                    <span class="rate-value-box">0</span>
+                                </div>
                             </div>
-                            <div class="row" *ngIf="currentState?.action === 'stop'">
-                                <input type="range" class="form-range form-range-box" min="0" max="4" step="1" value=0
-                                    disabled>
-                                <span class="rate-value-box">0</span>
+                        </div>
+                        <div class="col-sm-4" formArrayName="amplitude">
+                            <div [formGroupName]="i">
+                                <label class="form-label">Amplitude</label>
+                                <div class="row" *ngIf="currentState?.action !== 'stop'">
+                                    <input type="range" class="form-range form-range-box" min="0" max="4" step="0.5"
+                                        formControlName="value" value={{i}}>
+                                    <span class="rate-value-box">{{amplitudeValues[i]}}</span>
+                                </div>
+                                <div class="row" *ngIf="currentState?.action === 'stop'">
+                                    <input type="range" class="form-range form-range-box" min="0" max="4" step="0.5"
+                                        value=0 disabled>
+                                    <span class="rate-value-box">0</span>
+                                </div>
                             </div>
                         </div>
                     </div>
+
 
                 </div>
 
