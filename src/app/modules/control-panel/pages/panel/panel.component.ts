@@ -51,6 +51,7 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
     private meanIBP: number = 0;
     private curvesHelper: CurvesHelper = new CurvesHelper();
     public shiftValues: number[] = [0, 0, 0, 0];
+    public amplitudeValues: number[] = [1, 1, 1, 1];
     constructor(
         private animalSpecieService: AnimalSpeciesService,
         private fb: FormBuilder,
@@ -201,6 +202,7 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
         this.temperature = 0;
         this.spo2 = 0;
         this.shiftValues = [0, 0, 0, 0]
+        this.amplitudeValues = [1, 1, 1, 1];
         this.fromGroupParameters.setValue({
             heartRate: 0,
             breathRate: 0,
@@ -219,6 +221,18 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
             },
             {
                 value: 0
+            }],
+            amplitude: [{
+                value: 1
+            },
+            {
+                value: 1
+            },
+            {
+                value: 1
+            },
+            {
+                value: 1
             }]
         });
     }
@@ -243,6 +257,20 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
                 }),
                 this.fb.group({
                     value: 0
+                })
+            ]),
+            amplitude: this.fb.array([
+                this.fb.group({
+                    value: 1
+                }),
+                this.fb.group({
+                    value: 1
+                }),
+                this.fb.group({
+                    value: 1
+                }),
+                this.fb.group({
+                    value: 1
                 })
             ])
         });
@@ -315,9 +343,36 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
                         this.updatedState = true;
                     } else {
                         this.shiftValues[index] = value.value;
-                        const curveToShift: [number, number][] = this.originalCurves[index].curveValues;
+                        const curveToShift: [number, number][] = this.currentState.curves[index].curveValues;
                         this.curvesService
                             .shiftCurve(curveToShift, value.value)
+                            .subscribe((newCurve: [number, number][]) => {
+                                if (newCurve)
+                                    this.currentState.curves[index].curveValues = newCurve;
+                                const miniMonitor: MiniMonitorComponent = this.miniMonitors.toArray()[index];
+                                miniMonitor.changeMaxAndMin(this.currentState.curves[index].curveValues);
+                            },
+                                (error: Error) => {
+                                    console.error(error);
+                                })
+                    }
+
+                }
+            });
+        })
+
+        this.fromGroupParameters.get('amplitude').valueChanges.pipe(distinctUntilChanged()).subscribe((val) => {
+
+            val.forEach((value: { value: number }, index: number) => {
+                if (value.value != this.amplitudeValues[index]) {
+                    if (value.value === 1) {
+                        this.currentState.curves[index].curveValues = JSON.parse(JSON.stringify(this.originalCurves[index].curveValues))
+                        this.updatedState = true;
+                    } else {
+                        this.amplitudeValues[index] = value.value;
+                        const curveToChange: [number, number][] = this.currentState.curves[index].curveValues;
+                        this.curvesService
+                            .calculateAmplitude(curveToChange, value.value)
                             .subscribe((newCurve: [number, number][]) => {
                                 if (newCurve)
                                     this.currentState.curves[index].curveValues = newCurve;
@@ -436,7 +491,19 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
             },
             {
                 value: 0
-            }]
+            }],
+            amplitude: [{
+                value: 1
+            },
+            {
+                value: 1
+            },
+            {
+                value: 1
+            },
+            {
+                value: 1
+            }],
         })
 
     }

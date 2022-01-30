@@ -58,7 +58,10 @@ export class MiniMonitorComponent implements OnInit, OnDestroy {
             this.action == "pause",
             this.chart.xaxis.max,
             this.chart.xaxis.min,
-            maxY + 1,
+            (this.curves.curveConfiguration.label.toUpperCase() == "ETCO2" ||
+                this.curves.curveConfiguration.label.toUpperCase() == "CO2")
+                ? maxY * 2
+                : maxY,
             minY,
             this.action !== "stop" &&
                 (this.curves.curveConfiguration.label.toUpperCase() == "ETCO2" ||
@@ -77,7 +80,7 @@ export class MiniMonitorComponent implements OnInit, OnDestroy {
     private createDynamicChart(): void {
         if (this.curves.curveValues.length > 0) {
             const maxY: number =
-                this.curvesHelper.getMaxY(this.curves.curveValues) + 1;
+                this.curvesHelper.getMaxY(this.curves.curveValues);
             const minY: number = 0;
             const chart: ChartConfigurer = new ChartConfigurer({
                 colorLine: this.curves.curveConfiguration.colorLine,
@@ -191,8 +194,6 @@ export class MiniMonitorComponent implements OnInit, OnDestroy {
         const currentDataset: any = this.chart?.series.slice();
         if (currentDataset) {
             if (this.action === "stop") {
-                const minY: number | any = this.chart.yaxis.min;
-                const maxY: number | any = this.chart.yaxis.max;
                 currentDataset[0].data.push([this.timer, 0]);
             } else
                 currentDataset[0].data.push([this.timer, this.curves.curveValues[this.currentIndex][1]]);
