@@ -55,8 +55,8 @@ export class CurvesHelper {
     }
 
     public linealInterpolation(x1: number, x2: number, x: number, y1: number, y2: number): number {
-        const auxCalcX: number = (x - x1) / (x2 - x1);
-        const auxCalcY: number = y2 - y1;
+        const auxCalcX: number = (x - x1);
+        const auxCalcY: number = (y2 - y1) / (x2 - x1);
         return ((auxCalcX * auxCalcY) + y1);
     }
 
@@ -117,7 +117,12 @@ export class CurvesHelper {
     public calculateRate(rateValue: number, freq: number): number {
         const period: number = 60 / rateValue;
         if (period)
-            return (freq / 1000) / period;
+            return (freq / 1000) * period;
         return -1;
+    }
+
+    public getMeanValue(diastolicIBP: number, systolicIBP: number): number | null {
+        if (systolicIBP) return Math.round(((2 * diastolicIBP) + systolicIBP) / 3);
+        return null;
     }
 }

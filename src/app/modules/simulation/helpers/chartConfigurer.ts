@@ -37,7 +37,6 @@ export function commonOptions(
     minY: number,
     type?: ChartType
 ): Partial<ChartOptions> {
-    console.log(toolbarEnabled);
     return {
         stroke: {
             curve: "smooth",
@@ -73,15 +72,18 @@ export function commonOptions(
             toolbar: {
                 show: toolbarEnabled,
             },
+            animations: {
+                enabled: false
+            }
         },
         fill: {
             type: "solid",
         },
         yaxis: {
             labels: {
-                show: false,
+                show: toolbarEnabled,
             },
-            show: false,
+            show: toolbarEnabled,
             max: maxY,
             min: 0,
         },
@@ -140,14 +142,7 @@ export class ChartConfigurer {
             chart: {
                 id: "curves",
                 animations: {
-                    enabled: true,
-                    easing: "linear",
-                    animateGradually: {
-                        enabled: true,
-                    },
-                    dynamicAnimation: {
-                        enabled: true,
-                    },
+                    enabled: false
                 },
                 redrawOnParentResize: true,
                 redrawOnWindowResize: true,
@@ -160,6 +155,7 @@ export class ChartConfigurer {
                 toolbar: {
                     show: this.chartOptions.toolbar,
                 },
+
             },
             fill: {
                 type: "solid",
