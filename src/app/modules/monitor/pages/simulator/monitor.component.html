@@ -17,7 +17,7 @@
                 </h4>
 
             </ng-template>
-            <ng-template [ngIf]="currentState?.action === 'pause'">
+            <ng-template [ngIf]="currentState?.action === 'pause' || newCurrentState?.action === 'pause'">
                 <h4 class="text-center"><img src="https://img.icons8.com/fluency/24/000000/pause.png"
                         title="Freeze simulation" class="img-status" />Simulation
                     paused</h4>

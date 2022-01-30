@@ -360,6 +360,33 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
                 }
             });
         })
+
+        this.fromGroupParameters.get('amplitude').valueChanges.pipe(distinctUntilChanged()).subscribe((val) => {
+
+            val.forEach((value: { value: number }, index: number) => {
+                if (value.value != this.amplitudeValues[index]) {
+                    if (value.value === 1) {
+                        this.currentState.curves[index].curveValues = JSON.parse(JSON.stringify(this.originalCurves[index].curveValues))
+                        this.updatedState = true;
+                    } else {
+                        this.amplitudeValues[index] = value.value;
+                        const curveToChange: [number, number][] = this.currentState.curves[index].curveValues;
+                        this.curvesService
+                            .calculateAmplitude(curveToChange, value.value)
+                            .subscribe((newCurve: [number, number][]) => {
+                                if (newCurve)
+                                    this.currentState.curves[index].curveValues = newCurve;
+                                const miniMonitor: MiniMonitorComponent = this.miniMonitors.toArray()[index];
+                                miniMonitor.changeMaxAndMin(this.currentState.curves[index].curveValues);
+                            },
+                                (error: Error) => {
+                                    console.error(error);
+                                })
+                    }
+
+                }
+            });
+        })
     }
 
     /**

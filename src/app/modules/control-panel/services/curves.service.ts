@@ -77,4 +77,25 @@ export class CurvesService {
 
         return subject.asObservable();
     }
+
+    public calculateAmplitude(curve: [number, number][], valueToExtend: number): Observable<[number, number][]> {
+        const subject = new Subject<[number, number][]>();
+
+        let endpoint = environment.api.curves + 'amplitude';
+
+
+        this.api.httpPost(endpoint, { curve, valueToExtend }).subscribe(
+            (curves: [number, number][]) => {
+                subject.next(curves);
+            },
+            (error: Error) => {
+                subject.error(error);
+            },
+            () => {
+                subject.complete();
+            }
+        );
+
+        return subject.asObservable();
+    }
 }

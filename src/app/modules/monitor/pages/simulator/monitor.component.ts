@@ -40,7 +40,7 @@ export class MonitorComponent
     implements OnInit, OnDestroy {
     public currentState: StatesI;
     // New state after the current beat
-    private newCurrentState: StatesI;
+    public newCurrentState: StatesI;
     public animalSpecie: AnimalSpeciesI;
     @ViewChildren("chart") charts: QueryList<ChartComponent>;
     public today: Date = new Date();
@@ -192,7 +192,7 @@ export class MonitorComponent
             currentChart.yaxis.max = curve.curveConfiguration.label.toUpperCase() == "CO2" ||
                 curve.curveConfiguration.label.toUpperCase() == "ETCO2"
                 ? maxY * 2
-                : maxY + 1;
+                : maxY;
 
             this.charts.toArray()[index] = currentChart;
         }
@@ -205,9 +205,8 @@ export class MonitorComponent
     private createDynamicChart(curve: CurvesI): void {
         if (curve.curveValues.length > 0) {
             const maxY: number =
-                this.curvesHelper.getMaxY(curve.curveValues) + 1;
-            const minY: number =
-                this.curvesHelper.getMinY(curve.curveValues) - 1;
+                this.curvesHelper.getMaxY(curve.curveValues);
+            const minY: number = 0;
             const chart: ChartConfigurer = new ChartConfigurer({
                 colorLine: curve.curveConfiguration.colorLine,
                 height: 143,
