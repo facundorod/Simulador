@@ -8,16 +8,10 @@ import {
     ViewChild,
 } from "@angular/core";
 import { ApexAxisChartSeries, ChartComponent, ChartType } from "ng-apexcharts";
-import {
-    ChartConfigurer,
-    ChartOptions,
-} from "@app/modules/simulation/helpers/chartConfigurer";
+import { ChartConfigurer, ChartOptions, commonOptions } from "@app/modules/simulation/helpers/chartConfigurer";
 import { CurvesI } from "@app/shared/models/curvesI";
 import { Monitor } from "@app/shared/models/monitor";
-import {
-    ClosestPoint,
-    CurvesHelper,
-} from "@app/modules/simulation/helpers/curvesHelper";
+import { CurvesHelper } from "@app/modules/simulation/helpers/curvesHelper";
 
 @Component({
     selector: "app-mini-monitor",
@@ -30,6 +24,7 @@ export class MiniMonitorComponent implements OnInit, OnDestroy {
     @Input() breathCurve: boolean = false;
     @Input() action: string = "stop";
     @Input() rate: number;
+    @Input() updatedState: boolean = false;
     private simulationTimer: NodeJS.Timeout;
     private timer: number = 0.0;
     private currentIndex: number = 0;
@@ -39,7 +34,8 @@ export class MiniMonitorComponent implements OnInit, OnDestroy {
     public monitorConfiguration: Monitor = new Monitor();
     private firstSimulation: boolean = true;
 
-    constructor() {}
+    constructor() { }
+
 
 
     ngOnInit(): void {
@@ -47,10 +43,36 @@ export class MiniMonitorComponent implements OnInit, OnDestroy {
         this.simulateCurve();
     }
 
-
-
     ngOnDestroy() {
         clearInterval(this.simulationTimer);
+    }
+
+    public changeMaxAndMin(curves: [number, number][]): void {
+        this.curves.curveValues = curves;
+        clearInterval(this.simulationTimer);
+        this.currentIndex = 0;
+        const maxY: number =
+            this.curvesHelper.getMaxY(this.curves.curveValues) == 0 ? 1
+                : this.curvesHelper.getMaxY(this.curves.curveValues);
+        const minY: number = 0;
+        const options: Partial<ChartOptions> = commonOptions(
+            this.action == "pause",
+            this.chart.xaxis.max,
+            this.chart.xaxis.min,
+            (this.curves.curveConfiguration.label.toUpperCase() == "ETCO2" ||
+                this.curves.curveConfiguration.label.toUpperCase() == "CO2")
+                ? maxY * 2
+                : maxY,
+            minY,
+            this.action !== "stop" &&
+                (this.curves.curveConfiguration.label.toUpperCase() == "ETCO2" ||
+                    this.curves.curveConfiguration.label.toUpperCase() == "CO2")
+                ? "area"
+                : this.chart.chart.type
+        );
+        this.chartComponent.updateOptions(options);
+        this.chartComponent.resetSeries();
+        this.simulateCurve();
     }
 
     /**
@@ -59,27 +81,26 @@ export class MiniMonitorComponent implements OnInit, OnDestroy {
     private createDynamicChart(): void {
         if (this.curves.curveValues.length > 0) {
             const maxY: number =
-                this.curvesHelper.getMaxY(this.curves.curveValues);
-            const minY: number =
-                this.curvesHelper.getMinY(this.curves.curveValues);
+                this.curvesHelper.getMaxY(this.curves.curveValues) == 0 ? 1
+                    : this.curvesHelper.getMaxY(this.curves.curveValues);
+            const minY: number = 0;
             const chart: ChartConfigurer = new ChartConfigurer({
                 colorLine: this.curves.curveConfiguration.colorLine,
                 height: 100,
                 minX: 0,
                 maxX: 3,
-                minY: minY,
-                maxY: maxY,
+                minY,
+                maxY,
                 toolbar: false,
             });
             let type: ChartType = null;
 
             if (
                 this.action !== "stop" &&
-                    this.curves.curveConfiguration.label.toUpperCase() === "CO2")
+                this.curves.curveConfiguration.label.toUpperCase() === "CO2")
                 type = "area";
 
             chart.setChart([], type);
-
             this.chart = chart.getChart();
         }
     }
@@ -94,9 +115,9 @@ export class MiniMonitorComponent implements OnInit, OnDestroy {
                 this.initiateSimulation();
                 this.timer += this.breathCurve
                     ? this.monitorConfiguration.getMonitorConfiguration()
-                          .freqBreath / 1000
+                        .freqBreath / 1000
                     : this.monitorConfiguration.getMonitorConfiguration()
-                          .freqHeart / 1000;
+                        .freqHeart / 1000;
             }
             this.currentIndex += 1;
             this.updateChart(this.chartComponent.series);
@@ -106,7 +127,6 @@ export class MiniMonitorComponent implements OnInit, OnDestroy {
     public getChart(): Partial<ChartOptions> {
         return this.chart;
     }
-
 
 
     private updateTimer(): void {
@@ -159,6 +179,8 @@ export class MiniMonitorComponent implements OnInit, OnDestroy {
         if (chart) chart.updateSeries(chartDataset, false);
     }
 
+
+
     private initiateSimulation(): void {
         if (this.firstSimulation) {
             this.updateDataset();
@@ -174,9 +196,7 @@ export class MiniMonitorComponent implements OnInit, OnDestroy {
         const currentDataset: any = this.chart?.series.slice();
         if (currentDataset) {
             if (this.action === "stop") {
-                const minY: number | any = this.chart.yaxis.min;
-                const maxY: number | any = this.chart.yaxis.max;
-                currentDataset[0].data.push([this.timer, (minY + maxY) / 2]);
+                currentDataset[0].data.push([this.timer, 0]);
             } else
                 currentDataset[0].data.push([this.timer, this.curves.curveValues[this.currentIndex][1]]);
 
@@ -194,7 +214,7 @@ export class MiniMonitorComponent implements OnInit, OnDestroy {
         if (this.action === "stop") {
             const minY: number | any = this.chart.yaxis.min;
             const maxY: number | any = this.chart.yaxis.max;
-            curveValuesSimulation.push([this.timer, (minY + maxY) / 2]);
+            curveValuesSimulation.push([this.timer, 0]);
         } else {
             curveValuesSimulation.push([this.timer, this.curves.curveValues[this.currentIndex][1]]);
         }
@@ -202,8 +222,6 @@ export class MiniMonitorComponent implements OnInit, OnDestroy {
         currentDataset[0].data = curveValues;
         currentDataset[1].data = curveValuesSimulation;
     }
-
-
 
 
     /**
@@ -222,12 +240,12 @@ export class MiniMonitorComponent implements OnInit, OnDestroy {
         }
     }
 
-     /**
-     * Update currentIndex. If the currentIndex overcome the last item in the dataset, then
-     * currentIndex go back to 0.
-     * @param curveValues
-     */
-      private updateCurrentIndex(): void {
+    /**
+    * Update currentIndex. If the currentIndex overcome the last item in the dataset, then
+    * currentIndex go back to 0.
+    * @param curveValues
+    */
+    private updateCurrentIndex(): void {
         if (this.currentIndex >= this.maxSize) {
             this.currentIndex = 0;
         }

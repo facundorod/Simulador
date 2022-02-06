@@ -121,5 +121,8 @@ export class CurvesHelper {
         return -1;
     }
 
-
+    public getMeanValue(diastolicIBP: number, systolicIBP: number): number | null {
+        if (systolicIBP) return Math.round(((2 * diastolicIBP) + systolicIBP) / 3);
+        return null;
+    }
 }

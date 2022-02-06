@@ -19,10 +19,9 @@ export class NewComponent implements OnInit {
         private router: Router,
         private modal: NgbModal,
         private simulationService: SimulationService
-    ) {}
+    ) { }
 
     ngOnInit(): void {
-        // window.open(environment.simulation, "_blank");
     }
 
     initiateSimulation(): void {

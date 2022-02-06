@@ -19,7 +19,7 @@
 .curve-configuration {
     border: 2px solid #fff;
     border-radius: 10px;
-    max-height: 14vh;
+    max-height: 13.3vh;
     min-width: 250px;
     animation: none;
     margin-left: 0%;
@@ -29,7 +29,7 @@
     border: 2px solid #fff;
     border-radius: 10px;
     max-width: 20px;
-    max-height: 14vh;
+    max-height: 13.3vh;
 }
 
 .text-label {
@@ -114,6 +114,7 @@ h4 {
 
 .min-max-value {
     font-size: 1.7rem;
+    text-align: center;
 }
 
 @media all and (display-mode: fullscreen) {

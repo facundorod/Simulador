@@ -1,7 +1,7 @@
 export const environment = {
     production: false,
     api: {
-        baseUrl: "https://simvet-app.herokuapp.com/api",
+        baseUrl: "https://simvet-api.herokuapp.com/api",
         animalSpecies: "/animalSpecies/",
         arrhythmias: "/arrhythmia/",
         medications: "/medication/",
@@ -15,5 +15,5 @@ export const environment = {
         parameters: "/parameters/",
         user: "/auth/user",
     },
-    simulation: "http://localhost:4200/monitor",
+    simulation: "https://simvet-web.herokuapp.com/monitor",
 };

@@ -26,7 +26,7 @@ export class ParametersCreateComponent implements OnInit {
         private fb: FormBuilder,
         private activeModal: NgbActiveModal,
         private paramsService: ParametersService
-    ) {}
+    ) { }
 
     ngOnInit(): void {
         this.loadParameters();
@@ -184,6 +184,13 @@ export class ParametersCreateComponent implements OnInit {
         return param.label.toUpperCase() === 'IBP' || param.label.toUpperCase().toUpperCase() === 'NIBP';
     }
 
+    public isCO2Curve() {
+        if (this.parameter)
+            return this.parameter.animalParameters.physiologicalParameter.label.toUpperCase() === 'CO2';
+        const param: PhysiologicalParamaterI = this.formGroup.get('parameter').value;
+        return param.label.toUpperCase() === 'CO2';
+    }
+
     public getCurvesFromCSV(csvRecordsArray: any) {
         let csvArr = [];
         try {
@@ -252,6 +259,19 @@ export class ParametersCreateComponent implements OnInit {
                 console.error(error);
             }
         );
+    }
+
+    public setInitialValue() {
+        if (this.parameter)
+            return this.parameter.animalParameters.physiologicalParameter.label.toUpperCase() === 'SPO2'
+                || this.parameter.animalParameters.physiologicalParameter.label.toUpperCase() === 'TEMP'
+                || this.parameter.animalParameters.physiologicalParameter.label.toUpperCase() === 'CAR'
+                || this.parameter.animalParameters.physiologicalParameter.label.toUpperCase() === 'RESP';
+        const param: PhysiologicalParamaterI = this.formGroup.get('parameter').value;
+        return param.label.toUpperCase() === 'SPO2'
+            || param.label.toUpperCase() === 'TEMP'
+            || param.label.toUpperCase() === 'CAR'
+            || param.label.toUpperCase() === 'RESP';
     }
 
     public setCurrentParameters(parameters: PhysiologicalParamaterI[]) {

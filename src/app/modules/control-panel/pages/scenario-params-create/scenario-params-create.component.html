@@ -232,12 +232,7 @@
                             <th scope="col" class="col-param">
                                 Parameter
                             </th>
-                            <th scope="col">
-                                Value
-                            </th>
-                            <th scope="col" class="col-configuration">
-                                Special Configuration
-                            </th>
+
                             <th scope="col">
                                 Alerts
                             </th>
@@ -252,28 +247,30 @@
                             <td scope="col" class="col-param">
                                 <p>{{parameter.animalParameters.physiologicalParameter.name}}</p>
                             </td>
-                            <td scope="row" class="col-value">
-                                <p>{{parameter.value}}</p>
-                            </td>
-                            <td scope="row" class="col-configuration">
-                                <p *ngIf="parameter.animalParameters.physiologicalParameter.specialConfiguration">
-                                    {{parameter.animalParameters.physiologicalParameter.specialConfiguration}}</p>
 
-                                <p *ngIf="!parameter.animalParameters.physiologicalParameter.specialConfiguration">
-                                    -</p>
-                            </td>
                             <td scope="row">
-                                <p *ngIf="!isIBPCurve(parameter)">Alert low: {{parameter.animalParameters.alert_low}}
+                                <p *ngIf="!isIBPCurve(parameter) && !isCO2Curve(parameter)">Alert low:
+                                    {{parameter.animalParameters.alert_low}}
                                     <br>
                                     Alert high: {{parameter.animalParameters.alert_high}}
                                 </p>
-                                <p *ngIf="isIBPCurve(parameter)">Alert diastolic low: {{parameter.animalParameters.alert_low}}
+                                <p *ngIf="isIBPCurve(parameter)">Alert diastolic low:
+                                    {{parameter.animalParameters.alert_low}}
                                     -
                                     Alert systolic low: {{parameter.animalParameters.alert_low_2}}
                                     <br>
                                     Alert diastolic high: {{parameter.animalParameters.alert_high}}
                                     -
                                     Alert systolic high: {{parameter.animalParameters.alert_high_2}}
+                                </p>
+                                <p *ngIf="isCO2Curve(parameter)">Alert inspiration low:
+                                    {{parameter.animalParameters.alert_low}}
+                                    -
+                                    Alert end tidal low: {{parameter.animalParameters.alert_low_2}}
+                                    <br>
+                                    Alert inspiration high: {{parameter.animalParameters.alert_high}}
+                                    -
+                                    Alert end tidal high: {{parameter.animalParameters.alert_high_2}}
                                 </p>
                             </td>
                             <td scope="row">
@@ -292,11 +289,11 @@
                                     <img
                                         src="https://img.icons8.com/external-kiranshastry-lineal-color-kiranshastry/26/000000/external-pencil-interface-kiranshastry-lineal-color-kiranshastry-1.png" />
                                 </button>
-                                <span>
+                                <!-- <span>
                                     <button class="btn btn-trash btn-light ml-2" (click)="onDeleteParameter(i)">
                                         <img src="https://img.icons8.com/color/26/000000/trash--v1.png" />
                                     </button>
-                                </span>
+                                </span> -->
                             </td>
                         </tr>
 

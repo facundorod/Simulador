@@ -72,6 +72,9 @@ export function commonOptions(
             toolbar: {
                 show: toolbarEnabled,
             },
+            animations: {
+                enabled: false
+            }
         },
         fill: {
             type: "solid",
@@ -139,14 +142,7 @@ export class ChartConfigurer {
             chart: {
                 id: "curves",
                 animations: {
-                    enabled: true,
-                    easing: "linear",
-                    animateGradually: {
-                        enabled: true,
-                    },
-                    dynamicAnimation: {
-                        enabled: true,
-                    },
+                    enabled: false
                 },
                 redrawOnParentResize: true,
                 redrawOnWindowResize: true,
@@ -159,6 +155,7 @@ export class ChartConfigurer {
                 toolbar: {
                     show: this.chartOptions.toolbar,
                 },
+
             },
             fill: {
                 type: "solid",

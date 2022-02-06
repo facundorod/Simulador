@@ -3,6 +3,8 @@
     "version": "0.0.0",
     "scripts": {
         "ng": "ng",
+        "heroku-postbuild": "ng build --configuration=${environment}",
+        "start": "node server.js",
         "start:local": "ng serve --configuration=local",
         "start:dev": "ng serve --configuration=development",
         "start:prod": "ng serve --configuration=production",
@@ -30,6 +32,7 @@
         "@popperjs/core": "^2.3.3",
         "apexcharts": "^3.27.1",
         "bootstrap": "^4.4.1",
+        "express": "^4.17.2",
         "jquery": "^3.5.0",
         "karma": "^6.3.4",
         "ng-apexcharts": "^1.5.12",
