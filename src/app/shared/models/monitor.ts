@@ -2,7 +2,7 @@ import { MonitorI } from "./monitorI";
 
 export class Monitor {
     private monitorConfiguration: MonitorI = {
-        clockTimer: 10,
+        clockTimer: 30,
         freqHeart: 20,
         freqBreath: 15,
         maxSamples: 5,

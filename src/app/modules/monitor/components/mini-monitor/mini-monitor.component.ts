@@ -52,7 +52,8 @@ export class MiniMonitorComponent implements OnInit, OnDestroy {
         clearInterval(this.simulationTimer);
         this.currentIndex = 0;
         const maxY: number =
-            this.curvesHelper.getMaxY(this.curves.curveValues);
+            this.curvesHelper.getMaxY(this.curves.curveValues) == 0 ? 1
+                : this.curvesHelper.getMaxY(this.curves.curveValues);
         const minY: number = 0;
         const options: Partial<ChartOptions> = commonOptions(
             this.action == "pause",
@@ -80,7 +81,8 @@ export class MiniMonitorComponent implements OnInit, OnDestroy {
     private createDynamicChart(): void {
         if (this.curves.curveValues.length > 0) {
             const maxY: number =
-                this.curvesHelper.getMaxY(this.curves.curveValues);
+                this.curvesHelper.getMaxY(this.curves.curveValues) == 0 ? 1
+                    : this.curvesHelper.getMaxY(this.curves.curveValues);
             const minY: number = 0;
             const chart: ChartConfigurer = new ChartConfigurer({
                 colorLine: this.curves.curveConfiguration.colorLine,

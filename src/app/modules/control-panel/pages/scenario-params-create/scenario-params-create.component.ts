@@ -35,6 +35,7 @@ export class ScenarioParamsCreateComponent implements OnInit {
     private arrhythmias: ArrhythmiaI[] = [];
     private pathologies: PathologyI[] = [];
     private parameters: SPPI[] = [];
+    private allParameters: PhysiologicalParamaterI[];
 
     private loading: boolean = true;
     private scenario: ScenarioParamsI;
@@ -47,7 +48,7 @@ export class ScenarioParamsCreateComponent implements OnInit {
         private pathologiesService: PathologiesService,
         private arrhythmiasService: ArrhythmiasService,
         private scenarioService: ScenarioService,
-        private parameterService: ParametersService,
+        private paramsService: ParametersService,
         private fb: FormBuilder,
         private activatedRoute: ActivatedRoute,
         private toast: ToastrService,
@@ -65,6 +66,7 @@ export class ScenarioParamsCreateComponent implements OnInit {
 
     private loadData(): void {
         this.loading = true;
+        this.loadParameters();
         this.loadAnimals();
         this.loadArrhythmias();
         this.loadMedications();
@@ -77,6 +79,17 @@ export class ScenarioParamsCreateComponent implements OnInit {
                 [this.scenario] = scenario;
                 this.parameters = this.scenario.parametersScenario;
                 this.initForm();
+            },
+            (error: Error) => {
+                console.error(error);
+            }
+        );
+    }
+
+    private loadParameters(): void {
+        this.paramsService.findAll().subscribe(
+            (value: PhysiologicalParamaterI[]) => {
+                this.allParameters = value;
             },
             (error: Error) => {
                 console.error(error);
@@ -175,6 +188,7 @@ export class ScenarioParamsCreateComponent implements OnInit {
         this.loading = false;
     }
 
+
     public getForm(): FormGroup {
         return this.formGroupScenario;
     }
@@ -220,11 +234,9 @@ export class ScenarioParamsCreateComponent implements OnInit {
 
         const animalSpecie: AnimalSpeciesI =
             this.formGroupScenario.get("animalSpecie").value;
-
         this.parameters.forEach((value: SPPI) => {
             value.animalParameters.animalSpecie = animalSpecie;
         });
-
         this.scenario = {
             name: scenarioName,
             description: scenarioDescription,
@@ -233,6 +245,7 @@ export class ScenarioParamsCreateComponent implements OnInit {
             medications: medications,
             parametersScenario: this.parameters,
         };
+        this.completeAllParameters(animalSpecie);
         if (this.params && this.params.id) {
             this.scenario.id_scenario = this.params.id;
             this.scenarioService
@@ -261,6 +274,27 @@ export class ScenarioParamsCreateComponent implements OnInit {
                 }
             );
         }
+    }
+
+    private completeAllParameters(animalSpecie: AnimalSpeciesI): void {
+        this.allParameters.forEach((value: PhysiologicalParamaterI) => {
+            if (!this.parameters.some((paramValue: SPPI) => {
+                return paramValue.animalParameters.physiologicalParameter.id_pp
+                    === value.id_pp
+            })) {
+                const sppI: SPPI = {
+                    animalParameters: {
+                        alert_high: 0,
+                        alert_low: 0,
+                        animalSpecie,
+                        physiologicalParameter: value,
+                    },
+                    curves: [],
+                    value: 0
+                }
+                this.parameters.push(sppI);
+            }
+        })
     }
 
     private loadMedicationForm(): void {

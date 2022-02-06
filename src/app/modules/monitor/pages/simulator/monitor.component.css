@@ -114,6 +114,7 @@ h4 {
 
 .min-max-value {
     font-size: 1.7rem;
+    text-align: center;
 }
 
 @media all and (display-mode: fullscreen) {

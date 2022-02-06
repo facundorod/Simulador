@@ -156,7 +156,7 @@
                             <label class="custom-file-upload">
                                 <input class="form-control curves-dataset-input" id="formFile" type="file" accept=".csv"
                                     (change)="onFileChange($event, i)">
-                                Add Curves
+                                Replace Curve
                             </label>
                         </div>
                     </div>
@@ -190,6 +190,35 @@
                             </div>
                         </div>
                     </div>
+                    <div class="row" *ngIf="curve?.curveConfiguration.label == 'CO2'">
+                        <div class="col-sm-4">
+                            <label class="form-label">End Tidal</label>
+                            <div class="row" *ngIf="currentState?.action !== 'stop'">
+                                <input type="range" class="form-range form-range-box" min="0" max="50" step="1"
+                                    formControlName="endTidalCO2" value={{endTidalCO2}}>
+                                <span class="rate-value-box">{{endTidalCO2}}</span>
+                            </div>
+                            <div class="row" *ngIf="currentState?.action === 'stop'">
+                                <input type="range" class="form-range form-range-box" min="0" max="50" step="1" value=0
+                                    disabled>
+                                <span class="rate-value-box">0</span>
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                            <label class="form-label">Inspiration</label>
+                            <div class="row" *ngIf="currentState?.action !== 'stop'">
+                                <input type="range" class="form-range form-range-box" min="0" max="10" step="1"
+                                    formControlName="inspirationCO2" value={{inspirationCO2}}>
+                                <span class="rate-value-box">{{inspirationCO2}}</span>
+                            </div>
+                            <div class="row" *ngIf="currentState?.action === 'stop'">
+                                <input type="range" class="form-range form-range-box" min="0" max="10" step="1" value=0
+                                    disabled>
+                                <span class="rate-value-box">0</span>
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="row">
 
                         <div class="col-sm-4" formArrayName="valueToShift">
