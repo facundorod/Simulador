@@ -26,7 +26,7 @@ export class ParametersCreateComponent implements OnInit {
         private fb: FormBuilder,
         private activeModal: NgbActiveModal,
         private paramsService: ParametersService
-    ) {}
+    ) { }
 
     ngOnInit(): void {
         this.loadParameters();
@@ -48,18 +48,25 @@ export class ParametersCreateComponent implements OnInit {
         const value: number = this.formGroup.get("value").value;
         const alert_low: number = this.formGroup.get("alert_low").value;
         const alert_high: number = this.formGroup.get("alert_high").value;
+        const alert_high_2: number = this.formGroup.get("alert_high_2").value;
+        const alert_low_2: number = this.formGroup.get("alert_low_2").value;
+
         const parameter: PhysiologicalParamaterI =
             this.formGroup.get("parameter").value;
         if (this.parameter?.animalParameters) {
             this.parameter.animalParameters.alert_low = alert_low;
             this.parameter.animalParameters.alert_high = alert_high;
+            this.parameter.animalParameters.alert_high_2 = alert_high_2;
+            this.parameter.animalParameters.alert_low_2 = alert_low_2;
             this.parameter.value = value;
             this.parameter.curves = this.fileContent;
         } else {
             this.parameter = {
                 animalParameters: {
                     alert_high: alert_high,
+                    alert_high_2: alert_high_2,
                     alert_low: alert_low,
+                    alert_low_2: alert_low,
                     animalSpecie: this.animalSpecie,
                     physiologicalParameter: parameter,
                 },
@@ -106,11 +113,17 @@ export class ParametersCreateComponent implements OnInit {
                     ? this.parameter.animalParameters?.alert_low
                     : 0,
             ],
+            alert_low_2: [this.parameter?.animalParameters?.alert_low_2
+                ? this.parameter.animalParameters?.alert_low_2
+                : 0],
             alert_high: [
                 this.parameter?.animalParameters?.alert_high
                     ? this.parameter.animalParameters.alert_high
                     : 0,
             ],
+            alert_high_2: [this.parameter?.animalParameters?.alert_high_2
+                ? this.parameter.animalParameters?.alert_high_2
+                : 0],
             value: [this.parameter?.value ? this.parameter?.value : 0],
         });
         this.loading = false;
@@ -161,6 +174,21 @@ export class ParametersCreateComponent implements OnInit {
                 console.log("error is occured while reading file!");
             };
         }
+    }
+
+    public isIBPCurve() {
+        if (this.parameter)
+            return this.parameter.animalParameters.physiologicalParameter.label.toUpperCase() === 'IBP'
+                || this.parameter.animalParameters.physiologicalParameter.label.toUpperCase() === 'NIBP';
+        const param: PhysiologicalParamaterI = this.formGroup.get('parameter').value;
+        return param.label.toUpperCase() === 'IBP' || param.label.toUpperCase().toUpperCase() === 'NIBP';
+    }
+
+    public isCO2Curve() {
+        if (this.parameter)
+            return this.parameter.animalParameters.physiologicalParameter.label.toUpperCase() === 'CO2';
+        const param: PhysiologicalParamaterI = this.formGroup.get('parameter').value;
+        return param.label.toUpperCase() === 'CO2';
     }
 
     public getCurvesFromCSV(csvRecordsArray: any) {
@@ -231,6 +259,19 @@ export class ParametersCreateComponent implements OnInit {
                 console.error(error);
             }
         );
+    }
+
+    public setInitialValue() {
+        if (this.parameter)
+            return this.parameter.animalParameters.physiologicalParameter.label.toUpperCase() === 'SPO2'
+                || this.parameter.animalParameters.physiologicalParameter.label.toUpperCase() === 'TEMP'
+                || this.parameter.animalParameters.physiologicalParameter.label.toUpperCase() === 'CAR'
+                || this.parameter.animalParameters.physiologicalParameter.label.toUpperCase() === 'RESP';
+        const param: PhysiologicalParamaterI = this.formGroup.get('parameter').value;
+        return param.label.toUpperCase() === 'SPO2'
+            || param.label.toUpperCase() === 'TEMP'
+            || param.label.toUpperCase() === 'CAR'
+            || param.label.toUpperCase() === 'RESP';
     }
 
     public setCurrentParameters(parameters: PhysiologicalParamaterI[]) {

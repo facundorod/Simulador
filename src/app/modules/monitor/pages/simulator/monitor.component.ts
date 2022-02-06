@@ -503,25 +503,34 @@ export class MonitorComponent
     }
 
     public enableAlert(curve: CurvesConfigurationI): boolean {
-        if (
-            curve.source?.label.toUpperCase() === "CAR" &&
-            (curve.alert_high <= this.parameterInfo.heartRate ||
-                curve.alert_low >= this.parameterInfo.heartRate)
-        )
-            return true;
-        if (
-            curve.source?.label.toUpperCase() === "RESP" &&
-            (curve.alert_high <= this.parameterInfo.breathRate ||
-                curve.alert_low >= this.parameterInfo.breathRate)
-        )
-            return true;
-        if (
-            curve.source?.label.toUpperCase() === "SPO2" &&
-            (curve.alert_high <= this.parameterInfo.spO2 ||
-                curve.alert_low >= this.parameterInfo.spO2)
-        )
-            return true;
-        return false;
+        switch (curve.label) {
+            case 'ECG':
+                return this.parameterInfo.heartRate >= curve.alert_high ||
+                    this.parameterInfo.heartRate <= curve.alert_low;
+            case 'IBP' || 'NIBP':
+                return this.parameterInfo.ibpDiastolic <= curve.alert_low
+                    || this.parameterInfo.ibpDiastolic >= curve.alert_high
+                    || this.parameterInfo.ibpSystolic <= curve.alert_low_2
+                    || this.parameterInfo.ibpSystolic >= curve.alert_high_2;
+            case 'CO2':
+                return this.parameterInfo.inspirationCO2 <= curve.alert_low
+                    || this.parameterInfo.inspirationCO2 >= curve.alert_high
+                    || this.parameterInfo.endTidalCO2 <= curve.alert_low_2
+                    || this.parameterInfo.endTidalCO2 >= curve.alert_high_2;
+            case 'TEMP':
+                return this.parameterInfo.temperature >= curve.alert_high ||
+                    this.parameterInfo.temperature <= curve.alert_low;
+            case 'SPO2':
+                return this.parameterInfo.spO2 >= curve.alert_high ||
+                    this.parameterInfo.spO2 <= curve.alert_low
+            default:
+                return false;
+        }
+
+
+
+
+
     }
 
     /**

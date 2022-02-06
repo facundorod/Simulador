@@ -286,6 +286,8 @@ export class ScenarioParamsCreateComponent implements OnInit {
                     animalParameters: {
                         alert_high: 0,
                         alert_low: 0,
+                        alert_low_2: 0,
+                        alert_high_2: 0,
                         animalSpecie,
                         physiologicalParameter: value,
                     },
@@ -486,5 +488,14 @@ export class ScenarioParamsCreateComponent implements OnInit {
             .catch((error: Error) => {
                 console.error(error);
             });
+    }
+
+    public isIBPCurve(parameter: SPPI): boolean {
+        return parameter.animalParameters.physiologicalParameter.label.toUpperCase() === 'IBP'
+            || parameter.animalParameters.physiologicalParameter.label.toUpperCase() === 'NIBP';
+    }
+
+    public isCO2Curve(parameter: SPPI): boolean {
+        return parameter.animalParameters.physiologicalParameter.label.toUpperCase() === 'CO2';
     }
 }
