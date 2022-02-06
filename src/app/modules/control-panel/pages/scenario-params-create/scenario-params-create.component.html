@@ -235,9 +235,6 @@
                             <th scope="col">
                                 Value
                             </th>
-                            <th scope="col" class="col-configuration">
-                                Special Configuration
-                            </th>
                             <th scope="col">
                                 Alerts
                             </th>
@@ -254,13 +251,6 @@
                             </td>
                             <td scope="row" class="col-value">
                                 <p>{{parameter.value}}</p>
-                            </td>
-                            <td scope="row" class="col-configuration">
-                                <p *ngIf="parameter.animalParameters.physiologicalParameter.specialConfiguration">
-                                    {{parameter.animalParameters.physiologicalParameter.specialConfiguration}}</p>
-
-                                <p *ngIf="!parameter.animalParameters.physiologicalParameter.specialConfiguration">
-                                    -</p>
                             </td>
                             <td scope="row">
                                 <p>Alert low: {{parameter.animalParameters.alert_low}}
@@ -284,11 +274,11 @@
                                     <img
                                         src="https://img.icons8.com/external-kiranshastry-lineal-color-kiranshastry/26/000000/external-pencil-interface-kiranshastry-lineal-color-kiranshastry-1.png" />
                                 </button>
-                                <span>
+                                <!-- <span>
                                     <button class="btn btn-trash btn-light ml-2" (click)="onDeleteParameter(i)">
                                         <img src="https://img.icons8.com/color/26/000000/trash--v1.png" />
                                     </button>
-                                </span>
+                                </span> -->
                             </td>
                         </tr>
 

@@ -10,21 +10,22 @@
             <h3 class="font-italic">How do you want to initiate your new simulation?</h3>
             <form class="form-group" #form="ngForm">
                 <div class="form-check">
-                    <input class="form-check-input" type="radio" value="blank" name="blank" [(ngModel)]="option"
-                        checked>
+                    <input class="form-check-input" type="radio" value="blank" name="blank" checked [(ngModel)]="option"
+                        required>
                     <label class="form-check-label" for="exampleRadios1">
                         Create simulation from begining
                     </label>
                 </div>
                 <div class="form-check">
-                    <input class="form-check-input" type="radio" name="previous" value="previous" [(ngModel)]="option">
+                    <input class="form-check-input" type="radio" name="previous" value="previous" [(ngModel)]="option"
+                        required>
                     <label class="form-check-label" for="exampleRadios2">
                         Initiate with previous simulation
                     </label>
                 </div>
                 <div class="form-check">
                     <input class="form-check-input" type="radio" value="previous-scenario" name="blank"
-                        [(ngModel)]="option" checked>
+                        [(ngModel)]="option" required>
                     <label class="form-check-label" for="exampleRadios1">
                         Initiate simulation with previous scenarios
                     </label>

@@ -9,7 +9,7 @@
             </p>
         </div>
         <div class="col-4 alarms-off">
-            <ng-template [ngIf]="currentState?.action === 'stop'">
+            <ng-template [ngIf]="currentState?.action === 'stop' || newCurrentState?.action === 'stop'">
                 <h4 class="text-center"><img src="https://img.icons8.com/fluency/24/000000/stop.png"
                         class="img-status" />Simulation
                     stopped
@@ -22,7 +22,8 @@
                         title="Freeze simulation" class="img-status" />Simulation
                     paused</h4>
             </ng-template>
-            <ng-template [ngIf]="currentState.muteAlarms && currentState?.action !== 'stop'">
+            <ng-template [ngIf]="(currentState.muteAlarms || newCurrentState.muteAlarms) &&
+                (currentState?.action !== 'stop' || newCurrentState?.action !== 'stop')">
                 <h4 class="text-center"><img
                         src="https://img.icons8.com/external-kiranshastry-lineal-color-kiranshastry/30/000000/external-mute-multimedia-kiranshastry-lineal-color-kiranshastry.png" />
                     &nbsp;Alarms
@@ -53,7 +54,8 @@
     </div>
 
     <div class="row">
-        <app-audio *ngIf="currentState?.action !== 'stop'" [play]="true" [src]="'/assets/sounds/monitor.mp3'"
+        <app-audio *ngIf="currentState?.action !== 'stop' ||
+                            newCurrentState?.action !== 'stop'" [play]="true" [src]="'/assets/sounds/monitor.mp3'"
             [playRate]=calculatePlayRate()></app-audio>
         <app-audio [play]="enableSoundAlarm" [src]="'/assets/sounds/alarmLimit.mp3'" [playRate]=1>
         </app-audio>
@@ -98,10 +100,11 @@
                                                                 curves.curveConfiguration?.label.toUpperCase() != 'RESP'">
                             <div class="row">
                                 <div class="col-2">
-
+                                    <p class="text-center" [style.color]="getColor(curves)">
+                                        {{curves.curveConfiguration?.label}}</p>
                                 </div>
                                 <div class="col-6">
-                                    <p class="text-rate" [style.color]="getColor(curves)"
+                                    <p class="text-rate text-center" [style.color]="getColor(curves)"
                                         *ngIf="!showMinAndMax(curves) && currentState?.action !== 'stop'">
 
                                         {{getSourceRateValue(curves)}}
@@ -111,34 +114,51 @@
 
                                         --
                                     </p>
-                                    <p class="min-max-value" *ngIf="showMinAndMax(curves)"
+                                    <p class="min-max-value" *ngIf="isIBPCurve(curves)"
                                         [style.color]="getColor(curves)">
-                                        <ng-template [ngIf]="getMaxValue(i) && currentState?.action !== 'stop'">
-                                            {{getMaxValue(i)}} /
-                                            <ng-template [ngIf]="getMinValue(i)">
-                                                {{getMinValue(i)}}
-                                            </ng-template>
-                                            <ng-template [ngIf]="!getMinValue(i)">
-                                                --
-                                            </ng-template>
-                                        </ng-template>
-                                        <ng-template [ngIf]="!getMaxValue(i) || currentState?.action == 'stop'">
+                                        <ng-template [ngIf]="currentState?.action == 'stop'">
                                             -- / --
                                         </ng-template>
-                                        <br>
-                                        <ng-template [ngIf]="!getMeanValue(i) || currentState?.action == 'stop'">
-                                            --
-                                        </ng-template>
-                                        <ng-template [ngIf]=" getMeanValue(i) && currentState?.action !== 'stop'">
-                                            {{getMeanValue(i)}}
+                                        <ng-template [ngIf]="currentState?.action !== 'stop'">
+                                            {{getDiastolicIBP()}} / {{getSystolicIBP()}} {{getMeanIBP()}}
                                         </ng-template>
                                     </p>
+                                    <p class="min-max-value" *ngIf="isNIBPCurve(curves)">
+                                        <ng-template [ngIf]="currentState?.action == 'stop' || !getDiastolicNIBP()">
+                                            -- / --
+                                        </ng-template>
+                                        <ng-template [ngIf]="currentState?.action !== 'stop' && getDiastolicNIBP()">
+                                            {{getDiastolicNIBP()}} / {{getSystolicNIBP()}}
+                                            {{getMeanNIBP()}}
+                                        </ng-template>
+                                    </p>
+                                    <p class="min-max-value" *ngIf="isCO2Curve(curves)"
+                                        [style.color]="getColor(curves)">
+                                        <ng-template [ngIf]="currentState?.action == 'stop'">
+                                            -- / --
+                                        </ng-template>
+                                        <ng-template [ngIf]="currentState?.action !== 'stop'">
+                                            {{getEndTidalCO2()}}
+                                            <br>
+                                            {{getInspirationCO2()}}
+                                        </ng-template>
+
+                                    </p>
+
                                 </div>
-                                <div class=" col-4 parameter-box-var">
-                                    <p [style.color]="getColor(curves)">
-                                        {{curves.curveConfiguration?.label}}</p>
+                                <div class="col-4 parameter-box-var">
                                     <p [style.color]="getColor(curves)">
                                         {{curves.curveConfiguration?.unit}}</p>
+                                    <p *ngIf="isNIBPCurve(curves)" [style.color]="getColor(curves)">
+                                        ({{timeNIBP()}} min.)
+                                    </p>
+                                    <p *ngIf="isCO2Curve(curves)" [style.color]="getColor(curves)">
+                                        {{getRespirationRate()}}
+                                    </p>
+                                    <p *ngIf="isIBPCurve(curves) || isNIBPCurve(curves) || isSPO2Curve(curves)"
+                                        [style.color]="getColor(curves)">
+                                        {{getHeartRate()}}
+                                    </p>
                                 </div>
                             </div>
 
@@ -148,6 +168,8 @@
                             <p class="text-label" [style.color]="getColor(curves)">
                                 {{curves.curveConfiguration?.label}}
                             </p>
+
+
                         </div>
                     </div>
 

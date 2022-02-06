@@ -4,9 +4,6 @@ import { Component, OnDestroy, OnInit, QueryList, ViewChildren } from "@angular/
 
 // Service
 import { AnimalSpeciesService } from "./../../services/animalSpecies.service";
-
-// Models
-
 import { AnimalSpeciesI } from "@models/animal-speciesI";
 import { BaseComponent } from "@app/shared/components/base.component";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
@@ -20,7 +17,6 @@ import { ScenarioParamsI } from "@app/shared/models/scenarioParamsI";
 import { distinctUntilChanged } from "rxjs/operators";
 import { MiniMonitorComponent } from "@app/modules/monitor/components/mini-monitor/mini-monitor.component";
 import { CurveValues } from "@app/shared/models/curveValues";
-import { CurveValuesI } from "@app/shared/models/curveValuesI";
 
 @Component({
     selector: "app-panel",
@@ -45,6 +41,8 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
     public spo2: number = 0;
     public muteAlarms: boolean = false;
     public updatedState: boolean = true;
+    public endTidalCO2: number = 0;
+    public inspirationCO2: number = 0;
     public systolicIbp: number = 0;
     public avgIbp: number = 0;
     public diastolicIbp: number = 0;
@@ -135,6 +133,13 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
                     if (value) {
                         this.currentState.curves[index].curveValues = value;
                         this.originalCurves[index].curveValues = value;
+                        const curve = this.originalCurves[index];
+                        if (curve.curveConfiguration.label === 'IBP') {
+                            this.systolicIbp = Math.round(this.getSystolicPressure(value).value);
+                            this.diastolicIbp = Math.round(value[0][1]);
+                            this.meanIBP = this.curvesHelper.getMeanValue(this.diastolicIbp, this.systolicIbp);
+                            this.fromGroupParameters.patchValue({ ibpSystolic: this.systolicIbp, ibpDiastolic: this.diastolicIbp })
+                        }
                         const miniMonitor: MiniMonitorComponent = this.miniMonitors.toArray()[index];
                         miniMonitor.changeMaxAndMin(this.currentState.curves[index].curveValues);
                     }
@@ -198,6 +203,8 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
 
     private initFormValues(): void {
         this.heartRate = 0;
+        this.endTidalCO2 = 0;
+        this.inspirationCO2 = 0;
         this.breathRate = 0;
         this.temperature = 0;
         this.spo2 = 0;
@@ -207,6 +214,8 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
             heartRate: 0,
             breathRate: 0,
             temperature: 0,
+            endTidalCO2: 0,
+            inspirationCO2: 0,
             spo2: 0,
             ibpSystolic: 0,
             ibpDiastolic: 0,
@@ -245,6 +254,8 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
             spo2: [this.spo2 ? this.spo2 : 0],
             ibpSystolic: [this.systolicIbp ? this.systolicIbp : 0],
             ibpDiastolic: [this.diastolicIbp ? this.diastolicIbp : 0],
+            endTidalCO2: [this.endTidalCO2 ? this.endTidalCO2 : 0],
+            inspirationCO2: [this.inspirationCO2 ? this.inspirationCO2 : 0],
             valueToShift: this.fb.array([
                 this.fb.group({
                     value: 0
@@ -504,6 +515,8 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
             {
                 value: 1
             }],
+            endTidalCO2: 0,
+            inspirationCO2: 0
         })
 
     }
@@ -514,6 +527,11 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
             heartRate: this.heartRate,
             breathRate: this.breathRate,
             spO2: this.spo2,
+            endTidalCO2: this.endTidalCO2,
+            ibpDiastolic: this.diastolicIbp,
+            ibpMean: this.meanIBP,
+            ibpSystolic: this.systolicIbp,
+            inspirationCO2: this.inspirationCO2
         };
         this.localStorageService.saveValue(
             "parameterState",
@@ -601,38 +619,30 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
 
     public onPlaySimulation(): void {
         if (this.currentState) this.currentState.action = "play";
-        this.localStorageService.saveValue(
-            "simulationState",
-            JSON.stringify(this.currentState)
-        );
+        this.applyChanges();
+
     }
 
     public onPauseSimulation(): void {
         if (this.currentState) this.currentState.action = "pause";
-        this.localStorageService.saveValue(
-            "simulationState",
-            JSON.stringify(this.currentState)
-        );
+        this.applyChanges();
     }
 
     public onMuteAlarms(): void {
         if (this.currentState) this.currentState.muteAlarms = true;
         this.muteAlarms = true;
-        this.updateState();
+        this.applyChanges();
     }
 
     public onUnmuteAlarms(): void {
         if (this.currentState) this.currentState.muteAlarms = false;
         this.muteAlarms = false;
-        this.updateState();
+        this.applyChanges();
     }
 
     public onStopSimulation(): void {
         if (this.currentState) this.currentState.action = "stop";
-        this.localStorageService.saveValue(
-            "simulationState",
-            JSON.stringify(this.currentState)
-        );
+        this.applyChanges();
     }
 
     private updateState(): void {

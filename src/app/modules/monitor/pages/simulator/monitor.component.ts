@@ -45,10 +45,12 @@ export class MonitorComponent
     @ViewChildren("chart") charts: QueryList<ChartComponent>;
     public today: Date = new Date();
     private heartTimer: number;
-    private maxSize: number = 51;
+    private maxSizeHeart: number;
+    private maxSizeBreath: number;
     private breathTimer: number;
     private firstSimulationBreath: boolean;
-    private currentIndex: number = 0;
+    private currentIndexHeart: number = 0;
+    private currentIndexBreath: number = 0;
     private parameterInfo: ParameterInfoI;
     public curvesAndParams: any[] = [];
     private changeCurves: boolean = false;
@@ -106,7 +108,7 @@ export class MonitorComponent
             (simulationState: StatesI) => {
                 if (simulationState) {
                     this.updateParameterInfo();
-                    if (this.currentIndex == 0)
+                    if (this.currentIndexHeart == 0 || this.currentIndexBreath)
                         this.changeCurves = true;
                     else this.changeCurves = false;
                     this.updateCurves(simulationState);
@@ -139,8 +141,10 @@ export class MonitorComponent
         this.firstSimulationBreath = true;
         this.curvesAndParams = [];
         this.chartsOptions = [];
-        this.currentIndex = 0;
-        this.maxSize = 51;
+        this.currentIndexBreath = 0;
+        this.currentIndexHeart = 0;
+        this.maxSizeHeart = 0;
+        this.maxSizeBreath = 0;
         this.breathTimer = 0.0;
         this.heartTimer = 0.0;
         clearInterval(this.simulationTimer);
@@ -163,6 +167,8 @@ export class MonitorComponent
         let initCharts: boolean = this.chartsOptions?.length == 0;
         this.currentState.curves.forEach((curve: CurvesI, index: number) => {
             const enableAlert: boolean | undefined = this.enableAlerts[index];
+            if (this.isBreathCurve(index) && curve.curveValues.length > 0) this.maxSizeBreath = curve.curveValues.length;
+            if (!this.isBreathCurve(index) && curve.curveValues.length > 0) this.maxSizeHeart = curve.curveValues.length;
             if (initCharts) this.createDynamicChart(curve);
             if (enableAlert == undefined) {
                 const alert: boolean = this.enableAlert(
@@ -175,7 +181,8 @@ export class MonitorComponent
                 ) && this.currentState.action !== 'stop';
             this.enableSoundAlarm =
                 this.enableAlerts.includes(true) &&
-                !this.currentState.muteAlarms && this.currentState.action !== 'stop';
+                ((!this.currentState.muteAlarms && this.currentState.action !== 'stop')
+                    || (!this.newCurrentState && this.newCurrentState.muteAlarms && this.newCurrentState?.action !== 'stop'));
             this.updateMaxAndMin(index);
 
         });
@@ -186,9 +193,9 @@ export class MonitorComponent
         const currentChart: ChartComponent | any = this.charts.toArray()[index];
         const curve: CurvesI = this.newCurrentState.curves[index];
         if (currentChart) {
-            // this.currentIndex = 0;
             const maxY: number =
-                this.curvesHelper.getMaxY(curve.curveValues);
+                this.curvesHelper.getMaxY(curve.curveValues) == 0 ? 1
+                    : this.curvesHelper.getMaxY(curve.curveValues);
             currentChart.yaxis.max = curve.curveConfiguration.label.toUpperCase() == "CO2" ||
                 curve.curveConfiguration.label.toUpperCase() == "ETCO2"
                 ? maxY * 2
@@ -205,7 +212,8 @@ export class MonitorComponent
     private createDynamicChart(curve: CurvesI): void {
         if (curve.curveValues.length > 0) {
             const maxY: number =
-                this.curvesHelper.getMaxY(curve.curveValues);
+                this.curvesHelper.getMaxY(curve.curveValues) == 0 ? 1
+                    : this.curvesHelper.getMaxY(curve.curveValues);
             const minY: number = 0;
             const chart: ChartConfigurer = new ChartConfigurer({
                 colorLine: curve.curveConfiguration.colorLine,
@@ -266,7 +274,8 @@ export class MonitorComponent
                         .freqHeart / 1000);
                 this.breathTimer += (this.monitorConfiguration.getMonitorConfiguration()
                     .freqBreath / 1000);
-                this.currentIndex += 1;
+                this.currentIndexHeart += 1;
+                this.currentIndexBreath += 1;
                 this.today = new Date();
             }, this.monitorConfiguration.getMonitorConfiguration().clockTimer);
         }
@@ -300,11 +309,17 @@ export class MonitorComponent
      * @param curveValues
      */
     private updateCurrentIndex(): void {
-        if (this.currentIndex >= this.maxSize) {
-            this.currentIndex = 0;
-            if (this.newCurrentState) {
-                this.currentState = JSON.parse(JSON.stringify(this.newCurrentState));
-            }
+        let changeCurves: boolean = false;
+        if (this.currentIndexHeart >= this.maxSizeHeart) {
+            this.currentIndexHeart = 0;
+            changeCurves = true;
+        }
+        if (this.currentIndexBreath >= this.maxSizeBreath) {
+            this.currentIndexBreath = 0;
+            changeCurves = true;
+        }
+        if (changeCurves && this.newCurrentState) {
+            this.currentState = JSON.parse(JSON.stringify(this.newCurrentState));
         }
     }
 
@@ -334,7 +349,7 @@ export class MonitorComponent
             } else
                 currentDataset[0].data.push([
                     isBreathCurve ? this.breathTimer : this.heartTimer,
-                    curveValues[this.currentIndex][1],
+                    curveValues[isBreathCurve ? this.currentIndexBreath : this.currentIndexHeart][1],
                 ]);
 
         }
@@ -360,7 +375,7 @@ export class MonitorComponent
 
             curveValuesSimulation.push([
                 isBreathCurve ? this.breathTimer : this.heartTimer,
-                originalDataset[this.currentIndex][1],
+                originalDataset[isBreathCurve ? this.currentIndexBreath : this.currentIndexHeart][1],
             ]);
         }
         this.deleteOldPoints(
@@ -619,24 +634,67 @@ export class MonitorComponent
             curve.curveConfiguration.label.toUpperCase() === 'NIBP');
     }
 
-    public getMinValue(index: number): number | null {
-        const curves: CurvesI = this.currentState.curves[index];
-        if (curves && curves.curveValues && curves.curveValues.length > 0)
-            return Math.round(curves.curveValues[0][1]);
-        return null;
+    public getDiastolicIBP(): number {
+        return this.parameterInfo.ibpDiastolic;
     }
 
-    public getMaxValue(index: number): number | null {
-        const curves: CurvesI = this.currentState.curves[index];
-        if (curves && curves.curveValues && curves.curveValues.length > 0)
-            return Math.round(this.curvesHelper.getMaxY(curves.curveValues));
-        return null;
+    public getSystolicIBP(): number {
+        return this.parameterInfo.ibpSystolic;
     }
 
-    public getMeanValue(index: number): number | null {
-        const systolicIBP: number = this.getMaxValue(index);
-        const diastolicIBP: number = this.getMinValue(index);
-        if (systolicIBP) return Math.round(((2 * diastolicIBP) + systolicIBP) / 3);
-        return null;
+    public getMeanIBP(): number {
+        return this.parameterInfo.ibpMean;
     }
+
+    public isIBPCurve(curve: any): boolean {
+        return curve.curveConfiguration.label === 'IBP';
+    }
+
+    public isNIBPCurve(curve: any): boolean {
+        return curve.curveConfiguration.label === 'NIBP';
+    }
+
+    public getSystolicNIBP(): number {
+        return this.parameterInfo.ibpDiastolic;
+
+    }
+
+    public getDiastolicNIBP(): number {
+        return this.parameterInfo.ibpDiastolic;
+
+    }
+
+    public getEndTidalCO2(): number {
+        return this.parameterInfo.endTidalCO2;
+    }
+
+    public getInspirationCO2(): number {
+        return this.parameterInfo.inspirationCO2;
+    }
+
+    public getMeanNIBP(): number {
+        return this.parameterInfo.ibpDiastolic;
+
+    }
+
+    public timeNIBP(): number {
+        return 5;
+    }
+
+    public isCO2Curve(curve: any): boolean {
+        return curve.curveConfiguration.label === 'CO2';
+    }
+
+    public getRespirationRate(): number {
+        return this.parameterInfo.breathRate;
+    }
+
+    public getHeartRate(): number {
+        return this.parameterInfo.heartRate;
+    }
+
+    public isSPO2Curve(curve: any): boolean {
+        return curve.curveConfiguration.label === 'SPO2';
+    }
+
 }
