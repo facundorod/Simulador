@@ -58,6 +58,7 @@ export class MonitorComponent
     private curvesHelper: CurvesHelper = new CurvesHelper();
     private simulationTimer: NodeJS.Timeout;
     private enableAlerts: boolean[] = [];
+    private lastNIBP: Date;
     public monitorConfiguration: Monitor = new Monitor();
     public trackByFn: TrackByFunction<CurvesI> = (_, curve: CurvesI) =>
         curve.curveConfiguration.id_pp;
@@ -66,6 +67,11 @@ export class MonitorComponent
     public tooltipPause: ApexTooltip = {
         enabled: true,
     };
+    public calculatingNIBP: boolean = false;
+    public systolicNIBP: number;
+    public diastolicNIBP: number;
+    public meanNIBP: number;
+
     constructor(private monitorService: MonitorService) {
         super();
         this.initVariables();
@@ -107,6 +113,7 @@ export class MonitorComponent
         this.monitorService.getInfo().subscribe(
             (simulationState: StatesI) => {
                 if (simulationState) {
+                    this.lastNIBP = new Date();
                     this.updateParameterInfo();
                     if (this.currentIndexHeart == 0 || this.currentIndexBreath)
                         this.changeCurves = true;
@@ -277,6 +284,7 @@ export class MonitorComponent
                 this.currentIndexHeart += 1;
                 this.currentIndexBreath += 1;
                 this.today = new Date();
+                this.startNibp();
             }, this.monitorConfiguration.getMonitorConfiguration().clockTimer);
         }
     }
@@ -526,11 +534,6 @@ export class MonitorComponent
             default:
                 return false;
         }
-
-
-
-
-
     }
 
     /**
@@ -664,12 +667,12 @@ export class MonitorComponent
     }
 
     public getSystolicNIBP(): number {
-        return this.parameterInfo.ibpDiastolic;
+        return this.systolicNIBP;
 
     }
 
     public getDiastolicNIBP(): number {
-        return this.parameterInfo.ibpDiastolic;
+        return this.diastolicNIBP;
 
     }
 
@@ -682,12 +685,12 @@ export class MonitorComponent
     }
 
     public getMeanNIBP(): number {
-        return this.parameterInfo.ibpDiastolic;
+        return this.meanNIBP;
 
     }
 
     public timeNIBP(): number {
-        return 5;
+        return this.parameterInfo.timeNIBP;
     }
 
     public isCO2Curve(curve: any): boolean {
@@ -706,4 +709,37 @@ export class MonitorComponent
         return curve.curveConfiguration.label === 'SPO2';
     }
 
+    private startNibp(): void {
+        if (this.parameterInfo.startNIBP) {
+            this.calculateNIBP();
+            this.parameterInfo.startNIBP = false;
+        } else {
+            const diff: number = Math.abs(this.today.getTime() - this.lastNIBP.getTime());
+            const minutesBetween: number = Math.floor((diff / 1000) / 60);
+            if (minutesBetween >= this.parameterInfo.timeNIBP)
+                this.calculateNIBP();
+        }
+    }
+
+    private calculateNIBP(): void {
+        this.lastNIBP = new Date();
+        this.calculatingNIBP = true;
+        setTimeout(() => {
+            this.calculatingNIBP = false;
+            const randomVariation = Math.ceil(Math.random() * (15 - 5 + 1) + 5);
+            const decr: boolean = Math.random() < 0.5;
+            const valueToAdjustDiastolic: number = (this.parameterInfo.ibpDiastolic * (randomVariation / 100));
+            const valueToAdjustSystolic: number = (this.parameterInfo.ibpSystolic * (randomVariation / 100));
+            const valueToAdjustMean: number = (this.parameterInfo.ibpMean * (randomVariation / 100));
+            if (decr) {
+                this.diastolicNIBP = Math.ceil(this.parameterInfo.ibpDiastolic - valueToAdjustDiastolic);
+                this.systolicNIBP = Math.ceil(this.parameterInfo.ibpSystolic - valueToAdjustSystolic);
+                this.meanNIBP = Math.ceil(this.parameterInfo.ibpMean - valueToAdjustMean);
+            } else {
+                this.diastolicNIBP = Math.ceil(this.parameterInfo.ibpDiastolic + valueToAdjustDiastolic);
+                this.systolicNIBP = Math.ceil(this.parameterInfo.ibpSystolic + valueToAdjustSystolic);
+                this.meanNIBP = Math.ceil(this.parameterInfo.ibpMean + valueToAdjustMean);
+            }
+        }, 10000);
+    }
 }

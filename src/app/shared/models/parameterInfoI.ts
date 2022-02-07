@@ -8,4 +8,6 @@ export interface ParameterInfoI {
     ibpMean: number,
     endTidalCO2: number,
     inspirationCO2: number;
+    timeNIBP: number;
+    startNIBP: boolean;
 }

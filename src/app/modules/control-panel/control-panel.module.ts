@@ -35,6 +35,7 @@ import { ParametersComponent } from './pages/parameters/parameters.component';
 import { NewParameterComponent } from './modals/new-parameter/new-parameter.component';
 import { MonitorConfigsComponent } from './modals/monitor-configs/monitor-configs.component';
 import { ScenarioCloneComponent } from './modals/scenario-clone/scenario-clone.component';
+import { NibpComponent } from './modals/nibp/nibp.component';
 
 @NgModule({
     declarations: [
@@ -55,6 +56,7 @@ import { ScenarioCloneComponent } from './modals/scenario-clone/scenario-clone.c
         NewParameterComponent,
         MonitorConfigsComponent,
         ScenarioCloneComponent,
+        NibpComponent,
     ],
     imports: [
         CommonModule,
