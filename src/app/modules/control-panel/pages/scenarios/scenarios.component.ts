@@ -73,9 +73,9 @@ export class ScenariosComponent extends BaseComponent implements OnInit {
                 indexActive: this.indexScenarioActive,
             });
         }
-        if (this.isScenariosPanelRoute) {
-            this.returnScenarios.emit(this.scenariosSelected);
-        }
+        // if (this.isScenariosPanelRoute) {
+        //     this.returnScenarios.emit(this.scenariosSelected);
+        // }
     }
 
     /**
