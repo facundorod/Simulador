@@ -119,6 +119,10 @@ input[type="file"] {
     display: none;
 }
 
+.btn-spinner {
+    margin-left: 5%;
+}
+
 @media (min-width: 1024px) {
     .textSimulation {
         text-align: center;

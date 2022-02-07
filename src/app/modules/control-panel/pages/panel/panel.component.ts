@@ -623,6 +623,8 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
     public getPosScenarios(pos: any): void {
         if (this.indexSimulationActive != pos.indexActive) {
             this.indexSimulationActive = pos.indexActive;
+            this.activeScenario =
+                this.scenariosSimulation[this.indexSimulationActive];
             this.onLoadCurves(this.formGroup.value.animalSpecie);
         }
     }
