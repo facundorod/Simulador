@@ -1,0 +1,23 @@
+<form [formGroup]="getFormGroup()" (ngSubmit)="onSubmit()">
+    <div class="modal-header">
+        <h3>NIBP Settings</h3>
+    </div>
+    <div class="modal-body">
+        <div class="form-group row">
+            <label for="name" class="col-sm-3 col-form-label">Time period [min]</label>
+            <div class="col-sm-8">
+                <input type="number" class="form-control" id="timeNibp" formControlName="timeNibp">
+            </div>
+        </div>
+        <div class="custom-control custom-switch">
+            <input type="checkbox" class="custom-control-input" id="customSwitches" formControlName="startNow">
+            <label class="custom-control-label" for="customSwitches">Start now?</label>
+        </div>
+        <div class="modal-footer mt-3">
+            <button type="submit" class="btn btn-primary btn-save" *ngIf="getFormGroup().valid">Save changes</button>
+            <button type="submit" class="btn btn-primary btn-save" *ngIf="!getFormGroup().valid" disabled>Save
+                changes</button>
+            <button type="button" class="btn btn-danger" (click)="onCancel()">Cancel</button>
+        </div>
+    </div>
+</form>

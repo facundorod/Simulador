@@ -17,6 +17,8 @@ import { ScenarioParamsI } from "@app/shared/models/scenarioParamsI";
 import { distinctUntilChanged } from "rxjs/operators";
 import { MiniMonitorComponent } from "@app/modules/monitor/components/mini-monitor/mini-monitor.component";
 import { CurveValues } from "@app/shared/models/curveValues";
+import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
+import { NibpComponent } from "../../modals/nibp/nibp.component";
 
 @Component({
     selector: "app-panel",
@@ -50,20 +52,23 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
     private curvesHelper: CurvesHelper = new CurvesHelper();
     public shiftValues: number[] = [0, 0, 0, 0];
     public amplitudeValues: number[] = [1, 1, 1, 1];
+    private timeNIBP: number = 5;
+    private startNIBP: boolean = false;
+
     constructor(
         private animalSpecieService: AnimalSpeciesService,
         private fb: FormBuilder,
         private toast: ToastrService,
         private simulationService: SimulationService,
         private curvesService: CurvesService,
-        private localStorageService: LocalStorageService
+        private localStorageService: LocalStorageService,
+        private modal: NgbModal
     ) {
         super();
     }
 
     ngOnInit(): void {
         this.localStorageService.removeValue("simulationState");
-
         this.setSubmitForm(false);
         this.setLoading(true);
         this.loadData();
@@ -330,7 +335,7 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
         this.fromGroupParameters.get('ibpDiastolic').valueChanges.subscribe((val) => {
             if (val !== 0) {
                 this.diastolicIbp = val;
-                this.meanIBP = this.curvesHelper.getMeanValue(this.diastolicIbp, val);
+                this.meanIBP = this.curvesHelper.getMeanValue(this.diastolicIbp, this.systolicIbp);
                 this.updateDiastolicIBP();
                 this.updatedState = true;
             }
@@ -425,9 +430,11 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
                             this.currentState.muteAlarms = false;
                             this.currentState.newScenario = newScenario;
                             this.onLoadParameters();
+                            this.setLoading(false);
                             // this.applyChanges();
                         } else {
                             this.currentState = null;
+                            this.setLoading(false);
                             this.originalCurves = [];
                             this.localStorageService.removeValue(
                                 "simulationState"
@@ -442,6 +449,7 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
             this.currentState = null;
             this.originalCurves = [];
             this.localStorageService.removeValue("simulationState");
+            this.setLoading(false);
         }
     }
 
@@ -531,7 +539,9 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
             ibpDiastolic: this.diastolicIbp,
             ibpMean: this.meanIBP,
             ibpSystolic: this.systolicIbp,
-            inspirationCO2: this.inspirationCO2
+            inspirationCO2: this.inspirationCO2,
+            timeNIBP: this.timeNIBP,
+            startNIBP: this.startNIBP
         };
         this.localStorageService.saveValue(
             "parameterState",
@@ -777,6 +787,20 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
         this.initFormValues();
         this.initFormParameters();
         this.onValueChanges();
+    }
+
+    public configureNIBP(): void {
+        const modal = this.modal.open(NibpComponent);
+        modal.componentInstance.setInitialValue(this.timeNIBP);
+        modal.result.then((nibpSettings: { timeNibp: number, startNow: boolean }) => {
+            this.timeNIBP = nibpSettings.timeNibp;
+            this.startNIBP = nibpSettings.startNow;
+            this.applyChanges();
+            this.startNIBP = false;
+        })
+            .catch((error: Error) => {
+                console.error(error);
+            })
 
     }
 }
