@@ -98,4 +98,25 @@ export class CurvesService {
 
         return subject.asObservable();
     }
+
+    public updatePressure(curve: [number, number][], systolicValue: number, diastolicValue: number): Observable<[number, number][]> {
+        const subject = new Subject<[number, number][]>();
+
+        let endpoint = environment.api.curves + 'update-pressure';
+
+
+        this.api.httpPost(endpoint, { curve, systolic: systolicValue, diastolic: diastolicValue }).subscribe(
+            (curves: [number, number][]) => {
+                subject.next(curves);
+            },
+            (error: Error) => {
+                subject.error(error);
+            },
+            () => {
+                subject.complete();
+            }
+        );
+
+        return subject.asObservable();
+    }
 }

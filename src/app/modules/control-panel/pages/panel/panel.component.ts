@@ -225,16 +225,16 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
             ibpSystolic: 0,
             ibpDiastolic: 0,
             valueToShift: [{
-                value: 0
+                value: 1
             },
             {
-                value: 0
+                value: 1
             },
             {
-                value: 0
+                value: 1
             },
             {
-                value: 0
+                value: 1
             }],
             amplitude: [{
                 value: 1
@@ -263,16 +263,16 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
             inspirationCO2: [this.inspirationCO2 ? this.inspirationCO2 : 0],
             valueToShift: this.fb.array([
                 this.fb.group({
-                    value: 0
+                    value: 1
                 }),
                 this.fb.group({
-                    value: 0
+                    value: 1
                 }),
                 this.fb.group({
-                    value: 0
+                    value: 1
                 }),
                 this.fb.group({
-                    value: 0
+                    value: 1
                 })
             ]),
             amplitude: this.fb.array([
@@ -336,7 +336,7 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
             if (val !== 0) {
                 this.diastolicIbp = val;
                 this.meanIBP = this.curvesHelper.getMeanValue(this.diastolicIbp, this.systolicIbp);
-                this.updateDiastolicIBP();
+                this.updateIBPCurve();
                 this.updatedState = true;
             }
 
@@ -346,12 +346,11 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
                 this.systolicIbp = val;
                 this.meanIBP = this.curvesHelper.getMeanValue(this.diastolicIbp, val);
                 this.adjustPressureValues();
-                this.updateSystolicIBP();
+                this.updateIBPCurve();
                 this.updatedState = true;
             }
         })
         this.fromGroupParameters.get('valueToShift').valueChanges.pipe(distinctUntilChanged()).subscribe((val) => {
-
             val.forEach((value: { value: number }, index: number) => {
                 if (value.value != this.shiftValues[index]) {
                     if (value.value === 0) {
@@ -359,12 +358,19 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
                         this.updatedState = true;
                     } else {
                         this.shiftValues[index] = value.value;
+
                         const curveToShift: [number, number][] = this.currentState.curves[index].curveValues;
                         this.curvesService
                             .shiftCurve(curveToShift, value.value)
                             .subscribe((newCurve: [number, number][]) => {
                                 if (newCurve)
                                     this.currentState.curves[index].curveValues = newCurve;
+                                if (index === 2) {
+                                    this.systolicIbp = Math.round(this.getSystolicPressure(newCurve).value);
+                                    this.diastolicIbp = Math.round(newCurve[0][1]);
+                                    this.meanIBP = this.curvesHelper.getMeanValue(this.diastolicIbp, this.systolicIbp);
+                                    this.fromGroupParameters.patchValue({ ibpSystolic: this.systolicIbp, ibpDiastolic: this.diastolicIbp })
+                                }
                                 const miniMonitor: MiniMonitorComponent = this.miniMonitors.toArray()[index];
                                 miniMonitor.changeMaxAndMin(this.currentState.curves[index].curveValues);
                             },
@@ -392,6 +398,12 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
                             .subscribe((newCurve: [number, number][]) => {
                                 if (newCurve)
                                     this.currentState.curves[index].curveValues = newCurve;
+                                if (index === 2) {
+                                    this.systolicIbp = Math.round(this.getSystolicPressure(newCurve).value);
+                                    this.diastolicIbp = Math.round(newCurve[0][1]);
+                                    this.meanIBP = this.curvesHelper.getMeanValue(this.diastolicIbp, this.systolicIbp);
+                                    this.fromGroupParameters.patchValue({ ibpSystolic: this.systolicIbp, ibpDiastolic: this.diastolicIbp })
+                                }
                                 const miniMonitor: MiniMonitorComponent = this.miniMonitors.toArray()[index];
                                 miniMonitor.changeMaxAndMin(this.currentState.curves[index].curveValues);
                             },
@@ -403,6 +415,23 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
                 }
             });
         })
+    }
+
+    private updateIBPCurve(): void {
+        const { curveValues: ibpCurve } = this.currentState.curves[2];
+        if (ibpCurve) {
+            this.curvesService
+                .updatePressure(ibpCurve, this.systolicIbp, this.diastolicIbp)
+                .subscribe((newCurve: [number, number][]) => {
+                    if (newCurve)
+                        this.currentState.curves[2].curveValues = newCurve;
+                    const miniMonitor: MiniMonitorComponent = this.miniMonitors.toArray()[2];
+                    miniMonitor.changeMaxAndMin(this.currentState.curves[2].curveValues);
+                },
+                    (error: Error) => {
+                        console.error(error);
+                    })
+        }
     }
 
     /**
@@ -500,16 +529,16 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
             temperature: this.temperature,
             spo2: this.spo2,
             valueToShift: [{
-                value: 0
+                value: 1
             },
             {
-                value: 0
+                value: 1
             },
             {
-                value: 0
+                value: 1
             },
             {
-                value: 0
+                value: 1
             }],
             amplitude: [{
                 value: 1
@@ -695,40 +724,6 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
     }
 
 
-    private updateSystolicIBP(): void {
-        const curves: CurvesI[] = JSON.parse(JSON.stringify(this.originalCurves));
-
-        if (curves && curves.length > 0) {
-            if (curves[2] && curves[2].curveValues) {
-                const curveIBP = JSON.parse(JSON.stringify(curves[2].curveValues));
-                const previousSystolic: { index: number, value: number } = this.getSystolicPressure(curveIBP);
-                const adjustmentRate: number = this.calculateAdjustRate(previousSystolic.value, this.systolicIbp);
-                const newMean: { index: number, value: number } = this.getIndexMean(curveIBP, previousSystolic.index);
-                if (previousSystolic.value > this.systolicIbp) {
-                    this.adjustSystIBP(curveIBP, adjustmentRate, false, newMean.index);
-                } else this.adjustSystIBP(curveIBP, adjustmentRate, true, newMean.index);
-                curveIBP[previousSystolic.index][1] = this.systolicIbp;
-                curves[2].curveValues = curveIBP;
-                this.currentState.curves[2] = JSON.parse(JSON.stringify(curves[2]));
-            }
-
-        }
-    }
-
-    private updateDiastolicIBP(): void {
-        const curves: CurvesI[] = JSON.parse(JSON.stringify(this.originalCurves));
-        if (curves && curves.length > 0) {
-            if (curves[2] && curves[2].curveValues) {
-                const curveIBP = curves[2].curveValues.slice();
-                if (curveIBP) {
-                    this.adjustDiastIBP(curveIBP);
-                    curves[2].curveValues = curveIBP;
-                    this.currentState.curves[2] = curves[2];
-                }
-            }
-        }
-    }
-
     private adjustPressureValues() {
         if (this.systolicIbp <= this.diastolicIbp)
             this.diastolicIbp = this.systolicIbp - 1;
@@ -736,37 +731,15 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
 
 
 
-    private adjustSystIBP(curves: [number, number][], adjustmenPerctRate: number, inc: boolean, indexMean: number) {
-        let i: number = 1;
-        while (i < indexMean) {
-            const adjustmentRate: number = (curves[i][1] * adjustmenPerctRate);
-            if (!inc) curves[i][1] -= adjustmentRate;
-            else curves[i][1] += adjustmentRate;
-            if (curves[i][1] < 0) curves[i][1] = 0;
-            i++;
-        }
-    }
+
 
     private getIndexMean(curves: [number, number][], index: number): { index: number, value: number } {
         while (index <= curves.length && curves[index][1] < this.meanIBP) index++;
         return { index, value: curves[index][1] };
     }
 
-    private adjustDiastIBP(curves: [number, number][]) {
-        curves[0][1] = this.diastolicIbp;
-        const lastIndex: number = curves.length - 1;
-        for (let i = lastIndex; i <= lastIndex - 5; i--) {
-            curves[i][1] = this.diastolicIbp;
-        }
-    }
 
-    private calculateAdjustRate(currentValue: number, nextValue: number) {
-        let result: number = Math.abs(currentValue - nextValue);
-        if (currentValue) {
-            result /= currentValue;
-        }
-        return result;
-    }
+
 
     private getSystolicPressure(curves: [number, number][]): { index: number, value: number } {
         let max: number = curves[0][1];

@@ -38,7 +38,7 @@ export class InterceptorService implements HttpInterceptor {
                     message = `Something bad has happened!`;
                     this.router.navigateByUrl("/home");
                 }
-                this.toast.toastrConfig.timeOut = 0;
+                this.toast.toastrConfig.timeOut = 1000;
                 this.toast.error("Retry again!", `${message}`);
 
                 return throwError(message);

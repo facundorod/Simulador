@@ -59,14 +59,12 @@ export class MiniMonitorComponent implements OnInit, OnDestroy {
             this.action == "pause",
             this.chart.xaxis.max,
             this.chart.xaxis.min,
-            (this.curves.curveConfiguration.label.toUpperCase() == "ETCO2" ||
-                this.curves.curveConfiguration.label.toUpperCase() == "CO2")
+            (this.curves.curveConfiguration.label.toUpperCase() == "CO2")
                 ? maxY * 2
                 : maxY,
             minY,
             this.action !== "stop" &&
-                (this.curves.curveConfiguration.label.toUpperCase() == "ETCO2" ||
-                    this.curves.curveConfiguration.label.toUpperCase() == "CO2")
+                this.curves.curveConfiguration.label.toUpperCase() == "CO2"
                 ? "area"
                 : this.chart.chart.type
         );
@@ -121,7 +119,7 @@ export class MiniMonitorComponent implements OnInit, OnDestroy {
             }
             this.currentIndex += 1;
             this.updateChart(this.chartComponent.series);
-        }, 30);
+        }, 20);
     }
 
     public getChart(): Partial<ChartOptions> {
@@ -212,8 +210,6 @@ export class MiniMonitorComponent implements OnInit, OnDestroy {
         let curveValues = currentDataset[0].data;
         let curveValuesSimulation = currentDataset[1].data;
         if (this.action === "stop") {
-            const minY: number | any = this.chart.yaxis.min;
-            const maxY: number | any = this.chart.yaxis.max;
             curveValuesSimulation.push([this.timer, 0]);
         } else {
             curveValuesSimulation.push([this.timer, this.curves.curveValues[this.currentIndex][1]]);
