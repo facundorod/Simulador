@@ -35,6 +35,7 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
     public indexSimulationActive: number = 0; // Index for scenario simulation Active
     public currentState: StatesI; // Curves for scenario and animalSpecie selected
     private originalCurves: CurvesI[] = [];
+    private originalState: StatesI;
     // Paramaters Physiological without curves
     public fromGroupParameters: FormGroup;
     public heartRate: number = 0;
@@ -140,10 +141,15 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
                         this.originalCurves[index].curveValues = value;
                         const curve = this.originalCurves[index];
                         if (curve.curveConfiguration.label === 'IBP') {
-                            this.systolicIbp = Math.round(this.getSystolicPressure(value).value);
+                            this.systolicIbp = Math.round(this.getMaxYValue(value).value);
                             this.diastolicIbp = Math.round(value[0][1]);
                             this.meanIBP = this.curvesHelper.getMeanValue(this.diastolicIbp, this.systolicIbp);
                             this.fromGroupParameters.patchValue({ ibpSystolic: this.systolicIbp, ibpDiastolic: this.diastolicIbp })
+                        }
+                        if (curve.curveConfiguration.label === 'CO2') {
+                            this.endTidalCO2 = Math.round(this.getMaxYValue(value).value);
+                            this.inspirationCO2 = Math.round(value[0][1]);
+                            this.fromGroupParameters.patchValue({ inspirationCO2: this.inspirationCO2, endTidalCO2: this.endTidalCO2 })
                         }
                         const miniMonitor: MiniMonitorComponent = this.miniMonitors.toArray()[index];
                         miniMonitor.changeMaxAndMin(this.currentState.curves[index].curveValues);
@@ -311,15 +317,39 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
         });
         this.fromGroupParameters
             .get("heartRate")
-            .valueChanges.subscribe((val) => {
+            .valueChanges.pipe(distinctUntilChanged()).subscribe((val) => {
                 this.heartRate = val;
-                this.updatedState = true;
+                this.curvesService.updateHeartRate(this.originalState, val).subscribe((value: StatesI) => {
+                    this.currentState = value;
+
+                    const miniMonitors: MiniMonitorComponent[] = this.miniMonitors.toArray();
+                    for (let i: number = 0; i < miniMonitors.length; i++) {
+                        miniMonitors[i].changeMaxAndMin(this.currentState.curves[i].curveValues);
+                    }
+                    this.updatedState = true;
+
+                },
+                    (error: Error) => {
+                        console.error(error);
+                    })
             });
         this.fromGroupParameters
             .get("breathRate")
-            .valueChanges.subscribe((val) => {
+            .valueChanges.pipe(distinctUntilChanged()).subscribe((val) => {
                 this.breathRate = val;
-                this.updatedState = true;
+                this.curvesService.updateRespirationRate(this.originalState, val).subscribe((value: StatesI) => {
+                    this.currentState = value;
+
+                    const miniMonitors: MiniMonitorComponent[] = this.miniMonitors.toArray();
+                    for (let i: number = 0; i < miniMonitors.length; i++) {
+                        miniMonitors[i].changeMaxAndMin(this.currentState.curves[i].curveValues);
+                    }
+                    this.updatedState = true;
+
+                },
+                    (error: Error) => {
+                        console.error(error);
+                    })
             });
         this.fromGroupParameters
             .get("temperature")
@@ -332,7 +362,7 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
             this.spo2 = val;
             this.updatedState = true;
         });
-        this.fromGroupParameters.get('ibpDiastolic').valueChanges.subscribe((val) => {
+        this.fromGroupParameters.get('ibpDiastolic').valueChanges.pipe(distinctUntilChanged()).subscribe((val) => {
             if (val !== 0) {
                 this.diastolicIbp = val;
                 this.meanIBP = this.curvesHelper.getMeanValue(this.diastolicIbp, this.systolicIbp);
@@ -348,6 +378,18 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
                 this.adjustPressureValues();
                 this.updateIBPCurve();
                 this.updatedState = true;
+            }
+        })
+        this.fromGroupParameters.get("endTidalCO2").valueChanges.pipe(distinctUntilChanged()).subscribe((val) => {
+            if (val !== 0) {
+                this.endTidalCO2 = val;
+                this.updateCO2Curve();
+            }
+        })
+        this.fromGroupParameters.get("inspirationCO2").valueChanges.pipe(distinctUntilChanged()).subscribe((val) => {
+            if (val !== 0) {
+                this.inspirationCO2 = val;
+                this.updateCO2Curve();
             }
         })
         this.fromGroupParameters.get('valueToShift').valueChanges.pipe(distinctUntilChanged()).subscribe((val) => {
@@ -366,10 +408,15 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
                                 if (newCurve)
                                     this.currentState.curves[index].curveValues = newCurve;
                                 if (index === 2) {
-                                    this.systolicIbp = Math.round(this.getSystolicPressure(newCurve).value);
+                                    this.systolicIbp = Math.round(this.getMaxYValue(newCurve).value);
                                     this.diastolicIbp = Math.round(newCurve[0][1]);
                                     this.meanIBP = this.curvesHelper.getMeanValue(this.diastolicIbp, this.systolicIbp);
                                     this.fromGroupParameters.patchValue({ ibpSystolic: this.systolicIbp, ibpDiastolic: this.diastolicIbp })
+                                }
+                                if (index === 1) {
+                                    this.inspirationCO2 = Math.round(newCurve[0][1]);
+                                    this.endTidalCO2 = Math.round(this.getMaxYValue(newCurve).value);
+                                    this.fromGroupParameters.patchValue({ inspirationCO2: this.inspirationCO2, endTidalCO2: this.endTidalCO2 })
                                 }
                                 const miniMonitor: MiniMonitorComponent = this.miniMonitors.toArray()[index];
                                 miniMonitor.changeMaxAndMin(this.currentState.curves[index].curveValues);
@@ -399,10 +446,15 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
                                 if (newCurve)
                                     this.currentState.curves[index].curveValues = newCurve;
                                 if (index === 2) {
-                                    this.systolicIbp = Math.round(this.getSystolicPressure(newCurve).value);
+                                    this.systolicIbp = Math.round(this.getMaxYValue(newCurve).value);
                                     this.diastolicIbp = Math.round(newCurve[0][1]);
                                     this.meanIBP = this.curvesHelper.getMeanValue(this.diastolicIbp, this.systolicIbp);
                                     this.fromGroupParameters.patchValue({ ibpSystolic: this.systolicIbp, ibpDiastolic: this.diastolicIbp })
+                                }
+                                if (index === 1) {
+                                    this.inspirationCO2 = Math.round(newCurve[0][1]);
+                                    this.endTidalCO2 = Math.round(this.getMaxYValue(newCurve).value);
+                                    this.fromGroupParameters.patchValue({ inspirationCO2: this.inspirationCO2, endTidalCO2: this.endTidalCO2 })
                                 }
                                 const miniMonitor: MiniMonitorComponent = this.miniMonitors.toArray()[index];
                                 miniMonitor.changeMaxAndMin(this.currentState.curves[index].curveValues);
@@ -417,6 +469,23 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
         })
     }
 
+    private updateCO2Curve(): void {
+        const { curveValues: co2Curve } = this.currentState.curves[1];
+        if (co2Curve) {
+            this.curvesService.updateCO2(co2Curve, this.endTidalCO2, this.inspirationCO2)
+                .subscribe((newCurve: [number, number][]) => {
+                    if (newCurve)
+                        this.currentState.curves[1].curveValues = newCurve;
+                    const miniMonitor: MiniMonitorComponent = this.miniMonitors.toArray()[1];
+                    miniMonitor.changeMaxAndMin(this.currentState.curves[1].curveValues);
+                    this.updatedState = true;
+                },
+                    (error: Error) => {
+                        console.error(error);
+                    })
+        }
+
+    }
     private updateIBPCurve(): void {
         const { curveValues: ibpCurve } = this.currentState.curves[2];
         if (ibpCurve) {
@@ -453,6 +522,7 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
                                 action = "play";
                                 newScenario = true;
                             }
+                            this.originalState = JSON.parse(JSON.stringify(state));
                             this.currentState = state;
                             this.originalCurves = JSON.parse(JSON.stringify(state.curves));
                             this.currentState.action = action;
@@ -493,7 +563,6 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
 
     /**
      * Load parameters without curves
-     * @param state
      */
     private onLoadParameters(): void {
         this.currentState.curves = this.currentState.curves.filter(
@@ -512,7 +581,7 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
                         this.spo2 = value.curveConfiguration.refValue;
                         return value;
                     case 'IBP':
-                        this.systolicIbp = Math.round(this.getSystolicPressure(value.curveValues).value);
+                        this.systolicIbp = Math.round(this.getMaxYValue(value.curveValues).value);
                         this.diastolicIbp = Math.round(value.curveValues[0][1]);
                         this.meanIBP = this.curvesHelper.getMeanValue(this.diastolicIbp, this.systolicIbp);
                         return value;
@@ -741,7 +810,7 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
 
 
 
-    private getSystolicPressure(curves: [number, number][]): { index: number, value: number } {
+    private getMaxYValue(curves: [number, number][]): { index: number, value: number } {
         let max: number = curves[0][1];
         let index: number = 0;
         for (let i: number = 0; i < curves.length; i++) {
@@ -753,10 +822,11 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
         return { index, value: max };
     }
 
+
     public resetSimulation(): void {
         this.currentState.curves = JSON.parse(JSON.stringify(this.originalCurves));
         this.currentState.action = 'stop';
-        this.systolicIbp = Math.round(this.getSystolicPressure(this.currentState.curves[2].curveValues).value);
+        this.systolicIbp = Math.round(this.getMaxYValue(this.currentState.curves[2].curveValues).value);
         this.diastolicIbp = Math.round(this.currentState.curves[2].curveValues[0][1]);
         this.meanIBP = this.curvesHelper.getMeanValue(this.diastolicIbp, this.systolicIbp);
         this.initFormValues();

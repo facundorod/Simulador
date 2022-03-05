@@ -1,4 +1,5 @@
 import { Injectable } from "@angular/core";
+import { StatesI } from "@app/shared/models/stateI";
 import { ApiService } from "@app/shared/services/api.service";
 import { HelperService } from "@app/shared/services/helper.service";
 import { environment } from "@environments/environment";
@@ -107,6 +108,69 @@ export class CurvesService {
 
         this.api.httpPost(endpoint, { curve, systolic: systolicValue, diastolic: diastolicValue }).subscribe(
             (curves: [number, number][]) => {
+                subject.next(curves);
+            },
+            (error: Error) => {
+                subject.error(error);
+            },
+            () => {
+                subject.complete();
+            }
+        );
+
+        return subject.asObservable();
+    }
+
+    public updateCO2(curve: [number, number][], endTidalCO2: number, inspirationCO2: number): Observable<[number, number][]> {
+        const subject = new Subject<[number, number][]>();
+
+        let endpoint = environment.api.curves + 'update-co2';
+
+
+        this.api.httpPost(endpoint, { curve, endTidalCO2, inspirationCO2 }).subscribe(
+            (curves: [number, number][]) => {
+                subject.next(curves);
+            },
+            (error: Error) => {
+                subject.error(error);
+            },
+            () => {
+                subject.complete();
+            }
+        );
+
+        return subject.asObservable();
+    }
+
+    public updateHeartRate(curves: StatesI, heartRate: number): Observable<StatesI> {
+        const subject = new Subject<StatesI>();
+
+        let endpoint = environment.api.curves + 'update-heart-rate';
+
+
+        this.api.httpPost(endpoint, { curves, heartRate }).subscribe(
+            (curves: StatesI) => {
+                subject.next(curves);
+            },
+            (error: Error) => {
+                subject.error(error);
+            },
+            () => {
+                subject.complete();
+            }
+        );
+
+        return subject.asObservable();
+    }
+
+    public updateRespirationRate(curves: StatesI, breathRate: number): Observable<StatesI> {
+        const subject = new Subject<StatesI>();
+
+        let endpoint = environment.api.curves + 'update-breath-rate';
+
+
+        this.api.httpPost(endpoint, { curves, breathRate }).subscribe(
+            (curves: StatesI) => {
                 subject.next(curves);
             },
             (error: Error) => {

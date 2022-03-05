@@ -199,6 +199,8 @@ export class MonitorComponent
     private updateMaxAndMin(index: number): void {
         const currentChart: ChartComponent | any = this.charts.toArray()[index];
         const curve: CurvesI = this.newCurrentState.curves[index];
+        if (this.isBreathCurve(index) && curve.curveValues.length > 0) this.maxSizeBreath = curve.curveValues.length;
+        if (!this.isBreathCurve(index) && curve.curveValues.length > 0) this.maxSizeHeart = curve.curveValues.length;
         if (currentChart) {
             const maxY: number =
                 this.curvesHelper.getMaxY(curve.curveValues) == 0 ? 1
@@ -271,6 +273,8 @@ export class MonitorComponent
                 this.currentState.curves.forEach(
                     (curve: CurvesI, index: number) => {
                         if (curve.curveValues.length > 0) {
+                            if (this.isBreathCurve(index)) this.maxSizeBreath = curve.curveValues.length;
+                            if (!this.isBreathCurve(index)) this.maxSizeHeart = curve.curveValues.length;
                             this.simulateCurve(curve, index);
                         }
                     }
@@ -313,8 +317,7 @@ export class MonitorComponent
 
     /**
      * Update currentIndex. If the currentIndex overcome the last item in the dataset, then
-     * currentIndex go back to 0.
-     * @param curveValues
+     * currentIndex go back to 0
      */
     private updateCurrentIndex(): void {
         let changeCurves: boolean = false;

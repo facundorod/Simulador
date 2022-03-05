@@ -28,7 +28,7 @@ export class MiniMonitorComponent implements OnInit, OnDestroy {
     private simulationTimer: NodeJS.Timeout;
     private timer: number = 0.0;
     private currentIndex: number = 0;
-    private maxSize: number = 51;
+    private maxSize: number = 0;
     private curvesHelper: CurvesHelper = new CurvesHelper();
     private chart: Partial<ChartOptions>;
     public monitorConfiguration: Monitor = new Monitor();
@@ -77,7 +77,9 @@ export class MiniMonitorComponent implements OnInit, OnDestroy {
      * Create dynamic chart (for simulation)
      */
     private createDynamicChart(): void {
+
         if (this.curves.curveValues.length > 0) {
+            this.maxSize = this.curves.curveValues.length;
             const maxY: number =
                 this.curvesHelper.getMaxY(this.curves.curveValues) == 0 ? 1
                     : this.curvesHelper.getMaxY(this.curves.curveValues);
@@ -86,7 +88,7 @@ export class MiniMonitorComponent implements OnInit, OnDestroy {
                 colorLine: this.curves.curveConfiguration.colorLine,
                 height: 100,
                 minX: 0,
-                maxX: 3,
+                maxX: 5,
                 minY,
                 maxY,
                 toolbar: false,
@@ -129,7 +131,7 @@ export class MiniMonitorComponent implements OnInit, OnDestroy {
 
     private updateTimer(): void {
         if (this.firstSimulation) {
-            if (this.timer >= 3) {
+            if (this.timer >= 5) {
                 this.timer = 0.0;
                 this.firstSimulation = false;
                 // At this point, the first simulation end, so we create a new dataset for all curves where
@@ -137,7 +139,7 @@ export class MiniMonitorComponent implements OnInit, OnDestroy {
                 this.createSimulationDataset();
             }
         } else {
-            if (this.timer >= 3) {
+            if (this.timer >= 5) {
                 this.timer = 0.0;
                 // At this point, the clock timer overcomes monitor max samples, so we need to
                 // "restart" simulation
