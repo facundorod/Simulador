@@ -585,6 +585,10 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
                         this.diastolicIbp = Math.round(value.curveValues[0][1]);
                         this.meanIBP = this.curvesHelper.getMeanValue(this.diastolicIbp, this.systolicIbp);
                         return value;
+                    case 'CO2':
+                        this.inspirationCO2 = Math.round(value.curveValues[0][1]);
+                        this.endTidalCO2 = Math.round(this.getMaxYValue(value.curveValues).value);
+                        return value;
                     default:
                         return value;
                 }
@@ -621,8 +625,8 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
             {
                 value: 1
             }],
-            endTidalCO2: 0,
-            inspirationCO2: 0
+            endTidalCO2: this.endTidalCO2,
+            inspirationCO2: this.inspirationCO2
         })
 
     }
