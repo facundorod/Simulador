@@ -29,6 +29,7 @@ export class InterceptorService implements HttpInterceptor {
                 if (err.status >= 400 && err.status < 500) {
                     if (err.status == 401 || err.status == 412) {
                         message = `You don't have access`;
+                        localStorage.removeItem('authToken');
                     } else {
                         message = err.message;
                     }

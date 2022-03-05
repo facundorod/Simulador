@@ -63,7 +63,7 @@ export function commonOptions(
         chart: {
             id: "curves",
             type: type ? type : "line",
-            height: toolbarEnabled ? 130 : 143,
+            height: toolbarEnabled ? 110 : 143,
             redrawOnParentResize: true,
             redrawOnWindowResize: true,
             zoom: {
@@ -81,9 +81,9 @@ export function commonOptions(
         },
         yaxis: {
             labels: {
-                show: toolbarEnabled,
+                show: false,
             },
-            show: toolbarEnabled,
+            show: false,
             max: maxY,
             min: 0,
         },
