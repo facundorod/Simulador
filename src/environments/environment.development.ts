@@ -8,6 +8,7 @@ export const environment = {
         pathologies: "/pathology/",
         scenarios: "/scenario/",
         scenariosParams: "/scenario/parameters",
+        verifyToken: "/auth/verify",
         login: "/auth/login",
         register: "/auth/register",
         simulations: "/simulation/",

@@ -8,6 +8,7 @@ import { FormBuilder } from "@angular/forms";
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import { ModalEditComponentMed } from "../../modals/medications/modal-edit/modal-edit.component";
 import { MedicationsService } from "../../services/medications.service";
+import { AuthService } from "@app/services/auth.service";
 @Component({
     selector: "app-medications",
     templateUrl: "./medications.component.html",
@@ -35,6 +36,7 @@ export class MedicationsComponent extends BaseComponent implements OnInit {
     constructor(
         private fb: FormBuilder,
         private medicationsService: MedicationsService,
+        private authService: AuthService,
         private toast: ToastrService,
         private modal: NgbModal
     ) {
@@ -179,5 +181,9 @@ export class MedicationsComponent extends BaseComponent implements OnInit {
         this.queryOptions.page = 1;
         this.initFormGroup();
         this.loadData();
+    }
+
+    public isUserAdmin(): boolean {
+        return this.authService.isAdmin();
     }
 }

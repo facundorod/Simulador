@@ -58,7 +58,7 @@
                         <th scope="col">
                             Unit
                         </th>
-                        <th scope="col" class="text-center">
+                        <th scope="col" class="text-center" *ngIf="isUserAdmin()">
 
                         </th>
 
@@ -124,7 +124,7 @@
                             </ng-template>
                         </td>
 
-                        <td scope="row" class="text-right">
+                        <td scope="row" class="text-right" *ngIf="isUserAdmin()">
                             <button class="btn btn-light" (click)="onEditParameter(i)">
                                 <img
                                     src="https://img.icons8.com/external-kiranshastry-lineal-color-kiranshastry/18/000000/external-pencil-interface-kiranshastry-lineal-color-kiranshastry-1.png" />

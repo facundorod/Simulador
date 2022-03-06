@@ -1,5 +1,6 @@
 import { Component, OnInit } from "@angular/core";
 import { FormBuilder, FormGroup } from "@angular/forms";
+import { AuthService } from "@app/services/auth.service";
 import { ConfirmModalComponent } from "@app/shared/modals/confirm/confirm-modal.component";
 import { PhysiologicalParamaterI } from "@app/shared/models/physiologicalParamaterI";
 import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
@@ -18,10 +19,11 @@ export class ParametersComponent implements OnInit {
     private formGroup: FormGroup;
     constructor(
         private parameterSvc: ParametersService,
+        private authService: AuthService,
         private fb: FormBuilder,
         private toast: ToastrService,
         private modal: NgbModal
-    ) {}
+    ) { }
 
     ngOnInit(): void {
         this.initFormGroup();
@@ -153,5 +155,9 @@ export class ParametersComponent implements OnInit {
                 }
             });
         }
+    }
+
+    public isUserAdmin(): boolean {
+        return this.authService.isAdmin();
     }
 }

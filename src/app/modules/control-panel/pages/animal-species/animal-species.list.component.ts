@@ -7,6 +7,7 @@ import { AnimalSpeciesService } from "../../services/animalSpecies.service";
 import { FormBuilder } from "@angular/forms";
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import { ModalEditComponent } from "../../modals/animalSpecies/modal-edit/modal-edit.component";
+import { AuthService } from "@app/services/auth.service";
 @Component({
     selector: "app-animal-species",
     templateUrl: "./animal-species.list.component.html",
@@ -14,8 +15,7 @@ import { ModalEditComponent } from "../../modals/animalSpecies/modal-edit/modal-
 })
 export class AnimalSpeciesListComponent
     extends BaseComponent
-    implements OnInit
-{
+    implements OnInit {
     public animal: AnimalSpeciesI;
     public animalSpecies: AnimalSpeciesI[];
 
@@ -36,6 +36,7 @@ export class AnimalSpeciesListComponent
 
     constructor(
         private fb: FormBuilder,
+        private authService: AuthService,
         private animalSpeciesService: AnimalSpeciesService,
         private toast: ToastrService,
         private modal: NgbModal
@@ -141,6 +142,10 @@ export class AnimalSpeciesListComponent
                 }
             });
         }
+    }
+
+    public isUserAdmin(): boolean {
+        return this.authService.isAdmin();
     }
 
     public onDelete(index: number) {

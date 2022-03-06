@@ -3,8 +3,8 @@
         <div class="col-md-10">
             <h3 class="textSimulation">Simulation edition</h3>
         </div>
-        <div class="col-md-2">
-            <button type="submit" *ngIf="formGroup.valid" class="btn btn-primary saveChanges-top"
+        <div class="col-md-2" *ngIf="isUserAdmin()">
+            <button type=" submit" *ngIf="formGroup.valid" class="btn btn-primary saveChanges-top"
                 (click)="onSaveChanges()">Save
                 changes</button>
             <button type="submit" *ngIf="!formGroup.valid" class="btn btn-primary saveChanges-top"

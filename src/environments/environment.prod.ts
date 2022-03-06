@@ -10,6 +10,7 @@ export const environment = {
         scenariosParams: "/scenario/parameters",
         login: "/auth/login",
         register: "/auth/register",
+        verifyToken: "/auth/verify",
         simulations: "/simulation/",
         curves: "/curves/",
         parameters: "/parameters/",

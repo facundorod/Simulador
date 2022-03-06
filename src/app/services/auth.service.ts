@@ -6,12 +6,13 @@ import { environment } from "@environments/environment";
 import { Subject } from "rxjs";
 import { JwtResponseI } from "@app/shared/models/jwt-responseI";
 import { AuthSession } from "@app/shared/services/authSession.service";
+import { UserTokenI } from "@app/shared/models/userTokenI";
 
 @Injectable({
     providedIn: "root",
 })
 export class AuthService {
-    constructor(private api: ApiService, private http: HttpClient) {}
+    constructor(private api: ApiService, private http: HttpClient) { }
 
     login(email: String, password: String) {
         const subject = new Subject<any>();
@@ -58,6 +59,18 @@ export class AuthService {
         );
 
         return subject.asObservable();
+    }
+
+    public isAdmin(): boolean {
+        const { user }: UserTokenI = JSON.parse(localStorage.getItem('authToken'));
+        if (user) {
+            const isAdmin = user.roles.filter((rol) => {
+                return rol.name == 'admin'
+            })
+            if (isAdmin.length > 0) return true;
+            return false;
+        }
+        return false;
     }
 
     public isLogged(): boolean {

@@ -7,6 +7,7 @@ import { ScenarioService } from "../../services/scenario.service";
 import { ConfirmModalComponent } from "../../../../shared/modals/confirm/confirm-modal.component";
 import { ScenarioCloneComponent } from "../../modals/scenario-clone/scenario-clone.component";
 import { ScenarioParamsI } from "@app/shared/models/scenarioParamsI";
+import { AuthService } from "@app/services/auth.service";
 
 @Component({
     selector: "app-scenario-params",
@@ -19,7 +20,8 @@ export class ScenarioParamsComponent implements OnInit {
         private fb: FormBuilder,
         private router: Router,
         private toast: ToastrService,
-        private modal: NgbModal
+        private modal: NgbModal,
+        private authService: AuthService
     ) { }
     public scenarios: any;
     private formGroup: FormGroup;
@@ -159,5 +161,9 @@ export class ScenarioParamsComponent implements OnInit {
                 );
             }
         });
+    }
+
+    public isUserAdmin(): boolean {
+        return this.authService.isAdmin();
     }
 }

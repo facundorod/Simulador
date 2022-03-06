@@ -19,6 +19,7 @@ import { MiniMonitorComponent } from "@app/modules/monitor/components/mini-monit
 import { CurveValues } from "@app/shared/models/curveValues";
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import { NibpComponent } from "../../modals/nibp/nibp.component";
+import { AuthService } from "@app/services/auth.service";
 
 @Component({
     selector: "app-panel",
@@ -58,6 +59,7 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
 
     constructor(
         private animalSpecieService: AnimalSpeciesService,
+        private authService: AuthService,
         private fb: FormBuilder,
         private toast: ToastrService,
         private simulationService: SimulationService,
@@ -319,37 +321,40 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
             .get("heartRate")
             .valueChanges.pipe(distinctUntilChanged()).subscribe((val) => {
                 this.heartRate = val;
-                this.curvesService.updateHeartRate(this.originalState, val).subscribe((value: StatesI) => {
-                    this.currentState = value;
+                if (this.currentState.curves.length > 0)
+                    this.curvesService.updateHeartRate(this.originalState, val).subscribe((value: StatesI) => {
+                        this.currentState = value;
 
-                    const miniMonitors: MiniMonitorComponent[] = this.miniMonitors.toArray();
-                    for (let i: number = 0; i < miniMonitors.length; i++) {
-                        miniMonitors[i].changeMaxAndMin(this.currentState.curves[i].curveValues);
-                    }
-                    this.updatedState = true;
+                        const miniMonitors: MiniMonitorComponent[] = this.miniMonitors.toArray();
+                        for (let i: number = 0; i < miniMonitors.length; i++) {
+                            miniMonitors[i].changeMaxAndMin(this.currentState.curves[i].curveValues);
+                        }
+                        this.updatedState = true;
 
-                },
-                    (error: Error) => {
-                        console.error(error);
-                    })
+                    },
+                        (error: Error) => {
+                            console.error(error);
+                        })
             });
         this.fromGroupParameters
             .get("breathRate")
             .valueChanges.pipe(distinctUntilChanged()).subscribe((val) => {
                 this.breathRate = val;
-                this.curvesService.updateRespirationRate(this.originalState, val).subscribe((value: StatesI) => {
-                    this.currentState = value;
+                if (this.currentState.curves.length > 0)
 
-                    const miniMonitors: MiniMonitorComponent[] = this.miniMonitors.toArray();
-                    for (let i: number = 0; i < miniMonitors.length; i++) {
-                        miniMonitors[i].changeMaxAndMin(this.currentState.curves[i].curveValues);
-                    }
-                    this.updatedState = true;
+                    this.curvesService.updateRespirationRate(this.originalState, val).subscribe((value: StatesI) => {
+                        this.currentState = value;
 
-                },
-                    (error: Error) => {
-                        console.error(error);
-                    })
+                        const miniMonitors: MiniMonitorComponent[] = this.miniMonitors.toArray();
+                        for (let i: number = 0; i < miniMonitors.length; i++) {
+                            miniMonitors[i].changeMaxAndMin(this.currentState.curves[i].curveValues);
+                        }
+                        this.updatedState = true;
+
+                    },
+                        (error: Error) => {
+                            console.error(error);
+                        })
             });
         this.fromGroupParameters
             .get("temperature")
@@ -396,34 +401,39 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
             val.forEach((value: { value: number }, index: number) => {
                 if (value.value != this.shiftValues[index]) {
                     if (value.value === 0) {
-                        this.currentState.curves[index].curveValues = JSON.parse(JSON.stringify(this.originalCurves[index].curveValues))
-                        this.updatedState = true;
+                        if (this.currentState?.curves[index]?.curveValues) {
+                            this.currentState.curves[index].curveValues = JSON.parse(JSON.stringify(this.originalCurves[index].curveValues))
+                            this.updatedState = true;
+                        }
                     } else {
                         this.shiftValues[index] = value.value;
+                        if (this.currentState?.curves[index]?.curveValues) {
 
-                        const curveToShift: [number, number][] = this.currentState.curves[index].curveValues;
-                        this.curvesService
-                            .shiftCurve(curveToShift, value.value)
-                            .subscribe((newCurve: [number, number][]) => {
-                                if (newCurve)
-                                    this.currentState.curves[index].curveValues = newCurve;
-                                if (index === 2) {
-                                    this.systolicIbp = Math.round(this.getMaxYValue(newCurve).value);
-                                    this.diastolicIbp = Math.round(newCurve[0][1]);
-                                    this.meanIBP = this.curvesHelper.getMeanValue(this.diastolicIbp, this.systolicIbp);
-                                    this.fromGroupParameters.patchValue({ ibpSystolic: this.systolicIbp, ibpDiastolic: this.diastolicIbp })
-                                }
-                                if (index === 1) {
-                                    this.inspirationCO2 = Math.round(newCurve[0][1]);
-                                    this.endTidalCO2 = Math.round(this.getMaxYValue(newCurve).value);
-                                    this.fromGroupParameters.patchValue({ inspirationCO2: this.inspirationCO2, endTidalCO2: this.endTidalCO2 })
-                                }
-                                const miniMonitor: MiniMonitorComponent = this.miniMonitors.toArray()[index];
-                                miniMonitor.changeMaxAndMin(this.currentState.curves[index].curveValues);
-                            },
-                                (error: Error) => {
-                                    console.error(error);
-                                })
+                            const curveToShift: [number, number][] = this.currentState.curves[index].curveValues;
+                            if (curveToShift)
+                                this.curvesService
+                                    .shiftCurve(curveToShift, value.value)
+                                    .subscribe((newCurve: [number, number][]) => {
+                                        if (newCurve)
+                                            this.currentState.curves[index].curveValues = newCurve;
+                                        if (index === 2) {
+                                            this.systolicIbp = Math.round(this.getMaxYValue(newCurve).value);
+                                            this.diastolicIbp = Math.round(newCurve[0][1]);
+                                            this.meanIBP = this.curvesHelper.getMeanValue(this.diastolicIbp, this.systolicIbp);
+                                            this.fromGroupParameters.patchValue({ ibpSystolic: this.systolicIbp, ibpDiastolic: this.diastolicIbp })
+                                        }
+                                        if (index === 1) {
+                                            this.inspirationCO2 = Math.round(newCurve[0][1]);
+                                            this.endTidalCO2 = Math.round(this.getMaxYValue(newCurve).value);
+                                            this.fromGroupParameters.patchValue({ inspirationCO2: this.inspirationCO2, endTidalCO2: this.endTidalCO2 })
+                                        }
+                                        const miniMonitor: MiniMonitorComponent = this.miniMonitors.toArray()[index];
+                                        miniMonitor.changeMaxAndMin(this.currentState.curves[index].curveValues);
+                                    },
+                                        (error: Error) => {
+                                            console.error(error);
+                                        })
+                        }
                     }
 
                 }
@@ -435,35 +445,40 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
             val.forEach((value: { value: number }, index: number) => {
                 if (value.value != this.amplitudeValues[index]) {
                     if (value.value === 1) {
-                        this.currentState.curves[index].curveValues = JSON.parse(JSON.stringify(this.originalCurves[index].curveValues))
-                        this.updatedState = true;
+                        if (this.currentState?.curves[index]?.curveValues) {
+                            this.currentState.curves[index].curveValues = JSON.parse(JSON.stringify(this.originalCurves[index].curveValues))
+                            this.updatedState = true;
+                        }
                     } else {
                         this.amplitudeValues[index] = value.value;
-                        const curveToChange: [number, number][] = this.currentState.curves[index].curveValues;
-                        this.curvesService
-                            .calculateAmplitude(curveToChange, value.value)
-                            .subscribe((newCurve: [number, number][]) => {
-                                if (newCurve)
-                                    this.currentState.curves[index].curveValues = newCurve;
-                                if (index === 2) {
-                                    this.systolicIbp = Math.round(this.getMaxYValue(newCurve).value);
-                                    this.diastolicIbp = Math.round(newCurve[0][1]);
-                                    this.meanIBP = this.curvesHelper.getMeanValue(this.diastolicIbp, this.systolicIbp);
-                                    this.fromGroupParameters.patchValue({ ibpSystolic: this.systolicIbp, ibpDiastolic: this.diastolicIbp })
-                                }
-                                if (index === 1) {
-                                    this.inspirationCO2 = Math.round(newCurve[0][1]);
-                                    this.endTidalCO2 = Math.round(this.getMaxYValue(newCurve).value);
-                                    this.fromGroupParameters.patchValue({ inspirationCO2: this.inspirationCO2, endTidalCO2: this.endTidalCO2 })
-                                }
-                                const miniMonitor: MiniMonitorComponent = this.miniMonitors.toArray()[index];
-                                miniMonitor.changeMaxAndMin(this.currentState.curves[index].curveValues);
-                            },
-                                (error: Error) => {
-                                    console.error(error);
-                                })
-                    }
+                        if (this.currentState?.curves[index]?.curveValues) {
 
+                            const curveToChange: [number, number][] = this.currentState.curves[index].curveValues;
+                            if (curveToChange)
+                                this.curvesService
+                                    .calculateAmplitude(curveToChange, value.value)
+                                    .subscribe((newCurve: [number, number][]) => {
+                                        if (newCurve)
+                                            this.currentState.curves[index].curveValues = newCurve;
+                                        if (index === 2) {
+                                            this.systolicIbp = Math.round(this.getMaxYValue(newCurve).value);
+                                            this.diastolicIbp = Math.round(newCurve[0][1]);
+                                            this.meanIBP = this.curvesHelper.getMeanValue(this.diastolicIbp, this.systolicIbp);
+                                            this.fromGroupParameters.patchValue({ ibpSystolic: this.systolicIbp, ibpDiastolic: this.diastolicIbp })
+                                        }
+                                        if (index === 1) {
+                                            this.inspirationCO2 = Math.round(newCurve[0][1]);
+                                            this.endTidalCO2 = Math.round(this.getMaxYValue(newCurve).value);
+                                            this.fromGroupParameters.patchValue({ inspirationCO2: this.inspirationCO2, endTidalCO2: this.endTidalCO2 })
+                                        }
+                                        const miniMonitor: MiniMonitorComponent = this.miniMonitors.toArray()[index];
+                                        miniMonitor.changeMaxAndMin(this.currentState.curves[index].curveValues);
+                                    },
+                                        (error: Error) => {
+                                            console.error(error);
+                                        })
+                        }
+                    }
                 }
             });
         })
@@ -851,5 +866,9 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
                 console.error(error);
             })
 
+    }
+
+    public isUserAdmin(): boolean {
+        return this.authService.isAdmin();
     }
 }

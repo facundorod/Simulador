@@ -9,7 +9,7 @@
         <div class="card-body">
             <h3 class="font-italic">How do you want to initiate your new simulation?</h3>
             <form class="form-group" #form="ngForm">
-                <div class="form-check">
+                <div class="form-check" *ngIf="isUserAdmin()">
                     <input class="form-check-input" type="radio" value="blank" name="blank" checked [(ngModel)]="option"
                         required>
                     <label class="form-check-label" for="exampleRadios1">

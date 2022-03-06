@@ -5,7 +5,7 @@
                 <h3 class="title"> Pathologies </h3>
             </div>
             <div class="col text-right">
-                <button class="btn btn-primary btn-add" (click)="onEdit()"> + Pathology </button>
+                <button class="btn btn-primary btn-add" (click)="onEdit()" *ngIf="isUserAdmin()"> + Pathology </button>
             </div>
         </div>
     </div>
@@ -57,12 +57,10 @@
                         <th scope="col">
                             Last update
                         </th>
-                        <th scope="col">
+                        <th scope="col" *ngIf="isUserAdmin()">
                             <!-- For edit -->
                         </th>
-                        <!-- <th scope="col">
-                         For delete -->
-                        <!-- </th> -->
+
 
                     </tr>
                 </thead>
@@ -100,7 +98,7 @@
                         <td scope="row">
                             {{pathology.updated_at | date}}
                         </td>
-                        <td scope="row" class="text-right">
+                        <td scope="row" class="text-right" *ngIf="isUserAdmin()">
                             <button class="btn btn-light" (click)="onEdit(i)">
                                 <img
                                     src="https://img.icons8.com/external-kiranshastry-lineal-color-kiranshastry/26/000000/external-pencil-interface-kiranshastry-lineal-color-kiranshastry-1.png" />

@@ -5,7 +5,8 @@
                 <h3 class="title"> Scenarios </h3>
             </div>
             <div class="col text-right">
-                <button class="btn btn-primary btn-add" (click)="onAddScenario()"> + Scenario </button>
+                <button class="btn btn-primary btn-add" (click)="onAddScenario()" *ngIf="isUserAdmin()"> + Scenario
+                </button>
             </div>
         </div>
     </div>
@@ -54,7 +55,7 @@
                         <th scope="col">
                             Medications
                         </th>
-                        <th scope="col">
+                        <th scope="col" *ngIf="isUserAdmin()">
 
                         </th>
 
@@ -93,7 +94,7 @@
                                 {{scenario.medications | arrayJson: 'medications' }}
                             </ng-template>
                         </td>
-                        <td scope="row" class="text-right">
+                        <td scope="row" class="text-right" *ngIf="isUserAdmin()">
                             <button class="btn btn-light" (click)="onEdit(scenario.id_scenario)">
                                 <img
                                     src="https://img.icons8.com/external-kiranshastry-lineal-color-kiranshastry/18/000000/external-pencil-interface-kiranshastry-lineal-color-kiranshastry-1.png" />

@@ -5,6 +5,7 @@ import { environment } from "./../../../../../environments/environment";
 import { Component, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
 import { SimulationService } from "../../services/simulation.service";
+import { AuthService } from "@app/services/auth.service";
 
 @Component({
     selector: "app-new",
@@ -18,7 +19,8 @@ export class NewComponent implements OnInit {
     constructor(
         private router: Router,
         private modal: NgbModal,
-        private simulationService: SimulationService
+        private simulationService: SimulationService,
+        private authService: AuthService
     ) { }
 
     ngOnInit(): void {
@@ -65,5 +67,9 @@ export class NewComponent implements OnInit {
                 this.router.navigateByUrl("/panel");
             }
         }
+    }
+
+    public isUserAdmin(): boolean {
+        return this.authService.isAdmin();
     }
 }

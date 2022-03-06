@@ -9,6 +9,7 @@ import { FormBuilder } from "@angular/forms";
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import { ModalEditComponentArr } from "../../modals/arrhythmias/modal-edit/modal-edit.component";
 import { ArrhythmiasService } from "../../services/arrhythmias.service";
+import { AuthService } from "@app/services/auth.service";
 @Component({
     selector: "app-arrhythmias",
     templateUrl: "./arrhythmias.component.html",
@@ -36,6 +37,7 @@ export class ArrhythmiasComponent extends BaseComponent implements OnInit {
     constructor(
         private fb: FormBuilder,
         private arrhythmiasService: ArrhythmiasService,
+        private authService: AuthService,
         private toast: ToastrService,
         private router: Router,
         private route: ActivatedRoute,
@@ -79,7 +81,7 @@ export class ArrhythmiasComponent extends BaseComponent implements OnInit {
             );
     }
 
-    public onAddAnimalSpecie() {}
+    public onAddAnimalSpecie() { }
 
     private initFormGroup() {
         this.formGroup = this.fb.group({
@@ -181,5 +183,9 @@ export class ArrhythmiasComponent extends BaseComponent implements OnInit {
         this.queryOptions.page = 1;
         this.initFormGroup();
         this.loadData();
+    }
+
+    public isUserAdmin(): boolean {
+        return this.authService.isAdmin();
     }
 }

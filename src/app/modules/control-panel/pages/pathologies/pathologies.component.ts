@@ -8,6 +8,7 @@ import { BaseComponent } from "@app/shared/components/base.component";
 import { FormBuilder } from "@angular/forms";
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import { ModalEditComponentPath } from "../../modals/pathologies/modal-edit/modal-edit.component";
+import { AuthService } from "@app/services/auth.service";
 @Component({
     selector: "app-pathologies",
     templateUrl: "./pathologies.component.html",
@@ -34,6 +35,7 @@ export class PathologiesComponent extends BaseComponent implements OnInit {
     constructor(
         private fb: FormBuilder,
         private pathologiesService: PathologiesService,
+        private authService: AuthService,
         private toast: ToastrService,
         private modal: NgbModal
     ) {
@@ -177,5 +179,9 @@ export class PathologiesComponent extends BaseComponent implements OnInit {
         this.queryOptions.page = 1;
         this.initFormGroup();
         this.loadData();
+    }
+
+    public isUserAdmin(): boolean {
+        return this.authService.isAdmin();
     }
 }
