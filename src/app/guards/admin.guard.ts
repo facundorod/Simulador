@@ -12,6 +12,9 @@ export class AdminGuard implements CanActivate {
     constructor(private authSvc: AuthService, private router: Router) { }
 
     canActivate(): boolean {
-        return this.authSvc.isAdmin();
+        if (this.authSvc.isAdmin())
+            return true;
+        this.router.navigateByUrl('/home');
+        return false;
     }
 }

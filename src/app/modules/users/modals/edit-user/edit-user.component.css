@@ -1,0 +1,49 @@
+.modal-header,
+.modal-body {
+    background-color: #b7a9e2;
+}
+
+.modal-header h3 {
+    font-size: 1.5em;
+    color: #212529;
+}
+
+.btn-save {
+    background-color: #42336e;
+    border: 1px solid #42336e;
+}
+
+.btn-save:hover {
+    background-color: #fff;
+    color: #42336e;
+}
+
+:host::ng-deep ng-multiselect-dropdown .multiselect-dropdown {
+    border: 1px solid #42336e !important;
+    border-radius: 6px !important;
+    padding: 0;
+    margin: 0;
+    background-color: #fff;
+}
+
+:host::ng-deep.selected-item {
+    border-radius: 6px !important;
+    background: #42336e !important;
+    border: 1px solid #42336e !important;
+}
+
+:host::ng-deep
+    ng-multiselect-dropdown
+    .multiselect-item-checkbox
+    input[type="checkbox"]
+    + div:before {
+    border: 2px solid #42336e !important;
+}
+
+:host::ng-deep
+    ng-multiselect-dropdown
+    .multiselect-item-checkbox
+    input[type="checkbox"]:checked
+    + div:before {
+    background: #42336e !important;
+}

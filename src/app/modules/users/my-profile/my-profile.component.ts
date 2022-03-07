@@ -36,7 +36,7 @@ export class MyProfileComponent implements OnInit {
         };
     }
 
-    ngOnInit(): void {}
+    ngOnInit(): void { }
 
     public getForm(): FormGroup {
         return this.formGroup;
@@ -71,7 +71,7 @@ export class MyProfileComponent implements OnInit {
     }
 
     public onSubmit(): void {
-        this.userService.updateUser(this.user).subscribe(
+        this.userService.updateMyUser(this.user).subscribe(
             () => {
                 this.toast.toastrConfig.timeOut = 1000;
                 this.toast.toastrConfig.positionClass =

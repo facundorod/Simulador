@@ -20,19 +20,21 @@ export class LoginComponent implements OnInit {
         private toast: ToastrService,
         private router: Router,
         private monitorConfiguration: MonitorConfigurationService
-    ) {}
+    ) { }
 
     login() {
-        this.toast.toastrConfig.timeOut = 1000;
-        this.toast.toastrConfig.positionClass = "toast-bottom-left";
-        this.toast.toastrConfig.closeButton = true;
+
         this.authService.login(this.email, this.password).subscribe(
             () => {
                 // Logueo exitoso
                 this.router.navigateByUrl("/simulation/new");
                 this.submit = true;
-                this.toast.success("Login successful... Welcome");
                 const auth = JSON.parse(localStorage.getItem("authToken"));
+                const { user } = auth;
+                this.toast.toastrConfig.timeOut = 1000;
+                this.toast.toastrConfig.positionClass = "toast-bottom-left";
+                this.toast.toastrConfig.closeButton = true;
+                this.toast.success(`Welcome ${user.name}!`);
                 if (auth.user.roles.includes("admin"))
                     this.loadMonitorConfiguration();
                 // En caso de error lo intercepta el servicio Interceptor.
@@ -43,7 +45,7 @@ export class LoginComponent implements OnInit {
         );
     }
 
-    ngOnInit() {}
+    ngOnInit() { }
 
     private loadMonitorConfiguration(): void {
         this.monitorConfiguration.getMonitorConfiguration().subscribe(

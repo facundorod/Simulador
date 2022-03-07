@@ -54,7 +54,7 @@ export class AuthService {
                 subject.error(error);
             },
             () => {
-                subject.next();
+                subject.complete();
             }
         );
 

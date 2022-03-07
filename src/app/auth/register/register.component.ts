@@ -18,13 +18,11 @@ export class RegisterComponent implements OnInit {
         private authService: AuthService,
         private toast: ToastrService,
         private router: Router
-    ) {}
+    ) { }
 
-    ngOnInit() {}
+    ngOnInit() { }
 
     sign() {
-        this.toast.toastrConfig.timeOut = 1000;
-        this.toast.toastrConfig.positionClass = "toast-bottom-full-width";
         this.authService
             .register({
                 email: this.email,
@@ -35,6 +33,8 @@ export class RegisterComponent implements OnInit {
             })
             .subscribe(() => {
                 this.router.navigateByUrl("/auth/login");
+                this.toast.toastrConfig.timeOut = 1000;
+                this.toast.toastrConfig.positionClass = "toast-bottom-full-width";
                 this.toast.success("Your account has been created");
             });
     }
