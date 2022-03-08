@@ -66,6 +66,13 @@ export class EditUserComponent implements OnInit {
         this.activeModal.close(userEdited);
     }
 
+    public onSelectRole(role: RoleI) {
+
+    }
+
+    public onDeselectRole(role: RoleI) {
+    }
+
     public isLoading(): boolean {
         return this.loading;
     }

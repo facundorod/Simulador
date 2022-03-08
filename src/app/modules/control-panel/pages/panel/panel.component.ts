@@ -83,6 +83,8 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
 
     ngOnDestroy(): void {
         this.localStorageService.removeValue("simulationState");
+        this.localStorageService.removeValue("Simulation");
+
     }
 
     /**
@@ -321,13 +323,15 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
             .get("heartRate")
             .valueChanges.pipe(distinctUntilChanged()).subscribe((val) => {
                 this.heartRate = val;
-                if (this.currentState.curves.length > 0)
+                if (this.currentState?.curves?.length > 0)
                     this.curvesService.updateHeartRate(this.originalState, val).subscribe((value: StatesI) => {
-                        this.currentState = value;
-
+                        this.currentState.curves[0] = value.curves[0];
+                        this.currentState.curves[2] = value.curves[2];
+                        this.currentState.curves[3] = value.curves[3];
                         const miniMonitors: MiniMonitorComponent[] = this.miniMonitors.toArray();
                         for (let i: number = 0; i < miniMonitors.length; i++) {
-                            miniMonitors[i].changeMaxAndMin(this.currentState.curves[i].curveValues);
+                            if (i != 1)
+                                miniMonitors[i].changeMaxAndMin(this.currentState.curves[i].curveValues);
                         }
                         this.updatedState = true;
 
@@ -340,15 +344,11 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
             .get("breathRate")
             .valueChanges.pipe(distinctUntilChanged()).subscribe((val) => {
                 this.breathRate = val;
-                if (this.currentState.curves.length > 0)
-
+                if (this.currentState?.curves?.length > 0)
                     this.curvesService.updateRespirationRate(this.originalState, val).subscribe((value: StatesI) => {
-                        this.currentState = value;
-
-                        const miniMonitors: MiniMonitorComponent[] = this.miniMonitors.toArray();
-                        for (let i: number = 0; i < miniMonitors.length; i++) {
-                            miniMonitors[i].changeMaxAndMin(this.currentState.curves[i].curveValues);
-                        }
+                        this.currentState.curves[1] = value.curves[1];
+                        const miniMonitors: MiniMonitorComponent = this.miniMonitors.toArray()[1];
+                        miniMonitors.changeMaxAndMin(this.currentState.curves[1].curveValues);
                         this.updatedState = true;
 
                     },

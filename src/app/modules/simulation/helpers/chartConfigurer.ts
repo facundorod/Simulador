@@ -62,7 +62,7 @@ export function commonOptions(
         },
         chart: {
             id: "curves",
-            type: type ? type : "line",
+            type: "line",
             height: toolbarEnabled ? 110 : 143,
             redrawOnParentResize: true,
             redrawOnWindowResize: true,
@@ -147,7 +147,7 @@ export class ChartConfigurer {
                 redrawOnParentResize: true,
                 redrawOnWindowResize: true,
                 height: this.chartOptions.height,
-                type: type ? type : "line",
+                type: "line",
                 zoom: {
                     enabled: false,
                 },
