@@ -86,10 +86,10 @@
                         <td scope="row">
                             {{arrhythmia.name}}
                         </td>
-                        <td scope="row" style="max-width: 200px; overflow: auto">
+                        <td scope="row" class="extrainfo-row">
                             {{arrhythmia.description}}
                         </td>
-                        <td scope="row" style="max-width: 200px; overflow: auto">
+                        <td scope="row" class="extrainfo-row">
                             <p *ngIf="arrhythmia.extraInformation">{{arrhythmia.extraInformation}}</p>
                             <p class="ml-2" *ngIf="!arrhythmia.extraInformation">-</p>
                         </td>

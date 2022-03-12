@@ -29,7 +29,7 @@ export class ModalEditComponent extends BaseComponent implements OnInit {
                 this.animalSpecie ? this.animalSpecie.description : "",
                 Validators.required,
             ],
-            height: [this.animalSpecie ? this.animalSpecie.height : null],
+            age: [this.animalSpecie ? this.animalSpecie.age : null],
             weight: [this.animalSpecie ? this.animalSpecie.weight : null],
             extraInformation: [
                 this.animalSpecie ? this.animalSpecie.extraInformation : null,

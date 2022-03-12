@@ -112,7 +112,7 @@ export class AnimalSpeciesListComponent
                                 this.toast.toastrConfig.positionClass =
                                     "toast-bottom-full-width";
                                 this.toast.success(
-                                    "The animal specie has been updated"
+                                    "The animal patient has been updated"
                                 );
                                 this.loadData();
                             },
@@ -131,7 +131,7 @@ export class AnimalSpeciesListComponent
                             this.toast.toastrConfig.positionClass =
                                 "toast-bottom-full-width";
                             this.toast.success(
-                                "The animal specie has been inserted"
+                                "The animal patient has been inserted"
                             );
                             this.loadData();
                         },

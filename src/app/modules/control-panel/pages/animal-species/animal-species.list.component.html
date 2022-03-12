@@ -2,10 +2,10 @@
     <div class="animal-header">
         <div class="row">
             <div class="col-md-8">
-                <h3 class="title"> Animals </h3>
+                <h3 class="title"> Animal Patients </h3>
             </div>
             <div class="col text-right">
-                <button class="btn btn-primary btn-add" (click)="onEdit()" *ngIf="isUserAdmin()"> + Animal Specie
+                <button class="btn btn-primary btn-add" (click)="onEdit()" *ngIf="isUserAdmin()"> + Animal Patient
                 </button>
             </div>
         </div>
@@ -52,7 +52,7 @@
                             Weigth
                         </th>
                         <th scope="col">
-                            Heigth
+                            Age
                         </th>
                         <th scope="col">
                             Extra information
@@ -92,8 +92,8 @@
                             <p class="ml-2" *ngIf="!animalSpecie.weight">-</p>
                         </td>
                         <td scope="row">
-                            <p *ngIf="animalSpecie.height">{{animalSpecie.height}}</p>
-                            <p class="ml-2" *ngIf="!animalSpecie.height">-</p>
+                            <p *ngIf="animalSpecie.age">{{animalSpecie.age}}</p>
+                            <p class="ml-2" *ngIf="!animalSpecie.age">-</p>
 
                         </td>
                         <td scope="row">

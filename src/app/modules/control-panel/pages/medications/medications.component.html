@@ -85,10 +85,10 @@
                         <td scope="row">
                             {{medication.name}}
                         </td>
-                        <td scope="row" style="max-width: 200px; overflow: auto">
+                        <td scope="row" class="extrainfo-row">
                             {{medication.description}}
                         </td>
-                        <td scope="row" style="max-width: 200px; overflow: auto">
+                        <td scope="row" class="extrainfo-row">
                             <p *ngIf="medication.extraInformation">{{medication.extraInformation}}</p>
                             <p class="ml-2" *ngIf="!medication.extraInformation">-</p>
                         </td>

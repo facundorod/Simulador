@@ -110,7 +110,7 @@ export class MiniMonitorComponent implements OnInit, OnDestroy {
         this.simulationTimer = setInterval(() => {
             this.updateTimer();
             this.updateCurrentIndex();
-
+            this.maxSize = this.curves.curveValues.length;
             if (this.action !== "pause") {
                 this.initiateSimulation();
                 this.timer += this.breathCurve
@@ -197,8 +197,10 @@ export class MiniMonitorComponent implements OnInit, OnDestroy {
         if (currentDataset) {
             if (this.action === "stop") {
                 currentDataset[0].data.push([this.timer, 0]);
-            } else
+            } else {
                 currentDataset[0].data.push([this.timer, this.curves.curveValues[this.currentIndex][1]]);
+
+            }
 
         }
     }

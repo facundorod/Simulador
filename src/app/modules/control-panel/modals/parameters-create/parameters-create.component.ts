@@ -66,7 +66,7 @@ export class ParametersCreateComponent implements OnInit {
                     alert_high: alert_high,
                     alert_high_2: alert_high_2,
                     alert_low: alert_low,
-                    alert_low_2: alert_low,
+                    alert_low_2: alert_low_2,
                     animalSpecie: this.animalSpecie,
                     physiologicalParameter: parameter,
                 },

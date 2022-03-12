@@ -62,12 +62,16 @@ export class AuthService {
     }
 
     public isAdmin(): boolean {
-        const { user }: UserTokenI = JSON.parse(localStorage.getItem('authToken'));
-        if (user) {
-            const isAdmin = user.roles.filter((rol) => {
-                return rol.name == 'admin'
-            })
-            if (isAdmin.length > 0) return true;
+        const authToken = localStorage.getItem('authToken')
+        if (authToken) {
+            const { user }: UserTokenI = JSON.parse(localStorage.getItem('authToken'));
+            if (user) {
+                const isAdmin = user.roles.filter((rol) => {
+                    return rol.name == 'admin'
+                })
+                if (isAdmin.length > 0) return true;
+                return false;
+            }
             return false;
         }
         return false;

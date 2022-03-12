@@ -32,9 +32,9 @@
             </div>
 
             <div class="col-md-3">
-                <label for="animalSpecies" class="form-label">Animal Specie</label>
+                <label for="animalSpecies" class="form-label">Animal Patient</label>
                 <select class="form-select form-control" id="animalSpecie" formControlName="animalSpecie">
-                    <option value="">Choose Animal Specie</option>
+                    <option value="">Choose Animal patient</option>
                     <ng-template [ngIf]="animalSpecies.length > 0">
 
                         <option *ngIf="formGroup.value.animalSpecie?.name" [ngValue]="formGroup.value.animalSpecie">

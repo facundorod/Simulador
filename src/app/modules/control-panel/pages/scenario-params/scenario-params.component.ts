@@ -152,7 +152,7 @@ export class ScenarioParamsComponent implements OnInit {
                         this.toast.toastrConfig.positionClass =
                             "toast-bottom-full-width";
                         this.toast.success("Scenario deleted successfully");
-                        this.loading = false;
+                        this.loading = true;
                         this.loadData();
                     },
                     (error: Error) => {
