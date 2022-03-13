@@ -1,21 +1,21 @@
-import { Component, OnInit } from "@angular/core";
-import { FormBuilder, FormGroup } from "@angular/forms";
-import { AuthService } from "@app/services/auth.service";
-import { ConfirmModalComponent } from "@app/shared/modals/confirm/confirm-modal.component";
-import { PhysiologicalParamaterI } from "@app/shared/models/physiologicalParamaterI";
-import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
-import { ToastrService } from "ngx-toastr";
-import { NewParameterComponent } from "../../modals/new-parameter/new-parameter.component";
-import { ParametersService } from "../../services/parameters.service";
+import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup } from '@angular/forms';
+import { AuthService } from '@app/services/auth.service';
+import { ConfirmModalComponent } from '@app/shared/modals/confirm/confirm-modal.component';
+import { PhysiologicalParamaterI } from '@app/shared/models/physiologicalParamaterI';
+import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
+import { ToastrService } from 'ngx-toastr';
+import { NewParameterComponent } from '../../modals/new-parameter/new-parameter.component';
+import { ParametersService } from '../../services/parameters.service';
 
 @Component({
-    selector: "app-parameters",
-    templateUrl: "./parameters.component.html",
-    styleUrls: ["./parameters.component.css"],
+    selector: 'app-parameters',
+    templateUrl: './parameters.component.html',
+    styleUrls: ['./parameters.component.css'],
 })
 export class ParametersComponent implements OnInit {
     private parameters: PhysiologicalParamaterI[] = [];
-    private loading: boolean = true;
+    private loading = true;
     private formGroup: FormGroup;
     constructor(
         private parameterSvc: ParametersService,
@@ -32,10 +32,10 @@ export class ParametersComponent implements OnInit {
 
     private initFormGroup(): void {
         this.formGroup = this.fb.group({
-            q: [""],
+            q: [''],
         });
 
-        this.formGroup.get("q").valueChanges.subscribe((newValue) => {
+        this.formGroup.get('q').valueChanges.subscribe((newValue) => {
             this.loading = true;
             this.loadData(newValue);
         });
@@ -44,10 +44,10 @@ export class ParametersComponent implements OnInit {
     private loadData(q: string = null): void {
         this.loading = true;
         this.parameterSvc
-            .findAll({ q: q ? q : this.formGroup.get("q").value })
+            .findAll({ q: q ? q : this.formGroup.get('q').value })
             .subscribe(
                 (value: PhysiologicalParamaterI[]) => {
-                    if (value) this.parameters = value;
+                    if (value) { this.parameters = value; }
                     this.loading = false;
                 },
                 (error: Error) => {
@@ -73,8 +73,8 @@ export class ParametersComponent implements OnInit {
                         () => {
                             this.toast.toastrConfig.timeOut = 1000;
                             this.toast.toastrConfig.positionClass =
-                                "toast-bottom-full-width";
-                            this.toast.success("Parameter added successfully");
+                                'toast-bottom-full-width';
+                            this.toast.success('Parameter added successfully');
                             this.loadData();
                         },
                         (error: Error) => {
@@ -99,9 +99,9 @@ export class ParametersComponent implements OnInit {
                         () => {
                             this.toast.toastrConfig.timeOut = 1000;
                             this.toast.toastrConfig.positionClass =
-                                "toast-bottom-full-width";
+                                'toast-bottom-full-width';
                             this.toast.success(
-                                "Parameter updated successfully"
+                                'Parameter updated successfully'
                             );
                             this.loadData();
                         },
@@ -117,7 +117,7 @@ export class ParametersComponent implements OnInit {
     }
 
     public clearSearch(): void {
-        this.formGroup.get("q").reset();
+        this.formGroup.get('q').reset();
         this.loading = true;
         this.loadData();
     }
@@ -133,7 +133,7 @@ export class ParametersComponent implements OnInit {
             modal.componentInstance.setTitle(
                 `You will delete the scenario ${this.parameters[index].name}`
             );
-            modal.componentInstance.setContent("Are you sure?");
+            modal.componentInstance.setContent('Are you sure?');
             modal.result.then((result) => {
                 if (result) {
                     this.loading = true;
@@ -141,9 +141,9 @@ export class ParametersComponent implements OnInit {
                         () => {
                             this.toast.toastrConfig.timeOut = 1000;
                             this.toast.toastrConfig.positionClass =
-                                "toast-bottom-full-width";
+                                'toast-bottom-full-width';
                             this.toast.success(
-                                "Parameter deleted successfully"
+                                'Parameter deleted successfully'
                             );
                             this.loading = true;
                             this.loadData();

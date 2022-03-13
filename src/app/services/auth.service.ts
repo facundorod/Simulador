@@ -1,15 +1,15 @@
-import { UserI } from "./../shared/models/userI";
-import { ApiService } from "./../shared/services/api.service";
-import { Injectable } from "@angular/core";
-import { HttpClient } from "@angular/common/http";
-import { environment } from "@environments/environment";
-import { Subject } from "rxjs";
-import { JwtResponseI } from "@app/shared/models/jwt-responseI";
-import { AuthSession } from "@app/shared/services/authSession.service";
-import { UserTokenI } from "@app/shared/models/userTokenI";
+import { UserI } from './../shared/models/userI';
+import { ApiService } from './../shared/services/api.service';
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { environment } from '@environments/environment';
+import { Subject } from 'rxjs';
+import { JwtResponseI } from '@app/shared/models/jwt-responseI';
+import { AuthSession } from '@app/shared/services/authSession.service';
+import { UserTokenI } from '@app/shared/models/userTokenI';
 
 @Injectable({
-    providedIn: "root",
+    providedIn: 'root',
 })
 export class AuthService {
     constructor(private api: ApiService, private http: HttpClient) { }
@@ -62,14 +62,14 @@ export class AuthService {
     }
 
     public isAdmin(): boolean {
-        const authToken = localStorage.getItem('authToken')
+        const authToken = localStorage.getItem('authToken');
         if (authToken) {
             const { user }: UserTokenI = JSON.parse(localStorage.getItem('authToken'));
             if (user) {
                 const isAdmin = user.roles.filter((rol) => {
-                    return rol.name == 'admin'
-                })
-                if (isAdmin.length > 0) return true;
+                    return rol.name == 'admin';
+                });
+                if (isAdmin.length > 0) { return true; }
                 return false;
             }
             return false;
@@ -78,7 +78,7 @@ export class AuthService {
     }
 
     public isLogged(): boolean {
-        const token = localStorage.getItem("authToken");
+        const token = localStorage.getItem('authToken');
         if (token) {
             return true;
         }

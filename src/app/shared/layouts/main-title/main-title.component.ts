@@ -8,6 +8,6 @@ import { Component, Input } from '@angular/core';
 export class MainTitleComponent {
 
     @Input() title: any = null;
-    @Input() breadcrumb: any[] = null
+    @Input() breadcrumb: any[] = null;
 
 }

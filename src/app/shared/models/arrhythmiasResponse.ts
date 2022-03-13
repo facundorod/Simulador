@@ -1,4 +1,4 @@
-import { ArrhythmiaI } from "./arrhythmiaI";
+import { ArrhythmiaI } from './arrhythmiaI';
 
 export interface ArrhythmiaResponseI {
     perPage: number;

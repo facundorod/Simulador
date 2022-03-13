@@ -1,13 +1,13 @@
-import { Injectable } from "@angular/core";
-import { RoleI } from "@app/shared/models/roleI";
-import { UserI } from "@app/shared/models/userI";
-import { ApiService } from "@app/shared/services/api.service";
-import { HelperService } from "@app/shared/services/helper.service";
-import { environment } from "@environments/environment";
-import { Observable, Subject } from "rxjs";
+import { Injectable } from '@angular/core';
+import { RoleI } from '@app/shared/models/roleI';
+import { UserI } from '@app/shared/models/userI';
+import { ApiService } from '@app/shared/services/api.service';
+import { HelperService } from '@app/shared/services/helper.service';
+import { environment } from '@environments/environment';
+import { Observable, Subject } from 'rxjs';
 
 @Injectable({
-    providedIn: "root",
+    providedIn: 'root',
 })
 export class UserService {
     constructor(private api: ApiService) { }
@@ -15,7 +15,7 @@ export class UserService {
     public updateMyUser(userData: UserI) {
         const subject = new Subject<void>();
 
-        let endpoint = environment.api.user;
+        const endpoint = environment.api.user;
 
         this.api.httpPut(endpoint, userData).subscribe(
             () => {
@@ -42,11 +42,11 @@ export class UserService {
 
         let endpoint = environment.api.users;
 
-        if (query) endpoint += `?${HelperService.getQueryString(query)}`;
+        if (query) { endpoint += `?${HelperService.getQueryString(query)}`; }
         if (order) {
             const queryParams = HelperService.getOrderQueryString(order);
-            if (endpoint.indexOf("?") >= 0) endpoint += `&${queryParams}`;
-            else endpoint += `?${queryParams}`;
+            if (endpoint.indexOf('?') >= 0) { endpoint += `&${queryParams}`; }
+            else { endpoint += `?${queryParams}`; }
         }
 
         this.api.httpGet(endpoint).subscribe(
@@ -68,7 +68,7 @@ export class UserService {
     public delete(id_user: number): Observable<void> {
         const subject = new Subject<any>();
 
-        let endpoint = environment.api.user + `/${id_user}`;
+        const endpoint = environment.api.user + `/${id_user}`;
 
         this.api.httpDelete(endpoint).subscribe(
             () => {
@@ -88,7 +88,7 @@ export class UserService {
     public getRoles(): Observable<RoleI[]> {
         const subject = new Subject<RoleI[]>();
 
-        let endpoint = environment.api.roles;
+        const endpoint = environment.api.roles;
 
         this.api.httpGet(endpoint).subscribe(
             (roles: RoleI[]) => {
@@ -108,7 +108,7 @@ export class UserService {
     public updateUser(id_user: number, userData: UserI): Observable<void> {
         const subject = new Subject<void>();
 
-        let endpoint = environment.api.user + `/${id_user}`;
+        const endpoint = environment.api.user + `/${id_user}`;
 
         this.api.httpPut(endpoint, { user: userData }).subscribe(
             () => {
@@ -128,7 +128,7 @@ export class UserService {
     public createUser(userData: UserI): Observable<void> {
         const subject = new Subject<void>();
 
-        let endpoint = environment.api.user;
+        const endpoint = environment.api.user;
 
         this.api.httpPost(endpoint, userData).subscribe(
             () => {

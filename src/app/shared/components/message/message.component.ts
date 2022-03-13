@@ -22,12 +22,12 @@ export class MessageComponent implements OnInit {
             let existKey = false;
             this.errors.forEach((error: any) => {
                 if (error[this.key] !== undefined) {
-                    existKey = true
+                    existKey = true;
                 }
-            })
+            });
             return (existKey);
-        }
-        else
+        } else {
             return (this.errors !== null);
+        }
     }
 }

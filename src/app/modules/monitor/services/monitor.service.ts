@@ -1,6 +1,6 @@
-import { Injectable } from "@angular/core";
-import { StatesI } from "@app/shared/models/stateI";
-import { Observable, Subject } from "rxjs";
+import { Injectable } from '@angular/core';
+import { StatesI } from '@app/shared/models/stateI';
+import { Observable, Subject } from 'rxjs';
 
 @Injectable()
 export class MonitorService {
@@ -10,7 +10,7 @@ export class MonitorService {
     constructor() {
         setInterval(() => {
             const lastStatus: StatesI = JSON.parse(
-                localStorage.getItem("simulationState")
+                localStorage.getItem('simulationState')
             );
 
             if (!this.currentState || this.isDiff(lastStatus)) {

@@ -1,17 +1,17 @@
-import { Component, OnInit } from "@angular/core";
-import { Sidebar } from "ng-sidebar";
+import { Component, OnInit } from '@angular/core';
+import { Sidebar } from 'ng-sidebar';
 
 @Component({
-    selector: "app-new",
-    templateUrl: "./new.component.html",
-    styleUrls: ["./new.component.css"],
+    selector: 'app-new',
+    templateUrl: './new.component.html',
+    styleUrls: ['./new.component.css'],
 })
 export class NewComponent implements OnInit {
-    public sidebarOpen: boolean = false;
+    public sidebarOpen = false;
     public user: any;
     public toggleFlag = false;
     ngOnInit(): void {
-        const user = JSON.parse(localStorage.getItem("authToken"));
+        const user = JSON.parse(localStorage.getItem('authToken'));
         this.user = user.user;
     }
 

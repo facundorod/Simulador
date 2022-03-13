@@ -1,6 +1,6 @@
-import { ActivatedRoute, Router } from "@angular/router";
-import { FormGroup, AbstractControl } from "@angular/forms";
-import { Component, OnInit } from "@angular/core";
+import { ActivatedRoute, Router } from '@angular/router';
+import { FormGroup, AbstractControl } from '@angular/forms';
+import { Component, OnInit } from '@angular/core';
 
 export abstract class BaseComponent implements OnInit {
     formGroup: FormGroup = null;
@@ -70,8 +70,8 @@ export abstract class BaseComponent implements OnInit {
      */
     public setMessage(type: string, value: string) {
         this.message = {
-            type: type,
-            value: value,
+            type,
+            value,
         };
     }
 
@@ -100,9 +100,9 @@ export abstract class BaseComponent implements OnInit {
             Object.keys(this.formGroup.controls).forEach((key) => {
                 if (this.formGroup.controls[key].errors !== null) {
                     const item = {};
-                    item[key] = "Error (TBD)";
+                    item[key] = 'Error (TBD)';
                     if (this.formGroup.controls[key].errors.required) {
-                        item[key] = "This field is required";
+                        item[key] = 'This field is required';
                         errors.push(item);
                     } else {
                         errors.push(item);
@@ -150,9 +150,7 @@ export abstract class BaseComponent implements OnInit {
 
             for (const key in routeParams) {
                 if (params[key] !== undefined) {
-                    if (routeParams[key] === "true") params[key] = true;
-                    else if (routeParams[key] === "false") params[key] = false;
-                    else params[key] = routeParams[key];
+                    if (routeParams[key] === 'true') { params[key] = true; } else if (routeParams[key] === 'false') { params[key] = false; } else { params[key] = routeParams[key]; }
                 }
             }
         }

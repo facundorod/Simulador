@@ -16,7 +16,9 @@ export const environment = {
         parameters: "/parameters/",
         user: "/auth/user",
         users: "/auth/users",
-        roles: "/auth/roles"
+        roles: "/auth/roles",
+        userManual: '/files/user-manual.pdf'
     },
     simulation: "https://simvet-web.herokuapp.com/monitor",
+    userManual: 'https://simvet-api.herokuapp.com/files/user-manual.pdf'
 };

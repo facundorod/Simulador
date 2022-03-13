@@ -1,16 +1,16 @@
-import { ScenarioService } from "./../../../control-panel/services/scenario.service";
-import { SimulationsComponent } from "./../../modals/simulations/simulations.component";
-import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
-import { environment } from "./../../../../../environments/environment";
-import { Component, OnInit } from "@angular/core";
-import { Router } from "@angular/router";
-import { SimulationService } from "../../services/simulation.service";
-import { AuthService } from "@app/services/auth.service";
+import { ScenarioService } from './../../../control-panel/services/scenario.service';
+import { SimulationsComponent } from './../../modals/simulations/simulations.component';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { environment } from './../../../../../environments/environment';
+import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { SimulationService } from '../../services/simulation.service';
+import { AuthService } from '@app/services/auth.service';
 
 @Component({
-    selector: "app-new",
-    templateUrl: "./new.component.html",
-    styleUrls: ["./new.component.css"],
+    selector: 'app-new',
+    templateUrl: './new.component.html',
+    styleUrls: ['./new.component.css'],
 })
 export class NewComponent implements OnInit {
     option: any;
@@ -28,14 +28,14 @@ export class NewComponent implements OnInit {
 
     initiateSimulation(): void {
         // TODO: Change this logic to reactive forms.
-        const simulation = localStorage.getItem("Simulation");
+        const simulation = localStorage.getItem('Simulation');
 
-        if (this.option === "blank") {
-            this.router.navigateByUrl("/panel/scenarios");
+        if (this.option === 'blank') {
+            this.router.navigateByUrl('/panel/scenarios');
 
-            if (simulation) localStorage.removeItem("Simulation");
+            if (simulation) { localStorage.removeItem('Simulation'); }
         } else {
-            if (this.option === "previous") {
+            if (this.option === 'previous') {
                 const modal = this.modal.open(SimulationsComponent);
                 this.simulationService.list().subscribe(
                     (simulations: any) => {
@@ -53,10 +53,10 @@ export class NewComponent implements OnInit {
                     (simulation: any) => {
                         if (simulation) {
                             localStorage.setItem(
-                                "Simulation",
+                                'Simulation',
                                 JSON.stringify(simulation)
                             );
-                            this.router.navigateByUrl("/panel");
+                            this.router.navigateByUrl('/panel');
                         }
                     },
                     (error: any) => {
@@ -64,7 +64,7 @@ export class NewComponent implements OnInit {
                     }
                 );
             } else {
-                this.router.navigateByUrl("/panel");
+                this.router.navigateByUrl('/panel');
             }
         }
     }

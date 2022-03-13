@@ -1,9 +1,9 @@
-import { ArrhythmiaI } from "./../../../shared/models/arrhythmiaI";
-import { Injectable } from "@angular/core";
-import { ApiService } from "@app/shared/services/api.service";
-import { HelperService } from "@app/shared/services/helper.service";
-import { environment } from "@environments/environment";
-import { Subject } from "rxjs";
+import { ArrhythmiaI } from './../../../shared/models/arrhythmiaI';
+import { Injectable } from '@angular/core';
+import { ApiService } from '@app/shared/services/api.service';
+import { HelperService } from '@app/shared/services/helper.service';
+import { environment } from '@environments/environment';
+import { Subject } from 'rxjs';
 
 @Injectable()
 export class ArrhythmiasService {
@@ -19,11 +19,11 @@ export class ArrhythmiasService {
 
         let endpoint = environment.api.arrhythmias;
 
-        if (query) endpoint += `?${HelperService.getQueryString(query)}`;
+        if (query) { endpoint += `?${HelperService.getQueryString(query)}`; }
         if (order) {
             const queryParams = HelperService.getOrderQueryString(order);
-            if (endpoint.indexOf("?") >= 0) endpoint += `&${queryParams}`;
-            else endpoint += `?${queryParams}`;
+            if (endpoint.indexOf('?') >= 0) { endpoint += `&${queryParams}`; }
+            else { endpoint += `?${queryParams}`; }
         }
 
         this.api.httpGet(endpoint).subscribe(
@@ -48,7 +48,7 @@ export class ArrhythmiasService {
     public findById(arrhythmiaId: number) {
         const subject = new Subject<any>();
 
-        let endpoint = environment.api.arrhythmias;
+        const endpoint = environment.api.arrhythmias;
 
         this.api.httpGet(`${endpoint}/${arrhythmiaId}`).subscribe(
             (arrhythmias: any) => {
@@ -72,7 +72,7 @@ export class ArrhythmiasService {
     public create(arrhythmia: ArrhythmiaI) {
         const subject = new Subject<any>();
 
-        let endpoint = environment.api.arrhythmias;
+        const endpoint = environment.api.arrhythmias;
 
         this.api.httpPost(endpoint, arrhythmia).subscribe(
             (arrhythmia: ArrhythmiaI) => {
@@ -92,7 +92,7 @@ export class ArrhythmiasService {
     public updateById(arrhythmiaId: number, arrhythmia: ArrhythmiaI) {
         const subject = new Subject<any>();
 
-        let endpoint = environment.api.arrhythmias + arrhythmiaId;
+        const endpoint = environment.api.arrhythmias + arrhythmiaId;
 
         this.api.httpPut(endpoint, arrhythmia).subscribe(
             (arrhythmia: ArrhythmiaI) => {
@@ -111,7 +111,7 @@ export class ArrhythmiasService {
     public delete(arrhythmiaId: number) {
         const subject = new Subject<any>();
 
-        let endpoint = environment.api.arrhythmias + arrhythmiaId;
+        const endpoint = environment.api.arrhythmias + arrhythmiaId;
 
         this.api.httpDelete(endpoint).subscribe(
             (data: any) => {

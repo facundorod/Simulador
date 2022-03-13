@@ -1,12 +1,12 @@
-import { AnimalSpeciesI } from "../../../../../shared/models/animal-speciesI";
-import { Component, OnInit } from "@angular/core";
-import { FormBuilder, Validators } from "@angular/forms";
-import { BaseComponent } from "@app/shared/components/base.component";
-import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
+import { AnimalSpeciesI } from '../../../../../shared/models/animal-speciesI';
+import { Component, OnInit } from '@angular/core';
+import { FormBuilder, Validators } from '@angular/forms';
+import { BaseComponent } from '@app/shared/components/base.component';
+import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
-    templateUrl: "./modal-edit.component.html",
-    styleUrls: ["./modal-edit.component.css"],
+    templateUrl: './modal-edit.component.html',
+    styleUrls: ['./modal-edit.component.css'],
 })
 export class ModalEditComponent extends BaseComponent implements OnInit {
     public animalSpecie: AnimalSpeciesI;
@@ -22,11 +22,11 @@ export class ModalEditComponent extends BaseComponent implements OnInit {
     private initFormGroup() {
         this.formGroup = this.fb.group({
             name: [
-                this.animalSpecie ? this.animalSpecie.name : "",
+                this.animalSpecie ? this.animalSpecie.name : '',
                 Validators.required,
             ],
             description: [
-                this.animalSpecie ? this.animalSpecie.description : "",
+                this.animalSpecie ? this.animalSpecie.description : '',
                 Validators.required,
             ],
             age: [this.animalSpecie ? this.animalSpecie.age : null],

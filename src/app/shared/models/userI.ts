@@ -10,6 +10,6 @@ export interface UserI {
             id_role: number,
             name: string
         }
-    ],
+    ];
     updatedAt?: Date;
 }

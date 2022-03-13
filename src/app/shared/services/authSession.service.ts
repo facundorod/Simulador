@@ -1,4 +1,4 @@
-import { BehaviorSubject, Observable } from "rxjs";
+import { BehaviorSubject, Observable } from 'rxjs';
 
 export class AuthSession {
     static _authUser: BehaviorSubject<any> = new BehaviorSubject(null);
@@ -10,12 +10,15 @@ export class AuthSession {
      * Log out user
      */
     static logOut() {
-        if (localStorage.getItem("authUser"))
-            localStorage.removeItem("authUser");
-        if (localStorage.getItem("authToken"))
-            localStorage.removeItem("authToken");
-        if (localStorage.getItem("Simulation"))
-            localStorage.removeItem("Simulation");
+        if (localStorage.getItem('authUser')) {
+            localStorage.removeItem('authUser');
+        }
+        if (localStorage.getItem('authToken')) {
+            localStorage.removeItem('authToken');
+        }
+        if (localStorage.getItem('Simulation')) {
+            localStorage.removeItem('Simulation');
+        }
         AuthSession._authUser.next(null);
     }
 
@@ -24,7 +27,7 @@ export class AuthSession {
      * @param authUser
      */
     static saveAuthUser(authUser: any) {
-        localStorage.setItem("authUser", JSON.stringify(authUser));
+        localStorage.setItem('authUser', JSON.stringify(authUser));
         AuthSession._authUser.next(authUser);
     }
 
@@ -33,16 +36,16 @@ export class AuthSession {
      * @param authToken
      */
     static saveAuthToken(authToken) {
-        localStorage.setItem("authToken", authToken);
+        localStorage.setItem('authToken', authToken);
     }
 
     /**
      * Get Auth User
      */
     static getAuthUser() {
-        if (localStorage.getItem("authUser")) {
+        if (localStorage.getItem('authUser')) {
             try {
-                const authUser = JSON.parse(localStorage.getItem("authUser"));
+                const authUser = JSON.parse(localStorage.getItem('authUser'));
                 return authUser;
             } catch (err) {
                 return null;
@@ -55,9 +58,9 @@ export class AuthSession {
      * Return auth token
      */
     static getAuthToken(): string {
-        if (localStorage.getItem("authToken")) {
+        if (localStorage.getItem('authToken')) {
             try {
-                return localStorage.getItem("authToken");
+                return localStorage.getItem('authToken');
             } catch (err) {
                 return null;
             }

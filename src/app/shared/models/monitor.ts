@@ -1,4 +1,4 @@
-import { MonitorI } from "./monitorI";
+import { MonitorI } from './monitorI';
 
 export class Monitor {
     private monitorConfiguration: MonitorI = {
@@ -10,10 +10,11 @@ export class Monitor {
 
     public constructor() {
         const monitorConfiguration: MonitorI = JSON.parse(
-            localStorage.getItem("monitor")
+            localStorage.getItem('monitor')
         );
-        if (monitorConfiguration)
+        if (monitorConfiguration) {
             this.monitorConfiguration = monitorConfiguration;
+        }
     }
 
     public setMonitorConfiguration(monitor: MonitorI): void {

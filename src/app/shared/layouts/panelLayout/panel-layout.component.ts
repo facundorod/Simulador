@@ -1,18 +1,18 @@
-import { Component, OnInit } from "@angular/core";
-import { Sidebar } from "ng-sidebar";
+import { Component, OnInit } from '@angular/core';
+import { Sidebar } from 'ng-sidebar';
 
 @Component({
-    selector: "app-panel-layout",
-    templateUrl: "./panel-layout.component.html",
-    styleUrls: ["./panel-layout.component.css"],
+    selector: 'app-panel-layout',
+    templateUrl: './panel-layout.component.html',
+    styleUrls: ['./panel-layout.component.css'],
 })
 export class PanelLayoutComponent implements OnInit {
-    public sidebarOpen: boolean = false;
+    public sidebarOpen = false;
     public user: any;
     public toggleFlag = false;
 
     ngOnInit(): void {
-        const user = JSON.parse(localStorage.getItem("authToken"));
+        const user = JSON.parse(localStorage.getItem('authToken'));
         this.user = user.user;
     }
 

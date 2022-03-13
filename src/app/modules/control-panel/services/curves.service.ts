@@ -1,9 +1,9 @@
-import { Injectable } from "@angular/core";
-import { StatesI } from "@app/shared/models/stateI";
-import { ApiService } from "@app/shared/services/api.service";
-import { HelperService } from "@app/shared/services/helper.service";
-import { environment } from "@environments/environment";
-import { Observable, Subject } from "rxjs";
+import { Injectable } from '@angular/core';
+import { StatesI } from '@app/shared/models/stateI';
+import { ApiService } from '@app/shared/services/api.service';
+import { HelperService } from '@app/shared/services/helper.service';
+import { environment } from '@environments/environment';
+import { Observable, Subject } from 'rxjs';
 
 @Injectable()
 export class CurvesService {
@@ -20,7 +20,7 @@ export class CurvesService {
 
         let endpoint = environment.api.curves;
 
-        if (query) endpoint += `?${HelperService.getQueryString(query)}`;
+        if (query) { endpoint += `?${HelperService.getQueryString(query)}`; }
 
         this.api.httpGet(endpoint).subscribe(
             (curves: any) => {
@@ -40,7 +40,7 @@ export class CurvesService {
     public shiftCurve(curve: [number, number][], valueToShift: number): Observable<[number, number][]> {
         const subject = new Subject<[number, number][]>();
 
-        let endpoint = environment.api.curves + 'shift';
+        const endpoint = environment.api.curves + 'shift';
 
 
         this.api.httpPost(endpoint, { curve, valueToShift }).subscribe(
@@ -61,7 +61,7 @@ export class CurvesService {
     public normalizeCurve(curve: [number, number][]): Observable<[number, number][]> {
         const subject = new Subject<[number, number][]>();
 
-        let endpoint = environment.api.curves + 'normalize';
+        const endpoint = environment.api.curves + 'normalize';
 
 
         this.api.httpPost(endpoint, { curve }).subscribe(
@@ -82,7 +82,7 @@ export class CurvesService {
     public calculateAmplitude(curve: [number, number][], valueToExtend: number): Observable<[number, number][]> {
         const subject = new Subject<[number, number][]>();
 
-        let endpoint = environment.api.curves + 'amplitude';
+        const endpoint = environment.api.curves + 'amplitude';
 
 
         this.api.httpPost(endpoint, { curve, valueToExtend }).subscribe(
@@ -103,7 +103,7 @@ export class CurvesService {
     public updatePressure(curve: [number, number][], systolicValue: number, diastolicValue: number): Observable<[number, number][]> {
         const subject = new Subject<[number, number][]>();
 
-        let endpoint = environment.api.curves + 'update-pressure';
+        const endpoint = environment.api.curves + 'update-pressure';
 
 
         this.api.httpPost(endpoint, { curve, systolic: systolicValue, diastolic: diastolicValue }).subscribe(
@@ -124,7 +124,7 @@ export class CurvesService {
     public updateCO2(curve: [number, number][], endTidalCO2: number, inspirationCO2: number): Observable<[number, number][]> {
         const subject = new Subject<[number, number][]>();
 
-        let endpoint = environment.api.curves + 'update-co2';
+        const endpoint = environment.api.curves + 'update-co2';
 
 
         this.api.httpPost(endpoint, { curve, endTidalCO2, inspirationCO2 }).subscribe(
@@ -145,7 +145,7 @@ export class CurvesService {
     public updateHeartRate(curves: StatesI, heartRate: number): Observable<StatesI> {
         const subject = new Subject<StatesI>();
 
-        let endpoint = environment.api.curves + 'update-heart-rate';
+        const endpoint = environment.api.curves + 'update-heart-rate';
 
 
         this.api.httpPost(endpoint, { curves, heartRate }).subscribe(
@@ -166,7 +166,7 @@ export class CurvesService {
     public updateRespirationRate(curves: StatesI, breathRate: number): Observable<StatesI> {
         const subject = new Subject<StatesI>();
 
-        let endpoint = environment.api.curves + 'update-breath-rate';
+        const endpoint = environment.api.curves + 'update-breath-rate';
 
 
         this.api.httpPost(endpoint, { curves, breathRate }).subscribe(

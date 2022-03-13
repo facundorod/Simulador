@@ -1,5 +1,5 @@
-import { AnimalParametersI } from "./animaParametersI";
-import { CurveValuesI } from "./curveValuesI";
+import { AnimalParametersI } from './animaParametersI';
+import { CurveValuesI } from './curveValuesI';
 
 export interface SPPI {
     animalParameters: AnimalParametersI;

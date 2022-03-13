@@ -1,4 +1,4 @@
-import { Injectable } from "@angular/core";
+import { Injectable } from '@angular/core';
 import {
     HttpInterceptor,
     HttpRequest,
@@ -6,13 +6,13 @@ import {
     HttpEvent,
     HttpHeaders,
     HttpErrorResponse,
-} from "@angular/common/http";
-import { catchError, map } from "rxjs/operators";
-import { Router } from "@angular/router";
-import { throwError, Observable } from "rxjs";
-import { ToastrService } from "ngx-toastr";
+} from '@angular/common/http';
+import { catchError, map } from 'rxjs/operators';
+import { Router } from '@angular/router';
+import { throwError, Observable } from 'rxjs';
+import { ToastrService } from 'ngx-toastr';
 @Injectable({
-    providedIn: "root",
+    providedIn: 'root',
 })
 export class InterceptorService implements HttpInterceptor {
     constructor(private router: Router, private toast: ToastrService) { }
@@ -23,7 +23,7 @@ export class InterceptorService implements HttpInterceptor {
     ): Observable<HttpEvent<any>> {
         // Intercepta todos las peticiones Http
         let message: string;
-        let request = req;
+        const request = req;
         return next.handle(request).pipe(
             catchError((err: HttpErrorResponse) => {
                 if (err.status >= 400 && err.status < 500) {
@@ -33,14 +33,14 @@ export class InterceptorService implements HttpInterceptor {
                     } else {
                         message = err.message;
                     }
-                    this.router.navigateByUrl("/auth/login");
+                    this.router.navigateByUrl('/auth/login');
                 }
                 if (err.status >= 500) {
                     message = `Something bad has happened!`;
-                    this.router.navigateByUrl("/home");
+                    this.router.navigateByUrl('/home');
                 }
                 this.toast.toastrConfig.timeOut = 1000;
-                this.toast.error("Retry again!", `${message}`);
+                this.toast.error('Retry again!', `${message}`);
 
                 return throwError(message);
             })

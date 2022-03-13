@@ -1,8 +1,8 @@
-import { Injectable } from "@angular/core";
-import { MonitorI } from "../models/monitorI";
-import { ApiService } from "./api.service";
-import { environment } from "@environments/environment";
-import { Observable, Subject } from "rxjs";
+import { Injectable } from '@angular/core';
+import { MonitorI } from '../models/monitorI';
+import { ApiService } from './api.service';
+import { environment } from '@environments/environment';
+import { Observable, Subject } from 'rxjs';
 
 @Injectable()
 export class MonitorConfigurationService {
@@ -11,7 +11,7 @@ export class MonitorConfigurationService {
     public getMonitorConfiguration(): Observable<MonitorI> {
         const subject = new Subject<MonitorI>();
 
-        const endpoint: string = environment.api.simulations + "monitor";
+        const endpoint: string = environment.api.simulations + 'monitor';
         this.api.httpGet(endpoint).subscribe(
             (value: MonitorI) => {
                 subject.next(value);
@@ -30,7 +30,7 @@ export class MonitorConfigurationService {
     public updateMonitorConfiguration(monitor: MonitorI): Observable<void> {
         const subject = new Subject<void>();
 
-        const endpoint: string = environment.api.simulations + "monitor";
+        const endpoint: string = environment.api.simulations + 'monitor';
         this.api.httpPut(endpoint, monitor).subscribe(
             () => {
                 subject.next();

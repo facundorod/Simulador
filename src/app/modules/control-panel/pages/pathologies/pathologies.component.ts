@@ -1,18 +1,18 @@
-import { PathologiesService } from "./../../services/pathologies.service";
-import { PathologyI } from "@models/pathologyI";
-import { ConfirmModalComponent } from "../../../../shared/modals/confirm/confirm-modal.component";
-import { Component, OnInit } from "@angular/core";
-import { ToastrService } from "ngx-toastr";
-import { ActivatedRoute, Router } from "@angular/router";
-import { BaseComponent } from "@app/shared/components/base.component";
-import { FormBuilder } from "@angular/forms";
-import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
-import { ModalEditComponentPath } from "../../modals/pathologies/modal-edit/modal-edit.component";
-import { AuthService } from "@app/services/auth.service";
+import { PathologiesService } from './../../services/pathologies.service';
+import { PathologyI } from '@models/pathologyI';
+import { ConfirmModalComponent } from '../../../../shared/modals/confirm/confirm-modal.component';
+import { Component, OnInit } from '@angular/core';
+import { ToastrService } from 'ngx-toastr';
+import { ActivatedRoute, Router } from '@angular/router';
+import { BaseComponent } from '@app/shared/components/base.component';
+import { FormBuilder } from '@angular/forms';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { ModalEditComponentPath } from '../../modals/pathologies/modal-edit/modal-edit.component';
+import { AuthService } from '@app/services/auth.service';
 @Component({
-    selector: "app-pathologies",
-    templateUrl: "./pathologies.component.html",
-    styleUrls: ["./pathologies.component.css"],
+    selector: 'app-pathologies',
+    templateUrl: './pathologies.component.html',
+    styleUrls: ['./pathologies.component.css'],
 })
 export class PathologiesComponent extends BaseComponent implements OnInit {
     public pathology: PathologyI;
@@ -23,8 +23,8 @@ export class PathologiesComponent extends BaseComponent implements OnInit {
     };
 
     public order = {
-        orderBy: "name",
-        order: "asc",
+        orderBy: 'name',
+        order: 'asc',
     };
 
     public queryOptions = {
@@ -79,9 +79,9 @@ export class PathologiesComponent extends BaseComponent implements OnInit {
 
     private initFormGroup() {
         this.formGroup = this.fb.group({
-            q: [""],
+            q: [''],
         });
-        this.formGroup.get("q").valueChanges.subscribe((newValue) => {
+        this.formGroup.get('q').valueChanges.subscribe((newValue) => {
             this.setLoading(true);
             this.loadData(newValue);
         });
@@ -112,9 +112,9 @@ export class PathologiesComponent extends BaseComponent implements OnInit {
                             () => {
                                 this.toast.toastrConfig.timeOut = 1000;
                                 this.toast.toastrConfig.positionClass =
-                                    "toast-bottom-full-width";
+                                    'toast-bottom-full-width';
                                 this.toast.success(
-                                    "The pathology has been updated!"
+                                    'The pathology has been updated!'
                                 );
                                 this.loadData();
                             },
@@ -131,9 +131,9 @@ export class PathologiesComponent extends BaseComponent implements OnInit {
                         () => {
                             this.toast.toastrConfig.timeOut = 1000;
                             this.toast.toastrConfig.positionClass =
-                                "toast-bottom-full-width";
+                                'toast-bottom-full-width';
                             this.toast.success(
-                                "The pathology has been inserted!"
+                                'The pathology has been inserted!'
                             );
                             this.loadData();
                         },
@@ -152,7 +152,7 @@ export class PathologiesComponent extends BaseComponent implements OnInit {
         modal.componentInstance.setTitle(
             `You will delete the pathology ${this.pathologies[index].name}`
         );
-        modal.componentInstance.setContent("Are you sure?");
+        modal.componentInstance.setContent('Are you sure?');
         modal.result.then((result) => {
             if (result) {
                 this.pathologiesService
@@ -161,9 +161,9 @@ export class PathologiesComponent extends BaseComponent implements OnInit {
                         () => {
                             this.toast.toastrConfig.timeOut = 1000;
                             this.toast.toastrConfig.positionClass =
-                                "toast-bottom-full-width";
+                                'toast-bottom-full-width';
                             this.toast.success(
-                                "The pathology has been deleted!"
+                                'The pathology has been deleted!'
                             );
                             this.loadData();
                         },

@@ -6,6 +6,7 @@ import { AuthGuard } from "@guards/auth.guard";
 import { SimulationLayoutComponent } from "./shared/layouts/simulationLayout/simulation-layout.component";
 import { LoginGuard } from "./guards/login.guard";
 import { NewComponent } from "./shared/layouts/new/new.component";
+import { ManualComponent } from "./modules/home/manual/manual.component";
 
 const routes: Routes = [
     { path: "", redirectTo: "/home", pathMatch: "full" },
@@ -33,6 +34,10 @@ const routes: Routes = [
                     import("@home/home.module").then((m) => m.HomeModule),
             },
         ],
+    },
+    {
+        path: "manual",
+        component: ManualComponent
     },
     {
         path: "panel",
@@ -95,4 +100,4 @@ const routes: Routes = [
     imports: [RouterModule.forRoot(routes)],
     exports: [RouterModule],
 })
-export class AppRoutingModule {}
+export class AppRoutingModule { }

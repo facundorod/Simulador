@@ -16,7 +16,11 @@ export const environment = {
         parameters: "/parameters/",
         user: "/auth/user",
         users: "/auth/users",
-        roles: "/auth/roles"
+        roles: "/auth/roles",
+        userManual: '/files/user-manual.pdf'
     },
     simulation: "",
+    userManual: '/files/user-manual.pdf'
+
+
 };

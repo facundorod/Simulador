@@ -3,14 +3,14 @@ export class HelperService {
      * Return query string
      */
     static getQueryString(query: any) {
-        if (!query) return null;
-        let queryString = "";
+        if (!query) { return null; }
+        let queryString = '';
 
         for (const key in query) {
             if (query.hasOwnProperty(key)) {
-                if (query[key] !== null && query[key] !== "") {
-                    if (queryString) queryString += "&";
-                    queryString += key + "=" + query[key];
+                if (query[key] !== null && query[key] !== '') {
+                    if (queryString) { queryString += '&'; }
+                    queryString += key + '=' + query[key];
                 }
             }
         }
@@ -23,9 +23,9 @@ export class HelperService {
      * @param query
      */
     static getOrderQueryString(query: { orderBy: string; order: string }) {
-        if (!query) return null;
+        if (!query) { return null; }
 
-        let _return = `orderBy=${
+        const _return = `orderBy=${
             query.orderBy
         }&order=${query.order.toUpperCase()}`;
 

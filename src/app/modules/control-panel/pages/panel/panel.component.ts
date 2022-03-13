@@ -1,61 +1,61 @@
-import { SimulationService } from "./../../../simulation/services/simulation.service";
-import { ToastrService } from "ngx-toastr";
-import { Component, OnDestroy, OnInit, QueryList, ViewChildren } from "@angular/core";
+import { SimulationService } from './../../../simulation/services/simulation.service';
+import { ToastrService } from 'ngx-toastr';
+import { Component, OnDestroy, OnInit, QueryList, ViewChildren } from '@angular/core';
 
 // Service
-import { AnimalSpeciesService } from "./../../services/animalSpecies.service";
-import { AnimalSpeciesI } from "@models/animal-speciesI";
-import { BaseComponent } from "@app/shared/components/base.component";
-import { FormBuilder, FormGroup, Validators } from "@angular/forms";
-import { CurvesService } from "../../services/curves.service";
-import { CurvesI } from "@app/shared/models/curvesI";
-import { CurvesHelper } from "./../../../simulation/helpers/curvesHelper";
-import { LocalStorageService } from "@app/shared/services/localStorage.service";
-import { StatesI } from "@app/shared/models/stateI";
-import { ParameterInfoI } from "@app/shared/models/parameterInfoI";
-import { ScenarioParamsI } from "@app/shared/models/scenarioParamsI";
-import { distinctUntilChanged } from "rxjs/operators";
-import { MiniMonitorComponent } from "@app/modules/monitor/components/mini-monitor/mini-monitor.component";
-import { CurveValues } from "@app/shared/models/curveValues";
-import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
-import { NibpComponent } from "../../modals/nibp/nibp.component";
-import { AuthService } from "@app/services/auth.service";
+import { AnimalSpeciesService } from './../../services/animalSpecies.service';
+import { AnimalSpeciesI } from '@models/animal-speciesI';
+import { BaseComponent } from '@app/shared/components/base.component';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { CurvesService } from '../../services/curves.service';
+import { CurvesI } from '@app/shared/models/curvesI';
+import { CurvesHelper } from './../../../simulation/helpers/curvesHelper';
+import { LocalStorageService } from '@app/shared/services/localStorage.service';
+import { StatesI } from '@app/shared/models/stateI';
+import { ParameterInfoI } from '@app/shared/models/parameterInfoI';
+import { ScenarioParamsI } from '@app/shared/models/scenarioParamsI';
+import { distinctUntilChanged } from 'rxjs/operators';
+import { MiniMonitorComponent } from '@app/modules/monitor/components/mini-monitor/mini-monitor.component';
+import { CurveValues } from '@app/shared/models/curveValues';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { NibpComponent } from '../../modals/nibp/nibp.component';
+import { AuthService } from '@app/services/auth.service';
 
 @Component({
-    selector: "app-panel",
-    templateUrl: "./panel.component.html",
-    styleUrls: ["./panel.component.css"],
+    selector: 'app-panel',
+    templateUrl: './panel.component.html',
+    styleUrls: ['./panel.component.css'],
 })
 export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
     private activeScenario: ScenarioParamsI; // Scenario active for simulation
-    @ViewChildren("miniMonitor") miniMonitors: QueryList<MiniMonitorComponent>;
+    @ViewChildren('miniMonitor') miniMonitors: QueryList<MiniMonitorComponent>;
     public scenariosSimulation: ScenarioParamsI[] = [];
     public animalSpecies: AnimalSpeciesI[] = []; // Animal Species to populate the dropdown
     public animalSpecie: any = {}; // Animal Specie from simulation
     public simulation: any = {}; // Simulation from localStorage
-    public indexSimulationActive: number = 0; // Index for scenario simulation Active
+    public indexSimulationActive = 0; // Index for scenario simulation Active
     public currentState: StatesI; // Curves for scenario and animalSpecie selected
     private originalCurves: CurvesI[] = [];
     private originalState: StatesI;
     // Paramaters Physiological without curves
     public fromGroupParameters: FormGroup;
-    public heartRate: number = 0;
-    public breathRate: number = 0;
-    public temperature: number = 0;
-    public spo2: number = 0;
-    public muteAlarms: boolean = false;
-    public updatedState: boolean = true;
-    public endTidalCO2: number = 0;
-    public inspirationCO2: number = 0;
-    public systolicIbp: number = 0;
-    public avgIbp: number = 0;
-    public diastolicIbp: number = 0;
-    private meanIBP: number = 0;
+    public heartRate = 0;
+    public breathRate = 0;
+    public temperature = 0;
+    public spo2 = 0;
+    public muteAlarms = false;
+    public updatedState = true;
+    public endTidalCO2 = 0;
+    public inspirationCO2 = 0;
+    public systolicIbp = 0;
+    public avgIbp = 0;
+    public diastolicIbp = 0;
+    private meanIBP = 0;
     private curvesHelper: CurvesHelper = new CurvesHelper();
     public shiftValues: number[] = [0, 0, 0, 0];
     public amplitudeValues: number[] = [1, 1, 1, 1];
-    private timeNIBP: number = 5;
-    private startNIBP: boolean = false;
+    private timeNIBP = 5;
+    private startNIBP = false;
 
     constructor(
         private animalSpecieService: AnimalSpeciesService,
@@ -71,7 +71,7 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
-        this.localStorageService.removeValue("simulationState");
+        this.localStorageService.removeValue('simulationState');
         this.setSubmitForm(false);
         this.setLoading(true);
         this.loadData();
@@ -82,8 +82,8 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy(): void {
-        this.localStorageService.removeValue("simulationState");
-        this.localStorageService.removeValue("Simulation");
+        this.localStorageService.removeValue('simulationState');
+        this.localStorageService.removeValue('Simulation');
 
     }
 
@@ -91,7 +91,7 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
      * Load all data necesary for forms
      */
     private loadData() {
-        this.simulation = JSON.parse(localStorage.getItem("Simulation"));
+        this.simulation = JSON.parse(localStorage.getItem('Simulation'));
 
         this.animalSpecieService.list().subscribe(
             (animalSpecies: any) => {
@@ -113,31 +113,30 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
                     console.log(error);
                 }
             );
-        }
-        // Edit simulation
-        else {
+        } else {
             if (this.simulation.scenarios) {
                 this.scenariosSimulation = this.simulation.scenarios;
                 // If the simulation has scenarios, the first will be the active for simulation
                 this.activeScenario = this.scenariosSimulation[0];
             }
 
-            if (this.simulation.animalSpecie)
+            if (this.simulation.animalSpecie) {
                 this.animalSpecie = this.simulation.animalSpecie;
+            }
         }
     }
 
     public onFileChange(event: any, index: number): void {
         if (event.target.files && event.target.files.length) {
             const [file] = event.target.files;
-            let reader = new FileReader();
+            const reader = new FileReader();
             reader.readAsText(file);
             reader.onload = () => {
-                let csvData = reader.result;
-                let csvRecordsArray = (<string>csvData).split(/\r\n|\n/);
+                const csvData = reader.result;
+                const csvRecordsArray = (csvData as string).split(/\r\n|\n/);
                 const records: CurveValues[] = this.getCurvesFromCSV(csvRecordsArray);
                 const auxRecords: [number, number][] = records.map((value: CurveValues) => {
-                    return [value.t, value.value]
+                    return [value.t, value.value];
                 });
                 this.curvesService.normalizeCurve(auxRecords).subscribe((value) => {
                     if (value) {
@@ -148,34 +147,34 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
                             this.systolicIbp = Math.round(this.getMaxYValue(value).value);
                             this.diastolicIbp = Math.round(value[0][1]);
                             this.meanIBP = this.curvesHelper.getMeanValue(this.diastolicIbp, this.systolicIbp);
-                            this.fromGroupParameters.patchValue({ ibpSystolic: this.systolicIbp, ibpDiastolic: this.diastolicIbp })
+                            this.fromGroupParameters.patchValue({ ibpSystolic: this.systolicIbp, ibpDiastolic: this.diastolicIbp });
                         }
                         if (curve.curveConfiguration.label === 'CO2') {
                             this.endTidalCO2 = Math.round(this.getMaxYValue(value).value);
                             this.inspirationCO2 = Math.round(value[0][1]);
-                            this.fromGroupParameters.patchValue({ inspirationCO2: this.inspirationCO2, endTidalCO2: this.endTidalCO2 })
+                            this.fromGroupParameters.patchValue({ inspirationCO2: this.inspirationCO2, endTidalCO2: this.endTidalCO2 });
                         }
                         const miniMonitor: MiniMonitorComponent = this.miniMonitors.toArray()[index];
                         miniMonitor.changeMaxAndMin(this.currentState.curves[index].curveValues);
                     }
 
-                })
+                });
             };
-            reader.onerror = function () {
-                console.log("error is occured while reading file!");
+            reader.onerror = function() {
+                console.log('error is occured while reading file!');
             };
         }
     }
 
     public getCurvesFromCSV(csvRecordsArray: any) {
-        let csvArr = [];
+        const csvArr = [];
         try {
             for (let i = 1; i < csvRecordsArray.length; i++) {
-                let currentRecord = (<string>csvRecordsArray[i]).split(";");
+                const currentRecord = (csvRecordsArray[i] as string).split(';');
                 if (currentRecord[0] && currentRecord[1]) {
-                    currentRecord[0] = currentRecord[0].replace(",", ".");
-                    currentRecord[1] = currentRecord[1].replace(",", ".");
-                    let csvRecord: CurveValues = new CurveValues();
+                    currentRecord[0] = currentRecord[0].replace(',', '.');
+                    currentRecord[1] = currentRecord[1].replace(',', '.');
+                    const csvRecord: CurveValues = new CurveValues();
                     csvRecord.t = Number(currentRecord[0]);
                     csvRecord.value = Number(currentRecord[1]);
                     if (
@@ -202,15 +201,15 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
     private initFormGroup(): void {
         this.formGroup = this.fb.group({
             simulationName: [
-                this.simulation ? this.simulation.name : "",
+                this.simulation ? this.simulation.name : '',
                 Validators.required,
             ],
             simulationDescription: [
-                this.simulation ? this.simulation.description : "",
+                this.simulation ? this.simulation.description : '',
                 Validators.required,
             ],
             animalSpecie: [
-                this.animalSpecie ? this.animalSpecie : "",
+                this.animalSpecie ? this.animalSpecie : '',
                 Validators.required,
             ],
         });
@@ -223,7 +222,7 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
         this.breathRate = 0;
         this.temperature = 0;
         this.spo2 = 0;
-        this.shiftValues = [0, 0, 0, 0]
+        this.shiftValues = [0, 0, 0, 0];
         this.amplitudeValues = [1, 1, 1, 1];
         this.fromGroupParameters.setValue({
             heartRate: 0,
@@ -315,36 +314,38 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
      * Change detection for each input
      */
     private onValueChanges(): void {
-        this.formGroup.get("animalSpecie").valueChanges.subscribe((val) => {
+        this.formGroup.get('animalSpecie').valueChanges.subscribe((val) => {
             this.onLoadCurves(val);
             this.updateState();
         });
         this.fromGroupParameters
-            .get("heartRate")
+            .get('heartRate')
             .valueChanges.pipe(distinctUntilChanged()).subscribe((val) => {
                 this.heartRate = val;
-                if (this.currentState?.curves?.length > 0)
+                if (this.currentState?.curves?.length > 0) {
                     this.curvesService.updateHeartRate(this.originalState, val).subscribe((value: StatesI) => {
                         this.currentState.curves[0] = value.curves[0];
                         this.currentState.curves[2] = value.curves[2];
                         this.currentState.curves[3] = value.curves[3];
                         const miniMonitors: MiniMonitorComponent[] = this.miniMonitors.toArray();
-                        for (let i: number = 0; i < miniMonitors.length; i++) {
-                            if (i != 1)
+                        for (let i = 0; i < miniMonitors.length; i++) {
+                            if (i != 1) {
                                 miniMonitors[i].changeMaxAndMin(this.currentState.curves[i].curveValues);
+                            }
                         }
                         this.updatedState = true;
 
                     },
                         (error: Error) => {
                             console.error(error);
-                        })
+                        });
+                }
             });
         this.fromGroupParameters
-            .get("breathRate")
+            .get('breathRate')
             .valueChanges.pipe(distinctUntilChanged()).subscribe((val) => {
                 this.breathRate = val;
-                if (this.currentState?.curves?.length > 0)
+                if (this.currentState?.curves?.length > 0) {
                     this.curvesService.updateRespirationRate(this.originalState, val).subscribe((value: StatesI) => {
                         this.currentState.curves[1] = value.curves[1];
                         const miniMonitors: MiniMonitorComponent = this.miniMonitors.toArray()[1];
@@ -354,16 +355,17 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
                     },
                         (error: Error) => {
                             console.error(error);
-                        })
+                        });
+                }
             });
         this.fromGroupParameters
-            .get("temperature")
+            .get('temperature')
             .valueChanges.subscribe((val) => {
                 this.temperature = val;
                 this.updatedState = true;
 
             });
-        this.fromGroupParameters.get("spo2").valueChanges.subscribe((val) => {
+        this.fromGroupParameters.get('spo2').valueChanges.subscribe((val) => {
             this.spo2 = val;
             this.updatedState = true;
         });
@@ -375,7 +377,7 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
                 this.updatedState = true;
             }
 
-        })
+        });
         this.fromGroupParameters.get('ibpSystolic').valueChanges.pipe(distinctUntilChanged()).subscribe((val) => {
             if (val !== 0) {
                 this.systolicIbp = val;
@@ -384,25 +386,25 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
                 this.updateIBPCurve();
                 this.updatedState = true;
             }
-        })
-        this.fromGroupParameters.get("endTidalCO2").valueChanges.pipe(distinctUntilChanged()).subscribe((val) => {
+        });
+        this.fromGroupParameters.get('endTidalCO2').valueChanges.pipe(distinctUntilChanged()).subscribe((val) => {
             if (val !== 0) {
                 this.endTidalCO2 = val;
                 this.updateCO2Curve();
             }
-        })
-        this.fromGroupParameters.get("inspirationCO2").valueChanges.pipe(distinctUntilChanged()).subscribe((val) => {
+        });
+        this.fromGroupParameters.get('inspirationCO2').valueChanges.pipe(distinctUntilChanged()).subscribe((val) => {
             if (val !== 0) {
                 this.inspirationCO2 = val;
                 this.updateCO2Curve();
             }
-        })
+        });
         this.fromGroupParameters.get('valueToShift').valueChanges.pipe(distinctUntilChanged()).subscribe((val) => {
             val.forEach((value: { value: number }, index: number) => {
                 if (value.value != this.shiftValues[index]) {
                     if (value.value === 0) {
                         if (this.currentState?.curves[index]?.curveValues) {
-                            this.currentState.curves[index].curveValues = JSON.parse(JSON.stringify(this.originalCurves[index].curveValues))
+                            this.currentState.curves[index].curveValues = JSON.parse(JSON.stringify(this.originalCurves[index].curveValues));
                             this.updatedState = true;
                         }
                     } else {
@@ -410,35 +412,37 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
                         if (this.currentState?.curves[index]?.curveValues) {
 
                             const curveToShift: [number, number][] = this.currentState.curves[index].curveValues;
-                            if (curveToShift)
+                            if (curveToShift) {
                                 this.curvesService
                                     .shiftCurve(curveToShift, value.value)
                                     .subscribe((newCurve: [number, number][]) => {
-                                        if (newCurve)
+                                        if (newCurve) {
                                             this.currentState.curves[index].curveValues = newCurve;
+                                        }
                                         if (index === 2) {
                                             this.systolicIbp = Math.round(this.getMaxYValue(newCurve).value);
                                             this.diastolicIbp = Math.round(newCurve[0][1]);
                                             this.meanIBP = this.curvesHelper.getMeanValue(this.diastolicIbp, this.systolicIbp);
-                                            this.fromGroupParameters.patchValue({ ibpSystolic: this.systolicIbp, ibpDiastolic: this.diastolicIbp })
+                                            this.fromGroupParameters.patchValue({ ibpSystolic: this.systolicIbp, ibpDiastolic: this.diastolicIbp });
                                         }
                                         if (index === 1) {
                                             this.inspirationCO2 = Math.round(newCurve[0][1]);
                                             this.endTidalCO2 = Math.round(this.getMaxYValue(newCurve).value);
-                                            this.fromGroupParameters.patchValue({ inspirationCO2: this.inspirationCO2, endTidalCO2: this.endTidalCO2 })
+                                            this.fromGroupParameters.patchValue({ inspirationCO2: this.inspirationCO2, endTidalCO2: this.endTidalCO2 });
                                         }
                                         const miniMonitor: MiniMonitorComponent = this.miniMonitors.toArray()[index];
                                         miniMonitor.changeMaxAndMin(this.currentState.curves[index].curveValues);
                                     },
                                         (error: Error) => {
                                             console.error(error);
-                                        })
+                                        });
+                            }
                         }
                     }
 
                 }
             });
-        })
+        });
 
         this.fromGroupParameters.get('amplitude').valueChanges.pipe(distinctUntilChanged()).subscribe((val) => {
 
@@ -446,7 +450,7 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
                 if (value.value != this.amplitudeValues[index]) {
                     if (value.value === 1) {
                         if (this.currentState?.curves[index]?.curveValues) {
-                            this.currentState.curves[index].curveValues = JSON.parse(JSON.stringify(this.originalCurves[index].curveValues))
+                            this.currentState.curves[index].curveValues = JSON.parse(JSON.stringify(this.originalCurves[index].curveValues));
                             this.updatedState = true;
                         }
                     } else {
@@ -454,34 +458,36 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
                         if (this.currentState?.curves[index]?.curveValues) {
 
                             const curveToChange: [number, number][] = this.currentState.curves[index].curveValues;
-                            if (curveToChange)
+                            if (curveToChange) {
                                 this.curvesService
                                     .calculateAmplitude(curveToChange, value.value)
                                     .subscribe((newCurve: [number, number][]) => {
-                                        if (newCurve)
+                                        if (newCurve) {
                                             this.currentState.curves[index].curveValues = newCurve;
+                                        }
                                         if (index === 2) {
                                             this.systolicIbp = Math.round(this.getMaxYValue(newCurve).value);
                                             this.diastolicIbp = Math.round(newCurve[0][1]);
                                             this.meanIBP = this.curvesHelper.getMeanValue(this.diastolicIbp, this.systolicIbp);
-                                            this.fromGroupParameters.patchValue({ ibpSystolic: this.systolicIbp, ibpDiastolic: this.diastolicIbp })
+                                            this.fromGroupParameters.patchValue({ ibpSystolic: this.systolicIbp, ibpDiastolic: this.diastolicIbp });
                                         }
                                         if (index === 1) {
                                             this.inspirationCO2 = Math.round(newCurve[0][1]);
                                             this.endTidalCO2 = Math.round(this.getMaxYValue(newCurve).value);
-                                            this.fromGroupParameters.patchValue({ inspirationCO2: this.inspirationCO2, endTidalCO2: this.endTidalCO2 })
+                                            this.fromGroupParameters.patchValue({ inspirationCO2: this.inspirationCO2, endTidalCO2: this.endTidalCO2 });
                                         }
                                         const miniMonitor: MiniMonitorComponent = this.miniMonitors.toArray()[index];
                                         miniMonitor.changeMaxAndMin(this.currentState.curves[index].curveValues);
                                     },
                                         (error: Error) => {
                                             console.error(error);
-                                        })
+                                        });
+                            }
                         }
                     }
                 }
             });
-        })
+        });
     }
 
     private updateCO2Curve(): void {
@@ -489,15 +495,16 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
         if (co2Curve) {
             this.curvesService.updateCO2(co2Curve, this.endTidalCO2, this.inspirationCO2)
                 .subscribe((newCurve: [number, number][]) => {
-                    if (newCurve)
+                    if (newCurve) {
                         this.currentState.curves[1].curveValues = newCurve;
+                    }
                     const miniMonitor: MiniMonitorComponent = this.miniMonitors.toArray()[1];
                     miniMonitor.changeMaxAndMin(this.currentState.curves[1].curveValues);
                     this.updatedState = true;
                 },
                     (error: Error) => {
                         console.error(error);
-                    })
+                    });
         }
 
     }
@@ -507,14 +514,15 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
             this.curvesService
                 .updatePressure(ibpCurve, this.systolicIbp, this.diastolicIbp)
                 .subscribe((newCurve: [number, number][]) => {
-                    if (newCurve)
+                    if (newCurve) {
                         this.currentState.curves[2].curveValues = newCurve;
+                    }
                     const miniMonitor: MiniMonitorComponent = this.miniMonitors.toArray()[2];
                     miniMonitor.changeMaxAndMin(this.currentState.curves[2].curveValues);
                 },
                     (error: Error) => {
                         console.error(error);
-                    })
+                    });
         }
     }
 
@@ -531,10 +539,10 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
                 .subscribe(
                     (state: StatesI) => {
                         if (state) {
-                            let action: string = "stop";
-                            let newScenario: boolean = false;
+                            let action = 'stop';
+                            let newScenario = false;
                             if (this.currentState) {
-                                action = "play";
+                                action = 'play';
                                 newScenario = true;
                             }
                             this.originalState = JSON.parse(JSON.stringify(state));
@@ -551,7 +559,7 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
                             this.setLoading(false);
                             this.originalCurves = [];
                             this.localStorageService.removeValue(
-                                "simulationState"
+                                'simulationState'
                             );
                         }
                     },
@@ -562,14 +570,14 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
         } else {
             this.currentState = null;
             this.originalCurves = [];
-            this.localStorageService.removeValue("simulationState");
+            this.localStorageService.removeValue('simulationState');
             this.setLoading(false);
         }
     }
 
     public applyChanges(): void {
         this.localStorageService.saveValue(
-            "simulationState",
+            'simulationState',
             JSON.stringify(this.currentState)
         );
         this.saveParameterInfo();
@@ -583,16 +591,16 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
         this.currentState.curves = this.currentState.curves.filter(
             (value: CurvesI) => {
                 switch (value.curveConfiguration.label.toUpperCase()) {
-                    case "RESP":
+                    case 'RESP':
                         this.breathRate = value.curveConfiguration.refValue;
                         return value;
-                    case "CAR":
+                    case 'CAR':
                         this.heartRate = value.curveConfiguration.refValue;
                         return value;
-                    case "TEMP":
+                    case 'TEMP':
                         this.temperature = value.curveConfiguration.refValue;
                         return value;
-                    case "SPO2":
+                    case 'SPO2':
                         this.spo2 = value.curveConfiguration.refValue;
                         return value;
                     case 'IBP':
@@ -642,7 +650,7 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
             }],
             endTidalCO2: this.endTidalCO2,
             inspirationCO2: this.inspirationCO2
-        })
+        });
 
     }
 
@@ -661,7 +669,7 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
             startNIBP: this.startNIBP
         };
         this.localStorageService.saveValue(
-            "parameterState",
+            'parameterState',
             JSON.stringify(parameterInfo)
         );
     }
@@ -686,18 +694,18 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
             this.simulationService.create(simulationData).subscribe(
                 (data: any) => {
                     this.toast.toastrConfig.timeOut = 1000;
-                    this.toast.toastrConfig.positionClass = "toast-bottom-left";
+                    this.toast.toastrConfig.positionClass = 'toast-bottom-left';
                     this.toast.toastrConfig.closeButton = true;
-                    this.toast.success("Simulation saved!");
+                    this.toast.success('Simulation saved!');
                     this.simulation = simulationData;
                     this.simulation.id_simulation = data.id_simulation;
                 },
                 (error: Error) => {
                     console.error(error);
                     this.toast.toastrConfig.timeOut = 1000;
-                    this.toast.toastrConfig.positionClass = "toast-bottom-left";
+                    this.toast.toastrConfig.positionClass = 'toast-bottom-left';
                     this.toast.toastrConfig.closeButton = true;
-                    this.toast.error("Error saving simulation");
+                    this.toast.error('Error saving simulation');
                 }
             );
         } else {
@@ -708,16 +716,16 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
                     () => {
                         this.toast.toastrConfig.timeOut = 1000;
                         this.toast.toastrConfig.positionClass =
-                            "toast-bottom-left";
+                            'toast-bottom-left';
                         this.toast.toastrConfig.closeButton = true;
-                        this.toast.success("Simulation saved!");
+                        this.toast.success('Simulation saved!');
                     },
                     (error: Error) => {
                         this.toast.toastrConfig.timeOut = 1000;
                         this.toast.toastrConfig.positionClass =
-                            "toast-bottom-left";
+                            'toast-bottom-left';
                         this.toast.toastrConfig.closeButton = true;
-                        this.toast.error("Error saving simulation");
+                        this.toast.error('Error saving simulation');
                     }
                 );
         }
@@ -747,30 +755,30 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
     }
 
     public onPlaySimulation(): void {
-        if (this.currentState) this.currentState.action = "play";
+        if (this.currentState) { this.currentState.action = 'play'; }
         this.applyChanges();
 
     }
 
     public onPauseSimulation(): void {
-        if (this.currentState) this.currentState.action = "pause";
+        if (this.currentState) { this.currentState.action = 'pause'; }
         this.applyChanges();
     }
 
     public onMuteAlarms(): void {
-        if (this.currentState) this.currentState.muteAlarms = true;
+        if (this.currentState) { this.currentState.muteAlarms = true; }
         this.muteAlarms = true;
         this.applyChanges();
     }
 
     public onUnmuteAlarms(): void {
-        if (this.currentState) this.currentState.muteAlarms = false;
+        if (this.currentState) { this.currentState.muteAlarms = false; }
         this.muteAlarms = false;
         this.applyChanges();
     }
 
     public onStopSimulation(): void {
-        if (this.currentState) this.currentState.action = "stop";
+        if (this.currentState) { this.currentState.action = 'stop'; }
         this.applyChanges();
     }
 
@@ -779,7 +787,7 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
             this.currentState.state++;
             this.currentState.newScenario = false;
             this.localStorageService.saveValue(
-                "simulationState",
+                'simulationState',
                 JSON.stringify(this.currentState)
             );
         }
@@ -787,18 +795,20 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
 
     public getRate(index: number): number {
         const curve: CurvesI = this.currentState.curves[index];
-        if (curve.curveConfiguration.label.toUpperCase() === "CO2")
+        if (curve.curveConfiguration.label.toUpperCase() === 'CO2') {
             return this.breathRate;
+        }
         return this.heartRate;
     }
 
     public breathCurve(index: number): boolean {
         const curve: CurvesI = this.currentState.curves[index];
         if (
-            curve.curveConfiguration.label.toUpperCase() === "ETCO2" ||
-            curve.curveConfiguration.label.toUpperCase() === "CO2"
-        )
+            curve.curveConfiguration.label.toUpperCase() === 'ETCO2' ||
+            curve.curveConfiguration.label.toUpperCase() === 'CO2'
+        ) {
             return true;
+        }
         return false;
     }
 
@@ -813,8 +823,9 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
 
 
     private adjustPressureValues() {
-        if (this.systolicIbp <= this.diastolicIbp)
+        if (this.systolicIbp <= this.diastolicIbp) {
             this.diastolicIbp = this.systolicIbp - 1;
+        }
     }
 
 
@@ -822,7 +833,7 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
 
 
     private getIndexMean(curves: [number, number][], index: number): { index: number, value: number } {
-        while (index <= curves.length && curves[index][1] < this.meanIBP) index++;
+        while (index <= curves.length && curves[index][1] < this.meanIBP) { index++; }
         return { index, value: curves[index][1] };
     }
 
@@ -831,8 +842,8 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
 
     private getMaxYValue(curves: [number, number][]): { index: number, value: number } {
         let max: number = curves[0][1];
-        let index: number = 0;
-        for (let i: number = 0; i < curves.length; i++) {
+        let index = 0;
+        for (let i = 0; i < curves.length; i++) {
             if (curves[i][1] > max) {
                 max = curves[i][1];
                 index = i;
@@ -864,7 +875,7 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
         })
             .catch((error: Error) => {
                 console.error(error);
-            })
+            });
 
     }
 

@@ -19,4 +19,5 @@ export const environment = {
         roles: "/auth/roles"
     },
     simulation: "http://localhost:4200/monitor",
+    userManual: 'http://localhost:3000/files/user-manual.pdf'
 };

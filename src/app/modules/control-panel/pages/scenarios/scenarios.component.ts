@@ -1,13 +1,13 @@
-import { Component, Input, OnInit, Output, EventEmitter } from "@angular/core";
-import { BaseComponent } from "@app/shared/components/base.component";
-import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
-import { ScenariosModalComponent } from "@app/modules/simulation/modals/scenarios-modal/scenarios-modal.component";
+import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
+import { BaseComponent } from '@app/shared/components/base.component';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { ScenariosModalComponent } from '@app/modules/simulation/modals/scenarios-modal/scenarios-modal.component';
 
-import { Router } from "@angular/router";
+import { Router } from '@angular/router';
 @Component({
-    selector: "app-scenarios",
-    templateUrl: "./scenarios.component.html",
-    styleUrls: ["./scenarios.component.css"],
+    selector: 'app-scenarios',
+    templateUrl: './scenarios.component.html',
+    styleUrls: ['./scenarios.component.css'],
 })
 export class ScenariosComponent extends BaseComponent implements OnInit {
     @Input() scenariosSelected: any[];
@@ -17,14 +17,14 @@ export class ScenariosComponent extends BaseComponent implements OnInit {
     public indexScenarioActive: number;
     public indexScenarioEdit: number;
 
-    private isScenariosPanelRoute: boolean = false;
+    private isScenariosPanelRoute = false;
     constructor(private modal: NgbModal, private router: Router) {
         super();
 
         this.indexScenarioActive = 0;
         this.indexScenarioEdit = 0;
         this.isScenariosPanelRoute =
-            this.router.url === "/panel" ? true : false;
+            this.router.url === '/panel' ? true : false;
     }
 
     ngOnInit(): void { }
@@ -38,10 +38,11 @@ export class ScenariosComponent extends BaseComponent implements OnInit {
         modal.result.then(
             (data: any) => {
                 if (data) {
-                    if (this.scenariosSelected?.length > 0)
+                    if (this.scenariosSelected?.length > 0) {
                         this.scenariosSelected =
                             this.scenariosSelected.concat(data);
-                    else this.scenariosSelected = data;
+                    }
+                    else { this.scenariosSelected = data; }
                     if (this.isScenariosPanelRoute) {
                         this.returnScenarios.emit(this.scenariosSelected);
                     }

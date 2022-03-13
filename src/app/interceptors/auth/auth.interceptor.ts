@@ -1,13 +1,13 @@
-import { Injectable } from "@angular/core";
+import { Injectable } from '@angular/core';
 import {
     HttpRequest,
     HttpHandler,
     HttpEvent,
     HttpInterceptor,
-} from "@angular/common/http";
-import { Observable, BehaviorSubject, throwError } from "rxjs";
-import { Router } from "@angular/router";
-import { AuthSession } from "@app/shared/services/authSession.service";
+} from '@angular/common/http';
+import { Observable, BehaviorSubject, throwError } from 'rxjs';
+import { Router } from '@angular/router';
+import { AuthSession } from '@app/shared/services/authSession.service';
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
@@ -23,7 +23,7 @@ export class AuthInterceptor implements HttpInterceptor {
         if (authToken) {
             const cloned = req.clone({
                 headers: req.headers.set(
-                    "Authorization",
+                    'Authorization',
                     `Bearer ${authToken.access_token}`
                 ),
             });

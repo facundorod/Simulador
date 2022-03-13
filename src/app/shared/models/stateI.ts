@@ -1,5 +1,5 @@
-import { AnimalSpeciesI } from "./animal-speciesI";
-import { CurvesI } from "./curvesI";
+import { AnimalSpeciesI } from './animal-speciesI';
+import { CurvesI } from './curvesI';
 
 export interface StatesI {
     state: number;

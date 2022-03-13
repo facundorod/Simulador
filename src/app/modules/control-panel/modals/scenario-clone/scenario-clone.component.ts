@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
+import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
     selector: 'app-scenario-clone',
@@ -17,7 +17,7 @@ export class ScenarioCloneComponent implements OnInit {
     }
 
     public setName(name: string) {
-        if (name) this.newName = name;
+        if (name) { this.newName = name; }
     }
 
     public onCancel(): void {

@@ -1,7 +1,7 @@
-import { environment } from "@environments/environment";
-import { ApiService } from "@app/shared/services/api.service";
-import { Subject } from "rxjs";
-import { Injectable } from "@angular/core";
+import { environment } from '@environments/environment';
+import { ApiService } from '@app/shared/services/api.service';
+import { Subject } from 'rxjs';
+import { Injectable } from '@angular/core';
 
 @Injectable()
 export class SimulationService {

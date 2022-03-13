@@ -1,6 +1,6 @@
-import { UserI } from "./userI";
+import { UserI } from './userI';
 
 export interface UserTokenI {
-    user: UserI,
-    accessToken: string
+    user: UserI;
+    accessToken: string;
 }

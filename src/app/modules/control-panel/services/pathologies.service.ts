@@ -1,9 +1,9 @@
-import { PathologyI } from "./../../../shared/models/pathologyI";
-import { ApiService } from "./../../../shared/services/api.service";
-import { HelperService } from "@app/shared/services/helper.service";
-import { environment } from "@environments/environment";
-import { Subject } from "rxjs";
-import { Injectable } from "@angular/core";
+import { PathologyI } from './../../../shared/models/pathologyI';
+import { ApiService } from './../../../shared/services/api.service';
+import { HelperService } from '@app/shared/services/helper.service';
+import { environment } from '@environments/environment';
+import { Subject } from 'rxjs';
+import { Injectable } from '@angular/core';
 
 @Injectable()
 export class PathologiesService {
@@ -19,11 +19,11 @@ export class PathologiesService {
 
         let endpoint = environment.api.pathologies;
 
-        if (query) endpoint += `?${HelperService.getQueryString(query)}`;
+        if (query) { endpoint += `?${HelperService.getQueryString(query)}`; }
         if (order) {
             const queryParams = HelperService.getOrderQueryString(order);
-            if (endpoint.indexOf("?") >= 0) endpoint += `&${queryParams}`;
-            else endpoint += `?${queryParams}`;
+            if (endpoint.indexOf('?') >= 0) { endpoint += `&${queryParams}`; }
+            else { endpoint += `?${queryParams}`; }
         }
 
         this.api.httpGet(endpoint).subscribe(
@@ -48,7 +48,7 @@ export class PathologiesService {
     public findById(pathologyId: number) {
         const subject = new Subject<any>();
 
-        let endpoint = environment.api.pathologies;
+        const endpoint = environment.api.pathologies;
 
         this.api.httpGet(`${endpoint}/${pathologyId}`).subscribe(
             (pathologies: any) => {
@@ -72,7 +72,7 @@ export class PathologiesService {
     public create(pathology: PathologyI) {
         const subject = new Subject<any>();
 
-        let endpoint = environment.api.pathologies;
+        const endpoint = environment.api.pathologies;
 
         this.api.httpPost(endpoint, pathology).subscribe(
             (pathology: PathologyI) => {
@@ -92,7 +92,7 @@ export class PathologiesService {
     public updateById(pathologyId: number, pathology: PathologyI) {
         const subject = new Subject<any>();
 
-        let endpoint = environment.api.pathologies + pathologyId;
+        const endpoint = environment.api.pathologies + pathologyId;
 
         this.api.httpPut(endpoint, pathology).subscribe(
             (pathology: PathologyI) => {
@@ -111,7 +111,7 @@ export class PathologiesService {
     public delete(pathologyId: number) {
         const subject = new Subject<any>();
 
-        let endpoint = environment.api.pathologies + pathologyId;
+        const endpoint = environment.api.pathologies + pathologyId;
 
         this.api.httpDelete(endpoint).subscribe(
             (data: any) => {

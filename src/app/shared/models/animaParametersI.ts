@@ -1,5 +1,5 @@
-import { AnimalSpeciesI } from "./animal-speciesI";
-import { PhysiologicalParamaterI } from "./physiologicalParamaterI";
+import { AnimalSpeciesI } from './animal-speciesI';
+import { PhysiologicalParamaterI } from './physiologicalParamaterI';
 
 export interface AnimalParametersI {
     alert_low: number;

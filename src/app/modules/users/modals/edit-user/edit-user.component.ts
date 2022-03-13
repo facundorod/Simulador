@@ -23,8 +23,9 @@ export class EditUserComponent implements OnInit {
 
     ngOnInit(): void {
         this.loadData();
-        if (this.user && this.user.roles)
+        if (this.user && this.user.roles) {
             this.rolesSelected = this.user.roles;
+        }
         this.roleSettings = {
             singleSelection: false,
             idField: 'id_role',
@@ -36,7 +37,7 @@ export class EditUserComponent implements OnInit {
     }
     public loadData(): void {
         this.userService.getRoles().subscribe((roles: RoleI[]) => {
-            if (roles) this.roles = roles;
+            if (roles) { this.roles = roles; }
             this.loading = false;
             this.initFormGroup();
         },
@@ -62,7 +63,7 @@ export class EditUserComponent implements OnInit {
     public onSubmit(): void {
         this.loading = true;
         const userEdited: UserI = this.formGroup.value;
-        if (!this.newUser) delete userEdited.password;
+        if (!this.newUser) { delete userEdited.password; }
         this.activeModal.close(userEdited);
     }
 

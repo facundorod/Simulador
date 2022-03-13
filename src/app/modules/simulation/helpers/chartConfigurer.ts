@@ -1,4 +1,4 @@
-import { ChartOptionsI } from "@app/shared/models/chartOptionsI";
+import { ChartOptionsI } from '@app/shared/models/chartOptionsI';
 import {
     ApexAxisChartSeries,
     ApexChart,
@@ -13,9 +13,9 @@ import {
     ApexYAxis,
     ChartComponent,
     ChartType,
-} from "ng-apexcharts";
+} from 'ng-apexcharts';
 
-export type ChartOptions = {
+export interface ChartOptions {
     series: ApexAxisChartSeries;
     chart: ApexChart;
     xaxis: ApexXAxis;
@@ -27,7 +27,7 @@ export type ChartOptions = {
     legend: ApexLegend;
     tooltip: ApexTooltip;
     fill?: ApexFill;
-};
+}
 
 export function commonOptions(
     toolbarEnabled: boolean,
@@ -39,14 +39,14 @@ export function commonOptions(
 ): Partial<ChartOptions> {
     return {
         stroke: {
-            curve: "smooth",
+            curve: 'smooth',
             width: 2,
         },
         markers: {
             size: 0,
         },
         xaxis: {
-            type: "numeric",
+            type: 'numeric',
             labels: {
                 show: false,
             },
@@ -61,8 +61,8 @@ export function commonOptions(
             min: minX,
         },
         chart: {
-            id: "curves",
-            type: "line",
+            id: 'curves',
+            type: 'line',
             height: toolbarEnabled ? 110 : 143,
             redrawOnParentResize: true,
             redrawOnWindowResize: true,
@@ -77,7 +77,7 @@ export function commonOptions(
             }
         },
         fill: {
-            type: "solid",
+            type: 'solid',
         },
         yaxis: {
             labels: {
@@ -119,14 +119,14 @@ export class ChartConfigurer {
                 },
             ],
             stroke: {
-                curve: "smooth",
+                curve: 'smooth',
                 width: 2,
             },
             markers: {
                 size: 0,
             },
             xaxis: {
-                type: "numeric",
+                type: 'numeric',
                 labels: {
                     show: false,
                 },
@@ -140,25 +140,25 @@ export class ChartConfigurer {
                 },
             },
             chart: {
-                id: "curves",
+                id: 'curves',
                 animations: {
                     enabled: false
                 },
                 redrawOnParentResize: true,
                 redrawOnWindowResize: true,
                 height: this.chartOptions.height,
-                type: "line",
+                type: 'line',
                 zoom: {
                     enabled: false,
                 },
-                width: "100%",
+                width: '100%',
                 toolbar: {
                     show: this.chartOptions.toolbar,
                 },
 
             },
             fill: {
-                type: "solid",
+                type: 'solid',
             },
             yaxis: {
                 labels: {

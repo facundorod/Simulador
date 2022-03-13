@@ -1,23 +1,23 @@
-import { Component, OnInit } from "@angular/core";
-import { FormBuilder, FormGroup, Validators } from "@angular/forms";
-import { AnimalSpeciesI } from "@app/shared/models/animal-speciesI";
-import { CurveValues } from "@app/shared/models/curveValues";
-import { CurveValuesI } from "@app/shared/models/curveValuesI";
-import { PhysiologicalParamaterI } from "@app/shared/models/physiologicalParamaterI";
-import { SPPI } from "@app/shared/models/SPPI";
-import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
-import { ParametersService } from "../../services/parameters.service";
+import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AnimalSpeciesI } from '@app/shared/models/animal-speciesI';
+import { CurveValues } from '@app/shared/models/curveValues';
+import { CurveValuesI } from '@app/shared/models/curveValuesI';
+import { PhysiologicalParamaterI } from '@app/shared/models/physiologicalParamaterI';
+import { SPPI } from '@app/shared/models/SPPI';
+import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { ParametersService } from '../../services/parameters.service';
 
 @Component({
-    selector: "app-parameters-create",
-    templateUrl: "./parameters-create.component.html",
-    styleUrls: ["./parameters-create.component.css"],
+    selector: 'app-parameters-create',
+    templateUrl: './parameters-create.component.html',
+    styleUrls: ['./parameters-create.component.css'],
 })
 export class ParametersCreateComponent implements OnInit {
     private parameter: SPPI;
     private parameters: PhysiologicalParamaterI[];
     private physiologicalParameter: PhysiologicalParamaterI;
-    private loading: boolean = true;
+    private loading = true;
     private fileContent: CurveValuesI[] = [];
     private animalSpecie: AnimalSpeciesI;
     private currentParameters: PhysiologicalParamaterI[] = [];
@@ -45,14 +45,14 @@ export class ParametersCreateComponent implements OnInit {
     }
 
     public onSubmit(): void {
-        const value: number = this.formGroup.get("value").value;
-        const alert_low: number = this.formGroup.get("alert_low").value;
-        const alert_high: number = this.formGroup.get("alert_high").value;
-        const alert_high_2: number = this.formGroup.get("alert_high_2").value;
-        const alert_low_2: number = this.formGroup.get("alert_low_2").value;
+        const value: number = this.formGroup.get('value').value;
+        const alert_low: number = this.formGroup.get('alert_low').value;
+        const alert_high: number = this.formGroup.get('alert_high').value;
+        const alert_high_2: number = this.formGroup.get('alert_high_2').value;
+        const alert_low_2: number = this.formGroup.get('alert_low_2').value;
 
         const parameter: PhysiologicalParamaterI =
-            this.formGroup.get("parameter").value;
+            this.formGroup.get('parameter').value;
         if (this.parameter?.animalParameters) {
             this.parameter.animalParameters.alert_low = alert_low;
             this.parameter.animalParameters.alert_high = alert_high;
@@ -63,14 +63,14 @@ export class ParametersCreateComponent implements OnInit {
         } else {
             this.parameter = {
                 animalParameters: {
-                    alert_high: alert_high,
-                    alert_high_2: alert_high_2,
-                    alert_low: alert_low,
-                    alert_low_2: alert_low_2,
+                    alert_high,
+                    alert_high_2,
+                    alert_low,
+                    alert_low_2,
                     animalSpecie: this.animalSpecie,
                     physiologicalParameter: parameter,
                 },
-                value: value,
+                value,
                 curves: this.fileContent,
             };
         }
@@ -93,7 +93,7 @@ export class ParametersCreateComponent implements OnInit {
                 {
                     value: physiologicalParameter?.name
                         ? physiologicalParameter?.name
-                        : "",
+                        : '',
                     disabled: true,
                 },
                 Validators.required,
@@ -102,7 +102,7 @@ export class ParametersCreateComponent implements OnInit {
                 {
                     value: physiologicalParameter?.description
                         ? physiologicalParameter?.description
-                        : "",
+                        : '',
                     disabled: true,
                 },
                 Validators.required,
@@ -127,13 +127,13 @@ export class ParametersCreateComponent implements OnInit {
             value: [this.parameter?.value ? this.parameter?.value : 0],
         });
         this.loading = false;
-        this.formGroup.get("parameter").valueChanges.subscribe((value) => {
+        this.formGroup.get('parameter').valueChanges.subscribe((value) => {
             this.physiologicalParameter = value;
             this.formGroup
-                .get("name")
+                .get('name')
                 .setValue(this.physiologicalParameter.name);
             this.formGroup
-                .get("description")
+                .get('description')
                 .setValue(this.physiologicalParameter.description);
         });
     }
@@ -161,45 +161,47 @@ export class ParametersCreateComponent implements OnInit {
     public onFileChange(event: any): void {
         if (event.target.files && event.target.files.length) {
             const [file] = event.target.files;
-            let reader = new FileReader();
+            const reader = new FileReader();
             reader.readAsText(file);
 
             reader.onload = () => {
-                let csvData = reader.result;
-                let csvRecordsArray = (<string>csvData).split(/\r\n|\n/);
+                const csvData = reader.result;
+                const csvRecordsArray = (csvData as string).split(/\r\n|\n/);
                 const records = this.getCurvesFromCSV(csvRecordsArray);
                 this.fileContent = records;
             };
-            reader.onerror = function () {
-                console.log("error is occured while reading file!");
+            reader.onerror = function() {
+                console.log('error is occured while reading file!');
             };
         }
     }
 
     public isIBPCurve() {
-        if (this.parameter)
+        if (this.parameter) {
             return this.parameter.animalParameters.physiologicalParameter.label.toUpperCase() === 'IBP'
                 || this.parameter.animalParameters.physiologicalParameter.label.toUpperCase() === 'NIBP';
+        }
         const param: PhysiologicalParamaterI = this.formGroup.get('parameter').value;
         return param.label.toUpperCase() === 'IBP' || param.label.toUpperCase().toUpperCase() === 'NIBP';
     }
 
     public isCO2Curve() {
-        if (this.parameter)
+        if (this.parameter) {
             return this.parameter.animalParameters.physiologicalParameter.label.toUpperCase() === 'CO2';
+        }
         const param: PhysiologicalParamaterI = this.formGroup.get('parameter').value;
         return param.label.toUpperCase() === 'CO2';
     }
 
     public getCurvesFromCSV(csvRecordsArray: any) {
-        let csvArr = [];
+        const csvArr = [];
         try {
             for (let i = 1; i < csvRecordsArray.length; i++) {
-                let currentRecord = (<string>csvRecordsArray[i]).split(";");
+                const currentRecord = (csvRecordsArray[i] as string).split(';');
                 if (currentRecord[0] && currentRecord[1]) {
-                    currentRecord[0] = currentRecord[0].replace(",", ".");
-                    currentRecord[1] = currentRecord[1].replace(",", ".");
-                    let csvRecord: CurveValues = new CurveValues();
+                    currentRecord[0] = currentRecord[0].replace(',', '.');
+                    currentRecord[1] = currentRecord[1].replace(',', '.');
+                    const csvRecord: CurveValues = new CurveValues();
                     csvRecord.t = Number(currentRecord[0]);
                     csvRecord.value = Number(currentRecord[1]);
                     if (
@@ -224,8 +226,8 @@ export class ParametersCreateComponent implements OnInit {
         p1: PhysiologicalParamaterI,
         p2: PhysiologicalParamaterI
     ): boolean {
-        if (p1 && p2) return p1.id_pp === p2.id_pp;
-        if (!p1 && !p2) return true;
+        if (p1 && p2) { return p1.id_pp === p2.id_pp; }
+        if (!p1 && !p2) { return true; }
         return false;
     }
 
@@ -262,11 +264,12 @@ export class ParametersCreateComponent implements OnInit {
     }
 
     public setInitialValue() {
-        if (this.parameter)
+        if (this.parameter) {
             return this.parameter.animalParameters.physiologicalParameter.label.toUpperCase() === 'SPO2'
                 || this.parameter.animalParameters.physiologicalParameter.label.toUpperCase() === 'TEMP'
                 || this.parameter.animalParameters.physiologicalParameter.label.toUpperCase() === 'CAR'
                 || this.parameter.animalParameters.physiologicalParameter.label.toUpperCase() === 'RESP';
+        }
         const param: PhysiologicalParamaterI = this.formGroup.get('parameter').value;
         return param.label.toUpperCase() === 'SPO2'
             || param.label.toUpperCase() === 'TEMP'

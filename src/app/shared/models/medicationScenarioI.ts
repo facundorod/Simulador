@@ -1,4 +1,4 @@
-import { MedicationI } from "./medicationI";
+import { MedicationI } from './medicationI';
 
 export interface MedicationScenarioI {
     dose: number;
