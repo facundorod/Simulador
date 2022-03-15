@@ -1,6 +1,10 @@
 <div class="row">
     <div class="col text-right">
-        <button class="btn btn-primary save-changes" (click)="onLoadScenarios()"> Load Scenarios </button>
+        <button class="btn btn-primary save-changes" (click)="onLoadScenarios()" disabled *ngIf="!animal"> Load
+            Scenarios </button>
+
+        <button class="btn btn-primary save-changes" (click)="onLoadScenarios()" *ngIf="animal"> Load Scenarios
+        </button>
 
     </div>
 </div>
@@ -101,7 +105,7 @@
     <tbody *ngIf="!scenariosSelected || scenariosSelected.length == 0">
         <tr>
             <td colspan="12">
-                No scenarios available.
+                There are not scenarios availables.
             </td>
         </tr>
     </tbody>

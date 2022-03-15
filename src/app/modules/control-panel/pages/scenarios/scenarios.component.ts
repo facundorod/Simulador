@@ -4,6 +4,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ScenariosModalComponent } from '@app/modules/simulation/modals/scenarios-modal/scenarios-modal.component';
 
 import { Router } from '@angular/router';
+import { AnimalSpeciesI } from '@app/shared/models/animal-speciesI';
 @Component({
     selector: 'app-scenarios',
     templateUrl: './scenarios.component.html',
@@ -13,7 +14,7 @@ export class ScenariosComponent extends BaseComponent implements OnInit {
     @Input() scenariosSelected: any[];
     @Output() returnScenarios: EventEmitter<any[]> = new EventEmitter<any[]>();
     @Output() posScenarios: EventEmitter<any> = new EventEmitter<any>();
-
+    public animal: AnimalSpeciesI;
     public indexScenarioActive: number;
     public indexScenarioEdit: number;
 
@@ -34,7 +35,7 @@ export class ScenariosComponent extends BaseComponent implements OnInit {
      */
     onLoadScenarios(): void {
         const modal = this.modal.open(ScenariosModalComponent);
-
+        modal.componentInstance.setAnimal(this.animal.id_as);
         modal.result.then(
             (data: any) => {
                 if (data) {
@@ -52,6 +53,14 @@ export class ScenariosComponent extends BaseComponent implements OnInit {
                 console.log(error);
             }
         );
+    }
+
+    public clearScenarios(): void {
+        this.scenariosSelected = [];
+    }
+
+    public setAnimal(animal: AnimalSpeciesI): void {
+        this.animal = animal;
     }
 
     isActiveScenario(index: number): boolean {

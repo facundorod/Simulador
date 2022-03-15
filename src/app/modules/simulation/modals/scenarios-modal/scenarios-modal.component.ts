@@ -12,7 +12,7 @@ import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 })
 export class ScenariosModalComponent extends BaseComponent implements OnInit {
     scenarios: any[] = [];
-
+    private animalSpecie: number;
     constructor(
         private activeModal: NgbActiveModal,
         private fb: FormBuilder,
@@ -27,7 +27,7 @@ export class ScenariosModalComponent extends BaseComponent implements OnInit {
 
     async loadData(): Promise<any> {
         return new Promise((resolve, reject) => {
-            this.scenariosService.listWithParams().subscribe(
+            this.scenariosService.listWithParams({ animal: this.animalSpecie }).subscribe(
                 (data: any) => {
                     if (data) { resolve(data); }
                 },
@@ -37,6 +37,11 @@ export class ScenariosModalComponent extends BaseComponent implements OnInit {
             );
         });
     }
+
+    public setAnimal(animal: number): void {
+        this.animalSpecie = animal;
+    }
+
 
     onCancel() {
         this.activeModal.close();

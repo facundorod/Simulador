@@ -67,7 +67,7 @@
         </div>
         <div class="col-md-12">
             <app-scenarios [scenariosSelected]="scenariosSimulation" (posScenarios)="getPosScenarios($event)"
-                (returnScenarios)="getScenarios($event)">
+                (returnScenarios)="getScenarios($event)" #scenarios>
             </app-scenarios>
 
         </div>

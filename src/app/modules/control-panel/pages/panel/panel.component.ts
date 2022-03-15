@@ -1,6 +1,6 @@
 import { SimulationService } from './../../../simulation/services/simulation.service';
 import { ToastrService } from 'ngx-toastr';
-import { Component, OnDestroy, OnInit, QueryList, ViewChildren } from '@angular/core';
+import { Component, OnDestroy, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
 
 // Service
 import { AnimalSpeciesService } from './../../services/animalSpecies.service';
@@ -20,6 +20,7 @@ import { CurveValues } from '@app/shared/models/curveValues';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { NibpComponent } from '../../modals/nibp/nibp.component';
 import { AuthService } from '@app/services/auth.service';
+import { ScenariosComponent } from '../scenarios/scenarios.component';
 
 @Component({
     selector: 'app-panel',
@@ -29,6 +30,7 @@ import { AuthService } from '@app/services/auth.service';
 export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
     private activeScenario: ScenarioParamsI; // Scenario active for simulation
     @ViewChildren('miniMonitor') miniMonitors: QueryList<MiniMonitorComponent>;
+    @ViewChild('scenarios') scenarios: ScenariosComponent;
     public scenariosSimulation: ScenarioParamsI[] = [];
     public animalSpecies: AnimalSpeciesI[] = []; // Animal Species to populate the dropdown
     public animalSpecie: any = {}; // Animal Specie from simulation
@@ -160,7 +162,7 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
 
                 });
             };
-            reader.onerror = function() {
+            reader.onerror = function () {
                 console.log('error is occured while reading file!');
             };
         }
@@ -315,8 +317,13 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
      */
     private onValueChanges(): void {
         this.formGroup.get('animalSpecie').valueChanges.subscribe((val) => {
-            this.onLoadCurves(val);
+            this.scenarios.setAnimal(val);
             this.updateState();
+            if (val && this.animalSpecie && val.id_as !== this.animalSpecie.id_as) {
+                this.scenarios.clearScenarios();
+                this.activeScenario = null;
+            }
+            this.onLoadCurves(val);
         });
         this.fromGroupParameters
             .get('heartRate')
