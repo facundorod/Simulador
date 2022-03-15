@@ -861,12 +861,13 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
 
 
     public resetSimulation(): void {
+        this.currentState = this.originalState;
         this.currentState.curves = JSON.parse(JSON.stringify(this.originalCurves));
         this.currentState.action = 'stop';
         this.systolicIbp = Math.round(this.getMaxYValue(this.currentState.curves[2].curveValues).value);
         this.diastolicIbp = Math.round(this.currentState.curves[2].curveValues[0][1]);
         this.meanIBP = this.curvesHelper.getMeanValue(this.diastolicIbp, this.systolicIbp);
-        this.initFormValues();
+        this.onLoadParameters();
         this.initFormParameters();
         this.onValueChanges();
     }
