@@ -1,10 +1,10 @@
 <div class="container-fluid" *ngIf="currentState?.curves.length > 0 else noSimulation">
     <div class="row justify-content-between">
-        <div class="col-4">
+        <div class="col-5">
             <p class="text-left">
-                {{ today | date: "medium" }}
+                <!-- {{ today | date: "medium" }} -->
                 <span *ngIf="animalSpecie" class="text-animal-specie">
-                    {{ animalSpecie.name }}
+                    {{ animalSpecie.name }} - {{currentState.scenario.description | scenarioText }}
                 </span>
             </p>
         </div>
@@ -17,22 +17,26 @@
                 </h4>
 
             </ng-template>
-            <ng-template [ngIf]="currentState?.action !== 'stop' && calculatingNIBP">
-                <h4 class="text-center"><img src="/assets/icons/nibp-small.png" class="img-status" /> NIBP in progress
-                </h4>
-            </ng-template>
+
             <ng-template [ngIf]="currentState?.action === 'pause' || newCurrentState?.action === 'pause'">
                 <h4 class="text-center"><img src="https://img.icons8.com/fluency/24/000000/pause.png"
                         title="Freeze simulation" class="img-status" />Simulation
                     paused</h4>
             </ng-template>
-            <ng-template [ngIf]="(currentState.muteAlarms || newCurrentState.muteAlarms) &&
-                (currentState?.action !== 'stop' || newCurrentState?.action !== 'stop')">
+            <ng-template
+                [ngIf]="(currentState.muteAlarms || newCurrentState.muteAlarms) &&
+                (currentState?.action !== 'stop' || newCurrentState?.action !== 'stop') && (currentState?.action !== 'pause' || newCurrentState?.action !== 'pause')">
                 <h4 class="text-center"><img
                         src="https://img.icons8.com/external-kiranshastry-lineal-color-kiranshastry/30/000000/external-mute-multimedia-kiranshastry-lineal-color-kiranshastry.png" />
                     &nbsp;Alarms
                     off</h4>
             </ng-template>
+            <ng-template
+                [ngIf]="currentState?.action !== 'stop' && calculatingNIBP && !currentState.muteAlarms && (currentState?.action !== 'pause' || newCurrentState?.action !== 'pause')">
+                <h4 class="text-center"><img src="/assets/icons/nibp-small.png" class="img-status" /> NIBP in progress
+                </h4>
+            </ng-template>
+
 
         </div>
         <div class="col-3">
@@ -106,6 +110,10 @@
                                 <div class="col-2">
                                     <p class="text-center" [style.color]="getColor(curves)">
                                         {{curves.curveConfiguration?.label}}</p>
+                                    <ng-template
+                                        [ngIf]="currentState?.action !== 'stop' && isNIBPCurve(curves) && calculatingNIBP">
+                                        <p><img src="/assets/icons/nibp-small.png" class="img-status" /></p>
+                                    </ng-template>
                                 </div>
                                 <div class="col-6">
                                     <p class="text-rate text-center" [style.color]="getColor(curves)"

@@ -13,6 +13,7 @@ import { ArrayJsonPipe } from './pipes/array-json.pipe';
 import { LocalStorageService } from './services/localStorage.service';
 import { AudioComponent } from './components/audio/audio.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { ScenarioTextPipe } from './pipes/scenario-text.pipe';
 
 @NgModule({
     declarations: [
@@ -22,6 +23,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
         ConfirmModalComponent,
         ArrayJsonPipe,
         AudioComponent,
+        ScenarioTextPipe,
     ],
     imports: [
         CommonModule,
@@ -36,6 +38,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
         MessageComponent,
         ConfirmModalComponent,
         ArrayJsonPipe,
+        ScenarioTextPipe,
         AudioComponent
     ],
     providers: [ApiService, AuthSession, LocalStorageService],
