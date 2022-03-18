@@ -30,6 +30,10 @@ h3 a {
         padding-top: 1%;
     }
 
+    .showHidden {
+        display: none;
+    }
+
     .navbar-right ul li {
         margin-right: 10%;
     }
