@@ -74,7 +74,9 @@ export function commonOptions(
             },
             animations: {
                 enabled: false
-            }
+            },
+            width: '100%',
+
         },
         fill: {
             type: 'solid',

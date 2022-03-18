@@ -6,6 +6,12 @@
     height: 100%;
 }
 
+.curves {
+    width: 200px !important;
+    /* max-width: 200px !important; */
+    /* border: 2px solid red; */
+}
+
 .icon-pause {
     color: white;
     margin-right: 2%;
@@ -20,7 +26,7 @@
     border: 2px solid #fff;
     border-radius: 10px;
     max-height: 13.3vh;
-    min-width: 250px;
+    max-width: 25%;
     animation: none;
     margin-left: 0%;
 }
@@ -105,13 +111,6 @@ h4 {
     margin-right: 2%;
 }
 
-.curves {
-    width: 100%;
-    min-height: 20vh;
-    max-height: 20vh;
-    margin-right: 0px;
-}
-
 .min-max-value {
     font-size: 1.7rem;
     text-align: center;
@@ -140,12 +139,21 @@ h4 {
     }
 }
 
-@media (max-width: 1920px) {
+@media screen and (min-width: 1000px) {
     .curves {
         min-width: 910px;
         min-height: 18vh;
         max-height: 18vh;
         margin-right: 0px;
+    }
+
+    .curve-configuration {
+        border: 2px solid #fff;
+        border-radius: 10px;
+        max-height: 13.3vh;
+        min-width: 250px;
+        animation: none;
+        margin-left: 0%;
     }
 }
 

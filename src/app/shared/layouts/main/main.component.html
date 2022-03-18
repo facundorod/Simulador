@@ -1,10 +1,43 @@
 <nav class="navbar navbar-expand-lg">
     <div class="container-fluid">
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo03"
-            aria-controls="navbarTogglerDemo03" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <h3><a class="navbar-brand" href="#">SIMVet</a></h3>
+        <nav class="navbar navbar-light amber lighten-4 mb-4" data-bs-toggle="collapse"
+            data-bs-target="#navbarTogglerDemo03" aria-controls="navbarTogglerDemo03" aria-expanded="false"
+            aria-label="Toggle navigation">
+
+            <!-- Collapse button -->
+            <button class="navbar-toggler first-button" type="button" data-toggle="collapse"
+                data-target="#navbarSupportedContent20" aria-controls="navbarSupportedContent20" aria-expanded="false"
+                aria-label="Toggle navigation">
+                <div class="animated-icon1"><span></span><span></span><span></span></div>
+            </button>
+
+            <!-- Collapsible content -->
+            <div class="collapse navbar-collapse" id="navbarSupportedContent20">
+
+                <!-- Links -->
+                <ul class="navbar-nav mr-auto" i18n>
+                    <li class="nav-item active">
+                        <a class="nav-link" [routerLink]="['']">Home <span class="sr-only">(current)</span></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" [routerLink]="['/auth/login']">Login</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" [routerLink]="['/auth/register']">Register</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/home#info">Info</a>
+                    </li>
+                </ul>
+                <!-- Links -->
+
+            </div>
+            <!-- Collapsible content -->
+
+        </nav>
+
+        <h3><a class="navbar-brand" href="#"><img src="../../../../assets/images/simvetLogo.png" width="130"
+                    height="70"></a></h3>
 
         <div class="row row-nav">
             <div class="col-8">
