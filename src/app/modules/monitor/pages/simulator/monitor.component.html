@@ -10,8 +10,7 @@
         </div>
         <div class="col-4 alarms-off">
             <ng-template [ngIf]="currentState?.action === 'stop' || newCurrentState?.action === 'stop'">
-                <h4 class="text-center"><img src="https://img.icons8.com/fluency/24/000000/stop.png"
-                        class="img-status" />Simulation
+                <h4 class="text-center"><img src="/assets/icons/stop-1.png" class="img-status" />Simulation
                     stopped
 
                 </h4>
@@ -19,15 +18,14 @@
             </ng-template>
 
             <ng-template [ngIf]="currentState?.action === 'pause' || newCurrentState?.action === 'pause'">
-                <h4 class="text-center"><img src="https://img.icons8.com/fluency/24/000000/pause.png"
-                        title="Freeze simulation" class="img-status" />Simulation
+                <h4 class="text-center"><img src="/assets/icons/pause-1.png" title="Freeze simulation"
+                        class="img-status" />Simulation
                     paused</h4>
             </ng-template>
             <ng-template
                 [ngIf]="(currentState.muteAlarms || newCurrentState.muteAlarms) &&
                 (currentState?.action !== 'stop' || newCurrentState?.action !== 'stop') && (currentState?.action !== 'pause' || newCurrentState?.action !== 'pause')">
-                <h4 class="text-center"><img
-                        src="https://img.icons8.com/external-kiranshastry-lineal-color-kiranshastry/30/000000/external-mute-multimedia-kiranshastry-lineal-color-kiranshastry.png" />
+                <h4 class="text-center"><img src="/assets/icons/mute-1.png" />
                     &nbsp;Alarms
                     off</h4>
             </ng-template>
@@ -47,9 +45,9 @@
                 </div>
                 <div class="col-7">
                     <button class="btn btn-link" (click)="openFullscreen()" *ngIf="!isFullScren()">
-                        <img src="https://img.icons8.com/office/20/000000/fit-to-width.png" /> FullScreen</button>
+                        <img src="/assets/icons/fullscreen.png" /> FullScreen</button>
                     <button class="btn btn-link" (click)="closeFullscreen()" *ngIf="isFullScren()">
-                        <img src="https://img.icons8.com/office/20/000000/fit-to-width.png" /> Exit FullScreen</button>
+                        <img src="/assets/icons/exitFS.png" /> Exit FullScreen</button>
 
                 </div>
 

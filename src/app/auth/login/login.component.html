@@ -16,8 +16,7 @@
 
                         <label for="usuario"> User </label>
                         <div class="input-group">
-                            <div class="input-group-text"><img
-                                    src="https://img.icons8.com/fluency/24/000000/username.png" />
+                            <div class="input-group-text"><img src="/assets/icons/username.png" />
                             </div>
 
                             <input type="text" class="form-control" name="email" required [(ngModel)]="email"
@@ -31,8 +30,7 @@
                     <div class="form-group">
                         <label for="psw"> Password </label>
                         <div class="input-group">
-                            <div class="input-group-text"><img
-                                    src="https://img.icons8.com/fluency/24/000000/lock-2.png" /></div>
+                            <div class="input-group-text"><img src="/assets/icons/lock.png" /></div>
                             <input type="password" class="form-control" name="password" required [(ngModel)]="password"
                                 #psw="ngModel">
                         </div>
@@ -42,8 +40,7 @@
 
                     </div>
                     <button type="submit" class="btn btn-primary btn-block btn-login" (click)="login()"
-                        [disabled]="!loginForm.form.valid"> <img
-                            src="https://img.icons8.com/color-glass/24/000000/login-rounded-right.png" alt="signIn"
+                        [disabled]="!loginForm.form.valid"> <img src="/assets/icons/login.png" alt="signIn"
                             title="SignIn" />Sign In </button>
                 </form>
                 <div class="form-group mt-3">

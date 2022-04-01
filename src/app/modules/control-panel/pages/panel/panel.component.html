@@ -278,25 +278,23 @@
 <footer class="footer">
     <div class="container footerBtn">
         <button class="btn" (click)="applyChanges()">
-            <img src="https://img.icons8.com/fluency/33/000000/refresh.png" />&nbsp; Apply Changes
+            <img src="/assets/icons/refresh.png" />&nbsp; Apply Changes
         </button>
-        <button class="btn" (click)="onPlaySimulation()"> <img src="https://img.icons8.com/fluency/33/000000/play.png"
+        <button class="btn" (click)="onPlaySimulation()"> <img src="/assets/icons/play.png"
                 title="Play simulation" />&nbsp;Play</button>
-        <button class="btn" (click)="onPauseSimulation()"> <img src="https://img.icons8.com/fluency/33/000000/pause.png"
+        <button class="btn" (click)="onPauseSimulation()"> <img src="/assets/icons/pause.png"
                 title="Freeze simulation" />&nbsp;Freeze</button>
         <button class="btn" (click)="onStopSimulation()" title="Stop simulation"><img
-                src="https://img.icons8.com/fluency/33/000000/stop.png" />&nbsp;Stop</button>
-        <button class="btn" (click)="onUnmuteAlarms()" *ngIf="muteAlarms"> <img
-                src="https://img.icons8.com/external-kiranshastry-lineal-color-kiranshastry/33/000000/external-mute-multimedia-kiranshastry-lineal-color-kiranshastry.png" />
+                src="/assets/icons/stop.png" />&nbsp;Stop</button>
+        <button class="btn" (click)="onUnmuteAlarms()" *ngIf="muteAlarms"> <img src="/assets/icons/mute.png" />
             &nbsp; Unmute
             alarms</button>
         <button class="btn" (click)="onMuteAlarms()" *ngIf="!muteAlarms">
-            <img
-                src="https://img.icons8.com/external-kiranshastry-lineal-color-kiranshastry/33/000000/external-volume-multimedia-kiranshastry-lineal-color-kiranshastry.png" />
+            <img src="/assets/icons/sound.png" />
             &nbsp; Mute alarms
         </button>
         <button class="btn" (click)="resetSimulation()">
-            <img src="https://img.icons8.com/fluency/33/000000/recurring-appointment.png" />
+            <img src="/assets/icons/refresh2.png" />
             &nbsp; Reset Simulation
         </button>
         <button class="btn" (click)="configureNIBP()">
@@ -307,8 +305,7 @@
                 src="https://img.icons8.com/external-kiranshastry-lineal-color-kiranshastry/33/000000/external-settings-interface-kiranshastry-lineal-color-kiranshastry.png" />
             &nbsp; Monitor settings</button> -->
         <a [routerLink]="['/monitor']" target="_blank">
-            <img
-                src="https://img.icons8.com/external-icongeek26-flat-icongeek26/33/000000/external-ecg-pregnancy-amp-maternity-icongeek26-flat-icongeek26.png" />
+            <img src="/assets/icons/monitor.png" />
             &nbsp; Go to Monitor
         </a>
     </div>

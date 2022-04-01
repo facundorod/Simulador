@@ -73,3 +73,29 @@ h3 {
 .dropdown-menu a:link {
     color: #616161;
 }
+
+.div-navbar-logo {
+    display: none;
+}
+
+.div-profile {
+    left: 30%;
+}
+
+.div-content {
+    margin-top: 20%;
+}
+
+@media (min-width: 1024px) {
+    .div-navbar-logo {
+        display: block;
+    }
+
+    .div-profile {
+        left: 0%;
+    }
+
+    .div-content {
+        margin-top: inherit;
+    }
+}

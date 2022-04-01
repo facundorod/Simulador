@@ -15,16 +15,15 @@
                     <div class="col-3">
                         <button (click)="openSidebar(sidebar)" class="navbar__toogle"></button>
                     </div>
-                    <div class="col-5">
+                    <div class="col-5 div-navbar-logo">
                         <h3><a class="navbar-brand" href="#"><img src="../../../../assets/images/simvetLogo.png"
                                     width="90" height="40"></a></h3>
-
                     </div>
-                    <div class="col-3 offset-md-1">
+                    <div class="col-3 offset-md-1 div-profile">
                         <div class="dropdown">
                             <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton"
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" (click)="showMenu()">
-                                <img src="https://img.icons8.com/color/30/000000/veterinarian-male-skin-type-2.png" />
+                                <img src="../../../../assets/icons/veterinarian.png" />
                                 &nbsp; Hi, {{user.name}}
                             </button>
                             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton"
@@ -40,7 +39,7 @@
         </nav>
         <main role="main">
             <div class="template">
-                <div class="content rounded">
+                <div class="content rounded div-content">
                     <router-outlet></router-outlet>
                 </div>
             </div>
