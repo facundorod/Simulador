@@ -159,7 +159,7 @@
                                 <div class="col-4 parameter-box-var">
                                     <p [style.color]="getColor(curves)">
                                         {{curves.curveConfiguration?.unit}}</p>
-                                    <p *ngIf="isNIBPCurve(curves)" [style.color]="getColor(curves)">
+                                    <p *ngIf="isNIBPCurve(curves)" class="nibp-text" [style.color]="getColor(curves)">
                                         ({{timeNIBP()}} min.)
                                     </p>
                                     <p *ngIf="isCO2Curve(curves)" [style.color]="getColor(curves)">
