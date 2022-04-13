@@ -22,32 +22,36 @@
                         class="img-status" />Simulation
                     paused</h4>
             </ng-template>
+
             <ng-template
-                [ngIf]="(currentState.muteAlarms || newCurrentState.muteAlarms) &&
-                (currentState?.action !== 'stop' || newCurrentState?.action !== 'stop') && (currentState?.action !== 'pause' || newCurrentState?.action !== 'pause')">
-                <h4 class="text-center"><img src="/assets/icons/mute-1.png" />
-                    &nbsp;Alarms
-                    off</h4>
-            </ng-template>
-            <ng-template
-                [ngIf]="currentState?.action !== 'stop' && calculatingNIBP && !currentState.muteAlarms && (currentState?.action !== 'pause' || newCurrentState?.action !== 'pause')">
+                [ngIf]="currentState?.action !== 'stop' && calculatingNIBP  && (currentState?.action !== 'pause' || newCurrentState?.action !== 'pause')">
                 <h4 class="text-center"><img src="/assets/icons/nibp-small.png" class="img-status" /> NIBP in progress
                 </h4>
-            </ng-template>
 
+            </ng-template>
+            <ng-template
+                [ngIf]="currentState?.action !== 'stop' && !calculatingNIBP && (currentState?.action !== 'pause' || newCurrentState?.action !== 'pause') && getSystolicNIBP()" >
+                <h4 class="text-center"><img src="/assets/icons/nibp-small.png" class="img-status" /> {{getDiastolicNIBP()}} / {{getSystolicNIBP()}} ({{getMeanNIBP()}})
+                </h4>
+
+            </ng-template>
 
         </div>
         <div class="col-3">
-            <div class="row justify-content-between">
-                <div class="col-5">
-                    <!-- <p class="text-right" *ngIf="animalSpecie">ANIMAL CLINIC
-                    </p> -->
+            <div class="row">
+                <div class="col-5 temperature-div">
+                    <p class="text-left temperature" *ngIf="getParameterInfo() && getParameterInfo().temperature"> <img src="/assets/icons/temperature.png"  /> {{getParameterInfo().temperature}} °C
                 </div>
-                <div class="col-7">
-                    <button class="btn btn-link" (click)="openFullscreen()" *ngIf="!isFullScren()">
-                        <img src="/assets/icons/fullscreen.png" /> FullScreen</button>
-                    <button class="btn btn-link" (click)="closeFullscreen()" *ngIf="isFullScren()">
-                        <img src="/assets/icons/exitFS.png" /> Exit FullScreen</button>
+                <div class="col-2 fullScreen">
+                    <p class="text-left" *ngIf="(currentState.muteAlarms || newCurrentState.muteAlarms) &&
+                        (currentState?.action !== 'stop' || newCurrentState?.action !== 'stop') && (currentState?.action !== 'pause' || newCurrentState?.action !== 'pause')"><img src="/assets/icons/mute-1.png" />
+                    </p>
+                </div>
+                <div class="col-5 fullScreen">
+                    <p class="full-screen" *ngIf="!isFullScren()"> <a class="btn btn-link" (click)="openFullscreen()" ><img src="/assets/icons/fullscreen.png" />
+                        FS</a></p>
+                    <p class="full-screen" *ngIf="isFullScren()"> <a class="btn btn-link" (click)="closeFullscreen()" >
+                            <img src="/assets/icons/exitFS.png" />Exit </a> </p>
 
                 </div>
 
@@ -103,7 +107,9 @@
 
                         <div class="col-11 curve-configuration" [ngClass]="{'alert-enabled': getAlerts()[i]}"
                             *ngIf="curves.curveConfiguration?.label.toUpperCase() != 'CAR' &&
-                                                                curves.curveConfiguration?.label.toUpperCase() != 'RESP'">
+                                                                curves.curveConfiguration?.label.toUpperCase() != 'RESP' &&
+                                                                curves.curveConfiguration?.label.toUpperCase() != 'TEMP' &&
+                                                                curves.curveConfiguration?.label.toUpperCase() != 'NIBP'">
                             <div class="row">
                                 <div class="col-2">
                                     <p class="text-center" [style.color]="getColor(curves)">
@@ -173,14 +179,15 @@
                             </div>
 
                         </div>
-                        <div class="col-xs-1 curve-label" [ngClass]="{'alert-enabled': getAlerts()[i] }" *ngIf="curves.curveConfiguration?.label.toUpperCase() != 'CAR' &&
-                                    curves.curveConfiguration?.label.toUpperCase() != 'RESP' ">
+                        <!-- <div class="col-xs-1 curve-label" [ngClass]="{'alert-enabled': getAlerts()[i] }" *ngIf="curves.curveConfiguration?.label.toUpperCase() != 'CAR' &&
+                                    curves.curveConfiguration?.label.toUpperCase() != 'RESP' && curves.curveConfiguration?.label.toUpperCase() != 'TEMP' &&
+                                    curves.curveConfiguration?.label.toUpperCase() != 'NIBP' ">
                             <p class="text-label" [style.color]="getColor(curves)">
                                 {{curves.curveConfiguration?.label}}
                             </p>
 
 
-                        </div>
+                        </div> -->
                     </div>
 
                 </div>

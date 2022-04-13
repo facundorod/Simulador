@@ -229,7 +229,7 @@ export class MonitorComponent
             const minY = 0;
             const chart: ChartConfigurer = new ChartConfigurer({
                 colorLine: curve.curveConfiguration.colorLine,
-                height: 143,
+                height: 133,
                 minX: 0,
                 maxX: this.monitorConfiguration.getMonitorConfiguration()
                     .maxSamples,

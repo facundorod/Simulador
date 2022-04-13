@@ -63,7 +63,7 @@ export function commonOptions(
         chart: {
             id: 'curves',
             type: 'line',
-            height: toolbarEnabled ? 110 : 143,
+            height: toolbarEnabled ? 100 : 133,
             redrawOnParentResize: true,
             redrawOnWindowResize: true,
             zoom: {

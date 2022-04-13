@@ -31,12 +31,6 @@
     margin-left: 0%;
 }
 
-.curve-label {
-    border: 2px solid #fff;
-    border-radius: 10px;
-    max-width: 20px;
-    max-height: 13.3vh;
-}
 
 .text-label {
     writing-mode: vertical-rl;
@@ -69,7 +63,7 @@
 }
 
 .text-rate {
-    font-size: 3rem;
+    font-size: 4rem;
 }
 
 .container-configuration {
@@ -112,13 +106,13 @@ h4 {
 }
 
 .min-max-value {
-    font-size: 1.7rem;
+    font-size: 1.8rem;
     text-align: center;
 }
 
 @media all and (display-mode: fullscreen) {
     .curves {
-        max-height: 20vh;
+        max-height: 20vh !important;
         margin: 0%;
         padding: 0%;
     }
@@ -128,33 +122,62 @@ h4 {
         max-height: 0px;
     }
 
-    .curve-label {
+    /* .curve-label {
         min-height: 13vh;
-    }
+    } */
     .curve-label-left {
         min-height: 20vh;
     }
     .curve-configuration {
-        min-height: 14vh;
+        min-height: 18vh !important;
+        max-height: 18vh !important;
+
     }
 }
+
 
 @media screen and (min-width: 1000px) {
     .curves {
         min-width: 910px;
-        min-height: 18vh;
-        max-height: 18vh;
+        min-height: 17.5vh;
+        max-height: 17.5vh;
         margin-right: 0px;
     }
 
     .curve-configuration {
         border: 2px solid #fff;
         border-radius: 10px;
-        max-height: 13.3vh;
-        min-width: 250px;
-        animation: none;
+        min-height: 18vh;
+        max-height: 18vh;
+        margin-top: 3%;
+        min-width: 300px;
         margin-left: 0%;
     }
+
+    .temperature-div {
+        margin-top:1.5%;
+    }
+
+    .temperature {
+        font-size: 1.5em;
+    }
+
+    .fullScreen {
+        margin-top: 2%;
+    }
+
+    .full-screen {
+        color: blue
+    }
+    /* .curve-label {
+        border: 2px solid #fff;
+        border-radius: 10px;
+        max-width: 20px;
+        margin-top: 3%;
+        min-height: 18.5vh;
+        max-height: 18.6vh;
+    } */
+
 }
 
 .btn-link {
