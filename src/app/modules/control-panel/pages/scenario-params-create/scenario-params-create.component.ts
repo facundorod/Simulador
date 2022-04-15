@@ -482,6 +482,7 @@ export class ScenarioParamsCreateComponent implements OnInit {
 
         modal.result
             .then((value: SPPI) => {
+                console.log("value", value);
                 if (value) {
                     this.parameters.push(value);
                 }

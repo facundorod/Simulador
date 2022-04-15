@@ -79,7 +79,12 @@
                         <div class="col-xs-1 curve-label-left-col"
                             [ngClass]="{'curve-label curve-label-left': curves.chart && curves.chart.series,
                                                                             'no-curves-label': !curves.chart || !curves.chart.series}">
-                            <p class=" text-label">
+                            <p class=" text-label" *ngIf="curves.curveConfiguration.label.toUpperCase() === 'SPO2'">
+                                <ng-template [ngIf]="curves.chart && curves.chart.series">
+                                    PLET
+                                </ng-template>
+                            </p>
+                            <p class=" text-label" *ngIf="curves.curveConfiguration.label.toUpperCase() !== 'SPO2'">
                                 <ng-template [ngIf]="curves.chart && curves.chart.series">
                                     {{curves.curveConfiguration.label.toUpperCase()}}
                                 </ng-template>
@@ -115,7 +120,7 @@
                                     <p class="text-center" [style.color]="getColor(curves)">
                                         {{curves.curveConfiguration?.label}}</p>
                                     <ng-template
-                                        [ngIf]="currentState?.action !== 'stop' && isNIBPCurve(curves) && calculatingNIBP">
+                                        [ngIf]="currentState?.action !== 'stop' && isIBPCurve(curves) && calculatingNIBP">
                                         <p><img src="/assets/icons/nibp-small.png" class="img-status" /></p>
                                     </ng-template>
                                 </div>

@@ -268,16 +268,36 @@ export class ParametersCreateComponent implements OnInit {
             return this.parameter.animalParameters.physiologicalParameter.label.toUpperCase() === 'SPO2'
                 || this.parameter.animalParameters.physiologicalParameter.label.toUpperCase() === 'TEMP'
                 || this.parameter.animalParameters.physiologicalParameter.label.toUpperCase() === 'CAR'
-                || this.parameter.animalParameters.physiologicalParameter.label.toUpperCase() === 'RESP';
+                || this.parameter.animalParameters.physiologicalParameter.label.toUpperCase() === 'RESP'
+                || this.parameter.animalParameters.physiologicalParameter.label.toUpperCase() === 'ECG'
+                || this.parameter.animalParameters.physiologicalParameter.label.toUpperCase() === 'CO2';
         }
         const param: PhysiologicalParamaterI = this.formGroup.get('parameter').value;
         return param.label.toUpperCase() === 'SPO2'
             || param.label.toUpperCase() === 'TEMP'
             || param.label.toUpperCase() === 'CAR'
-            || param.label.toUpperCase() === 'RESP';
+            || param.label.toUpperCase() === 'RESP'
+            || param.label.toUpperCase() === 'ECG'
+            || param.label.toUpperCase() === 'CO2';
     }
 
     public setCurrentParameters(parameters: PhysiologicalParamaterI[]) {
         this.currentParameters = parameters;
+    }
+
+    public getLabelInitialValue() {
+        const param: PhysiologicalParamaterI = this.formGroup.get('parameter').value;
+        if (this.parameter || param) {
+            switch (this.parameter?.animalParameters?.physiologicalParameter?.label.toUpperCase() || param.label.toUpperCase()) {
+                case 'ECG':
+                    return 'Heart rate';
+                case 'CO2':
+                    return 'Breath Rate';
+                case 'SPO2':
+                    return 'SPO2 value';
+                default:
+                    break;
+            }
+        }
     }
 }
