@@ -10,7 +10,7 @@ export interface CurvesConfigurationI {
     id_pp: number;
     name: string;
     description: string;
-    source?: PhysiologicalParamaterI;
+    source?: string;
     colorLine?: string;
     minY?: number;
     maxY?: number;

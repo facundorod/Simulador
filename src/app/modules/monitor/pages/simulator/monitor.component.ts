@@ -406,7 +406,7 @@ export class MonitorComponent
         return (
             this.currentState.curves[
                 index
-            ].curveConfiguration?.source?.label?.toUpperCase() == 'RESP'
+            ].curveConfiguration?.source.toUpperCase() == 'RESP'
         );
     }
 
@@ -493,7 +493,7 @@ export class MonitorComponent
 
     public getSourceRateValue(curve: CurvesI): number {
         if (curve?.curveConfiguration && curve.curveConfiguration.source) {
-            switch (curve.curveConfiguration.source.label.toUpperCase()) {
+            switch (curve.curveConfiguration.source.toUpperCase()) {
                 case 'CAR':
                     return this.parameterInfo.heartRate;
                 case 'RESP':
@@ -609,11 +609,11 @@ export class MonitorComponent
             (breathRate &&
                 this.currentState.curves[
                     index
-                ].curveConfiguration?.source?.label?.toUpperCase() == 'RESP') ||
+                ].curveConfiguration?.source?.toUpperCase() == 'RESP') ||
             (!breathRate &&
                 this.currentState.curves[
                     index
-                ].curveConfiguration?.source?.label?.toUpperCase() != 'RESP')
+                ].curveConfiguration?.source?.toUpperCase() != 'RESP')
         );
     }
 

@@ -576,10 +576,7 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
         this.currentState.curves = this.currentState.curves.filter(
             (value: CurvesI) => {
                 switch (value.curveConfiguration.label.toUpperCase()) {
-                    case 'RESP':
-                        this.breathRate = value.curveConfiguration.refValue;
-                        return value;
-                    case 'CAR':
+                    case 'ECG':
                         this.heartRate = value.curveConfiguration.refValue;
                         return value;
                     case 'TEMP':
@@ -594,6 +591,7 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
                         this.meanIBP = this.curvesHelper.getMeanValue(this.diastolicIbp, this.systolicIbp);
                         return value;
                     case 'CO2':
+                        this.breathRate = value.curveConfiguration.refValue;
                         this.inspirationCO2 = Math.round(value.curveValues[0][1]);
                         this.endTidalCO2 = Math.round(this.getMaxYValue(value.curveValues).value);
                         return value;

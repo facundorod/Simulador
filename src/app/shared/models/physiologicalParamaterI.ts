@@ -8,5 +8,5 @@ export interface PhysiologicalParamaterI {
     specialConfiguration?: JSON;
     updated_at?: Date;
     created_at?: Date;
-    source?: PhysiologicalParamaterI;
+    source?: string;
 }
