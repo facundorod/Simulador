@@ -2,7 +2,6 @@
     <div class="row justify-content-between">
         <div class="col-5">
             <p class="text-left">
-                <!-- {{ today | date: "medium" }} -->
                 <span *ngIf="animalSpecie" class="text-animal-specie">
                     {{ animalSpecie.name }} - {{currentState.scenario.description | scenarioText }}
                 </span>
@@ -65,7 +64,7 @@
 
     <div class="row">
         <app-audio *ngIf="currentState?.action !== 'stop' ||
-                            newCurrentState?.action !== 'stop'" [play]="true" [src]="'/assets/sounds/monitor.mp3'">
+                            newCurrentState?.action !== 'stop'" [play]=true [src]="'/assets/sounds/heartRate.mp3'" [playRate]="calculatePlayRate()">
         </app-audio>
         <app-audio [play]="enableSoundAlarm" [src]="'/assets/sounds/alarmLimit.mp3'" [playRate]=1>
         </app-audio>

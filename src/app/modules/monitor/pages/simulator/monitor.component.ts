@@ -362,10 +362,12 @@ export class MonitorComponent
                     0,
                 ]);
             } else {
-                currentDataset[0].data.push([
-                    isBreathCurve ? this.breathTimer : this.heartTimer,
-                    curveValues[isBreathCurve ? this.currentIndexBreath : this.currentIndexHeart][1],
-                ]);
+                if (curveValues[isBreathCurve ? this.currentIndexBreath : this.currentIndexHeart]) {
+                    currentDataset[0].data.push([
+                        isBreathCurve ? this.breathTimer : this.heartTimer,
+                        curveValues[isBreathCurve ? this.currentIndexBreath : this.currentIndexHeart][1],
+                    ]);
+                }
             }
 
         }
@@ -386,13 +388,15 @@ export class MonitorComponent
                 0,
             ]);
         } else {
+
             const originalDataset: [number, number][] =
                 this.currentState.curves[index].curveValues;
-
-            curveValuesSimulation.push([
-                isBreathCurve ? this.breathTimer : this.heartTimer,
-                originalDataset[isBreathCurve ? this.currentIndexBreath : this.currentIndexHeart][1],
-            ]);
+            if (originalDataset[isBreathCurve ? this.currentIndexBreath : this.currentIndexHeart]) {
+                curveValuesSimulation.push([
+                    isBreathCurve ? this.breathTimer : this.heartTimer,
+                    originalDataset[isBreathCurve ? this.currentIndexBreath : this.currentIndexHeart][1],
+                ]);
+            }
         }
         this.deleteOldPoints(
             curveValues,
@@ -561,6 +565,8 @@ export class MonitorComponent
         }
     }
 
+
+
     /**
      * Swap curves between simulation data and current dataset. Old dataset will be the previous
      * simulation dataset, and new dataset will start empty
@@ -647,7 +653,7 @@ export class MonitorComponent
     }
 
     public calculatePlayRate(): number {
-        return this.parameterInfo.heartRate / 1000;
+        return this.parameterInfo.heartRate / 60;
     }
 
     public showMinAndMax(curve: CurvesI): boolean {

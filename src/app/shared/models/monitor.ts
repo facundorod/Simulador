@@ -5,7 +5,7 @@ export class Monitor {
         clockTimer: 30,
         freqHeart: 20,
         freqBreath: 15,
-        maxSamples: 10,
+        maxSamples: 8,
     };
 
     public constructor() {

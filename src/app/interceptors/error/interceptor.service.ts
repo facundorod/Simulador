@@ -27,11 +27,14 @@ export class InterceptorService implements HttpInterceptor {
         return next.handle(request).pipe(
             catchError((err: HttpErrorResponse) => {
                 if (err.status >= 400 && err.status < 500) {
-                    if (err.status == 401 || err.status == 412) {
+                    if (err.status == 401) {
                         message = `You don't have access`;
                         localStorage.removeItem('authToken');
                     } else {
-                        message = err.message;
+                        if (err.status == 412) {
+                            message = `Invalid user/pwd`;
+                        } else
+                            message = err.message;
                     }
                     this.router.navigateByUrl('/auth/login');
                 }
@@ -39,6 +42,8 @@ export class InterceptorService implements HttpInterceptor {
                     message = `Something bad has happened!`;
                     this.router.navigateByUrl('/home');
                 }
+                this.toast.toastrConfig.positionClass = 'toast-bottom-left';
+                this.toast.toastrConfig.closeButton = true;
                 this.toast.toastrConfig.timeOut = 1000;
                 this.toast.error('Retry again!', `${message}`);
 
