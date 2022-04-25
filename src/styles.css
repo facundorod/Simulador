@@ -47,6 +47,14 @@ body {
     height: 100%;
 }
 
+@media (max-width: 600px) {
+    .modal-small {
+        max-width: 90% !important;
+        margin-left: 2%;
+    }
+
+}
+
 .fs-1 {
     -webkit-user-select: none;
     -moz-user-select: none;

@@ -34,7 +34,7 @@ export class ScenariosComponent extends BaseComponent implements OnInit {
      * Load scenarios from db
      */
     onLoadScenarios(): void {
-        const modal = this.modal.open(ScenariosModalComponent);
+        const modal = this.modal.open(ScenariosModalComponent, { windowClass: 'modal-small'});
         modal.componentInstance.setAnimal(this.animal.id_as);
         modal.result.then(
             (data: any) => {

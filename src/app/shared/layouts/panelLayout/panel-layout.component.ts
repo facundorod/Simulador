@@ -28,4 +28,12 @@ export class PanelLayoutComponent implements OnInit {
     public showMenu(): void {
         this.toggleFlag = !this.toggleFlag;
     }
+
+    public getUserName(): string {
+        if (this.user && this.user.name) {
+            const splitUserName = this.user.name.split(' ');
+            return splitUserName[0];
+        }
+        return null;
+    }
 }

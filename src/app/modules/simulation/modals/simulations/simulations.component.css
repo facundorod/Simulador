@@ -34,6 +34,10 @@
     max-width: 10px;
 }
 
+.col-animal, .updated-at {
+    display: none;
+}
+
 @media (min-width: 1024px) {
     .updated-at {
         visibility: initial;
@@ -41,5 +45,9 @@
     .modal-header,
     .modal-body {
         min-width: 600px;
+    }
+
+    .col-animal, .updated-at {
+        display: table-cell;
     }
 }

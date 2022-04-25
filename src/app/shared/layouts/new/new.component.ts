@@ -19,6 +19,14 @@ export class NewComponent implements OnInit {
         this.sidebarOpen = false;
     }
 
+    public getUserName(): string {
+        if (this.user && this.user.name) {
+            const splitUserName = this.user.name.split(' ');
+            return splitUserName[0];
+        }
+        return null;
+    }
+
     openSidebar(sidebar: Sidebar): void {
         sidebar.open();
         this.sidebarOpen = true;
