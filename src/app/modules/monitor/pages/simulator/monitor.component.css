@@ -7,9 +7,7 @@
 }
 
 .curves {
-    width: 200px !important;
-    /* max-width: 200px !important; */
-    /* border: 2px solid red; */
+    width: 100px !important;
 }
 
 .icon-pause {
@@ -30,7 +28,6 @@
     animation: none;
     margin-left: 0%;
 }
-
 
 .text-label {
     writing-mode: vertical-rl;
@@ -63,7 +60,11 @@
 }
 
 .text-rate {
-    font-size: 4rem;
+    font-size: 1.2rem;
+}
+
+.unit-text {
+    display: none;
 }
 
 .container-configuration {
@@ -106,8 +107,19 @@ h4 {
 }
 
 .min-max-value {
-    font-size: 1.8rem;
+    font-size: 1.2rem;
+    margin-top: 5%;
     text-align: center;
+}
+
+.curve-configuration {
+    min-height: 20vh;
+    max-height: 20vh;
+    min-width: 100px;
+}
+
+.topbar {
+    display: none;
 }
 
 @media all and (display-mode: fullscreen) {
@@ -116,25 +128,35 @@ h4 {
         margin: 0%;
         padding: 0%;
     }
+
     .no-curves,
     .no-curves-label {
         display: hidden;
         max-height: 0px;
     }
 
-    /* .curve-label {
-        min-height: 13vh;
-    } */
+    .unit-text {
+        display: block;
+    }
+
     .curve-label-left {
         min-height: 20vh;
     }
     .curve-configuration {
         min-height: 18vh !important;
         max-height: 18vh !important;
+    }
 
+    .text-rate {
+        font-size: 4rem;
+    }
+
+    .min-max-value {
+        font-size: 1.8rem;
+        text-align: center;
+        margin-top: auto;
     }
 }
-
 
 @media screen and (min-width: 1000px) {
     .curves {
@@ -142,6 +164,15 @@ h4 {
         min-height: 17.5vh;
         max-height: 17.5vh;
         margin-right: 0px;
+    }
+    .min-max-value {
+        font-size: 1.8rem;
+        margin-top: auto;
+        text-align: center;
+    }
+
+    .unit-text {
+        display: block;
     }
 
     .curve-configuration {
@@ -155,7 +186,11 @@ h4 {
     }
 
     .temperature-div {
-        margin-top:1.5%;
+        margin-top: 1.5%;
+    }
+
+    .topbar {
+        display: flex;
     }
 
     .temperature {
@@ -167,17 +202,16 @@ h4 {
     }
 
     .full-screen {
-        color: blue
+        color: blue;
     }
-    /* .curve-label {
-        border: 2px solid #fff;
-        border-radius: 10px;
-        max-width: 20px;
-        margin-top: 3%;
-        min-height: 18.5vh;
-        max-height: 18.6vh;
-    } */
 
+    .text-rate {
+        font-size: 4rem;
+    }
+
+    .topbar {
+        display: flex;
+    }
 }
 
 .btn-link {

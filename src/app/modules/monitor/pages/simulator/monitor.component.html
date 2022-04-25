@@ -1,5 +1,5 @@
 <div class="container-fluid" *ngIf="currentState?.curves.length > 0 else noSimulation">
-    <div class="row justify-content-between">
+    <div class="row topbar justify-content-between">
         <div class="col-5">
             <p class="text-left">
                 <span *ngIf="animalSpecie" class="text-animal-specie">
@@ -167,7 +167,7 @@
 
                                 </div>
                                 <div class="col-4 parameter-box-var">
-                                    <p [style.color]="getColor(curves)">
+                                    <p [style.color]="getColor(curves)" class="unit-text">
                                         {{curves.curveConfiguration?.unit}}</p>
                                     <p *ngIf="isNIBPCurve(curves)" class="nibp-text" [style.color]="getColor(curves)">
                                         ({{timeNIBP()}} min.)
