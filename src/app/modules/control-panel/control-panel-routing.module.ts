@@ -10,7 +10,7 @@ import { ScenarioParamsCreateComponent } from './pages/scenario-params-create/sc
 import { ParametersComponent } from './pages/parameters/parameters.component';
 
 const routes: Routes = [
-    { path: '', component: PanelComponent },
+    { path: '', component: PanelComponent, data: {title: 'SIMVet - Control Panel'}},
     { path: 'animalSpecie', component: AnimalSpeciesListComponent },
     { path: 'pathologies', component: PathologiesComponent },
     { path: 'medications', component: MedicationsComponent },

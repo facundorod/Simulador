@@ -158,7 +158,11 @@ h4 {
     }
 }
 
-@media screen and (min-width: 1000px) {
+.first-box {
+    margin-top: 0% !important;
+}
+
+@media screen and (min-width: 1000px) and (max-width: 1400px) {
     .curves {
         min-width: 910px;
         min-height: 17.5vh;
@@ -211,6 +215,18 @@ h4 {
 
     .topbar {
         display: flex;
+    }
+}
+
+@media screen and (min-width: 1400px) and (max-width: 2000px) {
+    .curves {
+        min-width: 1150px;
+        min-height: 21vh;
+        margin-right: 0px;
+    }
+
+    .curve-configuration {
+        min-height: 18.7vh;
     }
 }
 

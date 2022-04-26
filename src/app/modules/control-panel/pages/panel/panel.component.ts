@@ -811,6 +811,10 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
         }
     }
 
+    public existCurves(): boolean {
+        return this.currentState?.curves?.length > 0;
+    }
+
 
 
 

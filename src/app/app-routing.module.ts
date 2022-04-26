@@ -91,6 +91,7 @@ const routes: Routes = [
                     import("./modules/monitor/monitor.module").then(
                         (m) => m.MonitorModule
                     ),
+
             },
         ],
     },

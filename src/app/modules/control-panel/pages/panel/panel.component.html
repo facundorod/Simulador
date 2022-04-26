@@ -277,7 +277,7 @@
 </button>
 
 
-<footer class="footer">
+<footer class="footer" [ngClass]="{'stickyFooter': existCurves()}">
     <div class="container footerBtn">
         <button class="btn" (click)="applyChanges()">
             <img src="/assets/icons/refresh.png" />&nbsp; Apply Changes

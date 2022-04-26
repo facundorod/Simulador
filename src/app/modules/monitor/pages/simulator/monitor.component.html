@@ -109,7 +109,7 @@
                 <div class="col-3">
                     <div class="row" *ngFor="let curves of curvesAndParams; let i = index">
 
-                        <div class="col-11 curve-configuration" [ngClass]="{'alert-enabled': getAlerts()[i]}"
+                        <div class="col-11 curve-configuration" [ngClass]="{'alert-enabled': getAlerts()[i], 'first-box': curves.curveConfiguration?.label.toUpperCase() == 'ECG'}"
                             *ngIf="curves.curveConfiguration?.label.toUpperCase() != 'CAR' &&
                                                                 curves.curveConfiguration?.label.toUpperCase() != 'RESP' &&
                                                                 curves.curveConfiguration?.label.toUpperCase() != 'TEMP' &&

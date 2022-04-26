@@ -35,13 +35,17 @@
 
 .footer {
     width: 100%;
-    bottom: 0%;
+    bottom: 0;
     background-color: #212122;
-    margin-top: 2%;
+    margin-top: 20%;
     position: sticky;
 }
 .footerBtn {
     text-align: center;
+}
+
+.stickyFooter {
+    position: sticky !important;
 }
 
 .param-configuration,
