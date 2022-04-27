@@ -65,7 +65,7 @@ export class ParametersComponent implements OnInit {
     }
 
     public onAddParameter(): void {
-        const modal: NgbModalRef = this.modal.open(NewParameterComponent);
+        const modal: NgbModalRef = this.modal.open(NewParameterComponent, {size: 'lg', windowClass: 'modal-small'});
         modal.result
             .then((value: PhysiologicalParamaterI) => {
                 if (value) {
@@ -89,7 +89,7 @@ export class ParametersComponent implements OnInit {
     }
 
     public onEditParameter(index: number) {
-        const modal: NgbModalRef = this.modal.open(NewParameterComponent);
+        const modal: NgbModalRef = this.modal.open(NewParameterComponent, {size: 'lg', windowClass: 'modal-small'});
         modal.componentInstance.setParameter(this.parameters[index]);
         const id: number = this.parameters[index].id_pp;
         modal.result
@@ -129,7 +129,7 @@ export class ParametersComponent implements OnInit {
     public onDeleteParameter(index: number) {
         const id: number = this.parameters[index].id_pp;
         if (id) {
-            const modal = this.modal.open(ConfirmModalComponent);
+            const modal = this.modal.open(ConfirmModalComponent, {size: 'lg', windowClass: 'modal-small'});
             modal.componentInstance.setTitle(
                 `You will delete the scenario ${this.parameters[index].name}`
             );

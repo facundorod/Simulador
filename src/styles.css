@@ -47,12 +47,21 @@ body {
     height: 100%;
 }
 
+.modal-content {
+    background-color: transparent;
+}
+
 @media (max-width: 600px) {
     .modal-small {
         max-width: 90% !important;
         margin-left: 2%;
     }
+}
 
+@media (min-width: 600px) {
+    .modal-small {
+        width: 100%;
+    }
 }
 
 .fs-1 {

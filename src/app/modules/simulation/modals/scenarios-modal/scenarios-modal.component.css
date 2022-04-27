@@ -46,6 +46,7 @@
         display: table-cell;
     }
 
+    .modal-content,
     .modal-header,
     .modal-body {
         min-width: 650px !important;

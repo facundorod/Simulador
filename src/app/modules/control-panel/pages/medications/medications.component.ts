@@ -98,7 +98,7 @@ export class MedicationsComponent extends BaseComponent implements OnInit {
     }
 
     public onEdit(index: number = null) {
-        const modal = this.modal.open(ModalEditComponentMed);
+        const modal = this.modal.open(ModalEditComponentMed, {size: 'lg', windowClass: 'modal-small'});
 
         if (index !== null) {
             modal.componentInstance.setMedication(this.medications[index]);
@@ -149,7 +149,7 @@ export class MedicationsComponent extends BaseComponent implements OnInit {
     }
 
     public onDelete(index: number) {
-        const modal = this.modal.open(ConfirmModalComponent);
+        const modal = this.modal.open(ConfirmModalComponent, {size: 'lg', windowClass: 'modal-small'});
 
         modal.componentInstance.setTitle(
             `You will delete the medication ${this.medications[index].name}`

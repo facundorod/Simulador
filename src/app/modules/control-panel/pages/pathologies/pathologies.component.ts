@@ -99,7 +99,7 @@ export class PathologiesComponent extends BaseComponent implements OnInit {
     }
 
     public onEdit(index: number = null) {
-        const modal = this.modal.open(ModalEditComponentPath);
+        const modal = this.modal.open(ModalEditComponentPath, {size: 'lg', windowClass: 'modal-small'});
 
         if (index !== null) {
             modal.componentInstance.setPathology(this.pathologies[index]);
@@ -147,7 +147,7 @@ export class PathologiesComponent extends BaseComponent implements OnInit {
     }
 
     public onDelete(index: number) {
-        const modal = this.modal.open(ConfirmModalComponent);
+        const modal = this.modal.open(ConfirmModalComponent, {size: 'lg', windowClass: 'modal-small'});
 
         modal.componentInstance.setTitle(
             `You will delete the pathology ${this.pathologies[index].name}`

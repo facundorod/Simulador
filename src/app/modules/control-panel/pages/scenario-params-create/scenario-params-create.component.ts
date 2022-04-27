@@ -454,7 +454,7 @@ export class ScenarioParamsCreateComponent implements OnInit {
     }
 
     public editParameter(index: number): void {
-        const modal: NgbModalRef = this.modal.open(ParametersCreateComponent);
+        const modal: NgbModalRef = this.modal.open(ParametersCreateComponent, {size: 'lg', windowClass: 'modal-small'});
         modal.componentInstance.setParameter(this.parameters[index]);
         modal.result
             .then((value: SPPI) => {
@@ -468,7 +468,7 @@ export class ScenarioParamsCreateComponent implements OnInit {
     }
 
     public onAddParameter(): void {
-        const modal: NgbModalRef = this.modal.open(ParametersCreateComponent);
+        const modal: NgbModalRef = this.modal.open(ParametersCreateComponent, {size: 'lg', windowClass: 'modal-small'});
         const animalSpecie: AnimalSpeciesI =
             this.formGroupScenario.get('animalSpecie').value;
         const parameters: PhysiologicalParamaterI[] = this.parameters.map(

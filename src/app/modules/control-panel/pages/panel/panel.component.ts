@@ -515,6 +515,7 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
      * Load curves for scenario active for simulation and animalSpecie selected
      */
     public onLoadCurves(as: AnimalSpeciesI) {
+
         if (this.activeScenario?.id_scenario && as?.id_as) {
             this.curvesService
                 .findAll({
@@ -538,6 +539,8 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
                             this.currentState.newScenario = newScenario;
                             this.onLoadParameters();
                             this.setLoading(false);
+                            this.scenarios.setAnimal(as);
+
                             // this.applyChanges();
                         } else {
                             this.currentState = null;
@@ -853,7 +856,7 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
     }
 
     public configureNIBP(): void {
-        const modal = this.modal.open(NibpComponent);
+        const modal = this.modal.open(NibpComponent, {size: 'lg', windowClass: 'modal-small'});
         modal.componentInstance.setInitialValue(this.timeNIBP);
         modal.result.then((nibpSettings: { timeNibp: number, startNow: boolean }) => {
             this.timeNIBP = nibpSettings.timeNibp;

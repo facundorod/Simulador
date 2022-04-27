@@ -44,7 +44,7 @@ export class MyProfileComponent implements OnInit {
 
     public onChangePassword(): void {
         const changePasswordModal: NgbModalRef = this.modal.open(
-            ChangePasswordComponent
+            ChangePasswordComponent, {size: 'lg', windowClass: 'modal-small'}
         );
 
         changePasswordModal.result.then((newPassword: string | null) => {

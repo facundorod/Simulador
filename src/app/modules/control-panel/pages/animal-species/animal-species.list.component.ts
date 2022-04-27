@@ -98,7 +98,7 @@ export class AnimalSpeciesListComponent
     }
 
     public onEdit(index: number = null) {
-        const modal = this.modal.open(ModalEditComponent);
+        const modal = this.modal.open(ModalEditComponent, {size: 'lg', windowClass: 'modal-small'});
         if (index !== null) {
             modal.componentInstance.setAnimalSpecie(this.animalSpecies[index]);
 
@@ -149,7 +149,7 @@ export class AnimalSpeciesListComponent
     }
 
     public onDelete(index: number) {
-        const modal = this.modal.open(ConfirmModalComponent);
+        const modal = this.modal.open(ConfirmModalComponent, {size: 'lg', windowClass: 'modal-small'});
 
         modal.componentInstance.setTitle(
             `You will delete the animal ${this.animalSpecies[index].name}`

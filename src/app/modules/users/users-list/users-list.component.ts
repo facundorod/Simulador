@@ -59,7 +59,7 @@ export class UsersListComponent implements OnInit {
     }
 
     public onInviteuser(): void {
-        const modal = this.modal.open(EditUserComponent);
+        const modal = this.modal.open(EditUserComponent, {size: 'lg', windowClass: 'modal-small'});
         modal.componentInstance.setNewUser(true);
         modal.result.then((result: UserI) => {
             if (result) {
@@ -114,7 +114,7 @@ export class UsersListComponent implements OnInit {
     }
 
     public onEdit(index: number): void {
-        const modal = this.modal.open(EditUserComponent);
+        const modal = this.modal.open(EditUserComponent, {size: 'lg', windowClass: 'modal-small'});
         const user: UserI = this.users[index];
         if (user) {
             modal.componentInstance.setUser(user);
@@ -140,7 +140,7 @@ export class UsersListComponent implements OnInit {
     }
 
     public onDelete(index: number) {
-        const modal = this.modal.open(ConfirmModalComponent);
+        const modal = this.modal.open(ConfirmModalComponent, {size: 'lg', windowClass: 'modal-small'});
 
         modal.componentInstance.setTitle(
             `You will delete the user ${this.users[index].surname}, ${this.users[index].name}`

@@ -36,7 +36,7 @@ export class NewComponent implements OnInit {
             if (simulation) { localStorage.removeItem('Simulation'); }
         } else {
             if (this.option === 'previous') {
-                const modal = this.modal.open(SimulationsComponent);
+                const modal = this.modal.open(SimulationsComponent, {size: 'lg', windowClass: 'modal-small'});
                 this.simulationService.list().subscribe(
                     (simulations: any) => {
                         this.simulations = simulations.data;

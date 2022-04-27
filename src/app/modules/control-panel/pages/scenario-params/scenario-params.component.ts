@@ -116,7 +116,7 @@ export class ScenarioParamsComponent implements OnInit {
         const clonedScenario: ScenarioParamsI = this.scenarios[index];
         delete clonedScenario.id_scenario;
         if (clonedScenario) {
-            const modal = this.modal.open(ScenarioCloneComponent);
+            const modal = this.modal.open(ScenarioCloneComponent, {size: 'lg', windowClass: 'modal-small'});
             modal.componentInstance.setName(clonedScenario.name);
             modal.result.then((result: { name: string }) => {
                 if (result) {
@@ -138,7 +138,7 @@ export class ScenarioParamsComponent implements OnInit {
     }
 
     public onDelete(id: number, index: number): void {
-        const modal = this.modal.open(ConfirmModalComponent);
+        const modal = this.modal.open(ConfirmModalComponent, {size: 'lg', windowClass: 'modal-small'});
         modal.componentInstance.setTitle(
             `You will delete the scenario ${this.scenarios[index].name}`
         );
