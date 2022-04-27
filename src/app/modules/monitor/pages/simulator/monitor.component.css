@@ -189,13 +189,11 @@ h4 {
         margin-left: 0%;
     }
 
+
     .temperature-div {
         margin-top: 1.5%;
     }
 
-    .topbar {
-        display: flex;
-    }
 
     .temperature {
         font-size: 1.5em;
@@ -226,7 +224,46 @@ h4 {
     }
 
     .curve-configuration {
+        border: 2px solid #fff;
+        border-radius: 10px;
+        margin-top: 3%;
+        min-width: 300px;
+        margin-left: 0%;
         min-height: 18.7vh;
+    }
+
+    .curve-label-left {
+        min-height: 20vh;
+    }
+
+    .min-max-value {
+        font-size: 1.8rem;
+        margin-top: auto;
+        text-align: center;
+    }
+
+    .unit-text {
+        display: block;
+    }
+
+    .temperature {
+        font-size: 1.5em;
+    }
+
+    .fullScreen {
+        margin-top: 2%;
+    }
+
+    .full-screen {
+        color: blue;
+    }
+
+    .text-rate {
+        font-size: 4rem;
+    }
+
+    .topbar {
+        display: flex;
     }
 }
 
