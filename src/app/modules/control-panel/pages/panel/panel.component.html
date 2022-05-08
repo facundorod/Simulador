@@ -85,25 +85,25 @@
             <div class="col-sm-4">
                 <label class="form-label">Heart Rate</label>
                 <div class="row ml-3" *ngIf="currentState?.action !== 'stop'">
-                    <input type="range" class="form-range" min="30" max="250" step="1" formControlName="heartRate"
+                    <input type="range" class="form-range" min="30" max="200" step="1" formControlName="heartRate"
                         value={{heartRate}}>
                     <span class="rate-value">{{heartRate}}</span>
 
                 </div>
                 <div class="row ml-3" *ngIf="currentState?.action === 'stop'">
-                    <input type="range" disabled class="form-range" min="30" max="250" step="1" value=0>
+                    <input type="range" disabled class="form-range" min="30" max="200" step="1" value=0>
                     <span class="rate-value">0</span>
                 </div>
             </div>
             <div class="col-sm-4">
                 <label class="form-label">Respiration Rate [rpm]</label>
                 <div class="row ml-3" *ngIf="currentState?.action !== 'stop'">
-                    <input type="range" class="form-range" min="1" max="100" step="1" formControlName="breathRate"
+                    <input type="range" class="form-range" min="1" max="50" step="1" formControlName="breathRate"
                         value={{breathRate}}>
                     <span class="rate-value">{{breathRate}}</span>
                 </div>
                 <div class="row ml-3" *ngIf="currentState?.action === 'stop'">
-                    <input type="range" disabled class="form-range" min="30" max="250" step="1" value=0>
+                    <input type="range" disabled class="form-range" min="1" max="50" step="1" value=0>
                     <span class="rate-value">0</span>
                 </div>
             </div>
@@ -115,7 +115,7 @@
                     <span class="rate-value">{{temperature}}</span>
                 </div>
                 <div class="row ml-3" *ngIf="currentState?.action === 'stop'">
-                    <input type="range" class="form-range" min="30" max="250" step="1" value=0 disabled>
+                    <input type="range" class="form-range" min="30" max="45" step="1" value=0 disabled>
                     <span class="rate-value">0</span>
                 </div>
             </div>
@@ -124,12 +124,12 @@
             <div class="col-sm-4">
                 <label class="form-label">SPO2</label>
                 <div class="row ml-3" *ngIf="currentState?.action !== 'stop'">
-                    <input type="range" class="form-range" min="30" max="250" step="1" formControlName="spo2"
+                    <input type="range" class="form-range" min="30" max="110" step="1" formControlName="spo2"
                         value={{spo2}}>
                     <span class="rate-value">{{spo2}}</span>
                 </div>
                 <div class="row ml-3" *ngIf="currentState?.action === 'stop'">
-                    <input type="range" disabled class="form-range" min="30" max="250" step="1" value=0>
+                    <input type="range" disabled class="form-range" min="30" max="110" step="1" value=0>
                     <span class="rate-value">0</span>
                 </div>
             </div>
