@@ -500,4 +500,9 @@ export class ScenarioParamsCreateComponent implements OnInit {
     public isCO2Curve(parameter: SPPI): boolean {
         return parameter.animalParameters.physiologicalParameter.label.toUpperCase() === 'CO2';
     }
+
+    public isSPO2Curve(parameter: SPPI): boolean {
+        return parameter.animalParameters.physiologicalParameter.label.toUpperCase() === 'SPO2';
+
+    }
 }

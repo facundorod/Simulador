@@ -312,4 +312,12 @@ export class ParametersCreateComponent implements OnInit {
             }
         }
     }
+
+    public isSPO2Curve() {
+        if (this.parameter) {
+            return this.parameter.animalParameters.physiologicalParameter.label.toUpperCase() === 'SPO2';
+        }
+        const param: PhysiologicalParamaterI = this.formGroup.get('parameter').value;
+        return param.label.toUpperCase() === 'SPO2';
+    }
 }

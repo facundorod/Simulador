@@ -249,10 +249,13 @@
                             </td>
 
                             <td scope="row">
-                                <p *ngIf="!isIBPCurve(parameter) && !isCO2Curve(parameter)">Alert low:
+                                <p *ngIf="!isIBPCurve(parameter) && !isCO2Curve(parameter) && !isSPO2Curve(parameter)">Alert low:
                                     {{parameter.animalParameters.alert_low}}
                                     <br>
                                     Alert high: {{parameter.animalParameters.alert_high}}
+                                </p>
+                                <p *ngIf="isSPO2Curve(parameter)">Alert low:
+                                    {{parameter.animalParameters.alert_low}}
                                 </p>
                                 <p *ngIf="isIBPCurve(parameter)">Alert diastolic low:
                                     {{parameter.animalParameters.alert_low}}

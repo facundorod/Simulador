@@ -540,8 +540,7 @@ export class MonitorComponent
                 return this.parameterInfo.temperature >= curve.alert_high ||
                     this.parameterInfo.temperature <= curve.alert_low;
             case 'SPO2':
-                return this.parameterInfo.spO2 >= curve.alert_high ||
-                    this.parameterInfo.spO2 <= curve.alert_low;
+                return this.parameterInfo.spO2 <= curve.alert_low;
             default:
                 return false;
         }
