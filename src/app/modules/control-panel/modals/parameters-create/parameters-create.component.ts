@@ -185,6 +185,16 @@ export class ParametersCreateComponent implements OnInit {
         return param.label.toUpperCase() === 'IBP' || param.label.toUpperCase().toUpperCase() === 'NIBP';
     }
 
+    public canAddCurves() {
+
+        if (this.parameter) {
+            return this.parameter.animalParameters.physiologicalParameter.label.toUpperCase() !== 'TEMP'
+                && this.parameter.animalParameters.physiologicalParameter.label.toUpperCase() !== 'NIBP';
+        }
+        const param: PhysiologicalParamaterI = this.formGroup.get('parameter').value;
+        return param.label.toUpperCase() !== 'TEMP' && param.label.toUpperCase().toUpperCase() !== 'NIBP';
+    }
+
     public isCO2Curve() {
         if (this.parameter) {
             return this.parameter.animalParameters.physiologicalParameter.label.toUpperCase() === 'CO2';
@@ -292,9 +302,11 @@ export class ParametersCreateComponent implements OnInit {
                 case 'ECG':
                     return 'Heart rate';
                 case 'CO2':
-                    return 'Breath Rate';
+                    return 'Respiration Rate';
                 case 'SPO2':
                     return 'SPO2 value';
+                case 'TEMP':
+                    return 'Initial value';
                 default:
                     break;
             }
