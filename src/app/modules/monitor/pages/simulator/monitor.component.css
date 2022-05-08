@@ -162,9 +162,9 @@ h4 {
     margin-top: 0% !important;
 }
 
-@media screen and (min-width: 1000px) and (max-width: 1400px) {
+@media screen and (min-width: 1200px) and (max-width: 1400px) {
     .curves {
-        min-width: 910px;
+        /* min-width: 850px; */
         min-height: 17.5vh;
         max-height: 17.5vh;
         margin-right: 0px;
@@ -218,7 +218,7 @@ h4 {
 
 @media screen and (min-width: 1400px) and (max-width: 2000px) {
     .curves {
-        min-width: 1150px;
+        width: 100%;
         min-height: 21vh;
         margin-right: 0px;
     }
