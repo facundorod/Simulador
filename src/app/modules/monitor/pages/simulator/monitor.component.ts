@@ -534,9 +534,7 @@ export class MonitorComponent
                     || this.parameterInfo.ibpSystolic <= curve.alert_low_2
                     || this.parameterInfo.ibpSystolic >= curve.alert_high_2;
             case 'CO2':
-                return this.parameterInfo.inspirationCO2 <= curve.alert_low
-                    || this.parameterInfo.inspirationCO2 >= curve.alert_high
-                    || this.parameterInfo.endTidalCO2 <= curve.alert_low_2
+                return this.parameterInfo.endTidalCO2 <= curve.alert_low_2
                     || this.parameterInfo.endTidalCO2 >= curve.alert_high_2;
             case 'TEMP':
                 return this.parameterInfo.temperature >= curve.alert_high ||
