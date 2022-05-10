@@ -30,8 +30,7 @@
             </ng-template>
             <ng-template
                 [ngIf]="currentState?.action !== 'stop' && !calculatingNIBP && (currentState?.action !== 'pause' || newCurrentState?.action !== 'pause') && getSystolicNIBP()" >
-                <h4 class="text-center"><img src="/assets/icons/nibp-small.png" class="img-status" /> {{getDiastolicNIBP()}} / {{getSystolicNIBP()}} ({{getMeanNIBP()}})
-                </h4>
+                <h4 class="text-center nibp-value">NIBP &nbsp; &nbsp; <img src="/assets/icons/nibp-small.png" class="img-status" /> {{getSystolicNIBP()}} / {{getDiastolicNIBP()}} ({{getMeanNIBP()}})</h4>
 
             </ng-template>
 
@@ -39,7 +38,7 @@
         <div class="col-3">
             <div class="row">
                 <div class="col-5 temperature-div">
-                    <p class="text-left temperature" *ngIf="getParameterInfo() && getParameterInfo().temperature"> <img src="/assets/icons/temperature.png"  /> {{getParameterInfo().temperature}} °C
+                    <h4 class="text-left temperature" *ngIf="getParameterInfo() && getParameterInfo().temperature"> <img src="/assets/icons/temperature.png"  /> {{getParameterInfo().temperature}} °C </h4>
                 </div>
                 <div class="col-2 fullScreen">
                     <p class="text-left" *ngIf="(currentState.muteAlarms || newCurrentState.muteAlarms) &&
@@ -140,7 +139,7 @@
                                             -- / --
                                         </ng-template>
                                         <ng-template [ngIf]="currentState?.action !== 'stop'">
-                                            {{getDiastolicIBP()}} / {{getSystolicIBP()}} {{getMeanIBP()}}
+                                            {{getSystolicIBP()}} / {{getDiastolicIBP()}} ({{getMeanIBP()}})
                                         </ng-template>
                                     </p>
                                     <p class="min-max-value" *ngIf="isNIBPCurve(curves)">
@@ -148,8 +147,7 @@
                                             -- / --
                                         </ng-template>
                                         <ng-template [ngIf]="currentState?.action !== 'stop' && getDiastolicNIBP()">
-                                            {{getDiastolicNIBP()}} / {{getSystolicNIBP()}}
-                                            {{getMeanNIBP()}}
+                                            {{getSystolicNIBP()}} / {{getDiastolicNIBP()}} ({{getMeanNIBP()}})
                                         </ng-template>
                                     </p>
                                     <p class="min-max-value" *ngIf="isCO2Curve(curves)"
