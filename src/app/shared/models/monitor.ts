@@ -4,6 +4,7 @@ export class Monitor {
     private monitorConfiguration: MonitorI = {
         clockTimer: 30,
         freqHeart: 20,
+        freqHeart2: 18,
         freqBreath: 15,
         maxSamples: 8,
     };
