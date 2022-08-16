@@ -10,15 +10,7 @@ export class AuthSession {
      * Log out user
      */
     static logOut() {
-        if (localStorage.getItem('authUser')) {
-            localStorage.removeItem('authUser');
-        }
-        if (localStorage.getItem('authToken')) {
-            localStorage.removeItem('authToken');
-        }
-        if (localStorage.getItem('Simulation')) {
-            localStorage.removeItem('Simulation');
-        }
+        localStorage.clear();
         AuthSession._authUser.next(null);
     }
 

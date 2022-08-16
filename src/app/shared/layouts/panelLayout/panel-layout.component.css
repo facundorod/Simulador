@@ -84,8 +84,16 @@ h3 {
     left: 15%;
 }
 
+.div-navbar-logo {
+    display: none;
+}
+
+
 @media (min-width: 1024px) {
     .simvet-head {
+        display: block;
+    }
+    .div-navbar-logo {
         display: block;
     }
 
