@@ -1,4 +1,4 @@
-import { AnimalSpeciesI } from "./animal-speciesI";
+import { AnimalSpeciesI } from './animal-speciesI';
 
 export interface AnimalSpeciesResponseI {
     perPage: number;

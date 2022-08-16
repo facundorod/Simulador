@@ -35,3 +35,7 @@ ngb-pagination ::ng-deep ul > li.active > a {
     background-color: #fff !important;
     color: #42336e !important;
 }
+.extrainfo-row {
+    max-width: 200px;
+    overflow: auto;
+}

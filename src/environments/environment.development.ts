@@ -8,12 +8,17 @@ export const environment = {
         pathologies: "/pathology/",
         scenarios: "/scenario/",
         scenariosParams: "/scenario/parameters",
+        verifyToken: "/auth/verify",
         login: "/auth/login",
         register: "/auth/register",
         simulations: "/simulation/",
         curves: "/curves/",
         parameters: "/parameters/",
         user: "/auth/user",
+        users: "/auth/users",
+        roles: "/auth/roles",
+        userManual: '/files/user-manual.pdf'
     },
     simulation: "https://simvet-web.herokuapp.com/monitor",
+    userManual: 'https://simvet-api.herokuapp.com/files/user-manual.pdf'
 };

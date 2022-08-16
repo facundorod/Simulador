@@ -1,7 +1,9 @@
-import { AnimalSpeciesI } from "./animal-speciesI";
-import { CurvesI } from "./curvesI";
+import { AnimalSpeciesI } from './animal-speciesI';
+import { CurvesI } from './curvesI';
+import { ScenarioI } from './scenarioI';
 
 export interface StatesI {
+    scenario: ScenarioI;
     state: number;
     newScenario: boolean;
     muteAlarms?: boolean;

@@ -1,25 +1,26 @@
-import { MedicationI } from "@models/medicationI";
-import { ConfirmModalComponent } from "../../../../shared/modals/confirm/confirm-modal.component";
-import { Component, OnInit } from "@angular/core";
-import { ToastrService } from "ngx-toastr";
-import { ActivatedRoute, Router } from "@angular/router";
-import { BaseComponent } from "@app/shared/components/base.component";
-import { FormBuilder } from "@angular/forms";
-import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
-import { ModalEditComponentMed } from "../../modals/medications/modal-edit/modal-edit.component";
-import { MedicationsService } from "../../services/medications.service";
+import { MedicationI } from '@models/medicationI';
+import { ConfirmModalComponent } from '../../../../shared/modals/confirm/confirm-modal.component';
+import { Component, OnInit } from '@angular/core';
+import { ToastrService } from 'ngx-toastr';
+import { ActivatedRoute, Router } from '@angular/router';
+import { BaseComponent } from '@app/shared/components/base.component';
+import { FormBuilder } from '@angular/forms';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { ModalEditComponentMed } from '../../modals/medications/modal-edit/modal-edit.component';
+import { MedicationsService } from '../../services/medications.service';
+import { AuthService } from '@app/services/auth.service';
 @Component({
-    selector: "app-medications",
-    templateUrl: "./medications.component.html",
-    styleUrls: ["./medications.component.css"],
+    selector: 'app-medications',
+    templateUrl: './medications.component.html',
+    styleUrls: ['./medications.component.css'],
 })
 export class MedicationsComponent extends BaseComponent implements OnInit {
     public medication: MedicationI;
     public medications: MedicationI[];
 
     public order = {
-        orderBy: "name",
-        order: "asc",
+        orderBy: 'name',
+        order: 'asc',
     };
 
     public paginatorData: {
@@ -35,6 +36,7 @@ export class MedicationsComponent extends BaseComponent implements OnInit {
     constructor(
         private fb: FormBuilder,
         private medicationsService: MedicationsService,
+        private authService: AuthService,
         private toast: ToastrService,
         private modal: NgbModal
     ) {
@@ -78,9 +80,9 @@ export class MedicationsComponent extends BaseComponent implements OnInit {
 
     private initFormGroup() {
         this.formGroup = this.fb.group({
-            q: [""],
+            q: [''],
         });
-        this.formGroup.get("q").valueChanges.subscribe((newValue) => {
+        this.formGroup.get('q').valueChanges.subscribe((newValue) => {
             this.setLoading(true);
             this.loadData(newValue);
         });
@@ -96,7 +98,7 @@ export class MedicationsComponent extends BaseComponent implements OnInit {
     }
 
     public onEdit(index: number = null) {
-        const modal = this.modal.open(ModalEditComponentMed);
+        const modal = this.modal.open(ModalEditComponentMed, {size: 'lg', windowClass: 'modal-small'});
 
         if (index !== null) {
             modal.componentInstance.setMedication(this.medications[index]);
@@ -112,9 +114,9 @@ export class MedicationsComponent extends BaseComponent implements OnInit {
                             () => {
                                 this.toast.toastrConfig.timeOut = 1000;
                                 this.toast.toastrConfig.positionClass =
-                                    "toast-bottom-full-width";
+                                    'toast-bottom-full-width';
                                 this.toast.success(
-                                    "The medication has been updated!"
+                                    'The medication has been updated!'
                                 );
                                 this.loadData();
                             },
@@ -131,9 +133,9 @@ export class MedicationsComponent extends BaseComponent implements OnInit {
                         () => {
                             this.toast.toastrConfig.timeOut = 1000;
                             this.toast.toastrConfig.positionClass =
-                                "toast-bottom-full-width";
+                                'toast-bottom-full-width';
                             this.toast.success(
-                                "The medication has been inserted!"
+                                'The medication has been inserted!'
                             );
                             this.loadData();
                         },
@@ -147,12 +149,12 @@ export class MedicationsComponent extends BaseComponent implements OnInit {
     }
 
     public onDelete(index: number) {
-        const modal = this.modal.open(ConfirmModalComponent);
+        const modal = this.modal.open(ConfirmModalComponent, {size: 'lg', windowClass: 'modal-small'});
 
         modal.componentInstance.setTitle(
             `You will delete the medication ${this.medications[index].name}`
         );
-        modal.componentInstance.setContent("Are you sure?");
+        modal.componentInstance.setContent('Are you sure?');
         modal.result.then((result) => {
             if (result) {
                 this.medicationsService
@@ -161,9 +163,9 @@ export class MedicationsComponent extends BaseComponent implements OnInit {
                         () => {
                             this.toast.toastrConfig.timeOut = 1000;
                             this.toast.toastrConfig.positionClass =
-                                "toast-bottom-full-width";
+                                'toast-bottom-full-width';
                             this.toast.success(
-                                "The medication has been deleted!"
+                                'The medication has been deleted!'
                             );
                             this.loadData();
                         },
@@ -179,5 +181,9 @@ export class MedicationsComponent extends BaseComponent implements OnInit {
         this.queryOptions.page = 1;
         this.initFormGroup();
         this.loadData();
+    }
+
+    public isUserAdmin(): boolean {
+        return this.authService.isAdmin();
     }
 }

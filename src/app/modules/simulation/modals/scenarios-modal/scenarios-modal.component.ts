@@ -1,18 +1,18 @@
-import { ScenarioI } from "@models/scenarioI";
-import { ScenarioService } from "../../../control-panel/services/scenario.service";
-import { AnimalSpeciesI } from "../../../../shared/models/animal-speciesI";
-import { Component, OnInit } from "@angular/core";
-import { FormArray, FormBuilder, Validators } from "@angular/forms";
-import { BaseComponent } from "@app/shared/components/base.component";
-import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
+import { ScenarioI } from '@models/scenarioI';
+import { ScenarioService } from '../../../control-panel/services/scenario.service';
+import { AnimalSpeciesI } from '../../../../shared/models/animal-speciesI';
+import { Component, OnInit } from '@angular/core';
+import { FormArray, FormBuilder, Validators } from '@angular/forms';
+import { BaseComponent } from '@app/shared/components/base.component';
+import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
-    templateUrl: "./scenarios-modal.component.html",
-    styleUrls: ["./scenarios-modal.component.css"],
+    templateUrl: './scenarios-modal.component.html',
+    styleUrls: ['./scenarios-modal.component.css'],
 })
 export class ScenariosModalComponent extends BaseComponent implements OnInit {
     scenarios: any[] = [];
-
+    private animalSpecie: number;
     constructor(
         private activeModal: NgbActiveModal,
         private fb: FormBuilder,
@@ -27,9 +27,9 @@ export class ScenariosModalComponent extends BaseComponent implements OnInit {
 
     async loadData(): Promise<any> {
         return new Promise((resolve, reject) => {
-            this.scenariosService.listWithParams().subscribe(
+            this.scenariosService.listWithParams({ animal: this.animalSpecie }).subscribe(
                 (data: any) => {
-                    if (data) resolve(data);
+                    if (data) { resolve(data); }
                 },
                 (error: any) => {
                     reject(error);
@@ -37,6 +37,11 @@ export class ScenariosModalComponent extends BaseComponent implements OnInit {
             );
         });
     }
+
+    public setAnimal(animal: number): void {
+        this.animalSpecie = animal;
+    }
+
 
     onCancel() {
         this.activeModal.close();
@@ -50,8 +55,9 @@ export class ScenariosModalComponent extends BaseComponent implements OnInit {
             i < this.formGroup.value.scenarioSelected.length;
             i += 1
         ) {
-            if (this.formGroup.value.scenarioSelected[i].value)
+            if (this.formGroup.value.scenarioSelected[i].value) {
                 scenarios.push(this.scenarios[i]);
+            }
         }
         this.activeModal.close(scenarios);
     }
@@ -67,9 +73,9 @@ export class ScenariosModalComponent extends BaseComponent implements OnInit {
                     this.scenarios = data.data;
                     if (this.scenarios) {
                         this.scenarios.forEach(() => {
-                            (<FormArray>(
-                                this.formGroup.get("scenarioSelected")
-                            )).push(
+                            ((
+                                this.formGroup.get('scenarioSelected')
+                            ) as FormArray).push(
                                 this.fb.group({
                                     value: [false],
                                 })

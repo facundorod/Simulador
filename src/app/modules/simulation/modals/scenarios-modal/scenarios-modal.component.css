@@ -2,14 +2,12 @@
     font-size: 1.5em;
     font-weight: bold;
     color: #212529;
-    text-align: center;
     width: 100%;
 }
 
 .modal-header,
 .modal-body {
     background-color: #b7a9e2;
-    min-width: 650px !important;
 }
 
 .modal-header {
@@ -23,6 +21,34 @@
     border: 1px solid #42336e;
 }
 
+.row-descr {
+    max-width: 200px;
+    overflow: auto;
+}
 .table-hover tbody tr:hover {
     background-color: #616161 !important;
+}
+
+.modal-title {
+    text-align: left;
+}
+
+.latest-col, .row-descr {
+    display: none;
+}
+
+@media (min-width: 1024px) {
+    .modal-title {
+        text-align: center;
+    }
+
+    .latest-col, .row-descr {
+        display: table-cell;
+    }
+
+    .modal-content,
+    .modal-header,
+    .modal-body {
+        min-width: 650px !important;
+    }
 }

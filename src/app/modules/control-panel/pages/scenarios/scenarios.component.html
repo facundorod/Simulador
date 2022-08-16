@@ -1,9 +1,14 @@
 <div class="row">
     <div class="col text-right">
-        <button class="btn btn-primary save-changes" (click)="onLoadScenarios()"> Load Scenarios </button>
+        <button class="btn btn-primary save-changes" (click)="onLoadScenarios()" disabled *ngIf="!animal"> Load
+            Scenarios </button>
+
+        <button class="btn btn-primary save-changes" (click)="onLoadScenarios()" *ngIf="animal"> Load Scenarios
+        </button>
 
     </div>
 </div>
+
 
 <table class="table table-hover table-scenarios">
     <thead class="thead-dark">
@@ -11,19 +16,19 @@
             <th scope="col">
 
             </th>
-            <th scope="col">
+            <th scope="col" class="">
                 Name
             </th>
-            <th scope="col">
+            <th scope="col" class="col-descr">
                 Description
             </th>
-            <th scope="col">
+            <th scope="col" class="col-arr">
                 Arrhythmias
             </th>
-            <th scope="col">
+            <th scope="col" class="col-path">
                 Pathologies
             </th>
-            <th scope="col">
+            <th scope="col" class="col-med">
                 Medications
             </th>
             <th scope="col">
@@ -40,13 +45,12 @@
             <td scope="row" class="td-icons">
                 <ng-template [ngIf]="isActiveScenario(i)">
                     <button class="btn btn-ligth btn-activate" (click)="onActiveScenario(i)">
-                        <img src="https://img.icons8.com/fluency/24/000000/play.png" />
+                        <img src="/assets/icons/smallPlay.png" />
                     </button>
                 </ng-template>
                 <ng-template [ngIf]="!isActiveScenario(i)">
                     <button class="btn btn-link btn-activate" (click)="onActiveScenario(i)">
-                        <img
-                            src="https://img.icons8.com/external-bearicons-blue-bearicons/24/000000/external-play-essential-collection-bearicons-blue-bearicons.png" />
+                        <img src="/assets/icons/smallPlay2.png" />
                     </button>
 
                 </ng-template>
@@ -87,7 +91,7 @@
             <td scope="row">
                 <!-- <span> -->
                 <button class="btn btn-trash btn-light" (click)="onDelete(i)">
-                    <img src="https://img.icons8.com/color/26/000000/trash--v1.png" />
+                    <img src="/assets/icons/trash.png" />
                 </button>
                 <!-- </span> -->
             </td>
@@ -101,7 +105,7 @@
     <tbody *ngIf="!scenariosSelected || scenariosSelected.length == 0">
         <tr>
             <td colspan="12">
-                No scenarios available.
+                There are not scenarios availables.
             </td>
         </tr>
     </tbody>

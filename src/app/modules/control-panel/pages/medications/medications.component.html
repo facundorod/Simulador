@@ -6,7 +6,8 @@
             </div>
             <div class="col text-right">
                 <div>
-                    <button class="btn btn-primary btn-add" (click)="onEdit()"> + Medication </button>
+                    <button class="btn btn-primary btn-add" (click)="onEdit()" *ngIf="isUserAdmin()"> + Medication
+                    </button>
                 </div>
             </div>
         </div>
@@ -23,7 +24,7 @@
                         <div class="input-group">
                             <input type="text" id="q" class="form-control" formControlName="q">
                             <div class="input-group-text">
-                                <img src="https://img.icons8.com/color/24/000000/search--v1.png" />
+                                <img src="assets/icons/search.png" />
                             </div>
                         </div>
                     </div>
@@ -57,7 +58,7 @@
                         <th scope="col">
                             Last update
                         </th>
-                        <th scope="col">
+                        <th scope="col" *ngIf="isUserAdmin()">
                             <!-- For edit -->
                         </th>
                         <!-- <th scope="col">
@@ -84,24 +85,23 @@
                         <td scope="row">
                             {{medication.name}}
                         </td>
-                        <td scope="row" style="max-width: 200px; overflow: auto">
+                        <td scope="row" class="extrainfo-row">
                             {{medication.description}}
                         </td>
-                        <td scope="row" style="max-width: 200px; overflow: auto">
+                        <td scope="row" class="extrainfo-row">
                             <p *ngIf="medication.extraInformation">{{medication.extraInformation}}</p>
                             <p class="ml-2" *ngIf="!medication.extraInformation">-</p>
                         </td>
                         <td scope="row">
                             {{medication.updated_at | date}}
                         </td>
-                        <td scope="row" class="text-right">
+                        <td scope="row" class="text-right" *ngIf="isUserAdmin()">
                             <button class="btn btn-light" (click)="onEdit(i)">
-                                <img
-                                    src="https://img.icons8.com/external-kiranshastry-lineal-color-kiranshastry/26/000000/external-pencil-interface-kiranshastry-lineal-color-kiranshastry-1.png" />
+                                <img src="/assets/icons/pencil.png" />
                             </button>
                             <span>
                                 <button class="btn btn-trash btn-light ml-2" (click)="onDelete(i)">
-                                    <img src="https://img.icons8.com/color/26/000000/trash--v1.png" />
+                                    <img src="/assets/icons/trash.png" />
                                 </button>
                             </span>
                         </td>

@@ -4,9 +4,9 @@
             <div class="col">
                 <h3 class="title"> Physiological Parameters </h3>
             </div>
-            <div class="col text-right">
+            <!-- <div class="col text-right">
                 <button class="btn btn-primary btn-add" (click)="onAddParameter()"> + Parameter </button>
-            </div>
+            </div> -->
         </div>
     </div>
     <div class="search-form row">
@@ -19,7 +19,7 @@
                         <div class="input-group">
                             <input type="text" id="q" class="form-control" formControlName="q">
                             <div class="input-group-text">
-                                <img src="https://img.icons8.com/color/24/000000/search--v1.png" />
+                                <img src="assets/icons/search.png" />
                             </div>
                         </div>
                     </div>
@@ -58,7 +58,7 @@
                         <th scope="col">
                             Unit
                         </th>
-                        <th scope="col" class="text-center">
+                        <th scope="col" class="text-center" *ngIf="isUserAdmin()">
 
                         </th>
 
@@ -98,11 +98,11 @@
                         </td>
 
                         <td scope="row" class="row-source">
-                            <ng-template [ngIf]="param.source?.name">
-                                <p class="text-center">{{param.source.name}}</p>
+                            <ng-template [ngIf]="param.source">
+                                <p class="text-center">{{param.source}}</p>
 
                             </ng-template>
-                            <ng-template [ngIf]="!param.source?.name">
+                            <ng-template [ngIf]="!param.source">
                                 <p class="text-center">-</p>
                             </ng-template>
                         </td>
@@ -124,16 +124,15 @@
                             </ng-template>
                         </td>
 
-                        <td scope="row" class="text-right">
+                        <td scope="row" class="text-right" *ngIf="isUserAdmin()">
                             <button class="btn btn-light" (click)="onEditParameter(i)">
-                                <img
-                                    src="https://img.icons8.com/external-kiranshastry-lineal-color-kiranshastry/18/000000/external-pencil-interface-kiranshastry-lineal-color-kiranshastry-1.png" />
+                                <img src="/assets/icons/pencil.png" />
                             </button>
-                            <span>
+                            <!-- <span>
                                 <button class="btn btn-trash btn-light ml-2" (click)="onDeleteParameter(i)">
-                                    <img src="https://img.icons8.com/color/18/000000/trash--v1.png" />
+                                    <img src="/assets/icons/smallTrash.png" />
                                 </button>
-                            </span>
+                            </span> -->
                         </td>
 
                     </tr>

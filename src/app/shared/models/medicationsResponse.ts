@@ -1,4 +1,4 @@
-import { MedicationI } from "./medicationI";
+import { MedicationI } from './medicationI';
 
 export interface MedicationResponseI {
     perPage: number;

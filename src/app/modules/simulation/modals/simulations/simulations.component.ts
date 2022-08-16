@@ -1,11 +1,11 @@
-import { Component, OnInit } from "@angular/core";
-import { FormBuilder, Validators } from "@angular/forms";
-import { BaseComponent } from "@app/shared/components/base.component";
-import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
+import { Component, OnInit } from '@angular/core';
+import { FormBuilder, Validators } from '@angular/forms';
+import { BaseComponent } from '@app/shared/components/base.component';
+import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
-    templateUrl: "./simulations.component.html",
-    styleUrls: ["./simulations.component.css"],
+    templateUrl: './simulations.component.html',
+    styleUrls: ['./simulations.component.css'],
 })
 export class SimulationsComponent extends BaseComponent implements OnInit {
     public simulations: any[];

@@ -1,12 +1,12 @@
-import { Router } from "@angular/router";
-import { AuthService } from "@services/auth.service";
-import { ToastrService } from "ngx-toastr";
-import { Component, OnInit } from "@angular/core";
+import { Router } from '@angular/router';
+import { AuthService } from '@services/auth.service';
+import { ToastrService } from 'ngx-toastr';
+import { Component, OnInit } from '@angular/core';
 
 @Component({
-    selector: "app-register",
-    templateUrl: "./register.component.html",
-    styleUrls: ["./register.component.css"],
+    selector: 'app-register',
+    templateUrl: './register.component.html',
+    styleUrls: ['./register.component.css'],
 })
 export class RegisterComponent implements OnInit {
     name: String;
@@ -18,13 +18,11 @@ export class RegisterComponent implements OnInit {
         private authService: AuthService,
         private toast: ToastrService,
         private router: Router
-    ) {}
+    ) { }
 
-    ngOnInit() {}
+    ngOnInit() { }
 
     sign() {
-        this.toast.toastrConfig.timeOut = 1000;
-        this.toast.toastrConfig.positionClass = "toast-bottom-full-width";
         this.authService
             .register({
                 email: this.email,
@@ -34,8 +32,10 @@ export class RegisterComponent implements OnInit {
                 institution: this.institution,
             })
             .subscribe(() => {
-                this.router.navigateByUrl("/auth/login");
-                this.toast.success("Your account has been created");
+                this.router.navigateByUrl('/auth/login');
+                this.toast.toastrConfig.timeOut = 1000;
+                this.toast.toastrConfig.positionClass = 'toast-bottom-full-width';
+                this.toast.success('Your account has been created');
             });
     }
 }

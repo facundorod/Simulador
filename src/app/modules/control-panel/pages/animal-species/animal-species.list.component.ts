@@ -1,21 +1,21 @@
-import { ConfirmModalComponent } from "../../../../shared/modals/confirm/confirm-modal.component";
-import { AnimalSpeciesI } from "../../../../shared/models/animal-speciesI";
-import { Component, OnInit } from "@angular/core";
-import { ToastrService } from "ngx-toastr";
-import { BaseComponent } from "@app/shared/components/base.component";
-import { AnimalSpeciesService } from "../../services/animalSpecies.service";
-import { FormBuilder } from "@angular/forms";
-import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
-import { ModalEditComponent } from "../../modals/animalSpecies/modal-edit/modal-edit.component";
+import { ConfirmModalComponent } from '../../../../shared/modals/confirm/confirm-modal.component';
+import { AnimalSpeciesI } from '../../../../shared/models/animal-speciesI';
+import { Component, OnInit } from '@angular/core';
+import { ToastrService } from 'ngx-toastr';
+import { BaseComponent } from '@app/shared/components/base.component';
+import { AnimalSpeciesService } from '../../services/animalSpecies.service';
+import { FormBuilder } from '@angular/forms';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { ModalEditComponent } from '../../modals/animalSpecies/modal-edit/modal-edit.component';
+import { AuthService } from '@app/services/auth.service';
 @Component({
-    selector: "app-animal-species",
-    templateUrl: "./animal-species.list.component.html",
-    styleUrls: ["./animal-species.list.component.css"],
+    selector: 'app-animal-species',
+    templateUrl: './animal-species.list.component.html',
+    styleUrls: ['./animal-species.list.component.css'],
 })
 export class AnimalSpeciesListComponent
     extends BaseComponent
-    implements OnInit
-{
+    implements OnInit {
     public animal: AnimalSpeciesI;
     public animalSpecies: AnimalSpeciesI[];
 
@@ -25,8 +25,8 @@ export class AnimalSpeciesListComponent
     };
 
     public order = {
-        orderBy: "name",
-        order: "asc",
+        orderBy: 'name',
+        order: 'asc',
     };
 
     public queryOptions = {
@@ -36,6 +36,7 @@ export class AnimalSpeciesListComponent
 
     constructor(
         private fb: FormBuilder,
+        private authService: AuthService,
         private animalSpeciesService: AnimalSpeciesService,
         private toast: ToastrService,
         private modal: NgbModal
@@ -77,9 +78,9 @@ export class AnimalSpeciesListComponent
 
     private initFormGroup() {
         this.formGroup = this.fb.group({
-            q: [""],
+            q: [''],
         });
-        this.formGroup.get("q").valueChanges.subscribe((newValue) => {
+        this.formGroup.get('q').valueChanges.subscribe((newValue) => {
             this.setLoading(true);
             this.loadData(newValue);
         });
@@ -97,7 +98,7 @@ export class AnimalSpeciesListComponent
     }
 
     public onEdit(index: number = null) {
-        const modal = this.modal.open(ModalEditComponent);
+        const modal = this.modal.open(ModalEditComponent, {size: 'lg', windowClass: 'modal-small'});
         if (index !== null) {
             modal.componentInstance.setAnimalSpecie(this.animalSpecies[index]);
 
@@ -109,9 +110,9 @@ export class AnimalSpeciesListComponent
                             () => {
                                 this.toast.toastrConfig.timeOut = 1000;
                                 this.toast.toastrConfig.positionClass =
-                                    "toast-bottom-full-width";
+                                    'toast-bottom-full-width';
                                 this.toast.success(
-                                    "The animal specie has been updated"
+                                    'The animal patient has been updated'
                                 );
                                 this.loadData();
                             },
@@ -128,9 +129,9 @@ export class AnimalSpeciesListComponent
                         () => {
                             this.toast.toastrConfig.timeOut = 1000;
                             this.toast.toastrConfig.positionClass =
-                                "toast-bottom-full-width";
+                                'toast-bottom-full-width';
                             this.toast.success(
-                                "The animal specie has been inserted"
+                                'The animal patient has been inserted'
                             );
                             this.loadData();
                         },
@@ -143,13 +144,17 @@ export class AnimalSpeciesListComponent
         }
     }
 
+    public isUserAdmin(): boolean {
+        return this.authService.isAdmin();
+    }
+
     public onDelete(index: number) {
-        const modal = this.modal.open(ConfirmModalComponent);
+        const modal = this.modal.open(ConfirmModalComponent, {size: 'lg', windowClass: 'modal-small'});
 
         modal.componentInstance.setTitle(
             `You will delete the animal ${this.animalSpecies[index].name}`
         );
-        modal.componentInstance.setContent("Are you sure?");
+        modal.componentInstance.setContent('Are you sure?');
         modal.result.then((result) => {
             if (result) {
                 this.animalSpeciesService
@@ -158,8 +163,8 @@ export class AnimalSpeciesListComponent
                         () => {
                             this.toast.toastrConfig.timeOut = 1000;
                             this.toast.toastrConfig.positionClass =
-                                "toast-bottom-full-width";
-                            this.toast.success("The animal has been deleted");
+                                'toast-bottom-full-width';
+                            this.toast.success('The animal has been deleted');
                             this.loadData();
                         },
                         (err: any) => {

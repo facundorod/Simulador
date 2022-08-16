@@ -35,20 +35,23 @@
 
 .footer {
     width: 100%;
-    bottom: 0%;
+    bottom: 0;
     background-color: #212122;
-    margin-top: 2%;
+    margin-top: 20%;
     position: sticky;
 }
 .footerBtn {
     text-align: center;
 }
 
+.stickyFooter {
+    position: sticky !important;
+}
+
 .param-configuration,
 .curves-configuration {
     border-radius: 10px;
     border: 2px solid #000;
-    max-height: 300px;
     margin-top: 20px;
 }
 .param-configuration {
@@ -119,6 +122,26 @@ input[type="file"] {
     display: none;
 }
 
+.btn-spinner {
+    margin-left: 5%;
+}
+
+.saveChanges-top {
+    display: block;
+    background-color: #59478d;
+    border-color: #59478d;
+    color: #fff;
+    height: 40px;
+    margin-left:5%;
+}
+
+.scenario-configuration {
+    margin-left: 5%;
+    margin-top: 2%;
+}
+
+
+
 @media (min-width: 1024px) {
     .textSimulation {
         text-align: center;
@@ -136,6 +159,7 @@ input[type="file"] {
         border-color: #59478d;
         color: #fff;
         height: 60px;
+        margin-left:0%;
     }
 
     .saveChanges-top:hover {
@@ -147,6 +171,7 @@ input[type="file"] {
     .scenario-configuration,
     .curves-configuration-text {
         width: 100%;
+        margin-left:0%;
         margin-top: 2%;
     }
 

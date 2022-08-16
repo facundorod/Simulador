@@ -5,4 +5,11 @@ export interface UserI {
     surname: String;
     password?: String;
     institution: String;
+    roles?: [
+        {
+            id_role: number,
+            name: string
+        }
+    ];
+    updatedAt?: Date;
 }

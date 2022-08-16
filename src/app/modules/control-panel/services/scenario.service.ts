@@ -1,10 +1,10 @@
-import { ScenarioI } from "@models/scenarioI";
-import { ApiService } from "../../../shared/services/api.service";
-import { HelperService } from "@app/shared/services/helper.service";
-import { environment } from "@environments/environment";
-import { Observable, Subject } from "rxjs";
-import { Injectable } from "@angular/core";
-import { ScenarioParamsI } from "@app/shared/models/scenarioParamsI";
+import { ScenarioI } from '@models/scenarioI';
+import { ApiService } from '../../../shared/services/api.service';
+import { HelperService } from '@app/shared/services/helper.service';
+import { environment } from '@environments/environment';
+import { Observable, Subject } from 'rxjs';
+import { Injectable } from '@angular/core';
+import { ScenarioParamsI } from '@app/shared/models/scenarioParamsI';
 
 @Injectable()
 export class ScenarioService {
@@ -20,11 +20,11 @@ export class ScenarioService {
 
         let endpoint = environment.api.scenarios;
 
-        if (query) endpoint += `?${HelperService.getQueryString(query)}`;
+        if (query) { endpoint += `?${HelperService.getQueryString(query)}`; }
         if (order) {
             const queryParams = HelperService.getOrderQueryString(order);
-            if (endpoint.indexOf("?") >= 0) endpoint += `&${queryParams}`;
-            else endpoint += `?${queryParams}`;
+            if (endpoint.indexOf('?') >= 0) { endpoint += `&${queryParams}`; }
+            else { endpoint += `?${queryParams}`; }
         }
 
         this.api.httpGet(endpoint).subscribe(
@@ -47,11 +47,11 @@ export class ScenarioService {
 
         let endpoint = environment.api.scenariosParams;
 
-        if (query) endpoint += `?${HelperService.getQueryString(query)}`;
+        if (query) { endpoint += `?${HelperService.getQueryString(query)}`; }
         if (order) {
             const queryParams = HelperService.getOrderQueryString(order);
-            if (endpoint.indexOf("?") >= 0) endpoint += `&${queryParams}`;
-            else endpoint += `?${queryParams}`;
+            if (endpoint.indexOf('?') >= 0) { endpoint += `&${queryParams}`; }
+            else { endpoint += `?${queryParams}`; }
         }
 
         this.api.httpGet(endpoint).subscribe(
@@ -74,11 +74,11 @@ export class ScenarioService {
     ): Observable<ScenarioParamsI[]> {
         const subject = new Subject<ScenarioParamsI[]>();
 
-        let endpoint = environment.api.scenariosParams + "/" + scenarioId;
+        const endpoint = environment.api.scenariosParams + '/' + scenarioId;
 
         this.api.httpGet(endpoint).subscribe(
             (data: any) => {
-                if (data && data.data) subject.next(data.data);
+                if (data && data.data) { subject.next(data.data); }
             },
             (err: any) => {
                 subject.error(err);
@@ -98,7 +98,7 @@ export class ScenarioService {
     public findById(scenarioId: number) {
         const subject = new Subject<any>();
 
-        let endpoint = environment.api.scenarios;
+        const endpoint = environment.api.scenarios;
 
         this.api.httpGet(`${endpoint}/${scenarioId}`).subscribe(
             (scenarios: any) => {
@@ -122,7 +122,7 @@ export class ScenarioService {
     public create(scenario: ScenarioParamsI) {
         const subject = new Subject<any>();
 
-        let endpoint = environment.api.scenarios;
+        const endpoint = environment.api.scenarios;
 
         this.api.httpPost(endpoint, { scenario }).subscribe(
             () => {
@@ -142,7 +142,7 @@ export class ScenarioService {
     public updateById(scenarioId: number, scenario: ScenarioParamsI) {
         const subject = new Subject<any>();
 
-        let endpoint = environment.api.scenarios + scenarioId;
+        const endpoint = environment.api.scenarios + scenarioId;
 
         this.api.httpPut(endpoint, { scenario }).subscribe(
             () => {
@@ -161,7 +161,7 @@ export class ScenarioService {
     public delete(scenarioId: number): Observable<void> {
         const subject = new Subject<void>();
 
-        let endpoint = environment.api.scenarios + scenarioId;
+        const endpoint = environment.api.scenarios + scenarioId;
 
         this.api.httpDelete(endpoint).subscribe(
             () => {
@@ -181,7 +181,7 @@ export class ScenarioService {
     public savePathologies(pathologies: any[], id_scenario: number) {
         const subject = new Subject<any>();
 
-        let endpoint = environment.api.scenarios + `pathologies`;
+        const endpoint = environment.api.scenarios + `pathologies`;
 
         this.api.httpPost(endpoint, { id_scenario, pathologies }).subscribe(
             (data: any) => {
@@ -201,7 +201,7 @@ export class ScenarioService {
     public saveMedications(medications: any[], id_scenario: number) {
         const subject = new Subject<any>();
 
-        let endpoint = environment.api.scenarios + `medications`;
+        const endpoint = environment.api.scenarios + `medications`;
 
         this.api.httpPost(endpoint, { id_scenario, medications }).subscribe(
             (data: any) => {
@@ -221,7 +221,7 @@ export class ScenarioService {
     public saveArrhythmias(arrhythmias: any[], id_scenario: number) {
         const subject = new Subject<any>();
 
-        let endpoint = environment.api.scenarios + `arrhythmias`;
+        const endpoint = environment.api.scenarios + `arrhythmias`;
 
         this.api
             .httpPost(endpoint, {

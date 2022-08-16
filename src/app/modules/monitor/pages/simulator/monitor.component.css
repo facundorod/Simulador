@@ -6,6 +6,10 @@
     height: 100%;
 }
 
+.curves {
+    width: 100px !important;
+}
+
 .icon-pause {
     color: white;
     margin-right: 2%;
@@ -20,16 +24,9 @@
     border: 2px solid #fff;
     border-radius: 10px;
     max-height: 13.3vh;
-    min-width: 250px;
+    max-width: 25%;
     animation: none;
     margin-left: 0%;
-}
-
-.curve-label {
-    border: 2px solid #fff;
-    border-radius: 10px;
-    max-width: 20px;
-    max-height: 13.3vh;
 }
 
 .text-label {
@@ -63,7 +60,11 @@
 }
 
 .text-rate {
-    font-size: 3rem;
+    font-size: 1.2rem;
+}
+
+.unit-text {
+    display: none;
 }
 
 .container-configuration {
@@ -105,50 +106,178 @@ h4 {
     margin-right: 2%;
 }
 
-.curves {
-    width: 100%;
-    min-height: 20vh;
-    max-height: 20vh;
-    margin-right: 0px;
+.min-max-value {
+    font-size: 1.2rem;
+    margin-top: 5%;
+    text-align: center;
 }
 
-.min-max-value {
-    font-size: 1.7rem;
+.curve-configuration {
+    min-height: 20vh;
+    max-height: 20vh;
+    min-width: 100px;
+}
+
+.topbar {
+    display: none;
 }
 
 @media all and (display-mode: fullscreen) {
     .curves {
-        max-height: 20vh;
+        max-height: 20vh !important;
         margin: 0%;
         padding: 0%;
     }
+
     .no-curves,
     .no-curves-label {
         display: hidden;
         max-height: 0px;
     }
 
-    .curve-label {
-        min-height: 13vh;
+    .unit-text {
+        display: block;
     }
+
     .curve-label-left {
         min-height: 20vh;
     }
     .curve-configuration {
-        min-height: 14vh;
+        min-height: 18vh !important;
+        max-height: 18vh !important;
+    }
+
+    .text-rate {
+        font-size: 4rem;
+    }
+
+    .min-max-value {
+        font-size: 1.8rem;
+        text-align: center;
+        margin-top: auto;
     }
 }
 
-@media (max-width: 1920px) {
+.first-box {
+    margin-top: 0% !important;
+}
+
+@media screen and (min-width: 1200px) and (max-width: 1400px) {
     .curves {
-        min-width: 910px;
+        /* min-width: 850px; */
+        min-height: 17.5vh;
+        max-height: 17.5vh;
+        margin-right: 0px;
+    }
+    .min-max-value {
+        font-size: 1.8rem;
+        margin-top: auto;
+        text-align: center;
+    }
+
+    .unit-text {
+        display: block;
+    }
+
+    .curve-configuration {
+        border: 2px solid #fff;
+        border-radius: 10px;
         min-height: 18vh;
         max-height: 18vh;
+        margin-top: 3%;
+        min-width: 300px;
+        margin-left: 0%;
+    }
+
+
+    .temperature-div {
+        margin-top: 1.5%;
+    }
+
+
+    .temperature {
+        font-size: 1.5em;
+    }
+
+    .fullScreen {
+        margin-top: 2%;
+    }
+
+    .full-screen {
+        color: blue;
+    }
+
+    .text-rate {
+        font-size: 4rem;
+    }
+
+    .topbar {
+        display: flex;
+    }
+}
+
+@media screen and (min-width: 1400px) and (max-width: 2000px) {
+    .curves {
+        width: 100%;
+        min-height: 21vh;
         margin-right: 0px;
+    }
+
+    .curve-configuration {
+        border: 2px solid #fff;
+        border-radius: 10px;
+        margin-top: 3%;
+        min-width: 300px;
+        margin-left: 0%;
+        min-height: 18.7vh;
+    }
+
+    .curve-label-left {
+        min-height: 20vh;
+    }
+
+    .min-max-value {
+        font-size: 1.8rem;
+        margin-top: auto;
+        text-align: center;
+    }
+
+    .unit-text {
+        display: block;
+    }
+
+    .temperature {
+        font-size: 1.5em;
+    }
+
+    .fullScreen {
+        margin-top: 2%;
+    }
+
+    .full-screen {
+        color: blue;
+    }
+
+    .text-rate {
+        font-size: 4rem;
+    }
+
+    .topbar {
+        display: flex;
     }
 }
 
 .btn-link {
     padding: 0;
     margin: 0;
+}
+
+.nibp-text {
+    font-size: small;
+}
+
+
+.nibp-value {
+    border: 2px solid #fff;
+    border-radius: 10px;
 }

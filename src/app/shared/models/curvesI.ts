@@ -1,5 +1,5 @@
-import { AnimalSpeciesI } from "./animal-speciesI";
-import { CurvesConfigurationI } from "./curvesConfigurationI";
+import { AnimalSpeciesI } from './animal-speciesI';
+import { CurvesConfigurationI } from './curvesConfigurationI';
 
 
 export interface CurvesI {

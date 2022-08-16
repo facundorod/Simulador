@@ -1,9 +1,9 @@
-import { environment } from "@environments/environment";
-import { HttpClient, HttpHeaders } from "@angular/common/http";
-import { Injectable } from "@angular/core";
-import { Router } from "@angular/router";
-import { Observable, Subject, BehaviorSubject, Subscription } from "rxjs";
-import { throwError } from "rxjs";
+import { environment } from '@environments/environment';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
+import { Observable, Subject, BehaviorSubject, Subscription } from 'rxjs';
+import { throwError } from 'rxjs';
 
 @Injectable()
 export class ApiService {
@@ -22,21 +22,21 @@ export class ApiService {
         let headers = new HttpHeaders();
 
         if (!uploadFile) {
-            headers = headers.set("Accept", "application/json");
-            headers = headers.set("Content-Type", "application/json");
+            headers = headers.set('Accept', 'application/json');
+            headers = headers.set('Content-Type', 'application/json');
             headers = headers.set(
-                "Language",
-                localStorage.getItem("activeLang")
-                    ? localStorage.getItem("activeLang")
-                    : "en"
+                'Language',
+                localStorage.getItem('activeLang')
+                    ? localStorage.getItem('activeLang')
+                    : 'en'
             );
         } else {
             // headers.append('enctype', 'multipart/form-data');
             headers = headers.set(
-                "Language",
-                localStorage.getItem("activeLang")
-                    ? localStorage.getItem("activeLang")
-                    : "en"
+                'Language',
+                localStorage.getItem('activeLang')
+                    ? localStorage.getItem('activeLang')
+                    : 'en'
             );
         }
 
@@ -55,8 +55,8 @@ export class ApiService {
         if (baseUrl) {
             let headers = new HttpHeaders();
             headers = headers.set(
-                "Accept",
-                "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3"
+                'Accept',
+                'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3'
             );
 
             this.http.get(baseUrl + res, { headers }).subscribe(
@@ -64,17 +64,17 @@ export class ApiService {
                     subject.next(data);
                 },
                 (err: any) => {
-                    subject.error(err.error || { msg: "System error" });
+                    subject.error(err.error || { msg: 'System error' });
                 }
             );
         } else {
             // Add timestamp to avoid cache
-            if (res.indexOf("?") >= 0) {
-                res += "&";
+            if (res.indexOf('?') >= 0) {
+                res += '&';
             } else {
-                res += "?";
+                res += '?';
             }
-            res += "_t=" + new Date().getTime();
+            res += '_t=' + new Date().getTime();
 
             this.http
                 .get(this.baseUrl + res, { headers: this.getHttpHeaders() })
@@ -85,7 +85,7 @@ export class ApiService {
                     (err: any) => {
                         this.handleError(
                             err,
-                            { method: "GET", endpoint: res },
+                            { method: 'GET', endpoint: res },
                             this
                         ).subscribe(
                             (data) => {
@@ -126,9 +126,9 @@ export class ApiService {
                     subject.next(data);
                 },
                 (err: any) => {
-                    if (!baseUrl)
-                        subject.error(err.error || { msg: "System error" });
-                    else subject.error(err);
+                    if (!baseUrl) {
+                        subject.error(err.error || { msg: 'System error' });
+                    } else { subject.error(err); }
                 },
                 () => {
                     subject.complete();
@@ -156,7 +156,7 @@ export class ApiService {
                     subject.next(data);
                 },
                 (err: any) => {
-                    subject.error(err.error || { msg: "System error" });
+                    subject.error(err.error || { msg: 'System error' });
                 },
                 () => {
                     subject.complete();
@@ -195,7 +195,6 @@ export class ApiService {
      * @returns {any}
      */
     private handleError(error: any, request: any = null, that: any = null) {
-        if (error && error.json) return throwError(error.json());
-        else return throwError({ msg: "Server error" });
+        if (error && error.json) { return throwError(error.json()); } else { return throwError({ msg: 'Server error' }); }
     }
 }

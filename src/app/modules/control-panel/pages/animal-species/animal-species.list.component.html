@@ -2,10 +2,11 @@
     <div class="animal-header">
         <div class="row">
             <div class="col-md-8">
-                <h3 class="title"> Animals </h3>
+                <h3 class="title"> Animal Patients </h3>
             </div>
             <div class="col text-right">
-                <button class="btn btn-primary btn-add" (click)="onEdit()"> + Animal Specie </button>
+                <button class="btn btn-primary btn-add" (click)="onEdit()" *ngIf="isUserAdmin()"> + Animal Patient
+                </button>
             </div>
         </div>
     </div>
@@ -19,7 +20,7 @@
                         <div class="input-group">
                             <input type="text" id="q" class="form-control" formControlName="q">
                             <div class="input-group-text">
-                                <img src="https://img.icons8.com/color/24/000000/search--v1.png" />
+                                <img src="assets/icons/search.png" />
                             </div>
                         </div>
                     </div>
@@ -51,7 +52,7 @@
                             Weigth
                         </th>
                         <th scope="col">
-                            Heigth
+                            Age
                         </th>
                         <th scope="col">
                             Extra information
@@ -59,7 +60,7 @@
                         <th scope="col">
                             Last update
                         </th>
-                        <th scope="col">
+                        <th scope="col" *ngIf="isUserAdmin()">
                             <!-- For edit -->
                         </th>
 
@@ -91,8 +92,8 @@
                             <p class="ml-2" *ngIf="!animalSpecie.weight">-</p>
                         </td>
                         <td scope="row">
-                            <p *ngIf="animalSpecie.height">{{animalSpecie.height}}</p>
-                            <p class="ml-2" *ngIf="!animalSpecie.height">-</p>
+                            <p *ngIf="animalSpecie.age">{{animalSpecie.age}}</p>
+                            <p class="ml-2" *ngIf="!animalSpecie.age">-</p>
 
                         </td>
                         <td scope="row">
@@ -102,14 +103,13 @@
                         <td scope="row">
                             {{animalSpecie.updated_at | date}}
                         </td>
-                        <td scope="row" class="text-right">
+                        <td scope="row" class="text-right" *ngIf="isUserAdmin()">
                             <button class="btn btn-light" (click)="onEdit(i)">
-                                <img
-                                    src="https://img.icons8.com/external-kiranshastry-lineal-color-kiranshastry/26/000000/external-pencil-interface-kiranshastry-lineal-color-kiranshastry-1.png" />
+                                <img src="/assets/icons/pencil.png" />
                             </button>
                             <span>
                                 <button class="btn btn-trash btn-light ml-2" (click)="onDelete(i)">
-                                    <img src="https://img.icons8.com/color/26/000000/trash--v1.png" />
+                                    <img src="/assets/icons/trash.png" />
                                 </button>
                             </span>
                         </td>

@@ -1,0 +1,135 @@
+<div class="container">
+    <div class="user-header">
+        <div class="row">
+            <div class="col-md-8">
+                <h3 class="title"> Users </h3>
+            </div>
+            <div class="col text-right">
+                <button class="btn btn-primary btn-add" (click)="onInviteuser()" *ngIf="isUserAdmin()"> + Invite user
+                </button>
+            </div>
+        </div>
+    </div>
+    <div class="search-form row">
+        <div class="col-10">
+            <form class="form mt-3" [formGroup]="formGroup" (ngSubmit)="onSearch()">
+                <div class="form-row">
+                    <div class="form-group col-md-8">
+
+                        <label for="name">Search</label>
+                        <div class="input-group">
+                            <input type="text" id="q" class="form-control" formControlName="q">
+                            <div class="input-group-text">
+                                <img src="assets/icons/search.png" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group col-md-4 d-flex align-items-end">
+                        <button class="btn btn-link btn-clear" (click)="onClearSearch()"><i class="fa fa-times"
+                                aria-hidden="true"></i></button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<div class="container">
+    <div class="row mt-3">
+        <div class="col table-bg">
+            <table class="table table-users table-hover">
+                <thead class="thead-dark">
+                    <tr>
+                        <th scope="col">
+                            Name
+                        </th>
+                        <th scope="col">
+                            Email
+                        </th>
+                        <th scope="col">
+                            Institution
+                        </th>
+                        <th scope="col">
+                            Roles
+                        </th>
+
+                        <th scope="col" *ngIf="isUserAdmin()">
+                            <!-- For edit -->
+                        </th>
+
+
+                    </tr>
+                </thead>
+
+                <!-- Loading -->
+                <tbody *ngIf="isLoading()">
+                    <tr>
+                        <td colspan="7">
+                            Loading...
+                        </td>
+                    </tr>
+                </tbody>
+                <!-- / Loading -->
+
+                <!-- Listing -->
+                <tbody *ngIf="!isLoading() && users">
+                    <tr *ngFor="let user of users; let i = index">
+                        <td scope="row">
+                            {{user.surname}}, {{user.name}}
+                        </td>
+                        <td scope="row">
+                            {{user.email}}
+                        </td>
+                        <td scope="row">
+                            {{user.institution}}
+                        </td>
+                        <td scope="row">
+                            {{user.roles | arrayJson}}
+                        </td>
+
+                        <td scope="row" class="text-right" *ngIf="isUserAdmin()">
+                            <button class="btn btn-light" (click)="onEdit(i)">
+                                <img src="/assets/icons/pencil.png" />
+                            </button>
+                            <span>
+                                <button class="btn btn-trash btn-light ml-2" (click)="onDelete(i)">
+                                    <img src="/assets/icons/trash.png" />
+                                </button>
+                            </span>
+                        </td>
+
+                    </tr>
+                </tbody>
+                <!-- / Listing -->
+
+                <!-- No items found -->
+                <tbody *ngIf="!isLoading() && (!users || users.length === 0)">
+                    <tr>
+                        <td colspan="7">
+                            Nothing to show you.
+                        </td>
+                    </tr>
+                </tbody>
+                <!-- / No items found -->
+
+            </table>
+
+        </div>
+    </div>
+</div>
+
+
+<div class="container">
+    <div class="row justify-content-center align-items-center">
+        <div class="col-2">
+            <ngb-pagination *ngIf="!isLoading() && (paginatorData.totalPages > queryOptions.pageSize)"
+                [collectionSize]="paginatorData.totalPages" [(page)]="queryOptions.page"
+                [maxSize]="queryOptions.pageSize" [ellipses]="true" [pageSize]="queryOptions.pageSize"
+                (pageChange)="onPageChange()">
+            </ngb-pagination>
+        </div>
+
+    </div>
+
+</div>

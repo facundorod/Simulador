@@ -74,3 +74,30 @@ h3 {
 .dropdown-menu a:link {
     color: #616161;
 }
+
+
+.simvet-head {
+    display: none;
+}
+
+.div-profile {
+    left: 15%;
+}
+
+.div-navbar-logo {
+    display: none;
+}
+
+
+@media (min-width: 1024px) {
+    .simvet-head {
+        display: block;
+    }
+    .div-navbar-logo {
+        display: block;
+    }
+
+    .div-profile {
+        left: 0%;
+    }
+}

@@ -1,5 +1,6 @@
+
 <div class="modal-header title">
-    <h3>Choose Scenario</h3>
+    <h3 class="modal-title">Choose Scenario</h3>
 </div>
 
 
@@ -20,10 +21,10 @@
                         <th scope="col">
                             Name
                         </th>
-                        <th scope="col">
+                        <th scope="col" class="row-descr">
                             Description
                         </th>
-                        <th scope="col">
+                        <th scope="col" class="latest-col">
                             Latest update
                         </th>
                         <th scope="col">
@@ -41,10 +42,10 @@
                         <td scope="row">
                             {{scenario.name}}
                         </td>
-                        <td scope="row">
+                        <td scope="row" class="row-descr">
                             {{scenario.description}}
                         </td>
-                        <td scope="row">
+                        <td scope="row" class="latest-col">
                             {{scenario.updated_at | date}}
                         </td>
 
@@ -63,13 +64,16 @@
                 <tbody *ngIf="(!scenarios || scenarios.length === 0)">
                     <tr>
                         <td colspan="7">
-                            Nothing to show you.
+                            There are not scenarios availables.
                         </td>
                     </tr>
                 </tbody>
                 <!-- / No items found -->
 
             </table>
+
+
+
 
             <div class="modal-footer">
                 <button class="btn btn-primary btn-submit" type="submit" *ngIf="containsTrue()">Select</button>

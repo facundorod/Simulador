@@ -1,17 +1,18 @@
-import { Component, OnInit } from "@angular/core";
-import { FormBuilder, FormGroup } from "@angular/forms";
-import { Router } from "@angular/router";
-import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
-import { ToastrService } from "ngx-toastr";
-import { ScenarioService } from "../../services/scenario.service";
-import { ConfirmModalComponent } from "../../../../shared/modals/confirm/confirm-modal.component";
-import { ScenarioCloneComponent } from "../../modals/scenario-clone/scenario-clone.component";
-import { ScenarioParamsI } from "@app/shared/models/scenarioParamsI";
+import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup } from '@angular/forms';
+import { Router } from '@angular/router';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { ToastrService } from 'ngx-toastr';
+import { ScenarioService } from '../../services/scenario.service';
+import { ConfirmModalComponent } from '../../../../shared/modals/confirm/confirm-modal.component';
+import { ScenarioCloneComponent } from '../../modals/scenario-clone/scenario-clone.component';
+import { ScenarioParamsI } from '@app/shared/models/scenarioParamsI';
+import { AuthService } from '@app/services/auth.service';
 
 @Component({
-    selector: "app-scenario-params",
-    templateUrl: "./scenario-params.component.html",
-    styleUrls: ["./scenario-params.component.css"],
+    selector: 'app-scenario-params',
+    templateUrl: './scenario-params.component.html',
+    styleUrls: ['./scenario-params.component.css'],
 })
 export class ScenarioParamsComponent implements OnInit {
     constructor(
@@ -19,7 +20,8 @@ export class ScenarioParamsComponent implements OnInit {
         private fb: FormBuilder,
         private router: Router,
         private toast: ToastrService,
-        private modal: NgbModal
+        private modal: NgbModal,
+        private authService: AuthService
     ) { }
     public scenarios: any;
     private formGroup: FormGroup;
@@ -29,15 +31,15 @@ export class ScenarioParamsComponent implements OnInit {
         itemsPerPage: number;
     };
 
-    private loading: boolean = true;
+    private loading = true;
     public queryOptions = {
         pageSize: 5,
         page: 1,
     };
 
     private order = {
-        orderBy: "updatedAt",
-        order: "asc",
+        orderBy: 'updatedAt',
+        order: 'asc',
     };
 
     ngOnInit(): void {
@@ -51,7 +53,7 @@ export class ScenarioParamsComponent implements OnInit {
                 {
                     page: this.queryOptions.page,
                     pageSize: this.queryOptions.pageSize,
-                    q: q ? q : this.formGroup.get("q").value,
+                    q: q ? q : this.formGroup.get('q').value,
                 },
                 this.order
             )
@@ -84,9 +86,9 @@ export class ScenarioParamsComponent implements OnInit {
 
     private initFormGroup() {
         this.formGroup = this.fb.group({
-            q: [""],
+            q: [''],
         });
-        this.formGroup.get("q").valueChanges.subscribe((newValue) => {
+        this.formGroup.get('q').valueChanges.subscribe((newValue) => {
             this.loading = true;
             this.loadData(newValue);
         });
@@ -97,13 +99,13 @@ export class ScenarioParamsComponent implements OnInit {
     }
 
     public clearSearch(): void {
-        this.formGroup.get("q").reset();
+        this.formGroup.get('q').reset();
         this.loading = true;
         this.loadData();
     }
 
     public onAddScenario(): void {
-        this.router.navigateByUrl("/panel/scenarios/create");
+        this.router.navigateByUrl('/panel/scenarios/create');
     }
 
     public onEdit(id: number): void {
@@ -111,10 +113,10 @@ export class ScenarioParamsComponent implements OnInit {
     }
 
     public onClone(index: number): void {
-        let clonedScenario: ScenarioParamsI = this.scenarios[index];
+        const clonedScenario: ScenarioParamsI = this.scenarios[index];
         delete clonedScenario.id_scenario;
         if (clonedScenario) {
-            const modal = this.modal.open(ScenarioCloneComponent);
+            const modal = this.modal.open(ScenarioCloneComponent, {size: 'lg', windowClass: 'modal-small'});
             modal.componentInstance.setName(clonedScenario.name);
             modal.result.then((result: { name: string }) => {
                 if (result) {
@@ -123,11 +125,11 @@ export class ScenarioParamsComponent implements OnInit {
                     this.scenarioService.create(clonedScenario).subscribe(() => {
                         this.toast.toastrConfig.timeOut = 1000;
                         this.toast.toastrConfig.positionClass =
-                            "toast-bottom-full-width";
-                        this.toast.success("Scenario cloned successfully");
+                            'toast-bottom-full-width';
+                        this.toast.success('Scenario cloned successfully');
                         this.loading = false;
                         this.loadData();
-                    })
+                    });
                 }
             }, (error: Error) => {
                 console.error(error);
@@ -136,11 +138,11 @@ export class ScenarioParamsComponent implements OnInit {
     }
 
     public onDelete(id: number, index: number): void {
-        const modal = this.modal.open(ConfirmModalComponent);
+        const modal = this.modal.open(ConfirmModalComponent, {size: 'lg', windowClass: 'modal-small'});
         modal.componentInstance.setTitle(
             `You will delete the scenario ${this.scenarios[index].name}`
         );
-        modal.componentInstance.setContent("Are you sure?");
+        modal.componentInstance.setContent('Are you sure?');
         modal.result.then((result) => {
             if (result) {
                 this.loading = true;
@@ -148,9 +150,9 @@ export class ScenarioParamsComponent implements OnInit {
                     () => {
                         this.toast.toastrConfig.timeOut = 1000;
                         this.toast.toastrConfig.positionClass =
-                            "toast-bottom-full-width";
-                        this.toast.success("Scenario deleted successfully");
-                        this.loading = false;
+                            'toast-bottom-full-width';
+                        this.toast.success('Scenario deleted successfully');
+                        this.loading = true;
                         this.loadData();
                     },
                     (error: Error) => {
@@ -159,5 +161,9 @@ export class ScenarioParamsComponent implements OnInit {
                 );
             }
         });
+    }
+
+    public isUserAdmin(): boolean {
+        return this.authService.isAdmin();
     }
 }

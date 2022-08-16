@@ -1,6 +1,6 @@
-export type ClosestPoint = {
-    lessValue: [number, number],
-    greaterValue: [number, number]
+export interface ClosestPoint {
+    lessValue: [number, number];
+    greaterValue: [number, number];
 }
 
 export class CurvesHelper {
@@ -9,18 +9,18 @@ export class CurvesHelper {
     constructor() { }
 
     public editX(curve: [number, number][], change: number = null): number[][] {
-        if (!change) change = Math.floor(Math.random() * 10);
+        if (!change) { change = Math.floor(Math.random() * 10); }
         curve.forEach((data: number[]) => {
-            if (data[0]) data[0] = data[0] + change;
+            if (data[0]) { data[0] = data[0] + change; }
         });
 
         return curve;
     }
 
     public editY(curve: [number, number][], change: number = null): number[][] {
-        if (!change) change = Math.floor(Math.random() * 10);
+        if (!change) { change = Math.floor(Math.random() * 10); }
         curve.forEach((data: number[]) => {
-            if (data[1]) data[1] = data[1] + change;
+            if (data[1]) { data[1] = data[1] + change; }
         });
 
         return curve;
@@ -33,9 +33,10 @@ export class CurvesHelper {
     */
     public getMaxY(curveValues: [number, number][]): number {
         let maxY: number = curveValues[0][1];
-        for (let curve of curveValues) {
-            if (curve[1] > maxY)
+        for (const curve of curveValues) {
+            if (curve[1] > maxY) {
                 maxY = curve[1];
+            }
         }
         return maxY;
     }
@@ -47,9 +48,10 @@ export class CurvesHelper {
      */
     public getMinY(curveValues: [number, number][]): number {
         let minY: number = curveValues[0][1];
-        for (let curve of curveValues) {
-            if (curve[1] < minY)
+        for (const curve of curveValues) {
+            if (curve[1] < minY) {
                 minY = curve[1];
+            }
         }
         return minY;
     }
@@ -61,7 +63,7 @@ export class CurvesHelper {
     }
 
     public lagrangeInterpolation(dataset: [number, number][], value: number): number {
-        let count: number = 0;
+        let count = 0;
         for (let i = 0; i < dataset.length; i++) {
             count += (dataset[i][1] * this.lagrangeFunction(dataset, value, i));
         }
@@ -69,8 +71,8 @@ export class CurvesHelper {
     }
 
     private lagrangeFunction(dataset: [number, number][], valueToInterpolate: number, i: number): number {
-        let num: number = 1;
-        let den: number = 1;
+        let num = 1;
+        let den = 1;
         for (let j = 0; j < dataset.length - 1; j++) {
             if (i != j) {
                 num *= (valueToInterpolate - dataset[j][0]);
@@ -86,25 +88,27 @@ export class CurvesHelper {
      * @param value
      */
     public getClosestIndex(dataset: [number, number][], value: number): ClosestPoint {
-        for (let i: number = 0; i < dataset.length; i++) {
+        for (let i = 0; i < dataset.length; i++) {
             if (dataset[i][0] > value) {
-                if (i != 0)
+                if (i != 0) {
                     return {
                         lessValue: dataset[i - 1],
                         greaterValue: dataset[i]
-                    }
-                else
+                    };
+                }
+                else {
                     return {
                         lessValue: dataset[i],
                         greaterValue: dataset[i + 1]
-                    }
-            };
+                    };
+                }
+            }
         }
 
         return {
             lessValue: dataset[dataset.length - 1],
             greaterValue: dataset[dataset.length - 2]
-        }
+        };
     }
 
     /**
@@ -116,13 +120,14 @@ export class CurvesHelper {
      */
     public calculateRate(rateValue: number, freq: number): number {
         const period: number = 60 / rateValue;
-        if (period)
+        if (period) {
             return (freq / 1000) * period;
+        }
         return -1;
     }
 
     public getMeanValue(diastolicIBP: number, systolicIBP: number): number | null {
-        if (systolicIBP) return Math.round(((2 * diastolicIBP) + systolicIBP) / 3);
+        if (systolicIBP) { return Math.round(((2 * diastolicIBP) + systolicIBP) / 3); }
         return null;
     }
 }

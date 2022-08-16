@@ -1,13 +1,13 @@
-import { Injectable } from "@angular/core";
-import { PhysiologicalParamaterI } from "@app/shared/models/physiologicalParamaterI";
-import { SPPI } from "@app/shared/models/SPPI";
-import { ApiService } from "@app/shared/services/api.service";
-import { HelperService } from "@app/shared/services/helper.service";
-import { environment } from "@environments/environment";
-import { Observable, Subject } from "rxjs";
+import { Injectable } from '@angular/core';
+import { PhysiologicalParamaterI } from '@app/shared/models/physiologicalParamaterI';
+import { SPPI } from '@app/shared/models/SPPI';
+import { ApiService } from '@app/shared/services/api.service';
+import { HelperService } from '@app/shared/services/helper.service';
+import { environment } from '@environments/environment';
+import { Observable, Subject } from 'rxjs';
 
 @Injectable({
-    providedIn: "root",
+    providedIn: 'root',
 })
 export class ParametersService {
     private baseUrl: string = environment.api.parameters;
@@ -17,7 +17,7 @@ export class ParametersService {
     public findAll(query: any = null): Observable<PhysiologicalParamaterI[]> {
         const subject = new Subject<PhysiologicalParamaterI[]>();
         let endpoint = this.baseUrl;
-        if (query) endpoint += `?${HelperService.getQueryString(query)}`;
+        if (query) { endpoint += `?${HelperService.getQueryString(query)}`; }
 
         this.api.httpGet(endpoint).subscribe(
             (data: PhysiologicalParamaterI[]) => {

@@ -7,7 +7,7 @@ import { Sidebar } from 'ng-sidebar';
     styleUrls: ['./main.component.css']
 })
 export class MainComponent implements OnInit {
-    public sidebarOpen: boolean = false;
+    public sidebarOpen = false;
     constructor() { }
 
     ngOnInit(): void {

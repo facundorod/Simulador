@@ -1,4 +1,4 @@
-import { PathologyI } from "./pathologyI";
+import { PathologyI } from './pathologyI';
 
 export interface PathologiesResponseI {
     perPage: number;
