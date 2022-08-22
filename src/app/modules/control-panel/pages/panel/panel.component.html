@@ -150,8 +150,10 @@
                 <div class="col-md-6 param-configuration">
                     <div class="row">
                         <div class="col-6">
-                            <p class="text-curve-label" *ngIf="curve?.curveConfiguration.label !== 'SPO2'"> {{ curve?.curveConfiguration.label }}</p>
-                            <p class="text-curve-label" *ngIf="curve?.curveConfiguration.label === 'SPO2'"> Pletismography </p>
+                            <p class="text-curve-label" *ngIf="curve?.curveConfiguration.label !== 'SPO2'"> {{
+                                curve?.curveConfiguration.label }}</p>
+                            <p class="text-curve-label" *ngIf="curve?.curveConfiguration.label === 'SPO2'">
+                                Pletismography </p>
 
                         </div>
                         <div class="col-md-6">
@@ -192,8 +194,8 @@
                             </div>
                         </div>
                     </div>
-                    <div class="row" *ngIf="curve?.curveConfiguration.label == 'CO2'">
-                        <div class="col-sm-4">
+                    <div class="row" >
+                        <div class="col-sm-4" *ngIf="curve?.curveConfiguration.label == 'CO2'">
                             <label class="form-label">End Tidal</label>
                             <div class="row" *ngIf="currentState?.action !== 'stop'">
                                 <input type="range" class="form-range form-range-box" min="0" max="50" step="1"
@@ -206,26 +208,10 @@
                                 <span class="rate-value-box">0</span>
                             </div>
                         </div>
-                        <div class="col-sm-4">
-                            <label class="form-label">Inspiration</label>
-                            <div class="row" *ngIf="currentState?.action !== 'stop'">
-                                <input type="range" class="form-range form-range-box" min="0" max="10" step="1"
-                                    formControlName="inspirationCO2" value={{inspirationCO2}}>
-                                <span class="rate-value-box">{{inspirationCO2}}</span>
-                            </div>
-                            <div class="row" *ngIf="currentState?.action === 'stop'">
-                                <input type="range" class="form-range form-range-box" min="0" max="10" step="1" value=0
-                                    disabled>
-                                <span class="rate-value-box">0</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="row">
-
-                        <div class="col-sm-4" formArrayName="valueToShift" *ngIf="curve?.curveConfiguration.label !== 'ECG'">
+                        <div class="col-sm-4" formArrayName="valueToShift"
+                            *ngIf="curve?.curveConfiguration.label !== 'ECG'">
                             <div [formGroupName]="i">
-                                <label class="form-label">Shift Curve</label>
+                                <label class="form-label">Scaling vertically</label>
                                 <div class="row" *ngIf="currentState?.action !== 'stop'">
                                     <input type="range" class="form-range form-range-box" min="1" max="4" step="0.5"
                                         formControlName="value" value={{i}}>
@@ -238,9 +224,15 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-sm-4" formArrayName="amplitude" *ngIf="curve?.curveConfiguration.label !== 'ECG'">
+
+                    </div>
+
+                    <div class="row">
+
+                        <!-- <div class="col-sm-4" formArrayName="amplitude"
+                            *ngIf="curve?.curveConfiguration.label !== 'ECG'">
                             <div [formGroupName]="i">
-                                <label class="form-label">Amplitude</label>
+                                <label class="form-label">Scaling horizontally</label>
                                 <div class="row" *ngIf="currentState?.action !== 'stop'">
                                     <input type="range" class="form-range form-range-box" min="1" max="6" step="0.5"
                                         formControlName="value" value={{i}}>
@@ -252,7 +244,7 @@
                                     <span class="rate-value-box">0</span>
                                 </div>
                             </div>
-                        </div>
+                        </div> -->
                     </div>
 
 

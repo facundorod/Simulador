@@ -144,6 +144,7 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
                     if (value) {
                         this.currentState.curves[index].curveValues = value;
                         this.originalCurves[index].curveValues = value;
+                        this.originalState.curves[index].curveValues = value;
                         const curve = this.originalCurves[index];
                         if (curve.curveConfiguration.label === 'IBP') {
                             this.systolicIbp = Math.round(this.getMaxYValue(value).value);
