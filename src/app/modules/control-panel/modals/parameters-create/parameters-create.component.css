@@ -40,3 +40,9 @@ input[type="file"] {
 .img-delete {
     margin-bottom: 30%;
 }
+
+
+.mini-monitor {
+    background-color: #000;
+    margin-left: 15px;
+}

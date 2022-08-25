@@ -36,6 +36,7 @@ import { NewParameterComponent } from './modals/new-parameter/new-parameter.comp
 import { MonitorConfigsComponent } from './modals/monitor-configs/monitor-configs.component';
 import { ScenarioCloneComponent } from './modals/scenario-clone/scenario-clone.component';
 import { NibpComponent } from './modals/nibp/nibp.component';
+import { NgApexchartsModule } from 'ng-apexcharts';
 
 @NgModule({
     declarations: [
@@ -64,6 +65,7 @@ import { NibpComponent } from './modals/nibp/nibp.component';
         ReactiveFormsModule,
         AuthorizationModule,
         FormsModule,
+        NgApexchartsModule,
         ToastrModule.forRoot(),
         SharedModule,
         NgbModule,

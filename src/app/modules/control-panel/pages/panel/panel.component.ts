@@ -542,7 +542,8 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
                             this.setLoading(false);
                             this.scenarios.setAnimal(as);
 
-                            // this.applyChanges();
+                            this.applyChanges();
+
                         } else {
                             this.currentState = null;
                             this.setLoading(false);

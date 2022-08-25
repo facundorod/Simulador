@@ -1,11 +1,14 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ChartConfigurer, ChartOptions, commonOptions } from '@app/modules/simulation/helpers/chartConfigurer';
+import { CurvesHelper } from '@app/modules/simulation/helpers/curvesHelper';
 import { AnimalSpeciesI } from '@app/shared/models/animal-speciesI';
 import { CurveValues } from '@app/shared/models/curveValues';
 import { CurveValuesI } from '@app/shared/models/curveValuesI';
 import { PhysiologicalParamaterI } from '@app/shared/models/physiologicalParamaterI';
 import { SPPI } from '@app/shared/models/SPPI';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { ApexAxisChartSeries, ChartComponent } from 'ng-apexcharts';
 import { ParametersService } from '../../services/parameters.service';
 
 @Component({
@@ -14,14 +17,19 @@ import { ParametersService } from '../../services/parameters.service';
     styleUrls: ['./parameters-create.component.css'],
 })
 export class ParametersCreateComponent implements OnInit {
+    @ViewChild('chart') chartComponent: ChartComponent;
     private parameter: SPPI;
     private parameters: PhysiologicalParamaterI[];
+    private chart: Partial<ChartOptions>;
     private physiologicalParameter: PhysiologicalParamaterI;
     private loading = true;
     private fileContent: CurveValuesI[] = [];
     private animalSpecie: AnimalSpeciesI;
     private currentParameters: PhysiologicalParamaterI[] = [];
     private formGroup: FormGroup;
+    private curvesHelper: CurvesHelper = new CurvesHelper();
+    public showChart: boolean = false;
+
     constructor(
         private fb: FormBuilder,
         private activeModal: NgbActiveModal,
@@ -126,7 +134,6 @@ export class ParametersCreateComponent implements OnInit {
                 : 0],
             value: [this.parameter?.value ? this.parameter?.value : 0],
         });
-        this.loading = false;
         this.formGroup.get('parameter').valueChanges.subscribe((value) => {
             this.physiologicalParameter = value;
             this.formGroup
@@ -136,6 +143,7 @@ export class ParametersCreateComponent implements OnInit {
                 .get('description')
                 .setValue(this.physiologicalParameter.description);
         });
+
     }
 
     public onCancel(): void {
@@ -150,12 +158,15 @@ export class ParametersCreateComponent implements OnInit {
         return this.loading;
     }
 
-    public changeCurves() {
-        return this.parameter?.curves?.length > 0;
+    public changeCurves(): boolean {
+        if (this.parameter?.curves?.length > 0 || this.fileContent?.length > 0) return true;
+        return false;
     }
 
     public onDeleteCurves() {
-        this.parameter.curves = [];
+        if (this.parameter && this.parameter.curves) this.parameter.curves = [];
+        this.fileContent = [];
+        this.showChart = false;
     }
 
     public onFileChange(event: any): void {
@@ -163,14 +174,19 @@ export class ParametersCreateComponent implements OnInit {
             const [file] = event.target.files;
             const reader = new FileReader();
             reader.readAsText(file);
-
+            this.onDeleteCurves();
             reader.onload = () => {
                 const csvData = reader.result;
                 const csvRecordsArray = (csvData as string).split(/\r\n|\n/);
                 const records = this.getCurvesFromCSV(csvRecordsArray);
                 this.fileContent = records;
+                const curveValues: [number, number][] = this.fileContent.map((value: CurveValuesI) => {
+                    return [+value.t, +value.value];
+                })
+                if (this.parameter) this.parameter.curves = records;
+                this.updateChart(curveValues);
             };
-            reader.onerror = function() {
+            reader.onerror = function () {
                 console.log('error is occured while reading file!');
             };
         }
@@ -266,8 +282,12 @@ export class ParametersCreateComponent implements OnInit {
                 });
                 this.parameters = values;
                 this.initFormGroup();
+                this.createPreviewChart();
+                this.loading = false;
+
             },
             (error: Error) => {
+                this.loading = false;
                 console.error(error);
             }
         );
@@ -319,5 +339,66 @@ export class ParametersCreateComponent implements OnInit {
         }
         const param: PhysiologicalParamaterI = this.formGroup.get('parameter').value;
         return param.label.toUpperCase() === 'SPO2';
+    }
+
+    private createPreviewChart(): void {
+        if (this.fileContent) {
+            const curveValues: [number, number][] = this.fileContent.map((value: CurveValuesI) => {
+                return [+value.t, +value.value];
+            })
+            if (curveValues && curveValues.length) {
+                const maxY: number =
+                    this.curvesHelper.getMaxY(curveValues) == 0 ? 1
+                        : this.curvesHelper.getMaxY(curveValues);
+                const minY = 0;
+                const chart: ChartConfigurer = new ChartConfigurer({
+                    colorLine: this.parameter?.animalParameters?.physiologicalParameter?.colorLine,
+                    height: 100,
+                    minX: 0,
+                    maxX: 1,
+                    minY,
+                    maxY,
+                    toolbar: false,
+                });
+                chart.setChart(curveValues, 'area', '100%');
+                this.chart = chart.getChart();
+                this.loading = false;
+                this.showChart = true;
+            }
+        }
+    }
+
+    public getChart(): Partial<ChartOptions> {
+        return this.chart;
+    }
+
+    /**
+    * Update all Apex Charts
+    */
+    private updateChart(data: [number, number][]): void {
+        this.showChart = true;
+        let chart: ChartComponent = this.chartComponent;
+        if (chart) {
+            chart.updateSeries([{ data: data }], true);
+            this.changeMaxAndMin(data);
+        } else {
+            this.createPreviewChart();
+            if (chart) chart.updateSeries([{ data: data }], true);
+        }
+    }
+
+    public changeMaxAndMin(curves: [number, number][]): void {
+        const maxY: number =
+            this.curvesHelper.getMaxY(curves) == 0 ? 1
+                : this.curvesHelper.getMaxY(curves);
+        const minY = 0;
+        const options: Partial<ChartOptions> = commonOptions(
+            false,
+            1,
+            0,
+            maxY,
+            minY
+        );
+        this.chartComponent.updateOptions(options);
     }
 }

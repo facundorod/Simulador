@@ -40,7 +40,7 @@ export function commonOptions(
     return {
         stroke: {
             curve: 'smooth',
-            width: 2,
+            width: 2.8,
         },
         markers: {
             size: 0,
@@ -112,7 +112,7 @@ export class ChartConfigurer {
         this.chartOptions = chartOptions;
     }
 
-    public setChart(dataset: [number, number][], type?: ChartType): void {
+    public setChart(dataset: [number, number][], type?: ChartType, width: string = "100%"): void {
         this.apexChartOptions = {
             series: [
                 {
@@ -153,7 +153,7 @@ export class ChartConfigurer {
                 zoom: {
                     enabled: false,
                 },
-                width: '100%',
+                width: width,
                 toolbar: {
                     show: this.chartOptions.toolbar,
                 },

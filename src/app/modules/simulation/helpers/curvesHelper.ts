@@ -1,3 +1,5 @@
+import { CurveValuesI } from "@app/shared/models/curveValuesI";
+
 export interface ClosestPoint {
     lessValue: [number, number];
     greaterValue: [number, number];
@@ -31,7 +33,7 @@ export class CurvesHelper {
     * @param curveValues
     * @returns max value for curveValues
     */
-    public getMaxY(curveValues: [number, number][]): number {
+    public getMaxY(curveValues: [number, number][] | CurveValuesI[]): number {
         let maxY: number = curveValues[0][1];
         for (const curve of curveValues) {
             if (curve[1] > maxY) {
