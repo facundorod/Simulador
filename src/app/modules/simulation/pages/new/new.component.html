@@ -1,40 +1,58 @@
-<div class="container">
-
-    <div class="card">
-
-        <div class="card-header">
-            <h2 class="text-center">New Simulation</h2>
-
+<div class="container text-center align-items-center ">
+    <div class="header-box">
+        <div class="row justify-content-center">
+            <div class="col-12 monitor-box" >
+                <img class="scale-up-hor-center " src="/assets/icons/monitor-menu.png"/>
+            </div>
         </div>
-        <div class="card-body">
-            <h3 class="font-italic">How do you want to initiate your new simulation?</h3>
-            <form class="form-group" #form="ngForm">
-                <div class="form-check" *ngIf="isUserAdmin()">
-                    <input class="form-check-input" type="radio" value="blank" name="blank" checked [(ngModel)]="option"
-                        required>
-                    <label class="form-check-label" for="exampleRadios1">
-                        Create simulation from begining
-                    </label>
-                </div>
-                <div class="form-check">
-                    <input class="form-check-input" type="radio" name="previous" value="previous" [(ngModel)]="option"
-                        required>
-                    <label class="form-check-label" for="exampleRadios2">
-                        Initiate with previous simulation
-                    </label>
-                </div>
-                <div class="form-check">
-                    <input class="form-check-input" type="radio" value="previous-scenario" name="blank"
-                        [(ngModel)]="option" required>
-                    <label class="form-check-label" for="exampleRadios1">
-                        Initiate simulation with previous scenarios
-                    </label>
-                </div>
-
-                <button type="submit" class="btn btn-primary btn-block btn-new" (click)="initiateSimulation()"
-                    [disabled]="!form.form.valid"> INITIATE SIMULATION </button>
-            </form>
+        <div class="row mt-2">
+            <div class="col">
+                <h3 class="text-center text-bold">
+                    Initiate Simulation
+                </h3>
+            </div>
         </div>
+        <div class="row">
+            <div class="col">
+                <p class="text-center subtitle">Choose an option to initiate a new simulation</p>
+            </div>
+        </div>
+
+
+    </div>
+    <div class="row justify-content-center parent-box">
+        <div class="col-3 box-col" (click)="initiateWithPreviousSimulation()">
+            <div class="inner">
+                <div class="front">
+                    <p>Continue simulation</p>
+                </div>
+                <div class="back">
+                    <p>Initiate with an existing simulation</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-3 box-col" (click)="initiateWithPreviousScenario()">
+            <div class="inner">
+                <div class="front">
+                    <p>Initiate with previous scenarios</p>
+                </div>
+                <div class="back">
+                    <p>Initiate new simulation with an existing scenario</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-3 box-col" (click)="initiateCustomSimulation()">
+            <div class="inner">
+                <div class="front">
+                    <p class="text-bold">Ad-hoc simulation</p>
+                </div>
+                <div class="back">
+                    <p>Create a custom simulation with a new clinical scenario</p>
+                </div>
+            </div>
+        </div>
+
+
     </div>
 
 

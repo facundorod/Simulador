@@ -17,6 +17,7 @@ export const environment = {
         verifyToken: '/auth/verify',
         simulations: '/simulation/',
         curves: '/curves/',
+        refCurves: '/refCurves',
         parameters: '/parameters/',
         user: '/auth/user',
         users: '/auth/users',

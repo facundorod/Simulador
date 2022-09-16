@@ -8,13 +8,34 @@ h3 {
 }
 
 .table-hover tbody tr:hover {
-    background-color: #616161;
+    background-color: #8e7cc3;
+    color: #fff;
 }
 
-.table-users,
-.table-users tr {
-    border: 2px solid #272626;
+.input-group-text {
+    background-color: #fff;
+    border-color: #fff;
 }
+
+input {
+    border: none;
+}
+
+.input-group {
+    background-color: #fff;
+    border-radius: 10px;
+    border: 2px solid #fff;
+}
+
+.thead-us {
+    background-color: #49377e;
+    color: #fff;
+}
+
+.delete-img, .edit-img {
+    cursor: pointer;
+}
+
 
 .btn-search,
 .btn-add {

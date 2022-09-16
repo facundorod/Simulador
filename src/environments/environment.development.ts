@@ -12,6 +12,7 @@ export const environment = {
         login: "/auth/login",
         register: "/auth/register",
         simulations: "/simulation/",
+        refCurves: '/refCurves',
         curves: "/curves/",
         parameters: "/parameters/",
         user: "/auth/user",
