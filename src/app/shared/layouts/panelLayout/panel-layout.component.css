@@ -65,13 +65,12 @@ h3 {
     margin-left: 15%;
     background-color: #8e7cc3;
 }
+
 .dropdown-menu a {
     color: #fff;
 }
 
-.dropdown-menu a:hover,
-.dropdown-menu a:active,
-.dropdown-menu a:link {
+.dropdown-menu a:hover {
     color: #616161;
 }
 
@@ -93,8 +92,17 @@ h3 {
     .simvet-head {
         display: block;
     }
+
     .div-navbar-logo {
         display: block;
+    }
+
+    .dropdown-toggle {
+        padding-left: 50%;
+    }
+
+    .dropdown-menu {
+        margin-left: 65%;
     }
 
     .div-profile {

@@ -26,7 +26,7 @@
 
             <div class="col-md-3">
                 <label for="simulationName" class="form-label">Simulation Name</label>
-                <input class="form-control" formControlName="simulationName">
+                <input class="form-control" formControlName="simulationName" placeholder="Simulation name">
                 <app-message *ngIf="isSubmitForm()" [errors]="getErrors()" [key]="'simulationName'">
                 </app-message>
             </div>
@@ -41,7 +41,7 @@
                             {{formGroup.value.animalSpecie.name}}</option>
                         <ng-template ngFor let-animalS [ngForOf]="animalSpecies">
                             <option
-                                *ngIf="formGroup.value.animalSpecie && animalS.name !== formGroup.value.animalSpecie.name"
+                                *ngIf="animalS.name !== formGroup.value.animalSpecie.name"
                                 [ngValue]="animalS">
                                 {{ animalS.name }}
                             </option>
@@ -55,7 +55,7 @@
 
             <div class="col-md-6">
                 <label class="form-label">Simulation description</label>
-                <textarea class="form-control" rows="4" formControlName="simulationDescription"></textarea>
+                <textarea class="form-control" rows="4" formControlName="simulationDescription" placeholder="Simulation description"></textarea>
             </div>
         </div>
     </form>
@@ -73,32 +73,37 @@
         </div>
     </div>
 
-    <div class="mt-4 progress" *ngIf="currentState?.curves?.length > 0">
+    <!-- <div class="mt-4 progress" *ngIf="currentState?.curves?.length > 0">
         <div class=" bar-separator progress-bar bg-info" role="progressbar" aria-valuenow="60" aria-valuemin="0"
             aria-valuemax="100"></div>
-    </div>
+    </div> -->
 
 </div>
+
 <div class="container form-parameters" *ngIf="currentState?.curves?.length > 0 && !isLoading()">
+    <div class="curves-configuration-text">
+        <h3 class="text-curves text-center">Curves Configuration</h3>
+
+    </div>
     <form [formGroup]="fromGroupParameters">
-        <div class="row">
+        <div class="row parameters-form">
             <div class="col-sm-4">
                 <label class="form-label">Heart Rate</label>
                 <div class="row ml-3" *ngIf="currentState?.action !== 'stop'">
-                    <input type="range" class="form-range" min="30" max="200" step="1" formControlName="heartRate"
+                    <input type="range" class="form-range " min="30" max="200" step="1" formControlName="heartRate"
                         value={{heartRate}}>
                     <span class="rate-value">{{heartRate}}</span>
 
                 </div>
                 <div class="row ml-3" *ngIf="currentState?.action === 'stop'">
-                    <input type="range" disabled class="form-range" min="30" max="200" step="1" value=0>
+                    <input type="range" disabled class="form-range " min="30" max="200" step="1" value=0>
                     <span class="rate-value">0</span>
                 </div>
             </div>
             <div class="col-sm-4">
                 <label class="form-label">Respiration Rate [rpm]</label>
                 <div class="row ml-3" *ngIf="currentState?.action !== 'stop'">
-                    <input type="range" class="form-range" min="1" max="50" step="1" formControlName="breathRate"
+                    <input type="range" class=" form-range" min="1" max="50" step="1" formControlName="breathRate"
                         value={{breathRate}}>
                     <span class="rate-value">{{breathRate}}</span>
                 </div>
@@ -110,7 +115,7 @@
             <div class="col-sm-4">
                 <label class="form-label">Temperature [°C]</label>
                 <div class="row ml-3" *ngIf="currentState?.action !== 'stop'">
-                    <input type="range" class="form-range" min="30" max="45" step="0.5" formControlName="temperature"
+                    <input type="range" class=" form-range" min="30" max="45" step="0.5" formControlName="temperature"
                         value={{temperature}}>
                     <span class="rate-value">{{temperature}}</span>
                 </div>
@@ -124,7 +129,7 @@
             <div class="col-sm-4">
                 <label class="form-label">SPO2</label>
                 <div class="row ml-3" *ngIf="currentState?.action !== 'stop'">
-                    <input type="range" class="form-range" min="30" max="110" step="1" formControlName="spo2"
+                    <input type="range" class=" form-range" min="30" max="110" step="1" formControlName="spo2"
                         value={{spo2}}>
                     <span class="rate-value">{{spo2}}</span>
                 </div>
@@ -139,16 +144,13 @@
 
 
 <div class="container" *ngIf="currentState?.curves.length > 0 && !isLoading()">
-    <div class="curves-configuration-text">
-        <h3 class="text-curves text-center">Curves Configuration</h3>
 
-    </div>
     <form [formGroup]="fromGroupParameters">
 
         <div class="row" *ngFor="let curve of currentState.curves; let i=index">
             <ng-template [ngIf]="curve.curveValues.length > 0">
                 <div class="col-md-6 param-configuration">
-                    <div class="row">
+                    <div class="row justify-content-between">
                         <div class="col-6">
                             <p class="text-curve-label" *ngIf="curve?.curveConfiguration.label !== 'SPO2'"> {{
                                 curve?.curveConfiguration.label }}</p>
@@ -156,97 +158,61 @@
                                 Pletismography </p>
 
                         </div>
-                        <div class="col-md-6">
-                            <label class="custom-file-upload">
-                                <input class="form-control curves-dataset-input" id="formFile" type="file" accept=".csv"
-                                    (change)="onFileChange($event, i)">
+                        <div class="col-4" *ngIf="showParam(curve)">
+                            <button class="btn btn-primary save-changes" (click)="onLoadRefCurves(curve?.curveConfiguration.label)" position="top" ngbTooltip="Change curve to simulate">
                                 Replace Curve
-                            </label>
+                            </button>
                         </div>
                     </div>
 
+                    <button class="btn btn-primary btn-spinner" type="button" disabled *ngIf="!showParam(curve)">
+                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                        Loading...
+                    </button>
+                    <div class="row" *ngIf="curve?.curveConfiguration.label == 'IBP' && showParam(curve)">
 
-                    <div class="row" *ngIf="curve?.curveConfiguration.label == 'IBP'">
-                        <div class="col-sm-4">
+                        <div class="col-sm-4" *ngIf="!isLoadingIbp">
                             <label class="form-label">Diastolic Pressure</label>
                             <div class="row" *ngIf="currentState?.action !== 'stop'">
-                                <input type="range" class="form-range form-range-box" min="0" max="{{systolicIbp - 1}}"
+                                <input type="range" class=" form-range form-range-box" min="0" max="{{systolicIbp - 1}}"
                                     step="1" formControlName="ibpDiastolic" value={{diastolicIbp}}>
                                 <span class="rate-value-box">{{diastolicIbp}}</span>
                             </div>
                             <div class="row" *ngIf="currentState?.action === 'stop'">
-                                <input type="range" class="form-range form-range-box" min="0" max="{{systolicIbp - 1}}"
+                                <input type="range" class=" form-range form-range-box" min="0" max="{{systolicIbp - 1}}"
                                     step="1" value=0 disabled>
                                 <span class="rate-value-box">0</span>
                             </div>
                         </div>
-                        <div class="col-sm-4">
+                        <div class="col-sm-4" *ngIf="!isLoadingIbp" >
                             <label class="form-label">Systolic Pressure</label>
                             <div class="row" *ngIf="currentState?.action !== 'stop'">
-                                <input type="range" class="form-range form-range-box" min="0" max="250" step="1"
+                                <input type="range" class=" form-range form-range-box" min="0" max="250" step="1"
                                     formControlName="ibpSystolic">
                                 <span class=" rate-value-box">{{systolicIbp}}</span>
                             </div>
                             <div class="row" *ngIf="currentState?.action === 'stop'">
-                                <input type="range" class="form-range form-range-box" min="0" max="250" step="1"
+                                <input type="range" class=" form-range form-range-box" min="0" max="250" step="1"
                                     disabled value=0>
                                 <span class="rate-value-box">0</span>
                             </div>
                         </div>
                     </div>
-                    <div class="row" >
-                        <div class="col-sm-4" *ngIf="curve?.curveConfiguration.label == 'CO2'">
+                    <div class="row" *ngIf="showParam(curve)">
+                        <div class="col-sm-4" *ngIf="curve?.curveConfiguration.label == 'CO2' && !isLoadingCapno">
                             <label class="form-label">End Tidal</label>
                             <div class="row" *ngIf="currentState?.action !== 'stop'">
-                                <input type="range" class="form-range form-range-box" min="0" max="50" step="1"
+                                <input type="range" class=" form-range form-range-box" min="0" max="50" step="1"
                                     formControlName="endTidalCO2" value={{endTidalCO2}}>
                                 <span class="rate-value-box">{{endTidalCO2}}</span>
                             </div>
                             <div class="row" *ngIf="currentState?.action === 'stop'">
-                                <input type="range" class="form-range form-range-box" min="0" max="50" step="1" value=0
+                                <input type="range" class=" form-range form-range-box" min="0" max="50" step="1" value=0
                                     disabled>
                                 <span class="rate-value-box">0</span>
                             </div>
                         </div>
-                        <!-- <div class="col-sm-4" formArrayName="valueToShift"
-                            *ngIf="curve?.curveConfiguration.label !== 'ECG'">
-                            <div [formGroupName]="i">
-                                <label class="form-label">Scaling vertically</label>
-                                <div class="row" *ngIf="currentState?.action !== 'stop'">
-                                    <input type="range" class="form-range form-range-box" min="1" max="4" step="0.5"
-                                        formControlName="value" value={{i}}>
-                                    <span class="rate-value-box">{{shiftValues[i]}}</span>
-                                </div>
-                                <div class="row" *ngIf="currentState?.action === 'stop'">
-                                    <input type="range" class="form-range form-range-box" min="1" max="4" step="0.5"
-                                        value=0 disabled>
-                                    <span class="rate-value-box">0</span>
-                                </div>
-                            </div>
-                        </div> -->
-
                     </div>
-
-                    <div class="row">
-
-                        <!-- <div class="col-sm-4" formArrayName="amplitude"
-                            *ngIf="curve?.curveConfiguration.label !== 'ECG'">
-                            <div [formGroupName]="i">
-                                <label class="form-label">Scaling horizontally</label>
-                                <div class="row" *ngIf="currentState?.action !== 'stop'">
-                                    <input type="range" class="form-range form-range-box" min="1" max="6" step="0.5"
-                                        formControlName="value" value={{i}}>
-                                    <span class="rate-value-box">{{amplitudeValues[i]}}</span>
-                                </div>
-                                <div class="row" *ngIf="currentState?.action === 'stop'">
-                                    <input type="range" class="form-range form-range-box" min="1" max="6" step="0.5"
-                                        value=0 disabled>
-                                    <span class="rate-value-box">0</span>
-                                </div>
-                            </div>
-                        </div> -->
-                    </div>
-
 
                 </div>
 

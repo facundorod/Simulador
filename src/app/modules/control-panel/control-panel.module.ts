@@ -37,6 +37,7 @@ import { MonitorConfigsComponent } from './modals/monitor-configs/monitor-config
 import { ScenarioCloneComponent } from './modals/scenario-clone/scenario-clone.component';
 import { NibpComponent } from './modals/nibp/nibp.component';
 import { NgApexchartsModule } from 'ng-apexcharts';
+import { RefCurvesComponent } from './modals/ref-curves/ref-curves.component';
 
 @NgModule({
     declarations: [
@@ -58,6 +59,7 @@ import { NgApexchartsModule } from 'ng-apexcharts';
         MonitorConfigsComponent,
         ScenarioCloneComponent,
         NibpComponent,
+        RefCurvesComponent,
     ],
     imports: [
         CommonModule,

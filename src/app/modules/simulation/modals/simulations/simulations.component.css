@@ -15,7 +15,10 @@
 .updated-at {
     visibility: collapse;
 }
-
+.thead-sim {
+    background-color: #49377e;
+    color: #fff;
+}
 .modal-header {
     font-size: 1.1em;
     font-weight: bold;
@@ -23,9 +26,9 @@
 }
 
 .table-hover tbody tr:hover {
-    background-color: #616161;
+    background-color: #8e7cc3;
+    color: #fff;
 }
-
 .btn-submit {
     background-color: #42336e;
 }

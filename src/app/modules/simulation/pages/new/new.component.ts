@@ -24,50 +24,52 @@ export class NewComponent implements OnInit {
     ) { }
 
     ngOnInit(): void {
-    }
-
-    initiateSimulation(): void {
-        // TODO: Change this logic to reactive forms.
         const simulation = localStorage.getItem('Simulation');
-
-        if (this.option === 'blank') {
-            this.router.navigateByUrl('/panel/scenarios');
-
-            if (simulation) { localStorage.removeItem('Simulation'); }
-        } else {
-            if (this.option === 'previous') {
-                const modal = this.modal.open(SimulationsComponent, {size: 'lg', windowClass: 'modal-small'});
-                this.simulationService.list().subscribe(
-                    (simulations: any) => {
-                        this.simulations = simulations.data;
-                        modal.componentInstance.setSimulations(
-                            simulations.data
-                        );
-                    },
-                    (error: any) => {
-                        console.log(error);
-                    }
-                );
-
-                modal.result.then(
-                    (simulation: any) => {
-                        if (simulation) {
-                            localStorage.setItem(
-                                'Simulation',
-                                JSON.stringify(simulation)
-                            );
-                            this.router.navigateByUrl('/panel');
-                        }
-                    },
-                    (error: any) => {
-                        console.log(error);
-                    }
-                );
-            } else {
-                this.router.navigateByUrl('/panel');
-            }
-        }
+        if (simulation) { localStorage.removeItem('Simulation'); }
     }
+
+
+    public initiateCustomSimulation(): void {
+        const simulation = localStorage.getItem('Simulation');
+        this.router.navigateByUrl('/panel/scenarios');
+        if (simulation) { localStorage.removeItem('Simulation'); }
+    }
+
+
+    public initiateWithPreviousSimulation(): void {
+        const modal = this.modal.open(SimulationsComponent, {size: 'lg', windowClass: 'modal-small'});
+        this.simulationService.list().subscribe(
+            (simulations: any) => {
+                this.simulations = simulations.data;
+                modal.componentInstance.setSimulations(
+                    simulations.data
+                );
+            },
+            (error: any) => {
+                console.log(error);
+            }
+        );
+
+        modal.result.then(
+            (simulation: any) => {
+                if (simulation) {
+                    localStorage.setItem(
+                        'Simulation',
+                        JSON.stringify(simulation)
+                    );
+                    this.router.navigateByUrl('/panel');
+                }
+            },
+            (error: Error) => {
+                console.log(error);
+            }
+        );
+    }
+
+    public initiateWithPreviousScenario(): void {
+        this.router.navigateByUrl('/panel');
+    }
+
 
     public isUserAdmin(): boolean {
         return this.authService.isAdmin();

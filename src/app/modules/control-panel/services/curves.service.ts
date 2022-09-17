@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { RefCurvesResponse } from '@app/shared/models/refCurvesResponse';
 import { StatesI } from '@app/shared/models/stateI';
 import { ApiService } from '@app/shared/services/api.service';
 import { HelperService } from '@app/shared/services/helper.service';
@@ -181,6 +182,25 @@ export class CurvesService {
             }
         );
 
+        return subject.asObservable();
+    }
+
+    public getRefCurves(animalId: number, parameter: string): Observable<RefCurvesResponse[]> {
+        const subject = new Subject<RefCurvesResponse[]>();
+
+        const endpoint = `${environment.api.refCurves}?animalId=${animalId}&parameter=${parameter}`;
+
+        this.api.httpGet(endpoint).subscribe(
+            (refCurves: RefCurvesResponse[]) => {
+                subject.next(refCurves);
+            },
+            (error: Error) => {
+                subject.error(error);
+            },
+            () => {
+                subject.complete();
+            }
+        )
         return subject.asObservable();
     }
 }

@@ -12,14 +12,14 @@
         <nav class="navbar navbar-expand-lg">
             <div class="container-fluid">
                 <div class="row row-navbar">
-                    <div class="col-3">
+                    <div class="col-4">
                         <button (click)="openSidebar(sidebar)" class="navbar__toogle"></button>
                     </div>
-                    <div class="col-5 div-navbar-logo">
+                    <div class="col-4 div-navbar-logo">
                         <h3><a class="navbar-brand" href="#"><img src="../../../../assets/images/simvetLogo.png"
                                     width="90" height="40"></a></h3>
                     </div>
-                    <div class="col-3 offset-md-1 div-profile">
+                    <div class="col-4 div-profile">
                         <div class="dropdown">
                             <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton"
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" (click)="showMenu()">
@@ -39,7 +39,7 @@
         </nav>
         <main role="main">
             <div class="template">
-                <div class="content rounded div-content">
+                <div class="content rounded div-content container">
                     <router-outlet></router-outlet>
                 </div>
             </div>

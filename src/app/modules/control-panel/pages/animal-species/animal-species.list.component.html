@@ -16,18 +16,18 @@
                 <div class="form-row">
                     <div class="form-group col-md-8">
 
-                        <label for="name">Search</label>
                         <div class="input-group">
-                            <input type="text" id="q" class="form-control" formControlName="q">
                             <div class="input-group-text">
-                                <img src="assets/icons/search.png" />
+                                <img src="https://img.icons8.com/ios-filled/20/7950F2/search--v1.png"/>
                             </div>
+                            <input type="text" id="q" class="form-control" formControlName="q" placeholder="Start typing to search animals">
+
                         </div>
                     </div>
-                    <div class="form-group col-md-4 d-flex align-items-end">
+                    <!-- <div class="form-group col-md-4 d-flex align-items-end">
                         <button class="btn btn-link btn-clear" (click)="onClearSearch()"><i class="fa fa-times"
                                 aria-hidden="true"></i></button>
-                    </div>
+                    </div> -->
                 </div>
             </form>
         </div>
@@ -39,7 +39,7 @@
     <div class="row mt-3">
         <div class="col table-bg">
             <table class="table table-animals table-hover">
-                <thead class="thead-dark">
+                <thead class="thead-animals">
                     <tr>
 
                         <th scope="col">
@@ -103,15 +103,15 @@
                         <td scope="row">
                             {{animalSpecie.updated_at | date}}
                         </td>
-                        <td scope="row" class="text-right" *ngIf="isUserAdmin()">
-                            <button class="btn btn-light" (click)="onEdit(i)">
-                                <img src="/assets/icons/pencil.png" />
-                            </button>
-                            <span>
-                                <button class="btn btn-trash btn-light ml-2" (click)="onDelete(i)">
-                                    <img src="/assets/icons/trash.png" />
-                                </button>
-                            </span>
+                        <td scope="row" *ngIf="isUserAdmin()">
+                            <div class="row justify-content-center">
+                                <div class="col-3 edit-img" (click)="onEdit(i)" >
+                                    <img src="/assets/icons/pencil.png" placement="top" ngbTooltip="Edit" />
+                                </div>
+                                <div class="col-3 delete-img" (click)="onDelete(i)" >
+                                    <img src="/assets/icons/trash.png" placement="top" ngbTooltip="Delete"/>
+                                </div>
+                            </div>
                         </td>
 
                     </tr>
