@@ -1,0 +1,126 @@
+.box-curve {
+    border-radius: 5px;
+    height: 100px;
+    padding-top: 30px;
+    background-color: #8e7cc3;
+    margin-right: 25px;
+}
+
+.box-curve-margin {
+    margin-left: 30% !important;
+}
+
+.modal-header,
+.modal-body, .modal-footer {
+    background-color: #b7a9e2;
+}
+
+.modal-header h3 {
+    font-size: 1.5em;
+    color: #212529;
+}
+
+.front>p {
+    font-size: 18px;
+    color: #212529;
+}
+
+.back>p {
+    font-size: 13px;
+    color: #fff;
+    padding: 0;
+}
+/*
+.modal-header, .modal-body, .modal-footer {
+    border: none;
+} */
+
+
+.custom-file-upload {
+    border-radius: 5px;
+    display: inline-block;
+    padding: 6px 12px;
+    margin-left: 15px;
+    cursor: pointer;
+    background-color: transparent;
+}
+
+input[type="file"] {
+    display: none;
+}
+
+.inner {
+    position: relative;
+    cursor: pointer;
+    text-align: center;
+    transition: transform 0.8s;
+    transform-style: preserve-3d;
+}
+
+.box-curve:hover,
+.box-curve:active {
+    background-color: #59478d;
+}
+
+.box-curve:hover .inner {
+    background-color: #59478d;
+    color: #212529;
+    transform: rotateY(180deg);
+}
+
+
+.scale-up-hor-center {
+    -webkit-animation: rotate-center 1.0s ease-in-out both;
+    animation: rotate-center 1.0s ease-in-out both;
+}
+
+@-webkit-keyframes rotate-center {
+    0% {
+        -webkit-transform: rotate(0);
+        transform: rotate(0);
+    }
+
+    100% {
+        -webkit-transform: rotate(360deg);
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes rotate-center {
+    0% {
+        -webkit-transform: rotate(0);
+        transform: rotate(0)
+    }
+
+    100% {
+        -webkit-transform: rotate(360deg);
+        transform: rotate(360deg)
+    }
+}
+
+/* Position the front and back side */
+.front,
+.back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    -webkit-backface-visibility: hidden;
+    /* Safari */
+    backface-visibility: hidden;
+}
+
+
+/* Style the front side (fallback if image is missing) */
+.front {
+    color: #212529;
+    cursor: pointer;
+}
+
+/* Style the back side */
+.back {
+    cursor: pointer;
+    background-color: dodgerblue;
+    color: white;
+    transform: rotateY(180deg);
+    padding: 0;
+}

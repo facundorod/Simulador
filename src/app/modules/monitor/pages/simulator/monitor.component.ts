@@ -59,6 +59,7 @@ export class MonitorComponent
     private breathTimer: number;
     private firstSimulationBreath: boolean;
     private currentIndexHeart = 0;
+    public playRate: number;
     private currentIndexBreath = 0;
     // Current index for SPO2 and IBP curves
     private currentIndexHeart2 = 0;
@@ -117,9 +118,9 @@ export class MonitorComponent
         // Create the conection with the monitor service
         this.monitorService.getInfo().subscribe(
             (simulationState: StatesI) => {
+                this.updateParameterInfo();
                 if (simulationState) {
                     this.lastNIBP = new Date();
-                    this.updateParameterInfo();
                     if ((this.currentIndexHeart == 0 && this.currentIndexHeart2 == 0) || this.currentIndexBreath) {
                         this.changeCurves = true;
                     }
@@ -138,8 +139,16 @@ export class MonitorComponent
         );
     }
 
+    public getPlayRate():  number {
+        if (this.playRate) {
+            return this.playRate;
+        }
+        return null;
+    }
+
     private updateParameterInfo(): void {
         this.parameterInfo = JSON.parse(localStorage.getItem('parameterState'));
+        this.playRate = this.parameterInfo.heartRate / 60;
     }
 
     /**
@@ -695,9 +704,6 @@ export class MonitorComponent
         }
     }
 
-    public calculatePlayRate(): number {
-        return this.parameterInfo.heartRate / 60;
-    }
 
     public showMinAndMax(curve: CurvesI): boolean {
         return (
@@ -794,7 +800,7 @@ export class MonitorComponent
             this.diastolicNIBP = Math.ceil(this.parameterInfo.ibpDiastolic - valueToAdjustDiastolic);
             this.systolicNIBP = Math.ceil(this.parameterInfo.ibpSystolic - valueToAdjustSystolic);
             this.meanNIBP = Math.ceil(this.parameterInfo.ibpMean - valueToAdjustMean);
-        }, 10000);
+        }, 13000);
     }
 
     public trackByFn: TrackByFunction<CurvesI> = (_, curve: CurvesI) =>

@@ -1,9 +1,9 @@
 <div class="row">
     <div class="col text-right">
-        <button class="btn btn-primary save-changes" (click)="onLoadScenarios()" disabled *ngIf="!animal"> Load
+        <button class="btn btn-primary save-changes  load-scenarios" (click)="onLoadScenarios()" disabled *ngIf="!animal"> Load
             Scenarios </button>
 
-        <button class="btn btn-primary save-changes" (click)="onLoadScenarios()" *ngIf="animal"> Load Scenarios
+        <button class="btn btn-primary save-changes load-scenarios" (click)="onLoadScenarios()" *ngIf="animal"> Load Scenarios
         </button>
 
     </div>
@@ -11,7 +11,7 @@
 
 
 <table class="table table-hover table-scenarios">
-    <thead class="thead-dark">
+    <thead class="thead-sc">
         <tr>
             <th scope="col">
 
@@ -44,13 +44,13 @@
         <tr *ngFor="let scenario of scenariosSelected; let i = index">
             <td scope="row" class="td-icons">
                 <ng-template [ngIf]="isActiveScenario(i)">
-                    <button class="btn btn-ligth btn-activate" (click)="onActiveScenario(i)">
-                        <img src="/assets/icons/smallPlay.png" />
+                    <button class="btn btn-ligth btn-activate" (click)="onActiveScenario(i)" >
+                        <img src="/assets/icons/smallPlay.png" placement="top" ngbTooltip="Scenario active"/>
                     </button>
                 </ng-template>
                 <ng-template [ngIf]="!isActiveScenario(i)">
                     <button class="btn btn-link btn-activate" (click)="onActiveScenario(i)">
-                        <img src="/assets/icons/smallPlay2.png" />
+                        <img src="/assets/icons/smallPlay2.png"  placement="top" ngbTooltip="Simulate scenario"/>
                     </button>
 
                 </ng-template>
@@ -88,12 +88,8 @@
                     -
                 </ng-template>
             </td>
-            <td scope="row">
-                <!-- <span> -->
-                <button class="btn btn-trash btn-light" (click)="onDelete(i)">
-                    <img src="/assets/icons/trash.png" />
-                </button>
-                <!-- </span> -->
+            <td scope="row" class="delete-img" (click)="onDelete(i)" >
+                <img src="/assets/icons/trash.png" placement="top" ngbTooltip="Delete"/>
             </td>
 
         </tr>
@@ -105,7 +101,7 @@
     <tbody *ngIf="!scenariosSelected || scenariosSelected.length == 0">
         <tr>
             <td colspan="12">
-                There are not scenarios availables.
+                No scenarios selected.
             </td>
         </tr>
     </tbody>

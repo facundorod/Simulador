@@ -17,17 +17,13 @@
                 <div class="form-row">
                     <div class="form-group col-md-8">
 
-                        <label for="name">Search</label>
                         <div class="input-group">
-                            <input type="text" id="q" class="form-control" formControlName="q">
                             <div class="input-group-text">
-                                <img src="assets/icons/search.png" />
+                                <img src="https://img.icons8.com/ios-filled/20/7950F2/search--v1.png" />
                             </div>
+                            <input type="text" id="q" class="form-control" formControlName="q"
+                                placeholder="Start typing to search clinical scenarios">
                         </div>
-                    </div>
-                    <div class="form-group col-md-4 d-flex align-items-end">
-                        <button class="btn btn-link btn-clear" (click)="clearSearch()"><i class="fa fa-times"
-                                aria-hidden="true"></i></button>
                     </div>
                 </div>
             </form>
@@ -36,11 +32,11 @@
     </div>
 </div>
 
-<div class="container">
+<div class="container mt-3">
     <div class="row">
         <div class="col table-bg">
             <table class="table table-hover table-scenarios">
-                <thead class="thead-dark">
+                <thead class="thead-sc">
                     <tr>
 
                         <th scope="col">
@@ -95,22 +91,19 @@
                                 {{scenario.medications | arrayJson: 'medications' }}
                             </ng-template>
                         </td>
-                        <td scope="row" class="text-right" *ngIf="isUserAdmin()">
-                            <button class="btn btn-light" (click)="onEdit(scenario.id_scenario)">
-                                <img src="/assets/icons/pencil.png" />
-                            </button>
-                            <span>
-                                <button class="btn btn-trash btn-light ml-2"
-                                    (click)="onDelete(scenario.id_scenario, i)">
-                                    <img src="/assets/icons/smallTrash.png" />
-                                </button>
-                            </span>
-                            <span>
-                                <button class="btn btn-trash btn-light ml-2" (click)="onClone(i)">
-                                    <img src="/assets/icons/copy.png" />
-                                </button>
-                            </span>
 
+                        <td scope="row" *ngIf="isUserAdmin()">
+                            <div class="row justify-content-center">
+                                <div class="col-3 edit-img" (click)="onEdit(i)" >
+                                    <img src="/assets/icons/pencil.png" placement="top" ngbTooltip="Edit"/>
+                                </div>
+                                <div class="col-3 delete-img" (click)="onDelete(scenario.id_scenario, i)">
+                                    <img src="/assets/icons/trash.png"  placement="top" ngbTooltip="Delete"/>
+                                </div>
+                                <div class="col-3 delete-img clone-img" (click)="onClone(i)" >
+                                    <img src="/assets/icons/copy.png" placement="top" ngbTooltip="Clone"/>
+                                </div>
+                            </div>
                         </td>
 
                     </tr>

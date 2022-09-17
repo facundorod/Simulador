@@ -7,15 +7,19 @@
 .row-2 {
     margin-top: 2%;
 }
-.table-med tr,
-.table-path tr,
-.table-arr tr {
-    border: 2px solid #272626;
+
+.table-hover tbody tr:hover {
+    background-color: #8e7cc3;
+    color: #fff;
 }
 
-.table-scenarios,
-.table-scenarios tr {
-    border: 2px solid #272626;
+.thead-sc {
+    background-color: #49377e;
+    color: #fff;
+}
+
+.delete-img {
+    cursor: pointer;
 }
 .btn-activate {
     padding: 0;
@@ -36,6 +40,10 @@
     color: #59478d;
     border-color: #fff;
     background-color: #fff;
+}
+
+.load-scenarios {
+    padding: 15px;
 }
 .td-icons {
     min-width: 95px;

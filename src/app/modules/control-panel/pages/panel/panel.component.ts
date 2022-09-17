@@ -21,6 +21,8 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { NibpComponent } from '../../modals/nibp/nibp.component';
 import { AuthService } from '@app/services/auth.service';
 import { ScenariosComponent } from '../scenarios/scenarios.component';
+import { RefCurvesResponse } from '@app/shared/models/refCurvesResponse';
+import { RefCurvesComponent } from '../../modals/ref-curves/ref-curves.component';
 
 @Component({
     selector: 'app-panel',
@@ -33,7 +35,7 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
     @ViewChild('scenarios') scenarios: ScenariosComponent;
     public scenariosSimulation: ScenarioParamsI[] = [];
     public animalSpecies: AnimalSpeciesI[] = []; // Animal Species to populate the dropdown
-    public animalSpecie: any = {}; // Animal Specie from simulation
+    public animalSpecie: AnimalSpeciesI; // Animal Specie from simulation
     public simulation: any = {}; // Simulation from localStorage
     public indexSimulationActive = 0; // Index for scenario simulation Active
     public currentState: StatesI; // Curves for scenario and animalSpecie selected
@@ -58,6 +60,14 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
     public amplitudeValues: number[] = [1, 1, 1, 1];
     private timeNIBP = 5;
     private startNIBP = false;
+    public refCurvesCapno: RefCurvesResponse[] = [];
+    public refCurvesPlet: RefCurvesResponse[] = [];
+    public refCurvesIBP: RefCurvesResponse[] = [];
+    public refCurvesECG: RefCurvesResponse[] = [];
+    public isLoadingECG: boolean = true;
+    public isLoadingCapno: boolean = true;
+    public isLoadingPlet: boolean = true;
+    public isLoadingIbp: boolean = true;
 
     constructor(
         private animalSpecieService: AnimalSpeciesService,
@@ -86,7 +96,6 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
     ngOnDestroy(): void {
         this.localStorageService.removeValue('simulationState');
         this.localStorageService.removeValue('Simulation');
-
     }
 
     /**
@@ -97,6 +106,7 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
 
         this.animalSpecieService.list().subscribe(
             (animalSpecies: any) => {
+                this.setLoading(false);
                 this.animalSpecies = animalSpecies.data;
             },
             (error: Error) => {
@@ -104,18 +114,7 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
             }
         );
 
-        // Create new simulation
-        if (!this.simulation) {
-            this.animalSpecieService.list().subscribe(
-                (animalSpecies) => {
-                    this.setLoading(false);
-                    this.animalSpecies = animalSpecies.data;
-                },
-                (error: any) => {
-                    console.log(error);
-                }
-            );
-        } else {
+       if (this.simulation) {
             if (this.simulation.scenarios) {
                 this.scenariosSimulation = this.simulation.scenarios;
                 // If the simulation has scenarios, the first will be the active for simulation
@@ -125,76 +124,6 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
             if (this.simulation.animalSpecie) {
                 this.animalSpecie = this.simulation.animalSpecie;
             }
-        }
-    }
-
-    public onFileChange(event: any, index: number): void {
-        if (event.target.files && event.target.files.length) {
-            const [file] = event.target.files;
-            const reader = new FileReader();
-            reader.readAsText(file);
-            reader.onload = () => {
-                const csvData = reader.result;
-                const csvRecordsArray = (csvData as string).split(/\r\n|\n/);
-                const records: CurveValues[] = this.getCurvesFromCSV(csvRecordsArray);
-                const auxRecords: [number, number][] = records.map((value: CurveValues) => {
-                    return [value.t, value.value];
-                });
-                this.curvesService.normalizeCurve(auxRecords).subscribe((value) => {
-                    if (value) {
-                        this.currentState.curves[index].curveValues = value;
-                        this.originalCurves[index].curveValues = value;
-                        this.originalState.curves[index].curveValues = value;
-                        const curve = this.originalCurves[index];
-                        if (curve.curveConfiguration.label === 'IBP') {
-                            this.systolicIbp = Math.round(this.getMaxYValue(value).value);
-                            this.diastolicIbp = Math.round(value[0][1]);
-                            this.meanIBP = this.curvesHelper.getMeanValue(this.diastolicIbp, this.systolicIbp);
-                            this.fromGroupParameters.patchValue({ ibpSystolic: this.systolicIbp, ibpDiastolic: this.diastolicIbp });
-                        }
-                        if (curve.curveConfiguration.label === 'CO2') {
-                            this.endTidalCO2 = Math.round(this.getMaxYValue(value).value);
-                            this.inspirationCO2 = Math.round(value[0][1]);
-                            this.fromGroupParameters.patchValue({ inspirationCO2: this.inspirationCO2, endTidalCO2: this.endTidalCO2 });
-                        }
-                        const miniMonitor: MiniMonitorComponent = this.miniMonitors.toArray()[index];
-                        miniMonitor.changeMaxAndMin(this.currentState.curves[index].curveValues);
-                    }
-
-                });
-            };
-            reader.onerror = function () {
-                console.log('error is occured while reading file!');
-            };
-        }
-    }
-
-    public getCurvesFromCSV(csvRecordsArray: any) {
-        const csvArr = [];
-        try {
-            for (let i = 1; i < csvRecordsArray.length; i++) {
-                const currentRecord = (csvRecordsArray[i] as string).split(';');
-                if (currentRecord[0] && currentRecord[1]) {
-                    currentRecord[0] = currentRecord[0].replace(',', '.');
-                    currentRecord[1] = currentRecord[1].replace(',', '.');
-                    const csvRecord: CurveValues = new CurveValues();
-                    csvRecord.t = Number(currentRecord[0]);
-                    csvRecord.value = Number(currentRecord[1]);
-                    if (
-                        !csvArr.some((value: CurveValues) => {
-                            return value.t === csvRecord.t;
-                        }) &&
-                        (csvRecord.t != null || csvRecord.value != null)
-                    ) {
-                        csvArr.push(csvRecord);
-                    }
-                }
-            }
-
-            return csvArr;
-        } catch (error) {
-            console.error(error);
-            throw error;
         }
     }
 
@@ -320,8 +249,9 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
         this.formGroup.get('animalSpecie').valueChanges.subscribe((val) => {
             this.scenarios.setAnimal(val);
             this.updateState();
-            if (val && this.animalSpecie && val.id_as !== this.animalSpecie.id_as) {
+            if (val && val.id_as !== this.animalSpecie?.id_as) {
                 this.scenarios.clearScenarios();
+                this.animalSpecie = val;
                 this.activeScenario = null;
             }
             this.onLoadCurves(val);
@@ -541,8 +471,9 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
                             this.onLoadParameters();
                             this.setLoading(false);
                             this.scenarios.setAnimal(as);
+                            this.loadRefCurves();
+                            this.applyChanges();
 
-                            // this.applyChanges();
                         } else {
                             this.currentState = null;
                             this.setLoading(false);
@@ -571,6 +502,106 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
         );
         this.saveParameterInfo();
         this.updateState();
+    }
+
+    public onLoadRefCurves(parameter: string): void {
+        const refModalCurves = this.modal.open(RefCurvesComponent, { size: 'lg', windowClass: 'modal-small' });
+        let curves = [];
+        let index = 0;
+        switch (parameter) {
+            case 'ECG':
+                curves = this.refCurvesECG;
+                break;
+            case 'SPO2':
+                curves = this.refCurvesPlet;
+                index = 3;
+                break;
+            case 'CO2':
+                curves = this.refCurvesCapno;
+                index = 1;
+                break;
+            case 'IBP':
+                curves = this.refCurvesIBP;
+                index = 2;
+                break;
+            default:
+                break;
+        }
+        refModalCurves.componentInstance.setRefCurves(curves);
+
+        refModalCurves.result.then((refCurve: [number, number][]) => {
+            if (refCurve && refCurve.length) {
+                this.curvesService.normalizeCurve(refCurve).subscribe((curve: [number, number][]) => {
+                    this.currentState.curves[index].curveValues = curve;
+
+                        this.curvesService.updateHeartRate(this.currentState, this.heartRate).subscribe((newState: StatesI) => {
+                            this.currentState.curves[index].curveValues = newState.curves[index].curveValues;
+                            this.originalCurves[index].curveValues = newState.curves[index].curveValues;
+                            this.originalState.curves[index].curveValues = newState.curves[index].curveValues;
+                            if (index == 2) {
+                                this.systolicIbp = Math.round(this.getMaxYValue(curve).value);
+                                this.diastolicIbp = Math.round(curve[0][1]);
+                                this.fromGroupParameters.patchValue({ ibpSystolic: this.systolicIbp, ibpDiastolic: this.diastolicIbp });
+                            }
+                            const miniMonitor: MiniMonitorComponent = this.miniMonitors.toArray()[index];
+                            miniMonitor.changeMaxAndMin(newState.curves[index].curveValues);
+                        })
+                })
+            }
+
+        })
+            .catch((error: Error) => {
+                console.error(error);
+            });
+    }
+
+    public showParam(curve: CurvesI): boolean {
+        switch (curve.curveConfiguration.label) {
+            case "ECG":
+                return !this.isLoadingECG;
+            case "CO2":
+                return !this.isLoadingCapno;
+            case "SPO2":
+                return !this.isLoadingPlet;
+            case "IBP":
+                return !this.isLoadingECG;
+            default:
+                break;
+        }
+    }
+
+    private loadRefCurves(): void {
+        const animalId: number | undefined = this.animalSpecie?.id_as;
+        if (animalId) {
+            this.curvesService.getRefCurves(animalId, 'ECG').subscribe((value: RefCurvesResponse[]) => {
+                if (value) {
+                    this.refCurvesECG = value;
+                }
+                this.isLoadingECG = false;
+            });
+
+            this.curvesService.getRefCurves(animalId, 'CO2').subscribe((value: RefCurvesResponse[]) => {
+                if (value) {
+                    this.refCurvesCapno = value;
+                }
+                this.isLoadingCapno = false;
+            })
+
+            this.curvesService.getRefCurves(animalId, 'SPO2').subscribe((value: RefCurvesResponse[]) => {
+                if (value) {
+                    this.refCurvesPlet = value;
+                }
+                this.isLoadingPlet = false;
+            })
+
+            this.curvesService.getRefCurves(animalId, 'IBP').subscribe((value: RefCurvesResponse[]) => {
+                if (value) {
+                    this.refCurvesIBP = value;
+                }
+                this.isLoadingIbp = false;
+            })
+        }
+
     }
 
     /**
@@ -819,18 +850,6 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
         return this.currentState?.curves?.length > 0;
     }
 
-
-
-
-
-    private getIndexMean(curves: [number, number][], index: number): { index: number, value: number } {
-        while (index <= curves.length && curves[index][1] < this.meanIBP) { index++; }
-        return { index, value: curves[index][1] };
-    }
-
-
-
-
     private getMaxYValue(curves: [number, number][]): { index: number, value: number } {
         let max: number = curves[0][1];
         let index = 0;
@@ -857,7 +876,7 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
     }
 
     public configureNIBP(): void {
-        const modal = this.modal.open(NibpComponent, {size: 'lg', windowClass: 'modal-small'});
+        const modal = this.modal.open(NibpComponent, { size: 'lg', windowClass: 'modal-small' });
         modal.componentInstance.setInitialValue(this.timeNIBP);
         modal.result.then((nibpSettings: { timeNibp: number, startNow: boolean }) => {
             this.timeNIBP = nibpSettings.timeNibp;

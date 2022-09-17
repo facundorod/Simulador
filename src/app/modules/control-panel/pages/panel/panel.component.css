@@ -40,6 +40,7 @@
     margin-top: 20%;
     position: sticky;
 }
+
 .footerBtn {
     text-align: center;
 }
@@ -51,12 +52,32 @@
 .param-configuration,
 .curves-configuration {
     border-radius: 10px;
-    border: 2px solid #000;
+    background-color: #BAAFE4;
+    border: 2px solid #59478d;
     margin-top: 20px;
 }
+
 .param-configuration {
     margin-left: 2%;
 }
+
+.custom-range {
+    width: 40%;
+}
+
+
+/* .custom-range::-webkit-slider-thumb {
+    background: #59478d;
+}
+
+.custom-range::-moz-range-thumb {
+    background: #59478d;
+} */
+
+/* .custom-range::-ms-thumb {
+    background: #59478d;
+} */
+
 
 .curves-configuration {
     margin-left: 4%;
@@ -104,7 +125,7 @@ a {
     margin-top: 2%;
     border-radius: 5px;
     display: inline-block;
-    padding: 6px 12px;
+    padding: 20px 12px;
     margin-left: 50%;
     cursor: pointer;
     background-color: #59478d;
@@ -118,6 +139,10 @@ a {
     background-color: #fff;
 }
 
+.btn-spinner {
+    background-color: #59478d;
+}
+
 input[type="file"] {
     display: none;
 }
@@ -126,13 +151,32 @@ input[type="file"] {
     margin-left: 5%;
 }
 
+.save-changes {
+    margin-left: 2%;
+    margin-top: 5px;
+    background-color: #59478d;
+    border-color: #59478d;
+    color: #fff;
+}
+
+.save-changes:hover {
+    color: #59478d;
+    margin-top: 5px;
+    border-color: #fff;
+    background-color: #fff;
+}
+
 .saveChanges-top {
     display: block;
     background-color: #59478d;
     border-color: #59478d;
     color: #fff;
     height: 40px;
-    margin-left:5%;
+    margin-left: 5%;
+}
+
+.parameters-form {
+    margin-top: 5%;
 }
 
 .scenario-configuration {
@@ -159,7 +203,7 @@ input[type="file"] {
         border-color: #59478d;
         color: #fff;
         height: 60px;
-        margin-left:0%;
+        margin-left: 0%;
     }
 
     .saveChanges-top:hover {
@@ -171,7 +215,7 @@ input[type="file"] {
     .scenario-configuration,
     .curves-configuration-text {
         width: 100%;
-        margin-left:0%;
+        margin-left: 0%;
         margin-top: 2%;
     }
 

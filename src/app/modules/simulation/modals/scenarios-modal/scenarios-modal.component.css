@@ -10,6 +10,11 @@
     background-color: #b7a9e2;
 }
 
+.table-hover tbody tr:hover {
+    background-color: #8e7cc3;
+    color: #fff;
+}
+
 .modal-header {
     font-size: 1.1em;
     font-weight: bold;
@@ -25,9 +30,12 @@
     max-width: 200px;
     overflow: auto;
 }
-.table-hover tbody tr:hover {
-    background-color: #616161 !important;
+
+.thead-sc {
+    background-color: #49377e;
+    color: #fff;
 }
+
 
 .modal-title {
     text-align: left;

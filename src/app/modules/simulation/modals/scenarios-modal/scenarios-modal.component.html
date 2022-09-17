@@ -12,10 +12,8 @@
             Loading...
         </button>
         <form [formGroup]="formGroup" (ngSubmit)="onSelect()" *ngIf="!isLoading()">
-
-
             <table class="table table-striped table-hover">
-                <thead class="thead-dark">
+                <thead class="thead-sc">
                     <tr>
 
                         <th scope="col">
@@ -64,7 +62,7 @@
                 <tbody *ngIf="(!scenarios || scenarios.length === 0)">
                     <tr>
                         <td colspan="7">
-                            There are not scenarios availables.
+                            There are not scenarios availables for the animal selected.
                         </td>
                     </tr>
                 </tbody>
