@@ -96,7 +96,6 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
     ngOnDestroy(): void {
         this.localStorageService.removeValue('simulationState');
         this.localStorageService.removeValue('Simulation');
-
     }
 
     /**
@@ -125,76 +124,6 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
             if (this.simulation.animalSpecie) {
                 this.animalSpecie = this.simulation.animalSpecie;
             }
-        }
-    }
-
-    public onFileChange(event: any, index: number): void {
-        if (event.target.files && event.target.files.length) {
-            const [file] = event.target.files;
-            const reader = new FileReader();
-            reader.readAsText(file);
-            reader.onload = () => {
-                const csvData = reader.result;
-                const csvRecordsArray = (csvData as string).split(/\r\n|\n/);
-                const records: CurveValues[] = this.getCurvesFromCSV(csvRecordsArray);
-                const auxRecords: [number, number][] = records.map((value: CurveValues) => {
-                    return [value.t, value.value];
-                });
-                this.curvesService.normalizeCurve(auxRecords).subscribe((value) => {
-                    if (value) {
-                        this.currentState.curves[index].curveValues = value;
-                        this.originalCurves[index].curveValues = value;
-                        this.originalState.curves[index].curveValues = value;
-                        const curve = this.originalCurves[index];
-                        if (curve.curveConfiguration.label === 'IBP') {
-                            this.systolicIbp = Math.round(this.getMaxYValue(value).value);
-                            this.diastolicIbp = Math.round(value[0][1]);
-                            this.meanIBP = this.curvesHelper.getMeanValue(this.diastolicIbp, this.systolicIbp);
-                            this.fromGroupParameters.patchValue({ ibpSystolic: this.systolicIbp, ibpDiastolic: this.diastolicIbp });
-                        }
-                        if (curve.curveConfiguration.label === 'CO2') {
-                            this.endTidalCO2 = Math.round(this.getMaxYValue(value).value);
-                            this.inspirationCO2 = Math.round(value[0][1]);
-                            this.fromGroupParameters.patchValue({ inspirationCO2: this.inspirationCO2, endTidalCO2: this.endTidalCO2 });
-                        }
-                        const miniMonitor: MiniMonitorComponent = this.miniMonitors.toArray()[index];
-                        miniMonitor.changeMaxAndMin(this.currentState.curves[index].curveValues);
-                    }
-
-                });
-            };
-            reader.onerror = function () {
-                console.log('error is occured while reading file!');
-            };
-        }
-    }
-
-    public getCurvesFromCSV(csvRecordsArray: any) {
-        const csvArr = [];
-        try {
-            for (let i = 1; i < csvRecordsArray.length; i++) {
-                const currentRecord = (csvRecordsArray[i] as string).split(';');
-                if (currentRecord[0] && currentRecord[1]) {
-                    currentRecord[0] = currentRecord[0].replace(',', '.');
-                    currentRecord[1] = currentRecord[1].replace(',', '.');
-                    const csvRecord: CurveValues = new CurveValues();
-                    csvRecord.t = Number(currentRecord[0]);
-                    csvRecord.value = Number(currentRecord[1]);
-                    if (
-                        !csvArr.some((value: CurveValues) => {
-                            return value.t === csvRecord.t;
-                        }) &&
-                        (csvRecord.t != null || csvRecord.value != null)
-                    ) {
-                        csvArr.push(csvRecord);
-                    }
-                }
-            }
-
-            return csvArr;
-        } catch (error) {
-            console.error(error);
-            throw error;
         }
     }
 
@@ -604,21 +533,19 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
             if (refCurve && refCurve.length) {
                 this.curvesService.normalizeCurve(refCurve).subscribe((curve: [number, number][]) => {
                     this.currentState.curves[index].curveValues = curve;
-                    this.originalCurves[index].curveValues = curve;
-                    this.originalState.curves[index].curveValues = curve;
-                    const curveRef = this.originalCurves[index];
-                    if (curveRef.curveConfiguration.label === 'IBP') {
-                        this.systolicIbp = Math.round(this.getMaxYValue(curve).value);
-                        this.diastolicIbp = Math.round(curve[0][1]);
-                        this.fromGroupParameters.patchValue({ ibpSystolic: this.systolicIbp, ibpDiastolic: this.diastolicIbp });
-                    }
-                    if (curveRef.curveConfiguration.label === 'CO2') {
-                        this.endTidalCO2 = Math.round(this.getMaxYValue(curve).value);
-                        this.inspirationCO2 = Math.round(curve[0][1]);
-                        this.fromGroupParameters.patchValue({ inspirationCO2: this.inspirationCO2, endTidalCO2: this.endTidalCO2 });
-                    }
-                    const miniMonitor: MiniMonitorComponent = this.miniMonitors.toArray()[index];
-                    miniMonitor.changeMaxAndMin(this.currentState.curves[index].curveValues);
+
+                        this.curvesService.updateHeartRate(this.currentState, this.heartRate).subscribe((newState: StatesI) => {
+                            this.currentState.curves[index].curveValues = newState.curves[index].curveValues;
+                            this.originalCurves[index].curveValues = newState.curves[index].curveValues;
+                            this.originalState.curves[index].curveValues = newState.curves[index].curveValues;
+                            if (index == 2) {
+                                this.systolicIbp = Math.round(this.getMaxYValue(curve).value);
+                                this.diastolicIbp = Math.round(curve[0][1]);
+                                this.fromGroupParameters.patchValue({ ibpSystolic: this.systolicIbp, ibpDiastolic: this.diastolicIbp });
+                            }
+                            const miniMonitor: MiniMonitorComponent = this.miniMonitors.toArray()[index];
+                            miniMonitor.changeMaxAndMin(newState.curves[index].curveValues);
+                        })
                 })
             }
 

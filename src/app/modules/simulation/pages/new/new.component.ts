@@ -24,6 +24,8 @@ export class NewComponent implements OnInit {
     ) { }
 
     ngOnInit(): void {
+        const simulation = localStorage.getItem('Simulation');
+        if (simulation) { localStorage.removeItem('Simulation'); }
     }
 
 

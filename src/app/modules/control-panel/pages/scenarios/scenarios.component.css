@@ -41,6 +41,10 @@
     border-color: #fff;
     background-color: #fff;
 }
+
+.load-scenarios {
+    padding: 15px;
+}
 .td-icons {
     min-width: 95px;
     max-width: 95px;
