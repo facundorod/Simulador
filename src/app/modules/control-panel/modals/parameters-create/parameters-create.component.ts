@@ -350,7 +350,7 @@ export class ParametersCreateComponent implements OnInit {
                 const maxY: number =
                     this.curvesHelper.getMaxY(curveValues) == 0 ? 1
                         : this.curvesHelper.getMaxY(curveValues);
-                const minY = 0;
+                const minY: number = this.curvesHelper.getMinY(curveValues);
                 const chart: ChartConfigurer = new ChartConfigurer({
                     colorLine: this.parameter?.animalParameters?.physiologicalParameter?.colorLine,
                     height: 100,

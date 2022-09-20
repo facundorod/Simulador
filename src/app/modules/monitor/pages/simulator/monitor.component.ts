@@ -230,10 +230,7 @@ export class MonitorComponent
             const maxY: number =
                 this.curvesHelper.getMaxY(curve.curveValues) == 0 ? 1
                     : this.curvesHelper.getMaxY(curve.curveValues);
-            currentChart.yaxis.max = curve.curveConfiguration.label.toUpperCase() == 'CO2' ||
-                curve.curveConfiguration.label.toUpperCase() == 'ETCO2'
-                ? maxY * 2
-                : maxY;
+            currentChart.yaxis.max = maxY;
 
             this.charts.toArray()[index] = currentChart;
         }
@@ -248,7 +245,7 @@ export class MonitorComponent
             const maxY: number =
                 this.curvesHelper.getMaxY(curve.curveValues) == 0 ? 1
                     : this.curvesHelper.getMaxY(curve.curveValues);
-            const minY = 0;
+            const minY = this.curvesHelper.getMinY(curve.curveValues);
             const chart: ChartConfigurer = new ChartConfigurer({
                 colorLine: curve.curveConfiguration.colorLine,
                 height: 133,
@@ -256,11 +253,7 @@ export class MonitorComponent
                 maxX: this.monitorConfiguration.getMonitorConfiguration()
                     .maxSamples,
                 minY,
-                maxY:
-                    curve.curveConfiguration.label.toUpperCase() == 'CO2' ||
-                        curve.curveConfiguration.label.toUpperCase() == 'ETCO2'
-                        ? maxY * 2
-                        : maxY,
+                maxY: maxY,
                 toolbar: false,
             });
             let type: ChartType = null;

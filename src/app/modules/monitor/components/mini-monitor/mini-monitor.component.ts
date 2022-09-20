@@ -59,9 +59,7 @@ export class MiniMonitorComponent implements OnInit, OnDestroy {
             this.action == 'pause',
             this.chart.xaxis.max,
             this.chart.xaxis.min,
-            (this.curves.curveConfiguration.label.toUpperCase() == 'CO2')
-                ? maxY * 2
-                : maxY,
+            maxY,
             minY,
             this.action !== 'stop' &&
                 this.curves.curveConfiguration.label.toUpperCase() == 'CO2'
@@ -83,7 +81,7 @@ export class MiniMonitorComponent implements OnInit, OnDestroy {
             const maxY: number =
                 this.curvesHelper.getMaxY(this.curves.curveValues) == 0 ? 1
                     : this.curvesHelper.getMaxY(this.curves.curveValues);
-            const minY = 0;
+            const minY = this.curvesHelper.getMinY(this.curves.curveValues);
             const chart: ChartConfigurer = new ChartConfigurer({
                 colorLine: this.curves.curveConfiguration.colorLine,
                 height: 100,

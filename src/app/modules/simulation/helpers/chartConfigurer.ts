@@ -143,9 +143,6 @@ export class ChartConfigurer {
             },
             chart: {
                 id: 'curves',
-                animations: {
-                    enabled: false
-                },
                 redrawOnParentResize: true,
                 redrawOnWindowResize: true,
                 height: this.chartOptions.height,
@@ -168,7 +165,7 @@ export class ChartConfigurer {
                 },
                 show: false,
                 max: this.chartOptions.maxY,
-                min: 0,
+                min: this.chartOptions.minY > 0 ? 0 : this.chartOptions.minY
             },
             dataLabels: {
                 enabled: false,
