@@ -153,6 +153,7 @@ export class ScenarioParamsComponent implements OnInit {
                             'toast-bottom-full-width';
                         this.toast.success('Scenario deleted successfully');
                         this.loading = true;
+                        this.queryOptions.page = 1;
                         this.loadData();
                     },
                     (error: Error) => {
