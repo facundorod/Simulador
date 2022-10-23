@@ -391,7 +391,7 @@ export class ParametersCreateComponent implements OnInit {
         const maxY: number =
             this.curvesHelper.getMaxY(curves) == 0 ? 1
                 : this.curvesHelper.getMaxY(curves);
-        const minY = 0;
+        const minY = this.curvesHelper.getMinY(curves);
         const options: Partial<ChartOptions> = commonOptions(
             false,
             1,

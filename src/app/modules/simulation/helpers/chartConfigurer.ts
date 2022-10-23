@@ -11,7 +11,6 @@ import {
     ApexTooltip,
     ApexXAxis,
     ApexYAxis,
-    ChartComponent,
     ChartType,
 } from 'ng-apexcharts';
 
@@ -87,7 +86,7 @@ export function commonOptions(
             },
             show: false,
             max: maxY,
-            min: minY < 0 ? minY : 0
+            min: -3
         },
         dataLabels: {
             enabled: false,
@@ -165,7 +164,8 @@ export class ChartConfigurer {
                 },
                 show: false,
                 max: this.chartOptions.maxY,
-                min: this.chartOptions.minY < 0 ? this.chartOptions.minY : 0
+                min: -2
+                // min: this.chartOptions.minY < 0 ? this.chartOptions.minY : 0
             },
             dataLabels: {
                 enabled: false,

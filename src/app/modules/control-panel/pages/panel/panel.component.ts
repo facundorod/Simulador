@@ -266,7 +266,7 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
             .valueChanges.pipe(distinctUntilChanged()).subscribe((val) => {
                 this.heartRate = val;
                 if (this.currentState?.curves?.length > 0) {
-                    this.curvesService.updateHeartRate(this.currentState, val).subscribe((value: StatesI) => {
+                    this.curvesService.updateHeartRate(this.originalState, val).subscribe((value: StatesI) => {
                         this.currentState.curves[0] = value.curves[0];
                         this.currentState.curves[2] = value.curves[2];
                         this.currentState.curves[3] = value.curves[3];
@@ -289,9 +289,9 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
             .valueChanges.pipe(distinctUntilChanged()).subscribe((val) => {
                 this.breathRate = val;
                 if (this.currentState?.curves?.length > 0) {
-                    this.curvesService.updateRespirationRate(this.currentState, val).subscribe((value: StatesI) => {
+                    this.curvesService.updateRespirationRate(this.originalState, val).subscribe((value: StatesI) => {
                         this.currentState.curves[1] = value.curves[1];
-                        const miniMonitors: MiniMonitorComponent = this.miniMonitors.toArray()[1];
+                        // const miniMonitors: MiniMonitorComponent = this.miniMonitors.toArray()[1];
                         // miniMonitors.changeMaxAndMin(this.currentState.curves[1].curveValues);
                         this.updatedState = true;
 
@@ -545,14 +545,11 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
                         this.capnoCurrentCurve = refCurve.name;
                         this.endTidalCO2 = Math.round(this.getMaxYValue(curve).value);
                         this.inspirationCO2 = Math.round(curve[0][1]);
-                        console.log(this.breathRate);
                         this.curvesService.updateRespirationRate(auxCurrentState, this.breathRate).subscribe((newState: StatesI) => {
-                            // debugger;
-
                             this.currentState.curves[1].curveValues = newState.curves[1].curveValues;
                             this.originalCurves[1].curveValues = newState.curves[1].curveValues;
+                            this.originalState.curves[index].curveValues = newState.curves[1].curveValues;
                             this.updatedState = true;
-
                         })
                     } else {
                         this.curvesService.updateHeartRate(auxCurrentState, this.heartRate).subscribe((newState: StatesI) => {
@@ -586,11 +583,6 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
             .catch((error: any) => {
                 console.error("Error", error);
             });
-    }
-
-
-    private calculateCurrentCurve(index: number) {
-
     }
 
     public showParam(curve: CurvesI): boolean {
