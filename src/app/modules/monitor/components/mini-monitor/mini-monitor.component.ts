@@ -51,8 +51,8 @@ export class MiniMonitorComponent implements OnInit, OnDestroy {
         this.curves.curveValues = curves;
         clearInterval(this.simulationTimer);
         this.currentIndex = 0;
-        const maxY: number = this.curvesHelper.getMaxY(this.curves.curveValues);
-        const minY = this.curvesHelper.getMinY(this.curves.curveValues);
+        const maxY: number = this.curves.curveConfiguration.maxY;
+        const minY = this.curves.curveConfiguration.minY;
         const options: Partial<ChartOptions> = commonOptions(
             this.action == 'pause',
             this.chart.xaxis.max,
@@ -72,8 +72,8 @@ export class MiniMonitorComponent implements OnInit, OnDestroy {
 
         if (this.curves.curveValues.length > 0) {
             this.maxSize = this.curves.curveValues.length;
-            const maxY: number = this.curvesHelper.getMaxY(this.curves.curveValues);
-            const minY = this.curvesHelper.getMinY(this.curves.curveValues);
+            const maxY: number = this.curves.curveConfiguration.maxY;
+            const minY = this.curves.curveConfiguration.minY;
             const chart: ChartConfigurer = new ChartConfigurer({
                 colorLine: this.curves.curveConfiguration.colorLine,
                 height: 150,

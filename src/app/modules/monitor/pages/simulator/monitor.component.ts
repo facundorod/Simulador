@@ -213,7 +213,7 @@ export class MonitorComponent
                 this.enableAlerts.includes(true) &&
                 ((!this.currentState.muteAlarms && this.currentState.action !== 'stop')
                     || (!this.newCurrentState && this.newCurrentState.muteAlarms && this.newCurrentState?.action !== 'stop'));
-            this.updateMaxAndMin(index);
+            // this.updateMaxAndMin(index);
 
         });
     }
@@ -227,9 +227,7 @@ export class MonitorComponent
         if (!this.isBreathCurve(index) && this.isECGCurve(index) && curve.curveValues.length > 0) { this.maxSizeHeart2 = curve.curveValues.length; }
 
         if (currentChart) {
-            const maxY: number =
-                this.curvesHelper.getMaxY(curve.curveValues) == 0 ? 1
-                    : this.curvesHelper.getMaxY(curve.curveValues);
+            const maxY: number = curve.curveConfiguration.maxY;
             currentChart.yaxis.max = maxY;
 
             this.charts.toArray()[index] = currentChart;
@@ -242,13 +240,11 @@ export class MonitorComponent
      */
     private createDynamicChart(curve: CurvesI): void {
         if (curve.curveValues.length > 0) {
-            const maxY: number =
-                this.curvesHelper.getMaxY(curve.curveValues) == 0 ? 1
-                    : this.curvesHelper.getMaxY(curve.curveValues);
+            const maxY: number = curve.curveConfiguration.maxY;
             const minY = this.curvesHelper.getMinY(curve.curveValues);
             const chart: ChartConfigurer = new ChartConfigurer({
                 colorLine: curve.curveConfiguration.colorLine,
-                height: 133,
+                height: 130,
                 minX: 0,
                 maxX: this.monitorConfiguration.getMonitorConfiguration()
                     .maxSamples,
@@ -258,8 +254,7 @@ export class MonitorComponent
             });
             let type: ChartType = null;
             if (
-                (curve.curveConfiguration.label.toUpperCase() == 'ETCO2' ||
-                    curve.curveConfiguration.label.toUpperCase() == 'CO2') &&
+                (curve.curveConfiguration.label.toUpperCase() == 'CO2') &&
                 this.currentState.action !== 'stop'
             ) {
                 type = 'area';

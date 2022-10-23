@@ -66,7 +66,7 @@
             <h3 class="text-scenario text-center">Scenario Configuration</h3>
         </div>
         <div class="col-md-12">
-            <app-scenarios [scenariosSelected]="scenariosSimulation" (posScenarios)="getPosScenarios($event)"
+            <app-scenarios [scenariosSelected]="scenariosSimulation" [animal]="animalSpecie" (posScenarios)="getPosScenarios($event)"
                 (returnScenarios)="getScenarios($event)" #scenarios>
             </app-scenarios>
 
@@ -151,7 +151,7 @@
             <ng-template [ngIf]="curve.curveValues.length > 0">
                 <div class="col-md-6 param-configuration">
                     <div class="row justify-content-between">
-                        <div class="col-6">
+                        <div class="col-4">
                             <p class="text-curve-label" *ngIf="curve?.curveConfiguration.label !== 'SPO2'"> {{
                                 curve?.curveConfiguration.label }}</p>
                             <p class="text-curve-label" *ngIf="curve?.curveConfiguration.label === 'SPO2'">
@@ -169,8 +169,17 @@
                         <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
                         Loading...
                     </button>
-                    <div class="row" *ngIf="curve?.curveConfiguration.label == 'IBP' && showParam(curve)">
 
+
+                    <div class="row" *ngIf="curve?.curveConfiguration.label == 'IBP' && showParam(curve)">
+                        <div class="justify-content-center" *ngIf="ibpCurrentCurve">
+                            <p class="text-center playing-curve-text"> <span>
+                                <img src="/assets/icons/info.png" alt="Info icon">
+                            </span> Playing {{ibpCurrentCurve}} </p>
+                        </div>
+                    </div>
+
+                    <div class="row" *ngIf="curve?.curveConfiguration.label == 'IBP' && showParam(curve)">
                         <div class="col-sm-4" *ngIf="!isLoadingIbp">
                             <label class="form-label">Diastolic Pressure</label>
                             <div class="row" *ngIf="currentState?.action !== 'stop'">
@@ -198,21 +207,67 @@
                             </div>
                         </div>
                     </div>
-                    <div class="row" *ngIf="showParam(curve)">
-                        <div class="col-sm-4" *ngIf="curve?.curveConfiguration.label == 'CO2' && !isLoadingCapno">
+
+                    <div class="row" *ngIf="showParam(curve) && curve?.curveConfiguration.label == 'CO2'">
+                        <div class="justify-content-center" *ngIf="capnoCurrentCurve">
+                            <p class="text-center playing-curve-text"> <span>
+                                <img src="/assets/icons/info.png" alt="Info icon">
+                            </span> Playing {{capnoCurrentCurve}} </p>
+                        </div>
+                    </div>
+
+                    <div class="row" *ngIf="showParam(curve) && curve?.curveConfiguration.label == 'ECG'">
+                        <div class="justify-content-center" *ngIf="ecgCurrentCurve">
+                            <p class="text-center playing-curve-text"> <span>
+                                <img src="/assets/icons/info.png" alt="Info icon">
+                            </span> Playing {{ecgCurrentCurve}} </p>
+                        </div>
+                    </div>
+
+                    <div class="row" *ngIf="showParam(curve) && curve?.curveConfiguration.label == 'SPO2'">
+                        <div class="justify-content-center" *ngIf="pletCurrentCurve">
+                            <p class="text-center playing-curve-text"> <span>
+                                <img src="/assets/icons/info.png" alt="Info icon">
+                            </span> Playing {{pletCurrentCurve}} </p>
+                        </div>
+                    </div>
+
+                    <div class="row" *ngIf="showParam(curve) && curve?.curveConfiguration.label == 'CO2'">
+                        <div class="col-sm-4" *ngIf="!isLoadingCapno">
                             <label class="form-label">End Tidal</label>
                             <div class="row" *ngIf="currentState?.action !== 'stop'">
                                 <input type="range" class=" form-range form-range-box" min="0" max="50" step="1"
                                     formControlName="endTidalCO2" value={{endTidalCO2}}>
                                 <span class="rate-value-box">{{endTidalCO2}}</span>
+
                             </div>
+
                             <div class="row" *ngIf="currentState?.action === 'stop'">
                                 <input type="range" class=" form-range form-range-box" min="0" max="50" step="1" value=0
                                     disabled>
                                 <span class="rate-value-box">0</span>
                             </div>
                         </div>
+
+                        <div class="col-sm-4" *ngIf="!isLoadingCapno">
+                            <label class="form-label">Inspiration</label>
+                            <div class="row" *ngIf="currentState?.action !== 'stop'">
+                                <input type="range" class=" form-range form-range-box" min="0" max="20" step="1"
+                                    formControlName="inspirationCO2" value={{inspirationCO2}}>
+                                <span class="rate-value-box">{{inspirationCO2}}</span>
+
+                            </div>
+
+                            <div class="row" *ngIf="currentState?.action === 'stop'">
+                                <input type="range" class=" form-range form-range-box" min="0" max="50" step="1" value=0
+                                    disabled>
+                                <span class="rate-value-box">0</span>
+                            </div>
+                        </div>
+
+
                     </div>
+
 
                 </div>
 

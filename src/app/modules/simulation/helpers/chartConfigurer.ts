@@ -63,7 +63,7 @@ export function commonOptions(
         chart: {
             id: 'curves',
             type: 'line',
-            height: toolbarEnabled ? 100 : 133,
+            height: toolbarEnabled ? 120 : 140,
             redrawOnParentResize: true,
             redrawOnWindowResize: true,
             zoom: {
@@ -87,7 +87,7 @@ export function commonOptions(
             },
             show: false,
             max: maxY,
-            min: 0,
+            min: minY < 0 ? minY : 0
         },
         dataLabels: {
             enabled: false,
@@ -165,7 +165,7 @@ export class ChartConfigurer {
                 },
                 show: false,
                 max: this.chartOptions.maxY,
-                min: this.chartOptions.minY > 0 ? 0 : this.chartOptions.minY
+                min: this.chartOptions.minY < 0 ? this.chartOptions.minY : 0
             },
             dataLabels: {
                 enabled: false,

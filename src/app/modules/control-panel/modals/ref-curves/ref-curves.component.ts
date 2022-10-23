@@ -37,7 +37,7 @@ export class RefCurvesComponent implements OnInit {
                 const formattedCurves: [number, number][] = records.map((value: CurveValues) => {
                     return [value.t, value.value];
                 });
-                this.activeModal.close(formattedCurves);
+                this.activeModal.close({ curves: formattedCurves, name: "Custom curve", description: "Custom curve" });
             };
             reader.onerror = function () {
                 console.log('error is occured while reading file!');
@@ -82,7 +82,7 @@ export class RefCurvesComponent implements OnInit {
         const formattedCurves: [number, number][] = refCurve.curves.curves.map((value: CurveValues) => {
             return [value.t, value.value];
         })
-        this.activeModal.close(formattedCurves);
+        this.activeModal.close({ curves: formattedCurves, name: refCurve.curves.name, description: refCurve.curves.description });
     }
 
     public onCancelModal(): void {
