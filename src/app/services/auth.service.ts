@@ -2,7 +2,7 @@ import { UserI } from './../shared/models/userI';
 import { ApiService } from './../shared/services/api.service';
 import { Injectable } from '@angular/core';
 import { environment } from '@environments/environment';
-import { Subject } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { AuthSession } from '@app/shared/services/authSession.service';
 import { UserTokenI } from '@app/shared/models/userTokenI';
 import { Router } from '@angular/router';
@@ -108,5 +108,29 @@ export class AuthService {
         this.clearTimeout = setTimeout(() => {
           this.logout();
         }, expirationDate);
+    }
+
+    public isValidSession(authToken: string): Observable<boolean> {
+        const subject = new Subject<boolean>();
+
+        const endpoint = environment.api.verifyToken;
+
+        const body = {
+            authToken,
+        };
+
+        this.api.httpPost(endpoint, body).subscribe(
+            (validSession: boolean) => {
+                subject.next(validSession);
+            },
+            (error: Error) => {
+                subject.error(error);
+            },
+            () => {
+                subject.complete();
+            }
+        );
+
+        return subject.asObservable();
     }
 }
