@@ -236,14 +236,14 @@
                         <div class="col-sm-4" *ngIf="!isLoadingCapno">
                             <label class="form-label">End Tidal</label>
                             <div class="row" *ngIf="currentState?.action !== 'stop'">
-                                <input type="range" class=" form-range form-range-box" min="0" max="50" step="1"
+                                <input type="range" class=" form-range form-range-box" min="0" max="60" step="1"
                                     formControlName="endTidalCO2" value={{endTidalCO2}}>
                                 <span class="rate-value-box">{{endTidalCO2}}</span>
 
                             </div>
 
                             <div class="row" *ngIf="currentState?.action === 'stop'">
-                                <input type="range" class=" form-range form-range-box" min="0" max="50" step="1" value=0
+                                <input type="range" class=" form-range form-range-box" min="0" max="60" step="1" value=0
                                     disabled>
                                 <span class="rate-value-box">0</span>
                             </div>
