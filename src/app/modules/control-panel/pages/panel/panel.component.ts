@@ -64,6 +64,10 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
     public refCurvesPlet: RefCurvesResponse[] = [];
     public refCurvesIBP: RefCurvesResponse[] = [];
     public refCurvesECG: RefCurvesResponse[] = [];
+    public ecgCurrentCurve: string;
+    public capnoCurrentCurve: string;
+    public pletCurrentCurve: string;
+    public ibpCurrentCurve: string;
     public isLoadingECG: boolean = true;
     public isLoadingCapno: boolean = true;
     public isLoadingPlet: boolean = true;
@@ -117,6 +121,7 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
        if (this.simulation) {
             if (this.simulation.scenarios) {
                 this.scenariosSimulation = this.simulation.scenarios;
+
                 // If the simulation has scenarios, the first will be the active for simulation
                 this.activeScenario = this.scenariosSimulation[0];
             }
@@ -266,11 +271,11 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
                         this.currentState.curves[2] = value.curves[2];
                         this.currentState.curves[3] = value.curves[3];
                         const miniMonitors: MiniMonitorComponent[] = this.miniMonitors.toArray();
-                        for (let i = 0; i < miniMonitors.length; i++) {
-                            if (i != 1) {
-                                miniMonitors[i].changeMaxAndMin(this.currentState.curves[i].curveValues);
-                            }
-                        }
+                        // for (let i = 0; i < miniMonitors.length; i++) {
+                        //     if (i != 1) {
+                        //         miniMonitors[i].changeMaxAndMin(this.currentState.curves[i].curveValues);
+                        //     }
+                        // }
                         this.updatedState = true;
 
                     },
@@ -286,8 +291,8 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
                 if (this.currentState?.curves?.length > 0) {
                     this.curvesService.updateRespirationRate(this.originalState, val).subscribe((value: StatesI) => {
                         this.currentState.curves[1] = value.curves[1];
-                        const miniMonitors: MiniMonitorComponent = this.miniMonitors.toArray()[1];
-                        miniMonitors.changeMaxAndMin(this.currentState.curves[1].curveValues);
+                        // const miniMonitors: MiniMonitorComponent = this.miniMonitors.toArray()[1];
+                        // miniMonitors.changeMaxAndMin(this.currentState.curves[1].curveValues);
                         this.updatedState = true;
 
                     },
@@ -357,8 +362,8 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
                                         if (newCurve) {
                                             this.currentState.curves[index].curveValues = newCurve;
                                         }
-                                        const miniMonitor: MiniMonitorComponent = this.miniMonitors.toArray()[index];
-                                        miniMonitor.changeMaxAndMin(this.currentState.curves[index].curveValues);
+                                        // const miniMonitor: MiniMonitorComponent = this.miniMonitors.toArray()[index];
+                                        // miniMonitor.changeMaxAndMin(this.currentState.curves[index].curveValues);
                                     },
                                         (error: Error) => {
                                             console.error(error);
@@ -393,7 +398,7 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
                                             this.currentState.curves[index].curveValues = newCurve;
                                         }
                                         const miniMonitor: MiniMonitorComponent = this.miniMonitors.toArray()[index];
-                                        miniMonitor.changeMaxAndMin(this.currentState.curves[index].curveValues);
+                                        // miniMonitor.changeMaxAndMin(this.currentState.curves[index].curveValues);
                                     },
                                         (error: Error) => {
                                             console.error(error);
@@ -414,8 +419,8 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
                     if (newCurve) {
                         this.currentState.curves[1].curveValues = newCurve;
                     }
-                    const miniMonitor: MiniMonitorComponent = this.miniMonitors.toArray()[1];
-                    miniMonitor.changeMaxAndMin(this.currentState.curves[1].curveValues);
+                    // const miniMonitor: MiniMonitorComponent = this.miniMonitors.toArray()[1];
+                    // miniMonitor.changeMaxAndMin(this.currentState.curves[1].curveValues);
                     this.updatedState = true;
                 },
                     (error: Error) => {
@@ -434,7 +439,7 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
                         this.currentState.curves[2].curveValues = newCurve;
                     }
                     const miniMonitor: MiniMonitorComponent = this.miniMonitors.toArray()[2];
-                    miniMonitor.changeMaxAndMin(this.currentState.curves[2].curveValues);
+                    // miniMonitor.changeMaxAndMin(this.currentState.curves[2].curveValues);
                 },
                     (error: Error) => {
                         console.error(error);
@@ -456,10 +461,9 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
                 .subscribe(
                     (state: StatesI) => {
                         if (state) {
-                            let action = 'stop';
+                            let action = 'play';
                             let newScenario = false;
                             if (this.currentState) {
-                                action = 'play';
                                 newScenario = true;
                             }
                             this.originalState = JSON.parse(JSON.stringify(state));
@@ -529,29 +533,55 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
         }
         refModalCurves.componentInstance.setRefCurves(curves);
 
-        refModalCurves.result.then((refCurve: [number, number][]) => {
-            if (refCurve && refCurve.length) {
-                this.curvesService.normalizeCurve(refCurve).subscribe((curve: [number, number][]) => {
-                    this.currentState.curves[index].curveValues = curve;
-
-                        this.curvesService.updateHeartRate(this.currentState, this.heartRate).subscribe((newState: StatesI) => {
+        refModalCurves.result.then((refCurve: {
+            curves: [number, number][],
+            name: string,
+            description: string }) => {
+            if (refCurve && refCurve.curves.length) {
+                this.curvesService.normalizeCurve(refCurve.curves).subscribe((curve: [number, number][]) => {
+                    const auxCurrentState = JSON.parse(JSON.stringify(this.currentState));
+                    auxCurrentState.curves[index].curveValues = curve;
+                    if (index == 1) {
+                        this.capnoCurrentCurve = refCurve.name;
+                        this.endTidalCO2 = Math.round(this.getMaxYValue(curve).value);
+                        this.inspirationCO2 = Math.round(curve[0][1]);
+                        this.curvesService.updateRespirationRate(auxCurrentState, this.breathRate).subscribe((newState: StatesI) => {
+                            this.currentState.curves[1].curveValues = newState.curves[1].curveValues;
+                            this.originalCurves[1].curveValues = newState.curves[1].curveValues;
+                            this.originalState.curves[index].curveValues = newState.curves[1].curveValues;
+                            this.updatedState = true;
+                        })
+                    } else {
+                        this.curvesService.updateHeartRate(auxCurrentState, this.heartRate).subscribe((newState: StatesI) => {
                             this.currentState.curves[index].curveValues = newState.curves[index].curveValues;
                             this.originalCurves[index].curveValues = newState.curves[index].curveValues;
                             this.originalState.curves[index].curveValues = newState.curves[index].curveValues;
+                            if (index == 0) {
+                                this.ecgCurrentCurve = refCurve.name;
+                            }
+
                             if (index == 2) {
                                 this.systolicIbp = Math.round(this.getMaxYValue(curve).value);
                                 this.diastolicIbp = Math.round(curve[0][1]);
+                                this.ibpCurrentCurve = refCurve.name;
                                 this.fromGroupParameters.patchValue({ ibpSystolic: this.systolicIbp, ibpDiastolic: this.diastolicIbp });
                             }
+                            if (index == 3) {
+                                this.pletCurrentCurve = refCurve.name;
+                            }
                             const miniMonitor: MiniMonitorComponent = this.miniMonitors.toArray()[index];
-                            miniMonitor.changeMaxAndMin(newState.curves[index].curveValues);
+                            // miniMonitor.changeMaxAndMin(newState.curves[index].curveValues);
                         })
+                    }
+
                 })
+
+
             }
 
         })
-            .catch((error: Error) => {
-                console.error(error);
+            .catch((error: any) => {
+                console.error("Error", error);
             });
     }
 
@@ -876,7 +906,7 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
     }
 
     public configureNIBP(): void {
-        const modal = this.modal.open(NibpComponent, { size: 'lg', windowClass: 'modal-small' });
+        const modal = this.modal.open(NibpComponent, { size: 'm', windowClass: 'modal-small' });
         modal.componentInstance.setInitialValue(this.timeNIBP);
         modal.result.then((nibpSettings: { timeNibp: number, startNow: boolean }) => {
             this.timeNIBP = nibpSettings.timeNibp;

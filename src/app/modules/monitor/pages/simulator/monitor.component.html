@@ -62,9 +62,9 @@
     </div>
 
     <div class="row">
-        <app-audio *ngIf="(currentState?.action !== 'stop' ||
+        <!-- <app-audio *ngIf="(currentState?.action !== 'stop' ||
                             newCurrentState?.action !== 'stop') && getPlayRate() != null" [src]="'/assets/sounds/monitor.mp3'" [play]=true [playRate]="playRate">
-        </app-audio>
+        </app-audio> -->
         <app-audio [play]="enableSoundAlarm" [src]="'/assets/sounds/alarmLimit.mp3'" [playRate]=1>
         </app-audio>
         <app-audio  [play]="calculatingNIBP" [src]="'/assets/sounds/nibp.aac'" [playRate]=1></app-audio>

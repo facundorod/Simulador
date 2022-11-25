@@ -11,7 +11,6 @@ import {
     ApexTooltip,
     ApexXAxis,
     ApexYAxis,
-    ChartComponent,
     ChartType,
 } from 'ng-apexcharts';
 
@@ -63,7 +62,7 @@ export function commonOptions(
         chart: {
             id: 'curves',
             type: 'line',
-            height: toolbarEnabled ? 100 : 133,
+            height: toolbarEnabled ? 120 : 140,
             redrawOnParentResize: true,
             redrawOnWindowResize: true,
             zoom: {
@@ -87,7 +86,7 @@ export function commonOptions(
             },
             show: false,
             max: maxY,
-            min: 0,
+            min: -3
         },
         dataLabels: {
             enabled: false,
@@ -143,9 +142,6 @@ export class ChartConfigurer {
             },
             chart: {
                 id: 'curves',
-                animations: {
-                    enabled: false
-                },
                 redrawOnParentResize: true,
                 redrawOnWindowResize: true,
                 height: this.chartOptions.height,
@@ -168,7 +164,8 @@ export class ChartConfigurer {
                 },
                 show: false,
                 max: this.chartOptions.maxY,
-                min: 0,
+                min: -2
+                // min: this.chartOptions.minY < 0 ? this.chartOptions.minY : 0
             },
             dataLabels: {
                 enabled: false,

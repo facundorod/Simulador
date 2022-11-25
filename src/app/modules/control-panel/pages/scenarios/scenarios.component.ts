@@ -14,7 +14,7 @@ export class ScenariosComponent extends BaseComponent implements OnInit {
     @Input() scenariosSelected: any[];
     @Output() returnScenarios: EventEmitter<any[]> = new EventEmitter<any[]>();
     @Output() posScenarios: EventEmitter<any> = new EventEmitter<any>();
-    public animal: AnimalSpeciesI;
+    @Input() animal: AnimalSpeciesI = null;
     public indexScenarioActive: number;
     public indexScenarioEdit: number;
 

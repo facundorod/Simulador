@@ -51,22 +51,14 @@ export class MiniMonitorComponent implements OnInit, OnDestroy {
         this.curves.curveValues = curves;
         clearInterval(this.simulationTimer);
         this.currentIndex = 0;
-        const maxY: number =
-            this.curvesHelper.getMaxY(this.curves.curveValues) == 0 ? 1
-                : this.curvesHelper.getMaxY(this.curves.curveValues);
-        const minY = 0;
+        const maxY: number = this.curves.curveConfiguration.maxY;
+        const minY = this.curves.curveConfiguration.minY;
         const options: Partial<ChartOptions> = commonOptions(
             this.action == 'pause',
             this.chart.xaxis.max,
             this.chart.xaxis.min,
-            (this.curves.curveConfiguration.label.toUpperCase() == 'CO2')
-                ? maxY * 2
-                : maxY,
-            minY,
-            this.action !== 'stop' &&
-                this.curves.curveConfiguration.label.toUpperCase() == 'CO2'
-                ? 'area'
-                : this.chart.chart.type
+            maxY,
+            minY
         );
         this.chartComponent.updateOptions(options);
         this.chartComponent.resetSeries();
@@ -80,13 +72,11 @@ export class MiniMonitorComponent implements OnInit, OnDestroy {
 
         if (this.curves.curveValues.length > 0) {
             this.maxSize = this.curves.curveValues.length;
-            const maxY: number =
-                this.curvesHelper.getMaxY(this.curves.curveValues) == 0 ? 1
-                    : this.curvesHelper.getMaxY(this.curves.curveValues);
-            const minY = 0;
+            const maxY: number = this.curves.curveConfiguration.maxY;
+            const minY = this.curves.curveConfiguration.minY;
             const chart: ChartConfigurer = new ChartConfigurer({
                 colorLine: this.curves.curveConfiguration.colorLine,
-                height: 100,
+                height: 150,
                 minX: 0,
                 maxX: 5,
                 minY,
@@ -94,12 +84,6 @@ export class MiniMonitorComponent implements OnInit, OnDestroy {
                 toolbar: false,
             });
             let type: ChartType = null;
-
-            if (
-                this.action !== 'stop' &&
-                this.curves.curveConfiguration.label.toUpperCase() === 'CO2') {
-                type = 'area';
-            }
 
             chart.setChart([], type);
             this.chart = chart.getChart();

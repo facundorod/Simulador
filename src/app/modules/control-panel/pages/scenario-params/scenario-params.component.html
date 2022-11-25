@@ -94,7 +94,7 @@
 
                         <td scope="row" *ngIf="isUserAdmin()">
                             <div class="row justify-content-center">
-                                <div class="col-3 edit-img" (click)="onEdit(i)" >
+                                <div class="col-3 edit-img" (click)="onEdit(scenario.id_scenario)" >
                                     <img src="/assets/icons/pencil.png" placement="top" ngbTooltip="Edit"/>
                                 </div>
                                 <div class="col-3 delete-img" (click)="onDelete(scenario.id_scenario, i)">
