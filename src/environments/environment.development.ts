@@ -1,7 +1,7 @@
 export const environment = {
     production: false,
     api: {
-        baseUrl: "http://54.208.101.214:3000/api",
+        baseUrl: "https://simvet-api.herokuapp.com/api",
         animalSpecies: "/animalSpecies/",
         arrhythmias: "/arrhythmia/",
         medications: "/medication/",
@@ -21,5 +21,5 @@ export const environment = {
         userManual: '/files/user-manual.pdf'
     },
     simulation: "https://simvet-web.herokuapp.com/monitor",
-    userManual: 'http://54.208.101.214:3000/files/user-manual.pdf'
+    userManual: 'https://simvet-api.herokuapp.com/files/user-manual.pdf'
 };
