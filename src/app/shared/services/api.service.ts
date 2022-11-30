@@ -24,6 +24,7 @@ export class ApiService {
         if (!uploadFile) {
             headers = headers.set('Accept', 'application/json');
             headers = headers.set('Content-Type', 'application/json');
+            headers = headers.set('Access-Control-Allow-Origin',  '*');
             headers = headers.set(
                 'Language',
                 localStorage.getItem('activeLang')
