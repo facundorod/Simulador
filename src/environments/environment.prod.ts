@@ -1,7 +1,7 @@
 export const environment = {
     production: true,
     api: {
-        baseUrl: "https://www.api.simvet.com.ar/api",
+        baseUrl: "https://api.simvet.com.ar/api",
         animalSpecies: "/animalSpecies/",
         arrhythmias: "/arrhythmia/",
         medications: "/medication/",
