@@ -1,7 +1,7 @@
 export const environment = {
     production: true,
     api: {
-        baseUrl: "https://api.simvet.com.ar/api",
+        baseUrl: "https://simvet.pladema.net:3000/api",
         animalSpecies: "/animalSpecies/",
         arrhythmias: "/arrhythmia/",
         medications: "/medication/",
@@ -20,7 +20,7 @@ export const environment = {
         roles: "/auth/roles",
         userManual: '/files/user-manual.pdf'
     },
-    simulation: "https://simvet.com.ar/monitor",
+    simulation: "https://simvet.pladema.net/monitor",
     userManual: '/files/user-manual.pdf'
 
 
