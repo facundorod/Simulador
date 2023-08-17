@@ -40,9 +40,7 @@
                         <option *ngIf="formGroup.value.animalSpecie?.name" [ngValue]="formGroup.value.animalSpecie">
                             {{formGroup.value.animalSpecie.name}}</option>
                         <ng-template ngFor let-animalS [ngForOf]="animalSpecies">
-                            <option
-                                *ngIf="animalS.name !== formGroup.value.animalSpecie.name"
-                                [ngValue]="animalS">
+                            <option *ngIf="animalS.name !== formGroup.value.animalSpecie.name" [ngValue]="animalS">
                                 {{ animalS.name }}
                             </option>
                         </ng-template>
@@ -55,7 +53,8 @@
 
             <div class="col-md-6">
                 <label class="form-label">Simulation description</label>
-                <textarea class="form-control" rows="4" formControlName="simulationDescription" placeholder="Simulation description"></textarea>
+                <textarea class="form-control" rows="4" formControlName="simulationDescription"
+                    placeholder="Simulation description"></textarea>
             </div>
         </div>
     </form>
@@ -66,8 +65,8 @@
             <h3 class="text-scenario text-center">Scenario Configuration</h3>
         </div>
         <div class="col-md-12">
-            <app-scenarios [scenariosSelected]="scenariosSimulation" [animal]="animalSpecie" (posScenarios)="getPosScenarios($event)"
-                (returnScenarios)="getScenarios($event)" #scenarios>
+            <app-scenarios [scenariosSelected]="scenariosSimulation" [animal]="animalSpecie"
+                (posScenarios)="getPosScenarios($event)" (returnScenarios)="getScenarios($event)" #scenarios>
             </app-scenarios>
 
         </div>
@@ -129,7 +128,7 @@
             <div class="col-sm-4">
                 <label class="form-label">SPO2</label>
                 <div class="row ml-3" *ngIf="currentState?.action !== 'stop'">
-                    <input type="range" class=" form-range" min="30" max="110" step="1" formControlName="spo2"
+                    <input type="range" class=" form-range" min="30" max="100" step="1" formControlName="spo2"
                         value={{spo2}}>
                     <span class="rate-value">{{spo2}}</span>
                 </div>
@@ -159,7 +158,9 @@
 
                         </div>
                         <div class="col-4" *ngIf="showParam(curve)">
-                            <button class="btn btn-primary save-changes" (click)="onLoadRefCurves(curve?.curveConfiguration.label)" position="top" ngbTooltip="Change curve to simulate">
+                            <button class="btn btn-primary save-changes"
+                                (click)="onLoadRefCurves(curve?.curveConfiguration.label)" position="top"
+                                ngbTooltip="Change curve to simulate">
                                 Replace Curve
                             </button>
                         </div>
@@ -174,8 +175,8 @@
                     <div class="row" *ngIf="curve?.curveConfiguration.label == 'IBP' && showParam(curve)">
                         <div class="justify-content-center" *ngIf="ibpCurrentCurve">
                             <p class="text-center playing-curve-text"> <span>
-                                <img src="/assets/icons/info.png" alt="Info icon">
-                            </span> Playing {{ibpCurrentCurve}} </p>
+                                    <img src="/assets/icons/info.png" alt="Info icon">
+                                </span> Playing {{ibpCurrentCurve}} </p>
                         </div>
                     </div>
 
@@ -193,7 +194,7 @@
                                 <span class="rate-value-box">0</span>
                             </div>
                         </div>
-                        <div class="col-sm-4" *ngIf="!isLoadingIbp" >
+                        <div class="col-sm-4" *ngIf="!isLoadingIbp">
                             <label class="form-label">Systolic Pressure</label>
                             <div class="row" *ngIf="currentState?.action !== 'stop'">
                                 <input type="range" class=" form-range form-range-box" min="0" max="250" step="1"
@@ -211,24 +212,24 @@
                     <div class="row" *ngIf="showParam(curve) && curve?.curveConfiguration.label == 'CO2'">
                         <div class="justify-content-center" *ngIf="capnoCurrentCurve">
                             <p class="text-center playing-curve-text"> <span>
-                                <img src="/assets/icons/info.png" alt="Info icon">
-                            </span> Playing {{capnoCurrentCurve}} </p>
+                                    <img src="/assets/icons/info.png" alt="Info icon">
+                                </span> Playing {{capnoCurrentCurve}} </p>
                         </div>
                     </div>
 
                     <div class="row" *ngIf="showParam(curve) && curve?.curveConfiguration.label == 'ECG'">
                         <div class="justify-content-center" *ngIf="ecgCurrentCurve">
                             <p class="text-center playing-curve-text"> <span>
-                                <img src="/assets/icons/info.png" alt="Info icon">
-                            </span> Playing {{ecgCurrentCurve}} </p>
+                                    <img src="/assets/icons/info.png" alt="Info icon">
+                                </span> Playing {{ecgCurrentCurve}} </p>
                         </div>
                     </div>
 
                     <div class="row" *ngIf="showParam(curve) && curve?.curveConfiguration.label == 'SPO2'">
                         <div class="justify-content-center" *ngIf="pletCurrentCurve">
                             <p class="text-center playing-curve-text"> <span>
-                                <img src="/assets/icons/info.png" alt="Info icon">
-                            </span> Playing {{pletCurrentCurve}} </p>
+                                    <img src="/assets/icons/info.png" alt="Info icon">
+                                </span> Playing {{pletCurrentCurve}} </p>
                         </div>
                     </div>
 
