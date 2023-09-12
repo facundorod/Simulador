@@ -1,0 +1,37 @@
+<div class="container-fluid h-100">
+    <div class="row header-monitor" *ngIf="isRunningSimulation() else noSimulation">
+        <div class="col-5">
+            <p class="text-left">
+                <span *ngIf="getAnimalName()" class="text-animal-specie">
+                    {{ getAnimalName() }} - {{getScenarioDescription() | textOverflow: 40 }}
+                </span>
+            </p>
+        </div>
+    </div>
+
+    <div class="curves-container">
+        <div class="row curve-container" *ngFor="let curveData of getCurvesToShowInMonitor()">
+            <div class="col-9"  *ngIf="curveData.showCurves">
+                <!-- Gráficos -->
+                <div class="container-fluid chart-container">
+                    <app-chart #chartComponent [colorLine]="curveData.colorLine" [maxY]="curveData.maxY"> </app-chart>
+                </div>
+            </div>
+            <div class="col-3 curve-container" style="border: 2px solid yellow" *ngIf="curveData.showCurves">
+                <!-- Parameter Box -->
+                <div class="container-fluid chart-container"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<ng-template #noSimulation class="mt-4 no-simulation">
+
+    <div class="container row no-simulation">
+        <div class="spinner-border text-danger" role="status">
+        </div>
+        <div class="ml-4">
+            <h3 class="text-center">Waiting for simulation</h3>
+        </div>
+    </div>
+</ng-template>

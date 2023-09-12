@@ -23,6 +23,8 @@ import { AuthService } from '@app/services/auth.service';
 import { ScenariosComponent } from '../scenarios/scenarios.component';
 import { RefCurvesResponse } from '@app/shared/models/refCurvesResponse';
 import { RefCurvesComponent } from '../../modals/ref-curves/ref-curves.component';
+import { MonitorStateI } from '@app/shared/models/MonitorStateI';
+import { CurvesInformationI } from '@app/shared/models/CurvesInformationI';
 
 @Component({
     selector: 'app-panel',
@@ -60,6 +62,8 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
     public amplitudeValues: number[] = [1, 1, 1, 1];
     private timeNIBP = 5;
     private startNIBP = false;
+    private monitorState: MonitorStateI;
+    private parameterInfo: ParameterInfoI;
     public refCurvesCapno: RefCurvesResponse[] = [];
     public refCurvesPlet: RefCurvesResponse[] = [];
     public refCurvesIBP: RefCurvesResponse[] = [];
@@ -88,6 +92,7 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
 
     ngOnInit(): void {
         this.localStorageService.removeValue('simulationState');
+        this.localStorageService.removeValue('scenarioState');
         this.setSubmitForm(false);
         this.setLoading(true);
         this.loadData();
@@ -118,7 +123,7 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
             }
         );
 
-       if (this.simulation) {
+        if (this.simulation) {
             if (this.simulation.scenarios) {
                 this.scenariosSimulation = this.simulation.scenarios;
 
@@ -468,6 +473,8 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
                             }
                             this.originalState = JSON.parse(JSON.stringify(state));
                             this.currentState = state;
+                            this.setMonitorState(state);
+
                             this.originalCurves = JSON.parse(JSON.stringify(state.curves));
                             this.currentState.action = action;
                             this.currentState.muteAlarms = false;
@@ -536,7 +543,8 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
         refModalCurves.result.then((refCurve: {
             curves: [number, number][],
             name: string,
-            description: string }) => {
+            description: string
+        }) => {
             if (refCurve && refCurve.curves.length) {
                 this.curvesService.normalizeCurve(refCurve.curves).subscribe((curve: [number, number][]) => {
                     const auxCurrentState = JSON.parse(JSON.stringify(this.currentState));
@@ -716,6 +724,7 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
             timeNIBP: this.timeNIBP,
             startNIBP: this.startNIBP
         };
+        this.parameterInfo = parameterInfo;
         this.localStorageService.saveValue(
             'parameterState',
             JSON.stringify(parameterInfo)
@@ -923,4 +932,53 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
     public isUserAdmin(): boolean {
         return this.authService.isAdmin();
     }
+
+    private setMonitorState(state: StatesI): void {
+        if (state) {
+            const curvesInformation: CurvesInformationI[] = state.curves.map((curve: CurvesI) => {
+                return {
+                    dataset: curve.curveValues,
+                    alert_low: curve.curveConfiguration.alert_low,
+                    alert_high: curve.curveConfiguration.alert_high,
+                    alert_high2: curve.curveConfiguration.alert_high_2,
+                    alert_low2: curve.curveConfiguration.alert_low_2,
+                    label: curve.curveConfiguration.label,
+                    unit: curve.curveConfiguration.unit,
+                    name: curve.curveConfiguration.name,
+                    colorLine: curve.curveConfiguration.colorLine,
+                    minY: curve.curveConfiguration.minY,
+                    maxY: curve.curveConfiguration.maxY,
+                    description: curve.curveConfiguration.description,
+                    showCurves: curve.curveConfiguration.showMonitor,
+                    source: curve.curveConfiguration.source,
+                }
+            })
+
+            this.monitorState = {
+                batteryStatus: 'NORMAL',
+                curvesInformation,
+                heartSamplingRate: state.heartSamplingRate,
+                breathSamplingRate: state.breathSamplingRate,
+                currentIndexBreath: 0,
+                currentIndexHeart: 0,
+                scenario: {
+                    animalName: this.animalSpecie.name,
+                    description: this.activeScenario.description,
+                    name: this.activeScenario.name
+                },
+                totalPoints: state.totalPoints,
+                totalPointsPerCycle: state.totalPointsPerCycle,
+                simulationStatus: 'RUNNING',
+                soundStatus: {
+                    alarms: true,
+                    batterySound: true,
+                    heartFreqSound: true
+                },
+                parameterInformation: this.parameterInfo
+            }
+            this.localStorageService.saveValue('scenarioState', JSON.stringify(this.monitorState));
+        }
+
+    }
 }
+

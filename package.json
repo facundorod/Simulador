@@ -30,6 +30,7 @@
         "@popperjs/core": "^2.3.3",
         "apexcharts": "^3.27.1",
         "bootstrap": "^4.4.1",
+        "chart.js": "^3.9.1",
         "express": "^4.17.2",
         "jquery": "^3.5.0",
         "ng-apexcharts": "^1.5.12",

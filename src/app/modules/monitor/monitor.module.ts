@@ -9,9 +9,11 @@ import { MonitorService } from './services/monitor.service';
 import { SharedModule } from '@app/shared/shared.module';
 import { NgApexchartsModule } from 'ng-apexcharts';
 import { MiniMonitorComponent } from './components/mini-monitor/mini-monitor.component';
+import { Monitor2Component } from './monitor2/monitor2.component';
+import { ChartComponent } from './components/chart/chart.component';
 
 @NgModule({
-    declarations: [MonitorComponent, MiniMonitorComponent],
+    declarations: [MonitorComponent, MiniMonitorComponent, Monitor2Component, ChartComponent],
     imports: [
         CommonModule,
         SimulationModule,

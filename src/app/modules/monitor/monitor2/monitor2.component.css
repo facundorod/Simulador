@@ -1,0 +1,29 @@
+.no-simulation {
+    height: 100%;
+}
+
+.header-monitor {
+    height: 5vh;
+    text-overflow: ellipsis;
+}
+
+.chart-container {
+    flex: 1;
+    box-sizing: border-box;
+}
+
+p,
+h3,
+h4 {
+    color: #fff;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+
+
+.chart-container {
+    height: calc(79vh / 4);
+}
