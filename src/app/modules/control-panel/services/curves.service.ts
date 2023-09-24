@@ -1,4 +1,8 @@
 import { Injectable } from '@angular/core';
+import { CurvesInformationI } from '@app/shared/models/CurvesInformationI';
+import { MonitorStateI } from '@app/shared/models/MonitorStateI';
+import { CurveStateI } from '@app/shared/models/curveStateI';
+import { CurvesI } from '@app/shared/models/curvesI';
 import { RefCurvesResponse } from '@app/shared/models/refCurvesResponse';
 import { StatesI } from '@app/shared/models/stateI';
 import { ApiService } from '@app/shared/services/api.service';
@@ -151,6 +155,27 @@ export class CurvesService {
 
         this.api.httpPost(endpoint, { curves, heartRate }).subscribe(
             (curves: StatesI) => {
+                subject.next(curves);
+            },
+            (error: Error) => {
+                subject.error(error);
+            },
+            () => {
+                subject.complete();
+            }
+        );
+
+        return subject.asObservable();
+    }
+
+    public updateHeartRate2(curves: CurveStateI, heartRate: number, currentHeartRate: number): Observable<CurveStateI> {
+        const subject = new Subject<CurveStateI>();
+
+        const endpoint = environment.api.curvesV2 + 'update-heart-rate';
+
+
+        this.api.httpPost(endpoint, { curves, newHeartRate: heartRate, currentHeartRate }).subscribe(
+            (curves: CurveStateI) => {
                 subject.next(curves);
             },
             (error: Error) => {

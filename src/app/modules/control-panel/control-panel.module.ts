@@ -38,6 +38,7 @@ import { ScenarioCloneComponent } from './modals/scenario-clone/scenario-clone.c
 import { NibpComponent } from './modals/nibp/nibp.component';
 import { NgApexchartsModule } from 'ng-apexcharts';
 import { RefCurvesComponent } from './modals/ref-curves/ref-curves.component';
+import { Panel2Component } from './pages/panel2/panel2.component';
 
 @NgModule({
     declarations: [
@@ -60,6 +61,7 @@ import { RefCurvesComponent } from './modals/ref-curves/ref-curves.component';
         ScenarioCloneComponent,
         NibpComponent,
         RefCurvesComponent,
+        Panel2Component,
     ],
     imports: [
         CommonModule,

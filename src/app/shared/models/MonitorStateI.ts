@@ -8,7 +8,8 @@ export interface MonitorStateI {
         description: string,
         animalName: string
     },
-    simulationStatus: 'RUNNING' | 'STOP' | 'PAUSED',
+    id: number;
+    simulationStatus: 'RUNNING' | 'STOP' | 'PAUSED' | 'OFF',
     heartSamplingRate: number,
     batteryStatus: 'LOW' | 'NORMAL',
     breathSamplingRate: number,

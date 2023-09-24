@@ -23,6 +23,7 @@ import { ScenarioService } from '../../services/scenario.service';
 import { ParametersCreateComponent } from '../../modals/parameters-create/parameters-create.component';
 import { ToastrService } from 'ngx-toastr';
 import { ParametersService } from '../../services/parameters.service';
+import { PaginatedItemI } from '@app/shared/models/paginatedItemsI';
 
 @Component({
     selector: 'app-scenario-params-create',
@@ -99,7 +100,7 @@ export class ScenarioParamsCreateComponent implements OnInit {
 
     private loadAnimals(): void {
         this.animalSpecieService.list().subscribe(
-            (animalSpecie: AnimalSpeciesResponseI) => {
+            (animalSpecie: PaginatedItemI<AnimalSpeciesI>) => {
                 if (animalSpecie) { this.animals = animalSpecie.data; }
             },
             (error: Error) => {

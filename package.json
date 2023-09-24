@@ -5,7 +5,7 @@
         "ng": "ng",
         "heroku-postbuild": "ng build --configuration=${environment}",
         "start": "node server.js",
-        "start:local": "ng serve --configuration=local",
+        "start:local": "set NODE_OPTIONS=--openssl-legacy-provider && ng serve --configuration=local",
         "start:dev": "ng serve --configuration=development",
         "start:prod": "ng serve --configuration=production",
         "build:local": "ng build --configuration=local",

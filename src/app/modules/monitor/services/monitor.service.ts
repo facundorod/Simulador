@@ -24,11 +24,20 @@ export class MonitorService {
 
         setInterval(() => {
             const lastStatus: MonitorStateI = JSON.parse(localStorage.getItem('scenarioState'))
-            if (!this.currentState) {
+            if (!this.currentMonitorState || this.isDiff2(lastStatus)) {
                 this.currentMonitorState = lastStatus;
                 this.values2.next(this.currentMonitorState);
             }
-        })
+        }, 1000);
+    }
+
+    private isDiff2(state: MonitorStateI): boolean {
+        return (
+            (!state && this.currentMonitorState != null) ||
+            state.id !== this.currentMonitorState.id ||
+            state.simulationStatus !== this.currentMonitorState.simulationStatus ||
+            state.soundStatus.alarms !== this.currentMonitorState.soundStatus.alarms
+        );
     }
 
     /**

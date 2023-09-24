@@ -6,4 +6,6 @@ export interface CurvesI {
     curveConfiguration: CurvesConfigurationI;
     animalSpecie: AnimalSpeciesI;
     curveValues: [number, number][];
+    heartSamplingRate?: number;
+    breathSamplingRate?: number;
 }

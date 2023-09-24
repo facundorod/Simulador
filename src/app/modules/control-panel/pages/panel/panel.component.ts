@@ -25,6 +25,7 @@ import { RefCurvesResponse } from '@app/shared/models/refCurvesResponse';
 import { RefCurvesComponent } from '../../modals/ref-curves/ref-curves.component';
 import { MonitorStateI } from '@app/shared/models/MonitorStateI';
 import { CurvesInformationI } from '@app/shared/models/CurvesInformationI';
+import { CurveStateI } from '@app/shared/models/curveStateI';
 
 @Component({
     selector: 'app-panel',
@@ -67,6 +68,7 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
     public refCurvesCapno: RefCurvesResponse[] = [];
     public refCurvesPlet: RefCurvesResponse[] = [];
     public refCurvesIBP: RefCurvesResponse[] = [];
+    private firstTime: boolean = true;
     public refCurvesECG: RefCurvesResponse[] = [];
     public ecgCurrentCurve: string;
     public capnoCurrentCurve: string;
@@ -93,6 +95,8 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
     ngOnInit(): void {
         this.localStorageService.removeValue('simulationState');
         this.localStorageService.removeValue('scenarioState');
+        this.localStorageService.removeValue('scenarioState');
+        this.monitorState = null;
         this.setSubmitForm(false);
         this.setLoading(true);
         this.loadData();
@@ -105,6 +109,8 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
     ngOnDestroy(): void {
         this.localStorageService.removeValue('simulationState');
         this.localStorageService.removeValue('Simulation');
+        this.localStorageService.removeValue('scenarioState');
+
     }
 
     /**
@@ -269,25 +275,55 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
         this.fromGroupParameters
             .get('heartRate')
             .valueChanges.pipe(distinctUntilChanged()).subscribe((val) => {
-                this.heartRate = val;
-                if (this.currentState?.curves?.length > 0) {
-                    this.curvesService.updateHeartRate(this.originalState, val).subscribe((value: StatesI) => {
-                        this.currentState.curves[0] = value.curves[0];
-                        this.currentState.curves[2] = value.curves[2];
-                        this.currentState.curves[3] = value.curves[3];
-                        const miniMonitors: MiniMonitorComponent[] = this.miniMonitors.toArray();
-                        // for (let i = 0; i < miniMonitors.length; i++) {
-                        //     if (i != 1) {
-                        //         miniMonitors[i].changeMaxAndMin(this.currentState.curves[i].curveValues);
-                        //     }
-                        // }
-                        this.updatedState = true;
+                if (!this.firstTime) {
+                    if (this.monitorState?.curvesInformation) {
+                        const curvesState: CurveStateI = {
+                            curves: this.monitorState.curvesInformation
+                        }
+                        this.curvesService.updateHeartRate2(curvesState, val, this.heartRate).subscribe((value: CurveStateI) => {
+                            this.monitorState.curvesInformation = value.curves.map((curve: CurvesInformationI) => {
+                                return {
+                                    dataset: curve.dataset,
+                                    alert_high: curve.alert_high,
+                                    alert_low: curve.alert_low,
+                                    colorLine: curve.colorLine,
+                                    source: curve.source,
+                                    description: curve.description,
+                                    label: curve.label,
+                                    maxY: curve.maxY,
+                                    minY: curve.minY,
+                                    name: curve.name,
+                                    unit: curve.unit,
+                                    id_pp: curve.id_pp,
+                                    alert_high_2: curve.alert_high_2,
+                                    alert_low_2: curve.alert_low_2,
+                                    showCurves: curve.showCurves
+                                }
+                            })
+                            this.monitorState.heartSamplingRate = value.heartSamplingRate
+                        })
+                    }
+                    this.heartRate = val;
+                } else this.firstTime = false;
+                // if (this.originalState) {
+                //     this.curvesService.updateHeartRate(this.originalState, val).subscribe((value: StatesI) => {
+                //         this.currentState.curves[0] = value.curves[0];
+                //         this.currentState.curves[2] = value.curves[2];
+                //         this.currentState.curves[3] = value.curves[3];
+                //         const miniMonitors: MiniMonitorComponent[] = this.miniMonitors.toArray();
+                //         // for (let i = 0; i < miniMonitors.length; i++) {
+                //         //     if (i != 1) {
+                //         //         miniMonitors[i].changeMaxAndMin(this.currentState.curves[i].curveValues);
+                //         //     }
+                //         // }
+                //         this.updatedState = true;
 
-                    },
-                        (error: Error) => {
-                            console.error(error);
-                        });
-                }
+                //     },
+                //         (error: Error) => {
+                //             console.error(error);
+                //         });
+                // }
+
             });
         this.fromGroupParameters
             .get('breathRate')
@@ -511,6 +547,7 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
             'simulationState',
             JSON.stringify(this.currentState)
         );
+        this.localStorageService.saveValue('scenarioState', JSON.stringify(this.monitorState))
         this.saveParameterInfo();
         this.updateState();
     }
@@ -819,6 +856,7 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
 
     public onPauseSimulation(): void {
         if (this.currentState) { this.currentState.action = 'pause'; }
+        this.monitorState.simulationStatus = 'PAUSED'
         this.applyChanges();
     }
 
@@ -846,6 +884,13 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
             this.localStorageService.saveValue(
                 'simulationState',
                 JSON.stringify(this.currentState)
+            );
+        }
+        if (this.monitorState) {
+            this.monitorState.id++;
+            this.localStorageService.saveValue(
+                'scenarioState',
+                JSON.stringify(this.monitorState)
             );
         }
     }
@@ -951,6 +996,7 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
                     description: curve.curveConfiguration.description,
                     showCurves: curve.curveConfiguration.showMonitor,
                     source: curve.curveConfiguration.source,
+                    id_pp: curve.curveConfiguration.id_pp
                 }
             })
 
@@ -974,6 +1020,7 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
                     batterySound: true,
                     heartFreqSound: true
                 },
+                id: this.currentState.state,
                 parameterInformation: this.parameterInfo
             }
             this.localStorageService.saveValue('scenarioState', JSON.stringify(this.monitorState));

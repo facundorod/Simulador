@@ -1,5 +1,5 @@
-<div class="container-fluid h-100">
-    <div class="row header-monitor" *ngIf="isRunningSimulation() else noSimulation">
+<div class="container-fluid h-100" *ngIf="isMonitorConnected() else noSimulation">
+    <div class="row header-monitor">
         <div class="col-5">
             <p class="text-left">
                 <span *ngIf="getAnimalName()" class="text-animal-specie">
@@ -10,14 +10,15 @@
     </div>
 
     <div class="curves-container">
-        <div class="row curve-container" *ngFor="let curveData of getCurvesToShowInMonitor()">
-            <div class="col-9"  *ngIf="curveData.showCurves">
+        <div class="row curve-container" *ngFor="let curveData of getCurvesToShowInMonitor(); let i = index; trackBy: trackByFn">
+            <div class="col-9" *ngIf="curveData.showCurves">
                 <!-- Gráficos -->
                 <div class="container-fluid chart-container">
-                    <app-chart #chartComponent [colorLine]="curveData.colorLine" [maxY]="curveData.maxY"> </app-chart>
+                    <app-chart #chartComponent [colorLine]="curveData.colorLine" [maxY]="curveData.maxY"
+                        [height]="'160px'" [dataset]="curveData.dataset"> </app-chart>
                 </div>
             </div>
-            <div class="col-3 curve-container" style="border: 2px solid yellow" *ngIf="curveData.showCurves">
+            <div class=" col-3 curve-container" style="border: 2px solid yellow" *ngIf="curveData.showCurves">
                 <!-- Parameter Box -->
                 <div class="container-fluid chart-container"></div>
             </div>

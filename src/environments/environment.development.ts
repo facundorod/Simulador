@@ -13,6 +13,7 @@ export const environment = {
         register: "/auth/register",
         simulations: "/simulation/",
         refCurves: '/refCurves',
+        curvesV2: '/curves/v2/',
         curves: "/curves/",
         parameters: "/parameters/",
         user: "/auth/user",

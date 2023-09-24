@@ -1,0 +1,134 @@
+<div class="container-fluid" *ngIf="!isLoading()">
+    <div class="row mt-5">
+        <div class="col-12">
+            <h1 class="text-center"> Control panel </h1>
+        </div>
+    </div>
+
+    <div class="container-fluid mt-3">
+        <form [formGroup]="getSimulationForm()">
+            <div class="row justify-content-around">
+                <div class="col-4">
+                    <label for="simulationName" class="form-label">Simulation Name</label>
+                    <input class="form-control" formControlName="simulationName" placeholder="Simulation name">
+                </div>
+                <div class="col-4">
+                    <label class="form-label">Simulation description</label>
+                    <textarea class="form-control" rows="4" formControlName="simulationDescription"
+                        placeholder="Simulation description"></textarea>
+                </div>
+                <div class="col-4">
+                    <label for="animalSpecies" class="form-label">Animal Patient</label>
+                    <select class="form-select form-control" id="animalSpecie" formControlName="animalSpecie">
+                        <option value="">Choose Animal patient</option>
+                        <ng-template [ngIf]="getAnimalSpecies().length">
+                            <option *ngIf="getActiveAnimal()" [ngValue]="getActiveAnimal()">
+                                {{getActiveAnimal().name}}</option>
+                            <ng-template ngFor let-animalS [ngForOf]="getAnimalSpecies()">
+                                <option *ngIf="animalS.name !== getActiveAnimal()?.name" [ngValue]="animalS">
+                                    {{ animalS.name }}
+                                </option>
+                            </ng-template>
+
+                        </ng-template>
+                    </select>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <div class="container-fluid mt-5">
+        <div class="row">
+            <div class="col-12">
+                <h1 class="text-center"> Scenario Panel </h1>
+            </div>
+        </div>
+        <div class="row text-center">
+            <div class="col-12">
+                    <app-scenarios [scenariosSelected]="scenariosSimulation" [animal]="getActiveAnimal()"
+                        (posScenarios)="getPosScenarios($event)" (returnScenarios)="getScenarios($event)" #scenarios>
+                    </app-scenarios>
+            </div>
+        </div>
+    </div>
+
+    <div class="container-fluid mt-5">
+        <div class="row">
+            <div class="col-12">
+                <h1 class="text-center">Curves Panel</h1>
+            </div>
+            <div class="col-12" style="border: 2px solid red">
+                <p>Parameters</p>
+            </div>
+        </div>
+        <div class="row mt-3">
+            <div class="col-6 param-configuration">
+                <p>Parameter</p>
+            </div>
+            <div class="col-6 curves-configuration">
+                <p>curve</p>
+            </div>
+        </div>
+        <div class="row mt-3">
+            <div class="col-6 param-configuration">
+                <p>Parameter</p>
+            </div>
+            <div class="col-6 curves-configuration">
+                <p>curve</p>
+            </div>
+        </div>
+        <div class="row mt-3">
+            <div class="col-6 param-configuration">
+                <p>Parameter</p>
+            </div>
+            <div class="col-6 curves-configuration">
+                <p>curve</p>
+            </div>
+        </div>
+        <div class="row mt-3">
+            <div class="col-6 param-configuration">
+                <p>Parameter</p>
+            </div>
+            <div class="col-6 curves-configuration">
+                <p>curve</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<footer class="button-box">
+    <div class="container footerBtn">
+        <button class="btn" (click)="applyChanges()">
+            <img src="/assets/icons/refresh.png" />&nbsp; Apply Changes
+        </button>
+        <button class="btn" (click)="onPlaySimulation()"> <img src="/assets/icons/play.png"
+                title="Play simulation" />&nbsp;Play</button>
+        <button class="btn" (click)="onPauseSimulation()"> <img src="/assets/icons/pause.png"
+                title="Freeze simulation" />&nbsp;Freeze</button>
+        <button class="btn" (click)="onStopSimulation()" title="Stop simulation"><img
+                src="/assets/icons/stop.png" />&nbsp;Stop</button>
+        <button class="btn" (click)="onUnmuteAlarms()" *ngIf="muteAlarms"> <img src="/assets/icons/mute.png" />
+            &nbsp; Unmute
+            alarms</button>
+        <button class="btn" (click)="onMuteAlarms()" *ngIf="!muteAlarms">
+            <img src="/assets/icons/sound.png" />
+            &nbsp; Mute alarms
+        </button>
+        <button class="btn" (click)="resetSimulation()">
+            <img src="/assets/icons/refresh2.png" />
+            &nbsp; Reset Simulation
+        </button>
+        <button class="btn" (click)="configureNIBP()">
+            <img src="/assets/icons/nibp.png" />
+            &nbsp; NIBP &nbsp;
+        </button>
+        <!-- <button class="btn"> <img
+                src="https://img.icons8.com/external-kiranshastry-lineal-color-kiranshastry/33/000000/external-settings-interface-kiranshastry-lineal-color-kiranshastry.png" />
+            &nbsp; Monitor settings</button> -->
+        <a [routerLink]="['/monitor']" target="_blank">
+            <img src="/assets/icons/monitor.png" />
+            &nbsp; Go to Monitor
+        </a>
+    </div>
+</footer>

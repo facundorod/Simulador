@@ -8,9 +8,11 @@ import { ArrhythmiasComponent } from './pages/arrhythmias/arrhythmias.component'
 import { ScenarioParamsComponent } from './pages/scenario-params/scenario-params.component';
 import { ScenarioParamsCreateComponent } from './pages/scenario-params-create/scenario-params-create.component';
 import { ParametersComponent } from './pages/parameters/parameters.component';
+import { Panel2Component } from './pages/panel2/panel2.component';
 
 const routes: Routes = [
-    { path: '', component: PanelComponent, data: {title: 'SIMVet - Control Panel'}},
+    { path: '', component: PanelComponent, data: { title: 'SIMVet - Control Panel' } },
+    { path: 'v2', component: Panel2Component, data: { title: 'SIMVet - Control Panel 2' } },
     { path: 'animalSpecie', component: AnimalSpeciesListComponent },
     { path: 'pathologies', component: PathologiesComponent },
     { path: 'medications', component: MedicationsComponent },
