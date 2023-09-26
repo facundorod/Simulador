@@ -4,7 +4,7 @@ import { MonitorService } from '../services/monitor.service';
 import { ParameterInfoI } from '@app/shared/models/parameterInfoI';
 import { MonitorStateI } from '@app/shared/models/MonitorStateI';
 import { CurvesInformationI } from '@app/shared/models/CurvesInformationI';
-import { PhysiologicalParameterEnum } from '@app/shared/enum/PhysiologicalParameterEnum';
+import { PhysiologicalParameterSourceEnum } from '@app/shared/enum/physiologicalParameterSourceEnum';
 
 @Component({
     selector: 'app-monitor2',
@@ -65,7 +65,7 @@ export class Monitor2Component implements OnInit, AfterViewInit {
     private updateBreathRateCurves(): void {
         this.chartComponents.forEach((chartComponent: ChartComponent, index: number) => {
             const curveConfiguration: CurvesInformationI = this.monitorState.curvesInformation[index];
-            if (curveConfiguration.source === PhysiologicalParameterEnum.Breath) {
+            if (curveConfiguration.source === PhysiologicalParameterSourceEnum.Breath) {
                 chartComponent.updateRealTimeDataset();
             }
         })
@@ -74,7 +74,7 @@ export class Monitor2Component implements OnInit, AfterViewInit {
     private updateHeartRateCurves(): void {
         this.chartComponents.forEach((chartComponent: ChartComponent, index: number) => {
             const curveConfiguration: CurvesInformationI = this.monitorState.curvesInformation[index];
-            if (curveConfiguration.source === PhysiologicalParameterEnum.Heart) {
+            if (curveConfiguration.source === PhysiologicalParameterSourceEnum.Heart) {
                 chartComponent.updateRealTimeDataset();
             }
         })

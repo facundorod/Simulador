@@ -1,4 +1,4 @@
-import { PhysiologicalParameterEnum } from "../enum/PhysiologicalParameterEnum";
+import { PhysiologicalParameterSourceEnum } from "../enum/physiologicalParameterSourceEnum";
 
 export interface CurvesInformationI {
     dataset: [number, number][],
@@ -14,6 +14,6 @@ export interface CurvesInformationI {
     colorLine: string;
     minY: number;
     maxY: number;
-    source?: PhysiologicalParameterEnum;
+    source?: PhysiologicalParameterSourceEnum;
     showCurves?: boolean;
 }

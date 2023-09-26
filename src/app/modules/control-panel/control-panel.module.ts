@@ -39,6 +39,8 @@ import { NibpComponent } from './modals/nibp/nibp.component';
 import { NgApexchartsModule } from 'ng-apexcharts';
 import { RefCurvesComponent } from './modals/ref-curves/ref-curves.component';
 import { Panel2Component } from './pages/panel2/panel2.component';
+import { ParametersRangesComponent } from './components/parameters-ranges/parameters-ranges.component';
+import { ParameterBoxComponent } from './components/parameter-box/parameter-box.component';
 
 @NgModule({
     declarations: [
@@ -62,6 +64,8 @@ import { Panel2Component } from './pages/panel2/panel2.component';
         NibpComponent,
         RefCurvesComponent,
         Panel2Component,
+        ParametersRangesComponent,
+        ParameterBoxComponent,
     ],
     imports: [
         CommonModule,

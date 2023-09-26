@@ -25,7 +25,7 @@ export class ScenariosComponent extends BaseComponent implements OnInit {
         this.indexScenarioActive = 0;
         this.indexScenarioEdit = 0;
         this.isScenariosPanelRoute =
-            this.router.url === '/panel' ? true : false;
+            this.router.url === '/panel' || this.router.url === '/panel/v2' ? true : false;
     }
 
     ngOnInit(): void { }

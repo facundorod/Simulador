@@ -1,10 +1,15 @@
 import { Component, Input, OnInit, ViewChild } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { AnimalSpeciesService } from '../../services/animalSpecies.service';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { PhysiologicalParameterEnum } from '@app/shared/enum/physiologicalParameterEnum';
 import { AnimalSpeciesI } from '@app/shared/models/animal-speciesI';
-import { SimulationI } from '@app/shared/models/simulationI';
+import { InputParameterI } from '@app/shared/models/inputParameters';
 import { PaginatedItemI } from '@app/shared/models/paginatedItemsI';
+import { PhysiologicalParamaterI } from '@app/shared/models/physiologicalParamaterI';
+import { ScenarioI } from '@app/shared/models/scenarioI';
 import { ScenarioParamsI } from '@app/shared/models/scenarioParamsI';
+import { SimulationI } from '@app/shared/models/simulationI';
+import { ParametersRangesComponent } from '../../components/parameters-ranges/parameters-ranges.component';
+import { AnimalSpeciesService } from '../../services/animalSpecies.service';
 import { ScenariosComponent } from '../scenarios/scenarios.component';
 
 @Component({
@@ -13,18 +18,20 @@ import { ScenariosComponent } from '../scenarios/scenarios.component';
     styleUrls: ['./panel2.component.css']
 })
 export class Panel2Component implements OnInit {
+
     private simulationForm: FormGroup;
     private animalSpecies: AnimalSpeciesI[];
     private loading: boolean;
     private activeAnimalSpecie: AnimalSpeciesI;
     @Input() simulation: SimulationI;
     @ViewChild('scenarios') scenarios: ScenariosComponent;
+    @ViewChild('parametersRanges') parametersSelectors: ParametersRangesComponent;
     muteAlarms: any;
     private indexSimulationActive: number;
-    private activeScenario: ScenarioParamsI;
-    private _scenariosSimulation: ScenarioParamsI[] = [];
-
-
+    private activeScenario: ScenarioI;
+    private scenariosSimulation: ScenarioI[] = [];
+    private inputParameters: InputParameterI;
+    private parametersWithCurves: PhysiologicalParamaterI[];
 
     constructor(
         private fb: FormBuilder,
@@ -34,6 +41,13 @@ export class Panel2Component implements OnInit {
     ngOnInit(): void {
         this.loading = true;
         this.animalSpecies = [];
+        this.inputParameters = {
+            breathRate: 0,
+            heartRate: 0,
+            spO2: 0,
+            temperature: 0
+        }
+        this.indexSimulationActive = 0;
         this.activeAnimalSpecie = null;
         this.initFormSimulation();
         this.getAnimalSpeciesFromServer();
@@ -119,19 +133,16 @@ export class Panel2Component implements OnInit {
     }
 
     public getScenarios(scenarios: ScenarioParamsI | any): void {
-        this.scenarioSimulation = scenarios;
-        if (this.activeScenario !== this.scenariosSimulation[this.indexSimulationActive])
+        this.scenariosSimulation = scenarios;
+        if (!this.activeScenario || this.activeScenario !== this.scenariosSimulation[this.indexSimulationActive])
             this.activeScenario = this.scenariosSimulation[this.indexSimulationActive];
-
+        this.setParameterInformation();
     }
 
-    public get scenariosSimulation(): ScenarioParamsI[] {
-        return this._scenariosSimulation;
+    public getScenariosSimulation(): ScenarioI[] {
+        return this.scenariosSimulation;
     }
 
-    public set scenarioSimulation(scenario: ScenarioParamsI) {
-        this.scenarioSimulation = scenario;
-    }
 
     private onValueChanges(): void {
         this.simulationForm.get('animalSpecie').valueChanges.subscribe((val: AnimalSpeciesI) => {
@@ -142,5 +153,61 @@ export class Panel2Component implements OnInit {
                 this.activeScenario = null;
             }
         });
+    }
+
+    private setParameterInformation(): void {
+        if (this.activeScenario) {
+            this.parametersWithCurves = this.activeScenario.parameters.filter((par: PhysiologicalParamaterI) => {
+                return par.showInMonitor
+            }).sort((par1: PhysiologicalParamaterI, par2: PhysiologicalParamaterI) => {
+                return par1.order - par2.order
+            })
+
+            this.activeScenario.parameters.forEach((parameter: PhysiologicalParamaterI) => {
+                switch (parameter.label.toUpperCase()) {
+                    case PhysiologicalParameterEnum.HeartRate:
+                        this.inputParameters.heartRate = parameter.value;
+                        break;
+                    case PhysiologicalParameterEnum.OxygenSaturation:
+                        this.inputParameters.spO2 = parameter.value;
+                        break;
+                    case PhysiologicalParameterEnum.RespirationRate:
+                        this.inputParameters.breathRate = parameter.value;
+                        break;
+                    case PhysiologicalParameterEnum.Temperature:
+                        this.inputParameters.temperature = parameter.value;
+                        break;
+                    default:
+                        break;
+                }
+            })
+            this.parametersSelectors.setParametersInformation(this.inputParameters);
+        }
+    }
+
+    public getParameterInformation(): InputParameterI {
+        return this.inputParameters;
+    }
+
+    public connectedSimulation(): boolean {
+        return this.activeScenario !== null && this.activeScenario !== undefined;
+    }
+
+    public setHeartRate(newHR: number): void {
+        this.inputParameters.heartRate = newHR;
+    }
+
+    public setTemperature(newTemp: number): void {
+        this.inputParameters.temperature = newTemp;
+    }
+    public setSPO2(newSPO2: number): void {
+        this.inputParameters.temperature = newSPO2;
+    }
+    public setBreathRate(newBR: number): void {
+        this.inputParameters.breathRate = newBR;
+    }
+
+    public getParametersWithCurves(): PhysiologicalParamaterI[] {
+        return this.parametersWithCurves;
     }
 }

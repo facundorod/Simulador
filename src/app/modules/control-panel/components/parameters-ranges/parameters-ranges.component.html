@@ -1,0 +1,30 @@
+<form [formGroup]="getFormGroup()">
+    <div class="row justify-content-center">
+        <div class="col-4">
+            <label for="customRange1" class="form-label">Heart rate</label>
+            <input type="range" class="form-range" id="customRange1" min="1" max="200" step="1"
+                formControlName="heartRate">
+            <span class="rate-value">{{getFormGroup().get('heartRate').value}}</span>
+        </div>
+        <div class="col-4">
+            <label for="customRange1" class="form-label">Respiration rate</label>
+            <input type="range" class="form-range" id="customRange1" min="1" max="50" step="1"
+                formControlName="respirationRate">
+            <span class="rate-value">{{getFormGroup().get('respirationRate').value}}</span>
+        </div>
+    </div>
+    <div class="row justify-content-center">
+        <div class="col-4">
+            <label for="customRange1" class="form-label">SPO2</label>
+            <input type="range" class="form-range" id="customRange1" min="30" max="100" step="1" formControlName="spo2">
+            <span class="rate-value">{{getFormGroup().get('spo2').value}}</span>
+        </div>
+        <div class="col-4">
+            <label for="customRange1" class="form-label">Temperature</label>
+            <input type="range" class="form-range" id="customRange1" min="30" max="45" step="1"
+                formControlName="temperature">
+            <span class="rate-value">{{getFormGroup().get('temperature').value}}</span>
+        </div>
+    </div>
+
+</form>
