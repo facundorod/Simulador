@@ -1,3 +1,6 @@
+import { PhysiologicalParameterEnum } from "../enum/physiologicalParameterEnum";
+import { RefCurvesI } from "./refCurvesI";
+
 export interface PhysiologicalParamaterI {
     id_pp: number;
     name: string;
@@ -8,7 +11,7 @@ export interface PhysiologicalParamaterI {
     specialConfiguration?: JSON;
     updated_at?: Date;
     created_at?: Date;
-    source?: string;
+    source?: PhysiologicalParameterEnum;
     alert_high?: number;
     alert_high_2?: number;
     order?: number;
@@ -17,8 +20,6 @@ export interface PhysiologicalParamaterI {
     alert_low_2?: number;
     maxY?: number;
     value?: number;
-    curves?: {
-        original: [number, number][],
-        dataset: [number, number][]
-    }
+    refCurves?: RefCurvesI[];
+    curve?: [number, number][]
 }

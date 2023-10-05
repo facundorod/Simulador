@@ -11,9 +11,10 @@ import { NgApexchartsModule } from 'ng-apexcharts';
 import { MiniMonitorComponent } from './components/mini-monitor/mini-monitor.component';
 import { Monitor2Component } from './monitor2/monitor2.component';
 import { ChartComponent } from './components/chart/chart.component';
+import { CurvesPreviewComponent } from './components/curves-preview/curves-preview.component';
 
 @NgModule({
-    declarations: [MonitorComponent, MiniMonitorComponent, Monitor2Component, ChartComponent],
+    declarations: [MonitorComponent, MiniMonitorComponent, Monitor2Component, ChartComponent, CurvesPreviewComponent],
     imports: [
         CommonModule,
         SimulationModule,
@@ -24,6 +25,6 @@ import { ChartComponent } from './components/chart/chart.component';
         NgApexchartsModule,
     ],
     providers: [CurvesService, MonitorService],
-    exports: [MiniMonitorComponent],
+    exports: [MiniMonitorComponent, CurvesPreviewComponent],
 })
 export class MonitorModule {}

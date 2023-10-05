@@ -75,6 +75,10 @@ export class ChartComponent implements OnInit, AfterViewInit {
         this.currentIndex++;
     }
 
+    public getCurrentIndex(): number {
+        return this.currentIndex;
+    }
+
     private swapDatasets(): void {
         const swapCurve = [...this.activeDataset];
         this.activeDataset = [...this.sweepDataset];
@@ -83,12 +87,19 @@ export class ChartComponent implements OnInit, AfterViewInit {
 
     private updateSeries(): void {
         if (this.chartElement) {
-            this.chartElement.updateSeries([{ data: this.activeDataset }, { data: this.sweepDataset }], true)
+            this.chartElement.updateSeries([{ data: this.activeDataset }, { data: this.sweepDataset }], false)
         }
     }
 
     private shouldSwapCurves(): boolean {
         return this.sweepDataset.length === this.dataset.length - 1
+    }
+
+    public updateColorLine(newColorLine: string) {
+        this.options.series.forEach((value) => {
+            value.color = newColorLine
+        })
+        this.chartElement.updateOptions(this.options)
     }
 
     private getChartOptions(): Partial<ChartOptions> {

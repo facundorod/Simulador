@@ -1,0 +1,4 @@
+<div class="container-fluid chart-container" *ngIf="dataset && dataset.length">
+    <app-chart #chartComponent [colorLine]="colorLine" [maxY]="maxY" [height]="'160px'" [dataset]="dataset">
+    </app-chart>
+</div>

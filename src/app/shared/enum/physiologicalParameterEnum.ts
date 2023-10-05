@@ -4,5 +4,7 @@ export enum PhysiologicalParameterEnum {
     Temperature = 'TEMP',
     NonInvasiveBloodPressure = 'NIBP',
     InvasiveBloodPressure = 'IBP',
-    OxygenSaturation = 'SPO2'
+    OxygenSaturation = 'SPO2',
+    HeartSource = 'CAR',
+    BreathSource = 'RESP'
 }

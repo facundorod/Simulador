@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, Input, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { PhysiologicalParameterEnum } from '@app/shared/enum/physiologicalParameterEnum';
 import { AnimalSpeciesI } from '@app/shared/models/animal-speciesI';
@@ -11,6 +11,8 @@ import { SimulationI } from '@app/shared/models/simulationI';
 import { ParametersRangesComponent } from '../../components/parameters-ranges/parameters-ranges.component';
 import { AnimalSpeciesService } from '../../services/animalSpecies.service';
 import { ScenariosComponent } from '../scenarios/scenarios.component';
+import { CurvesPreviewComponent } from '@app/modules/monitor/components/curves-preview/curves-preview.component';
+import { CurvesService } from '../../services/curves.service';
 
 @Component({
     selector: 'app-panel2',
@@ -26,6 +28,8 @@ export class Panel2Component implements OnInit {
     @Input() simulation: SimulationI;
     @ViewChild('scenarios') scenarios: ScenariosComponent;
     @ViewChild('parametersRanges') parametersSelectors: ParametersRangesComponent;
+    @ViewChildren('curvesPreview') curvesPreviews: QueryList<CurvesPreviewComponent>;
+
     muteAlarms: any;
     private indexSimulationActive: number;
     private activeScenario: ScenarioI;
@@ -35,7 +39,8 @@ export class Panel2Component implements OnInit {
 
     constructor(
         private fb: FormBuilder,
-        private animalService: AnimalSpeciesService
+        private animalService: AnimalSpeciesService,
+        private curvesService: CurvesService
     ) { }
 
     ngOnInit(): void {
@@ -56,9 +61,12 @@ export class Panel2Component implements OnInit {
     existCurves(): any {
         throw new Error('Method not implemented.');
     }
-    applyChanges() {
-        throw new Error('Method not implemented.');
+    public onApplyChanges(): void {
+        // localStorage.setItem('scenarioState', JSON.stringify(this.monitorState))
+        // this.saveParameterInfo();
+        // this.updateState();
     }
+
     onPlaySimulation() {
         throw new Error('Method not implemented.');
     }
@@ -155,14 +163,29 @@ export class Panel2Component implements OnInit {
         });
     }
 
+    public setNewColorLine(newColorLine: string, index: number) {
+        this.parametersWithCurves[index].colorLine = newColorLine;
+    }
+
     private setParameterInformation(): void {
         if (this.activeScenario) {
             this.parametersWithCurves = this.activeScenario.parameters.filter((par: PhysiologicalParamaterI) => {
                 return par.showInMonitor
             }).sort((par1: PhysiologicalParamaterI, par2: PhysiologicalParamaterI) => {
                 return par1.order - par2.order
+            }).map((par: PhysiologicalParamaterI) => {
+                let normalizedDataset: [number, number][] = []
+                if (par.source === PhysiologicalParameterEnum.HeartSource) {
+                    normalizedDataset = this.curvesService.normalizeDataset(par.curve, this.inputParameters.heartRate, par.source)
+                } else {
+                    normalizedDataset = this.curvesService.normalizeDataset(par.curve, this.inputParameters.breathRate, par.source)
+                }
+                delete par.curve
+                return {
+                    curve: this.curvesService.extendCurves(normalizedDataset),
+                    ...par
+                }
             })
-
             this.activeScenario.parameters.forEach((parameter: PhysiologicalParamaterI) => {
                 switch (parameter.label.toUpperCase()) {
                     case PhysiologicalParameterEnum.HeartRate:
@@ -209,5 +232,11 @@ export class Panel2Component implements OnInit {
 
     public getParametersWithCurves(): PhysiologicalParamaterI[] {
         return this.parametersWithCurves;
+    }
+
+    public setNewDataset(newDataset: [number, number][] | any, index: number) {
+        const curvesPreviewItem: CurvesPreviewComponent = this.curvesPreviews.toArray()[index];
+        if (curvesPreviewItem)
+            curvesPreviewItem.updateDataset(newDataset);
     }
 }

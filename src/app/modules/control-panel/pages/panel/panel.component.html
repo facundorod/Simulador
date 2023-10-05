@@ -157,13 +157,12 @@
                                 Pletismography </p>
 
                         </div>
-                        <div class="col-4" *ngIf="showParam(curve)">
-                            <button class="btn btn-primary save-changes"
-                                (click)="onLoadRefCurves(curve?.curveConfiguration.label)" position="top"
-                                ngbTooltip="Change curve to simulate">
+                        <!-- <div class="col-4" *ngIf="showParam(curve)">
+                            <button class="btn btn-primary save-changes" (click)="onLoadRefCurves(curve?.curveConfiguration.label)"
+                                position="top" ngbTooltip="Change curve to simulate">
                                 Replace Curve
                             </button>
-                        </div>
+                        </div> -->
                     </div>
 
                     <button class="btn btn-primary btn-spinner" type="button" disabled *ngIf="!showParam(curve)">

@@ -518,7 +518,7 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
                             this.onLoadParameters();
                             this.setLoading(false);
                             this.scenarios.setAnimal(as);
-                            this.loadRefCurves();
+                            // this.loadRefCurves();
                             this.applyChanges();
 
                         } else {
@@ -553,81 +553,81 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
     }
 
     public onLoadRefCurves(parameter: string): void {
-        const refModalCurves = this.modal.open(RefCurvesComponent, { size: 'lg', windowClass: 'modal-small' });
-        let curves = [];
-        let index = 0;
-        switch (parameter) {
-            case 'ECG':
-                curves = this.refCurvesECG;
-                break;
-            case 'SPO2':
-                curves = this.refCurvesPlet;
-                index = 3;
-                break;
-            case 'CO2':
-                curves = this.refCurvesCapno;
-                index = 1;
-                break;
-            case 'IBP':
-                curves = this.refCurvesIBP;
-                index = 2;
-                break;
-            default:
-                break;
-        }
-        refModalCurves.componentInstance.setRefCurves(curves);
+        // const refModalCurves = this.modal.open(RefCurvesComponent, { size: 'lg', windowClass: 'modal-small' });
+        // let curves = [];
+        // let index = 0;
+        // switch (parameter) {
+        //     case 'ECG':
+        //         curves = this.refCurvesECG;
+        //         break;
+        //     case 'SPO2':
+        //         curves = this.refCurvesPlet;
+        //         index = 3;
+        //         break;
+        //     case 'CO2':
+        //         curves = this.refCurvesCapno;
+        //         index = 1;
+        //         break;
+        //     case 'IBP':
+        //         curves = this.refCurvesIBP;
+        //         index = 2;
+        //         break;
+        //     default:
+        //         break;
+        // }
+        // refModalCurves.componentInstance.setRefCurves(curves);
 
-        refModalCurves.result.then((refCurve: {
-            curves: [number, number][],
-            name: string,
-            description: string
-        }) => {
-            if (refCurve && refCurve.curves.length) {
-                this.curvesService.normalizeCurve(refCurve.curves).subscribe((curve: [number, number][]) => {
-                    const auxCurrentState = JSON.parse(JSON.stringify(this.currentState));
-                    auxCurrentState.curves[index].curveValues = curve;
-                    if (index == 1) {
-                        this.capnoCurrentCurve = refCurve.name;
-                        this.endTidalCO2 = Math.round(this.getMaxYValue(curve).value);
-                        this.inspirationCO2 = Math.round(curve[0][1]);
-                        this.curvesService.updateRespirationRate(auxCurrentState, this.breathRate).subscribe((newState: StatesI) => {
-                            this.currentState.curves[1].curveValues = newState.curves[1].curveValues;
-                            this.originalCurves[1].curveValues = newState.curves[1].curveValues;
-                            this.originalState.curves[index].curveValues = newState.curves[1].curveValues;
-                            this.updatedState = true;
-                        })
-                    } else {
-                        this.curvesService.updateHeartRate(auxCurrentState, this.heartRate).subscribe((newState: StatesI) => {
-                            this.currentState.curves[index].curveValues = newState.curves[index].curveValues;
-                            this.originalCurves[index].curveValues = newState.curves[index].curveValues;
-                            this.originalState.curves[index].curveValues = newState.curves[index].curveValues;
-                            if (index == 0) {
-                                this.ecgCurrentCurve = refCurve.name;
-                            }
+        // refModalCurves.result.then((refCurve: {
+        //     curves: [number, number][],
+        //     name: string,
+        //     description: string
+        // }) => {
+        //     if (refCurve && refCurve.curves.length) {
+        //         this.curvesService.normalizeCurve(refCurve.curves).subscribe((curve: [number, number][]) => {
+        //             const auxCurrentState = JSON.parse(JSON.stringify(this.currentState));
+        //             auxCurrentState.curves[index].curveValues = curve;
+        //             if (index == 1) {
+        //                 this.capnoCurrentCurve = refCurve.name;
+        //                 this.endTidalCO2 = Math.round(this.getMaxYValue(curve).value);
+        //                 this.inspirationCO2 = Math.round(curve[0][1]);
+        //                 this.curvesService.updateRespirationRate(auxCurrentState, this.breathRate).subscribe((newState: StatesI) => {
+        //                     this.currentState.curves[1].curveValues = newState.curves[1].curveValues;
+        //                     this.originalCurves[1].curveValues = newState.curves[1].curveValues;
+        //                     this.originalState.curves[index].curveValues = newState.curves[1].curveValues;
+        //                     this.updatedState = true;
+        //                 })
+        //             } else {
+        //                 this.curvesService.updateHeartRate(auxCurrentState, this.heartRate).subscribe((newState: StatesI) => {
+        //                     this.currentState.curves[index].curveValues = newState.curves[index].curveValues;
+        //                     this.originalCurves[index].curveValues = newState.curves[index].curveValues;
+        //                     this.originalState.curves[index].curveValues = newState.curves[index].curveValues;
+        //                     if (index == 0) {
+        //                         this.ecgCurrentCurve = refCurve.name;
+        //                     }
 
-                            if (index == 2) {
-                                this.systolicIbp = Math.round(this.getMaxYValue(curve).value);
-                                this.diastolicIbp = Math.round(curve[0][1]);
-                                this.ibpCurrentCurve = refCurve.name;
-                                this.fromGroupParameters.patchValue({ ibpSystolic: this.systolicIbp, ibpDiastolic: this.diastolicIbp });
-                            }
-                            if (index == 3) {
-                                this.pletCurrentCurve = refCurve.name;
-                            }
-                            const miniMonitor: MiniMonitorComponent = this.miniMonitors.toArray()[index];
-                            // miniMonitor.changeMaxAndMin(newState.curves[index].curveValues);
-                        })
-                    }
+        //                     if (index == 2) {
+        //                         this.systolicIbp = Math.round(this.getMaxYValue(curve).value);
+        //                         this.diastolicIbp = Math.round(curve[0][1]);
+        //                         this.ibpCurrentCurve = refCurve.name;
+        //                         this.fromGroupParameters.patchValue({ ibpSystolic: this.systolicIbp, ibpDiastolic: this.diastolicIbp });
+        //                     }
+        //                     if (index == 3) {
+        //                         this.pletCurrentCurve = refCurve.name;
+        //                     }
+        //                     const miniMonitor: MiniMonitorComponent = this.miniMonitors.toArray()[index];
+        //                     // miniMonitor.changeMaxAndMin(newState.curves[index].curveValues);
+        //                 })
+        //             }
 
-                })
+        //         })
 
 
-            }
+        //     }
 
-        })
-            .catch((error: any) => {
-                console.error("Error", error);
-            });
+        // })
+        //     .catch((error: any) => {
+        //         console.error("Error", error);
+        //     });
     }
 
     public showParam(curve: CurvesI): boolean {
@@ -646,36 +646,36 @@ export class PanelComponent extends BaseComponent implements OnInit, OnDestroy {
     }
 
     private loadRefCurves(): void {
-        const animalId: number | undefined = this.animalSpecie?.id_as;
-        if (animalId) {
-            this.curvesService.getRefCurves(animalId, 'ECG').subscribe((value: RefCurvesResponse[]) => {
-                if (value) {
-                    this.refCurvesECG = value;
-                }
-                this.isLoadingECG = false;
-            });
+        // const animalId: number | undefined = this.animalSpecie?.id_as;
+        // if (animalId) {
+        //     this.curvesService.getRefCurves(animalId, 'ECG').subscribe((value: RefCurvesResponse[]) => {
+        //         if (value) {
+        //             this.refCurvesECG = value;
+        //         }
+        //         this.isLoadingECG = false;
+        //     });
 
-            this.curvesService.getRefCurves(animalId, 'CO2').subscribe((value: RefCurvesResponse[]) => {
-                if (value) {
-                    this.refCurvesCapno = value;
-                }
-                this.isLoadingCapno = false;
-            })
+        //     this.curvesService.getRefCurves(animalId, 'CO2').subscribe((value: RefCurvesResponse[]) => {
+        //         if (value) {
+        //             this.refCurvesCapno = value;
+        //         }
+        //         this.isLoadingCapno = false;
+        //     })
 
-            this.curvesService.getRefCurves(animalId, 'SPO2').subscribe((value: RefCurvesResponse[]) => {
-                if (value) {
-                    this.refCurvesPlet = value;
-                }
-                this.isLoadingPlet = false;
-            })
+        //     this.curvesService.getRefCurves(animalId, 'SPO2').subscribe((value: RefCurvesResponse[]) => {
+        //         if (value) {
+        //             this.refCurvesPlet = value;
+        //         }
+        //         this.isLoadingPlet = false;
+        //     })
 
-            this.curvesService.getRefCurves(animalId, 'IBP').subscribe((value: RefCurvesResponse[]) => {
-                if (value) {
-                    this.refCurvesIBP = value;
-                }
-                this.isLoadingIbp = false;
-            })
-        }
+        //     this.curvesService.getRefCurves(animalId, 'IBP').subscribe((value: RefCurvesResponse[]) => {
+        //         if (value) {
+        //             this.refCurvesIBP = value;
+        //         }
+        //         this.isLoadingIbp = false;
+        //     })
+        // }
 
     }
 

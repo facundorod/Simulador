@@ -11,11 +11,18 @@
     color: #fff;
 }
 
+.param-configuration {
+    background-color: #BAAFE4;
+}
+
 .param-configuration,
 .curves-configuration {
     border-radius: 10px;
-    background-color: #BAAFE4;
     border: 2px solid #59478d;
     margin-top: 20px;
     width: 100%;
+}
+
+.curves-configuration {
+    background-color: #000;
 }

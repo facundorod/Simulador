@@ -41,6 +41,7 @@ import { RefCurvesComponent } from './modals/ref-curves/ref-curves.component';
 import { Panel2Component } from './pages/panel2/panel2.component';
 import { ParametersRangesComponent } from './components/parameters-ranges/parameters-ranges.component';
 import { ParameterBoxComponent } from './components/parameter-box/parameter-box.component';
+import { InterpolatorService } from './services/interpolator.service';
 
 @NgModule({
     declarations: [
@@ -91,6 +92,7 @@ import { ParameterBoxComponent } from './components/parameter-box/parameter-box.
         CurvesService,
         MonitorService,
         ParametersService,
+        InterpolatorService
     ],
 })
 export class ControlPanelModule { }

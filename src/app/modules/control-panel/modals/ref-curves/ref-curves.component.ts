@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CurveValues } from '@app/shared/models/curveValues';
-import { RefCurvesResponse } from '@app/shared/models/refCurvesResponse';
+import { RefCurvesI } from '@app/shared/models/refCurvesI';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
@@ -10,7 +10,7 @@ import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 })
 export class RefCurvesComponent implements OnInit {
 
-    private refCurves: RefCurvesResponse[];
+    private refCurves: RefCurvesI[];
     constructor(private activeModal: NgbActiveModal) {
     }
 
@@ -18,10 +18,8 @@ export class RefCurvesComponent implements OnInit {
     }
 
 
-    public setRefCurves(refCurves: RefCurvesResponse[]): void {
+    public setRefCurves(refCurves: RefCurvesI[]): void {
         if (refCurves) this.refCurves = refCurves;
-        // Add new item null just for custom curves
-        if (!this.refCurves.includes(null)) this.refCurves.push(null);
     }
 
 
@@ -74,15 +72,12 @@ export class RefCurvesComponent implements OnInit {
         }
     }
 
-    public getRefCurves(): RefCurvesResponse[] {
+    public getRefCurves(): RefCurvesI[] {
         return this.refCurves;
     }
 
-    public onSelectCurve(refCurve: RefCurvesResponse): void {
-        const formattedCurves: [number, number][] = refCurve.curves.curves.map((value: CurveValues) => {
-            return [value.t, value.value];
-        })
-        this.activeModal.close({ curves: formattedCurves, name: refCurve.curves.name, description: refCurve.curves.description });
+    public onSelectCurve(refCurve: RefCurvesI): void {
+        this.activeModal.close(refCurve);
     }
 
     public onCancelModal(): void {

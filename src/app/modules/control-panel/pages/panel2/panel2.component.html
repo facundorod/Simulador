@@ -65,12 +65,17 @@
                 </app-parameters-ranges>
             </div>
         </div>
-        <div class="row mt-3" *ngFor="let parCurve of getParametersWithCurves()">
+        <div class="row mt-3 justify-content-around" *ngFor="let parCurve of getParametersWithCurves(); let i=index">
             <div class="col-6 param-configuration">
-                <app-parameter-box [parameter]="parCurve"></app-parameter-box>
+                <app-parameter-box [parameter]="parCurve" [breathRate]="getParameterInformation().breathRate"
+                    [heartRate]="getParameterInformation().heartRate"
+                    (newParameter)="setNewDataset($event, i)" (colorLine)="setNewColorLine($event, i)" ></app-parameter-box>
             </div>
-            <div class="col-6 curves-configuration">
-                <p>curve</p>
+            <div class="col-5 curves-configuration">
+                <app-curves-preview #curvesPreview [colorLine]="parCurve.colorLine"
+                    [dataset]="parCurve.curve">
+
+                </app-curves-preview>
             </div>
         </div>
     </div>
@@ -79,7 +84,7 @@
 
 <footer class="button-box">
     <div class="container footerBtn">
-        <button class="btn" (click)="applyChanges()">
+        <button class="btn" (click)="onApplyChanges()">
             <img src="/assets/icons/refresh.png" />&nbsp; Apply Changes
         </button>
         <button class="btn" (click)="onPlaySimulation()"> <img src="/assets/icons/play.png"
