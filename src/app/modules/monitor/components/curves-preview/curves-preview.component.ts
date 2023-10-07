@@ -8,12 +8,13 @@ import { curvesConfiguration } from '@app/shared/constants/curves';
     styleUrls: ['./curves-preview.component.css']
 })
 export class CurvesPreviewComponent implements OnInit, AfterViewInit, OnChanges {
-
-    @Input() dataset: [number, number][];
+    private _dataset: [number, number][]
+    @Input() set dataset(d: [number, number][]) {
+        this._dataset = d;
+    };
     @Input() colorLine: string;
     @Input() maxY: number;
     @ViewChild('chartComponent') chartComponent: ChartComponent;
-    private newDataset: [number, number][] = [];
 
     private intervalCurves: NodeJS.Timeout;
 
@@ -31,28 +32,24 @@ export class CurvesPreviewComponent implements OnInit, AfterViewInit, OnChanges 
         if (change.colorLine && !change.colorLine.firstChange) {
             this.chartComponent.updateColorLine(change.colorLine.currentValue)
         }
+
     }
 
 
+    public get dataset() {
+        return this._dataset;
+    }
 
     private simulationHeartCurves(): void {
-
         this.intervalCurves = setInterval(() => {
-            if (this.newDataset.length) {
+            if (this._dataset.length) {
                 const currentIndex = this.chartComponent.getCurrentIndex();
                 if (currentIndex % curvesConfiguration.TOTAL_POINTS === 0) {
-                    this.dataset = [...this.newDataset];
-                    this.newDataset = [];
+                    this.dataset = [...this._dataset];
                 }
             }
             if (this.chartComponent)
                 this.chartComponent.updateRealTimeDataset();
-        }, 50)
+        }, 10)
     }
-
-
-    public updateDataset(newDataset: [number, number][]): void {
-        this.newDataset = newDataset;
-    }
-
 }

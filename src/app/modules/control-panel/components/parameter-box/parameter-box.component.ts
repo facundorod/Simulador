@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { PhysiologicalParamaterI } from '@app/shared/models/physiologicalParamaterI';
 import { CurvesService } from '../../services/curves.service';
 import { FormBuilder, FormGroup } from '@angular/forms';
@@ -6,6 +6,7 @@ import { RefCurvesComponent } from '../../modals/ref-curves/ref-curves.component
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { RefCurvesI } from '@app/shared/models/refCurvesI';
 import { PhysiologicalParameterEnum } from '@app/shared/enum/physiologicalParameterEnum';
+import { PhysiologicalParameterSourceEnum } from '@app/shared/enum/physiologicalParameterSourceEnum';
 
 @Component({
     selector: 'app-parameter-box',
@@ -14,8 +15,9 @@ import { PhysiologicalParameterEnum } from '@app/shared/enum/physiologicalParame
 })
 export class ParameterBoxComponent implements OnInit {
     private _parameter: PhysiologicalParamaterI; // Copia privada de parCurve
-    @Output() newParameter: EventEmitter<[number, number][]> = new EventEmitter<[number, number][]>();
+    @Output() newParameterDataset: EventEmitter<[number, number][]> = new EventEmitter<[number, number][]>();
     @Output() colorLine: EventEmitter<string> = new EventEmitter<string>();
+    @Output() disconnectParameter: EventEmitter<boolean> = new EventEmitter<boolean>();
     @Input() heartRate: number;
     @Input() breathRate: number;
     @Input() set parameter(param: PhysiologicalParamaterI) {
@@ -60,6 +62,9 @@ export class ParameterBoxComponent implements OnInit {
                 this.emitNewColorLine(newColorLine);
             }
         })
+        this.parameterForm.get('disconnect').valueChanges.subscribe((disconnect: boolean) => {
+            this.emitDisconnectParameter(disconnect);
+        })
     }
 
     public disconnectValue(): boolean {
@@ -83,10 +88,10 @@ export class ParameterBoxComponent implements OnInit {
         refModalCurves.componentInstance.setRefCurves(this.parameter.refCurves);
         refModalCurves.result.then((value: RefCurvesI) => {
             if (value?.dataset && value.dataset.length) {
-                const originalNormalizedCurve: [number, number][] = this.parameter.source === PhysiologicalParameterEnum.HeartSource ?
-                    this.curvesService.normalizeDataset(value.dataset, this.heartRate, PhysiologicalParameterEnum.HeartSource) :
-                    this.curvesService.normalizeDataset(value.dataset, this.breathRate, PhysiologicalParameterEnum.BreathSource)
-                this._parameter.curve = this.curvesService.extendCurves(originalNormalizedCurve);
+                this._parameter.curve = value.dataset;
+                this._parameter.normalizedCurve = this.curvesService
+                    .normalizeDataset(value.dataset, this.parameter.source === PhysiologicalParameterSourceEnum.Heart ? this.heartRate : this.breathRate,
+                        this.parameter.source)
                 this.emitNewParameterDataset();
             }
         })
@@ -98,6 +103,10 @@ export class ParameterBoxComponent implements OnInit {
     }
 
     public emitNewParameterDataset(): void {
-        this.newParameter.emit(this._parameter.curve)
+        this.newParameterDataset.emit(this._parameter.curve)
+    }
+
+    public emitDisconnectParameter(disconnectValue: boolean) {
+        this.disconnectParameter.emit(disconnectValue);
     }
 }

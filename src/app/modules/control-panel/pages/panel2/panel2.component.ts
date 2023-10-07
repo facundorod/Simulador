@@ -13,6 +13,8 @@ import { AnimalSpeciesService } from '../../services/animalSpecies.service';
 import { ScenariosComponent } from '../scenarios/scenarios.component';
 import { CurvesPreviewComponent } from '@app/modules/monitor/components/curves-preview/curves-preview.component';
 import { CurvesService } from '../../services/curves.service';
+import { PhysiologicalParameterSourceEnum } from '@app/shared/enum/physiologicalParameterSourceEnum';
+import { curvesConfiguration } from '@app/shared/constants/curves';
 
 @Component({
     selector: 'app-panel2',
@@ -23,7 +25,7 @@ export class Panel2Component implements OnInit {
 
     private simulationForm: FormGroup;
     private animalSpecies: AnimalSpeciesI[];
-    private loading: boolean;
+    public loading: boolean;
     private activeAnimalSpecie: AnimalSpeciesI;
     @Input() simulation: SimulationI;
     @ViewChild('scenarios') scenarios: ScenariosComponent;
@@ -35,8 +37,8 @@ export class Panel2Component implements OnInit {
     private activeScenario: ScenarioI;
     private scenariosSimulation: ScenarioI[] = [];
     private inputParameters: InputParameterI;
-    private parametersWithCurves: PhysiologicalParamaterI[];
-
+    private originalParametersWithCurves: PhysiologicalParamaterI[];
+    private currentParametersWithCurves: PhysiologicalParamaterI[];
     constructor(
         private fb: FormBuilder,
         private animalService: AnimalSpeciesService,
@@ -129,10 +131,6 @@ export class Panel2Component implements OnInit {
         })
     }
 
-    public isLoading(): boolean {
-        return this.loading;
-    }
-
     public getPosScenarios(pos: { indexActive: number }): void {
         if (this.indexSimulationActive != pos.indexActive) {
             this.indexSimulationActive = pos.indexActive;
@@ -163,29 +161,24 @@ export class Panel2Component implements OnInit {
         });
     }
 
+    public disconnectParameter(disconnect: boolean, index: number) {
+        const currentParameter: PhysiologicalParamaterI = this.currentParametersWithCurves[index]
+        if (disconnect && !currentParameter.disconnected) {
+            this.currentParametersWithCurves[index].curve = curvesConfiguration.CURVE_CONSTANT();
+            this.currentParametersWithCurves[index].normalizedCurve = curvesConfiguration.CURVE_CONSTANT();
+        }
+        if (!disconnect && currentParameter.disconnected) {
+            this.currentParametersWithCurves[index].curve = this.originalParametersWithCurves[index].curve
+            this.currentParametersWithCurves[index].normalizedCurve = this.originalParametersWithCurves[index].normalizedCurve
+        }
+    }
+
     public setNewColorLine(newColorLine: string, index: number) {
-        this.parametersWithCurves[index].colorLine = newColorLine;
+        this.originalParametersWithCurves[index].colorLine = newColorLine;
     }
 
     private setParameterInformation(): void {
         if (this.activeScenario) {
-            this.parametersWithCurves = this.activeScenario.parameters.filter((par: PhysiologicalParamaterI) => {
-                return par.showInMonitor
-            }).sort((par1: PhysiologicalParamaterI, par2: PhysiologicalParamaterI) => {
-                return par1.order - par2.order
-            }).map((par: PhysiologicalParamaterI) => {
-                let normalizedDataset: [number, number][] = []
-                if (par.source === PhysiologicalParameterEnum.HeartSource) {
-                    normalizedDataset = this.curvesService.normalizeDataset(par.curve, this.inputParameters.heartRate, par.source)
-                } else {
-                    normalizedDataset = this.curvesService.normalizeDataset(par.curve, this.inputParameters.breathRate, par.source)
-                }
-                delete par.curve
-                return {
-                    curve: this.curvesService.extendCurves(normalizedDataset),
-                    ...par
-                }
-            })
             this.activeScenario.parameters.forEach((parameter: PhysiologicalParamaterI) => {
                 switch (parameter.label.toUpperCase()) {
                     case PhysiologicalParameterEnum.HeartRate:
@@ -205,7 +198,36 @@ export class Panel2Component implements OnInit {
                 }
             })
             this.parametersSelectors.setParametersInformation(this.inputParameters);
+            this.setParametersWithCurve();
         }
+    }
+
+
+    private setParametersWithCurve() {
+        this.originalParametersWithCurves = this.activeScenario.parameters.filter((par: PhysiologicalParamaterI) => {
+            return par.showInMonitor;
+        }).sort((par1: PhysiologicalParamaterI, par2: PhysiologicalParamaterI) => {
+            return par1.order - par2.order;
+        }).map((par: PhysiologicalParamaterI) => {
+            let normalizedDataset: [number, number][] = this.normalizeCurves(par);
+            return {
+                curve: normalizedDataset,
+                normalizedCurve: normalizedDataset,
+                ...par
+            };
+        });
+
+        this.currentParametersWithCurves = [...this.originalParametersWithCurves];
+    }
+
+    private normalizeCurves(par: PhysiologicalParamaterI): [number, number][] {
+        let normalizedDataset: [number, number][] = [];
+        if (par.source === PhysiologicalParameterSourceEnum.Heart) {
+            normalizedDataset = this.curvesService.normalizeDataset(par.curve, this.inputParameters.heartRate, PhysiologicalParameterSourceEnum.Heart);
+        } else {
+            normalizedDataset = this.curvesService.normalizeDataset(par.curve, this.inputParameters.breathRate, PhysiologicalParameterSourceEnum.Breath);
+        }
+        return normalizedDataset;
     }
 
     public getParameterInformation(): InputParameterI {
@@ -218,6 +240,10 @@ export class Panel2Component implements OnInit {
 
     public setHeartRate(newHR: number): void {
         this.inputParameters.heartRate = newHR;
+        this.currentParametersWithCurves.forEach((par: PhysiologicalParamaterI, i: number) => {
+            if (par.source === PhysiologicalParameterSourceEnum.Heart)
+                this.setNewDataset(par.curve, this.normalizeCurves(par), i);
+        });
     }
 
     public setTemperature(newTemp: number): void {
@@ -228,15 +254,19 @@ export class Panel2Component implements OnInit {
     }
     public setBreathRate(newBR: number): void {
         this.inputParameters.breathRate = newBR;
+        this.currentParametersWithCurves.forEach((par: PhysiologicalParamaterI, i: number) => {
+            if (par.source === PhysiologicalParameterSourceEnum.Breath)
+                this.setNewDataset(par.curve, this.normalizeCurves(par), i);
+        })
     }
 
     public getParametersWithCurves(): PhysiologicalParamaterI[] {
-        return this.parametersWithCurves;
+        return this.currentParametersWithCurves;
     }
 
-    public setNewDataset(newDataset: [number, number][] | any, index: number) {
-        const curvesPreviewItem: CurvesPreviewComponent = this.curvesPreviews.toArray()[index];
-        if (curvesPreviewItem)
-            curvesPreviewItem.updateDataset(newDataset);
+
+    public setNewDataset(original: [number, number][], normalized: [number, number][], index: number) {
+        this.currentParametersWithCurves[index].curve = original;
+        this.currentParametersWithCurves[index].normalizedCurve = normalized;
     }
 }

@@ -1,4 +1,4 @@
-<div class="container-fluid" *ngIf="!isLoading()">
+<div class="container-fluid" *ngIf="!loading">
     <div class="row mt-5">
         <div class="col-12">
             <h1 class="text-center"> Control panel </h1>
@@ -69,11 +69,11 @@
             <div class="col-6 param-configuration">
                 <app-parameter-box [parameter]="parCurve" [breathRate]="getParameterInformation().breathRate"
                     [heartRate]="getParameterInformation().heartRate"
-                    (newParameter)="setNewDataset($event, i)" (colorLine)="setNewColorLine($event, i)" ></app-parameter-box>
+                    (newParameterDataset)="setNewDataset($event, $event, i)" (colorLine)="setNewColorLine($event, i)"
+                    (disconnectParameter)="disconnectParameter($event, i)"></app-parameter-box>
             </div>
             <div class="col-5 curves-configuration">
-                <app-curves-preview #curvesPreview [colorLine]="parCurve.colorLine"
-                    [dataset]="parCurve.curve">
+                <app-curves-preview #curvesPreview [colorLine]="parCurve.colorLine" [dataset]="parCurve.normalizedCurve">
 
                 </app-curves-preview>
             </div>

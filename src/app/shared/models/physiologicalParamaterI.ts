@@ -1,4 +1,5 @@
 import { PhysiologicalParameterEnum } from "../enum/physiologicalParameterEnum";
+import { PhysiologicalParameterSourceEnum } from "../enum/physiologicalParameterSourceEnum";
 import { RefCurvesI } from "./refCurvesI";
 
 export interface PhysiologicalParamaterI {
@@ -11,7 +12,7 @@ export interface PhysiologicalParamaterI {
     specialConfiguration?: JSON;
     updated_at?: Date;
     created_at?: Date;
-    source?: PhysiologicalParameterEnum;
+    source?: PhysiologicalParameterSourceEnum;
     alert_high?: number;
     alert_high_2?: number;
     order?: number;
@@ -21,5 +22,7 @@ export interface PhysiologicalParamaterI {
     maxY?: number;
     value?: number;
     refCurves?: RefCurvesI[];
-    curve?: [number, number][]
+    curve?: [number, number][];
+    normalizedCurve?: [number, number][];
+    disconnected?: boolean;
 }

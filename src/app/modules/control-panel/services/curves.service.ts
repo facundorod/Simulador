@@ -9,6 +9,7 @@ import { environment } from '@environments/environment';
 import { Observable, Subject } from 'rxjs';
 import { InterpolatorService } from './interpolator.service';
 import { PhysiologicalParameterEnum } from '@app/shared/enum/physiologicalParameterEnum';
+import { PhysiologicalParameterSourceEnum } from '@app/shared/enum/physiologicalParameterSourceEnum';
 
 @Injectable()
 export class CurvesService {
@@ -241,62 +242,59 @@ export class CurvesService {
       * @param freqRate
       */
     public normalizeHRCurve(dataset: [number, number][], freqRate: number = 60): [number, number][] {
-        const normalizedCurve = [...dataset];
+        const normalizedCurve = [];
+        const lastElement = dataset[dataset.length - 1];
         const freqCurve: number = 60 / freqRate;
-        // Cantidad de puntos correspondientes unicamente a la curva principal
-        const curvePoints: number = Math.floor((curvesConfiguration.CURVE_TIME * curvesConfiguration.TOTAL_POINTS) / freqCurve);
-        // Cantidad de puntos que representan los puntos constantes al principio y al final de la curva principal
-        const constantPoints: number = curvesConfiguration.TOTAL_POINTS - curvePoints;
-        const newPointsToAddLeft: number = Math.ceil(constantPoints / 2);
-        this.addPointsRight(dataset, newPointsToAddLeft, normalizedCurve);
-        this.addPointsLeft(dataset, newPointsToAddLeft, normalizedCurve);
+        let time: number = 0.0;
+        const constantPoints: number = (curvesConfiguration.TOTAL_POINTS * freqCurve) - curvesConfiguration.CURVE_POINTS;
+        debugger;
+        while (time < curvesConfiguration.MAX_MONITOR) {
+            for (let i = 0; i < constantPoints / 2 && time < curvesConfiguration.MAX_MONITOR; i++) {
+                normalizedCurve.push([time, lastElement[1]]);
+                time += curvesConfiguration.STEPS_HEART;
+            }
+            for (let j = 0; j < dataset.length && time < curvesConfiguration.MAX_MONITOR; j++) {
+                normalizedCurve.push([time, dataset[j][1]]);
+                time += curvesConfiguration.STEPS_HEART;
+            }
+            for (let k = 0; k < constantPoints / 2 && time < curvesConfiguration.MAX_MONITOR; k++) {
+                normalizedCurve.push([time, lastElement[1]]);
+                time += curvesConfiguration.STEPS_HEART;
+            }
+        }
         return normalizedCurve;
     }
 
-    private addPointsRight(dataset: number[][], newPointsToAddLeft: number, normalizedCurve: number[][]) {
-        const lastPoint: number[] = dataset[dataset.length - 1];
-        for (let i = dataset.length - 1; i < dataset.length + newPointsToAddLeft - 1; i++) {
-            const xNorm = i / (curvesConfiguration.TOTAL_POINTS - 1);
-            const yNorm = lastPoint[1];
-            normalizedCurve.push([xNorm, yNorm]);
-        }
-    }
-
-    private addPointsLeft(dataset: number[][], newPointsToAddRight: number, normalizedCurve: number[][]) {
-        const firstPoint: number[] = dataset[0];
-        for (let i = newPointsToAddRight; i > 0; i--) {
-            const xNorm = i / (curvesConfiguration.TOTAL_POINTS - 1);
-            const yNorm = firstPoint[1];
-            normalizedCurve.unshift([xNorm, yNorm]);
-        }
-    }
 
     /**
      * Normaliza el dataset a un tamaño particular de puntos
      * @param curves Curves to normalize
      * @returns {[number, number][]}
      */
-    public normalizeDataset(dataset: [number, number][], value: number, source: PhysiologicalParameterEnum): [number, number][] {
-        let normalizedCurve: [number, number][] = []
-        if (dataset.length) {
-            if (source === PhysiologicalParameterEnum.HeartSource) {
-                this.interpolatorService.setDataset(this.normalizeHRCurve(dataset, value))
-            } else {
-                this.interpolatorService.setDataset(dataset)
-            }
-        } else {
-            this.interpolatorService.setDataset([[0, 0]])
+    public normalizeDataset(dataset: [number, number][], value: number, source: PhysiologicalParameterSourceEnum): [number, number][] {
+        if (!dataset.length) {
+            return curvesConfiguration.CURVE_CONSTANT();
         }
-        for (let i = 0; i < curvesConfiguration.TOTAL_POINTS; i++) {
-            // Establece un nuevo step de acuerdo a la cantidad de puntos que se necesita para las curvas
-            const xNorm = i / (curvesConfiguration.TOTAL_POINTS - 1)
-            // Calcula el nuevo valor de y de acuerdo a la interpolación del nuevo valor de X
-            const yNorm = this.interpolatorService.interpolateXValue(xNorm)
-            normalizedCurve.push([xNorm, yNorm])
+        if (source === PhysiologicalParameterSourceEnum.Heart) {
+            return this.normalizeHRCurve(dataset, value);
         }
-        return normalizedCurve;
+        this.interpolatorService.setDataset(dataset)
+        return this.normalizeRespirationCurve();
     }
 
+
+    private normalizeRespirationCurve() {
+        const normalizedCurve: [number, number][] = [];
+        for (let i = 0; i < curvesConfiguration.TOTAL_POINTS; i++) {
+            // Establece un nuevo step de acuerdo a la cantidad de puntos que se necesita para las curvas
+            const xNorm = i / (curvesConfiguration.TOTAL_POINTS - 1);
+            // Calcula el nuevo valor de y de acuerdo a la interpolación del nuevo valor de X
+            const yNorm = this.interpolatorService.interpolateXValue(xNorm);
+            normalizedCurve.push([xNorm, yNorm]);
+        }
+
+        return this.extendCurves(normalizedCurve);
+    }
 
     public extendCurves(curves: [number, number][]): [number, number][] {
         const extendedCurves: [number, number][] = []
