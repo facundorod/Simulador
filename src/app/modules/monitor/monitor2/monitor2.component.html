@@ -15,7 +15,7 @@
                 <!-- Gráficos -->
                 <div class="container-fluid chart-container">
                     <app-chart #chartComponent [colorLine]="curveData.colorLine" [maxY]="curveData.maxY"
-                        [height]="'200px'" [dataset]="curveData.normalizedCurve"> </app-chart>
+                        [height]="getChartHeight()" [dataset]="curveData.normalizedCurve"> </app-chart>
                 </div>
             </div>
             <div class=" col-3 curve-container" style="border: 2px solid yellow" *ngIf="curveData.showCurves">

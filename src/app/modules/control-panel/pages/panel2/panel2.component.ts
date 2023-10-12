@@ -222,9 +222,6 @@ export class Panel2Component implements OnInit, OnDestroy {
         if (this.activeScenario) {
             this.setParametersWithCurve();
             this.activeScenario.parameters.forEach((parameter: PhysiologicalParamaterI) => {
-                if (parameter.showInMonitor) {
-                    parameter.showCurves = true;
-                }
                 switch (parameter.label.toUpperCase()) {
                     case PhysiologicalParameterEnum.HeartRate:
                         this.inputParameters.heartRate = parameter.value;
@@ -264,6 +261,9 @@ export class Panel2Component implements OnInit, OnDestroy {
             return par1.order - par2.order;
         }).map((par: PhysiologicalParamaterI) => {
             let normalizedDataset: [number, number][] = this.normalizeCurves(par);
+            if (par.showInMonitor) {
+                par.showCurves = true;
+            }
             return {
                 curve: normalizedDataset,
                 normalizedCurve: normalizedDataset,

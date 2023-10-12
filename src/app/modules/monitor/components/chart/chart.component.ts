@@ -156,7 +156,7 @@ export class ChartComponent implements OnInit, AfterViewInit, OnChanges {
                 },
                 zoom: {
                     enabled: false
-                }
+                },
             },
             yaxis: {
                 labels: {
@@ -178,6 +178,33 @@ export class ChartComponent implements OnInit, AfterViewInit, OnChanges {
             tooltip: {
                 enabled: false
             },
+            // Not working
+            responsive: [
+                {
+                    breakpoint: 1000,
+                    options: {
+                        chart: {
+                            height: '135px'
+                        }
+                    }
+                },
+                {
+                    breakpoint: 500,
+                    options: {
+                        chart: {
+                            height: '100px'
+                        }
+                    }
+                },
+                {
+                    breakpoint: 1900,
+                    options: {
+                        chart: {
+                            height: '200px'
+                        }
+                    }
+                }
+            ]
         }
     }
 

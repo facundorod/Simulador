@@ -1,9 +1,7 @@
 import { AfterViewInit, Component, Input, OnChanges, OnInit, SimpleChanges, ViewChild } from '@angular/core';
 import { ChartComponent } from '../chart/chart.component';
 import { curvesConfiguration } from '@app/shared/constants/curves';
-import { PhysiologicalParamaterI } from '@app/shared/models/physiologicalParamaterI';
-import { PhysiologicalParameterSourceEnum } from '@app/shared/enum/physiologicalParameterSourceEnum';
-import { CurvesService } from '@app/modules/control-panel/services/curves.service';
+
 
 @Component({
     selector: 'app-curves-preview',

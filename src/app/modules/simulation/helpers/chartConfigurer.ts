@@ -7,6 +7,7 @@ import {
     ApexGrid,
     ApexLegend,
     ApexMarkers,
+    ApexResponsive,
     ApexStroke,
     ApexTooltip,
     ApexXAxis,
@@ -26,6 +27,7 @@ export interface ChartOptions {
     legend: ApexLegend;
     tooltip: ApexTooltip;
     fill?: ApexFill;
+    responsive?: ApexResponsive[]
 }
 
 export function commonOptions(

@@ -94,9 +94,15 @@ export class Monitor2Component implements OnInit, AfterViewInit {
     }
 
     public getCurvesToShowInMonitor(): PhysiologicalParamaterI[] {
-        return this.monitorState.parametersWithCurves.filter((curveData: PhysiologicalParamaterI) => {
-            return curveData.showCurves
-        })
+        return this.monitorState.parametersWithCurves
+            .filter((curveData: PhysiologicalParamaterI) => curveData.showCurves)
+    }
+
+    public getChartHeight(): string {
+        if (window.innerHeight > 900) {
+            return '200px';
+        }
+        return '135px';
     }
 
     // Define la función trackByFn para realizar un seguimiento de los elementos por su ID
