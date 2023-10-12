@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { LOCALSTORAGEITEMS } from '@app/shared/constants/localStorage';
 import { MonitorStateI } from '@app/shared/models/MonitorStateI';
 import { StatesI } from '@app/shared/models/stateI';
 import { Observable, Subject } from 'rxjs';
@@ -23,7 +24,7 @@ export class MonitorService {
         }, 1000);
 
         setInterval(() => {
-            const lastStatus: MonitorStateI = JSON.parse(localStorage.getItem('scenarioState'))
+            const lastStatus: MonitorStateI = JSON.parse(localStorage.getItem(LOCALSTORAGEITEMS.SIMULATION))
             if (!this.currentMonitorState || this.isDiff2(lastStatus)) {
                 this.currentMonitorState = lastStatus;
                 this.values2.next(this.currentMonitorState);

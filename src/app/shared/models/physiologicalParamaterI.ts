@@ -6,7 +6,7 @@ export interface PhysiologicalParamaterI {
     id_pp: number;
     name: string;
     description: string;
-    label: string;
+    label: PhysiologicalParameterEnum;
     unit: string;
     colorLine?: string;
     specialConfiguration?: JSON;
@@ -18,6 +18,7 @@ export interface PhysiologicalParamaterI {
     order?: number;
     alert_low?: number;
     showInMonitor?: boolean;
+    showCurves?: boolean;
     alert_low_2?: number;
     maxY?: number;
     value?: number;

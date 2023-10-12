@@ -1,10 +1,12 @@
-import { AfterViewInit, Component, OnInit, TrackByFunction, ViewChildren } from '@angular/core';
+import { AfterViewInit, Component, OnInit, ViewChildren } from '@angular/core';
+import { PhysiologicalParameterSourceEnum } from '@app/shared/enum/physiologicalParameterSourceEnum';
+import { SimulationStatusEnum } from '@app/shared/enum/simulationStatusEnum';
+import { MonitorStateI } from '@app/shared/models/MonitorStateI';
+import { PhysiologicalParamaterI } from '@app/shared/models/physiologicalParamaterI';
 import { ChartComponent } from '../components/chart/chart.component';
 import { MonitorService } from '../services/monitor.service';
-import { ParameterInfoI } from '@app/shared/models/parameterInfoI';
-import { MonitorStateI } from '@app/shared/models/MonitorStateI';
-import { CurvesInformationI } from '@app/shared/models/CurvesInformationI';
-import { PhysiologicalParameterSourceEnum } from '@app/shared/enum/physiologicalParameterSourceEnum';
+import { CurvesService } from '@app/modules/control-panel/services/curves.service';
+import { curvesConfiguration } from '@app/shared/constants/curves';
 
 @Component({
     selector: 'app-monitor2',
@@ -18,6 +20,7 @@ export class Monitor2Component implements OnInit, AfterViewInit {
     private intervalBreathCurves: NodeJS.Timeout;
     constructor(private monitorService: MonitorService) {
     }
+
     ngAfterViewInit(): void {
         this.checkLocalStorage()
     }
@@ -29,11 +32,10 @@ export class Monitor2Component implements OnInit, AfterViewInit {
         this.monitorService.getMonitorState().subscribe((newState: MonitorStateI) => {
             if (newState) {
                 this.monitorState = newState;
-                this.updateParametersValues();
                 this.updateCurvesDataset();
                 this.runSimulation();
             } else {
-                if (this.monitorState) this.monitorState.simulationStatus = 'OFF'
+                if (this.monitorState) this.monitorState.simulationStatus = SimulationStatusEnum.OFF
                 clearInterval(this.intervalBreathCurves)
                 clearInterval(this.intervalHeartCurves)
             }
@@ -43,7 +45,7 @@ export class Monitor2Component implements OnInit, AfterViewInit {
     private runSimulation(): void {
         if (this.intervalBreathCurves) clearInterval(this.intervalBreathCurves)
         if (this.intervalHeartCurves) clearInterval(this.intervalHeartCurves)
-        if (this.monitorState.simulationStatus === 'RUNNING') {
+        if (this.monitorState.simulationStatus === SimulationStatusEnum.RUNNING) {
             this.simulationBreathCurves();
             this.simulationHeartCurves();
         }
@@ -51,20 +53,20 @@ export class Monitor2Component implements OnInit, AfterViewInit {
 
     private updateCurvesDataset(): void {
         this.chartComponents.forEach((chartComponent: ChartComponent, index: number) => {
-            const curveConfiguration: CurvesInformationI = this.monitorState.curvesInformation[index];
-            chartComponent.updateDataset(curveConfiguration.dataset);
+            const curveConfiguration: PhysiologicalParamaterI = this.monitorState.parametersWithCurves[index];
+            chartComponent.updateDataset(curveConfiguration.normalizedCurve);
         })
     }
 
     private simulationBreathCurves(): void {
         this.intervalBreathCurves = setInterval(() => {
             this.updateBreathRateCurves();
-        }, this.monitorState.breathSamplingRate)
+        }, CurvesService.getBreathSamplingRate(this.monitorState.parameterInformation.breathRate))
     }
 
     private updateBreathRateCurves(): void {
         this.chartComponents.forEach((chartComponent: ChartComponent, index: number) => {
-            const curveConfiguration: CurvesInformationI = this.monitorState.curvesInformation[index];
+            const curveConfiguration: PhysiologicalParamaterI = this.monitorState.parametersWithCurves[index];
             if (curveConfiguration.source === PhysiologicalParameterSourceEnum.Breath) {
                 chartComponent.updateRealTimeDataset();
             }
@@ -73,7 +75,7 @@ export class Monitor2Component implements OnInit, AfterViewInit {
 
     private updateHeartRateCurves(): void {
         this.chartComponents.forEach((chartComponent: ChartComponent, index: number) => {
-            const curveConfiguration: CurvesInformationI = this.monitorState.curvesInformation[index];
+            const curveConfiguration: PhysiologicalParamaterI = this.monitorState.parametersWithCurves[index];
             if (curveConfiguration.source === PhysiologicalParameterSourceEnum.Heart) {
                 chartComponent.updateRealTimeDataset();
             }
@@ -83,27 +85,22 @@ export class Monitor2Component implements OnInit, AfterViewInit {
     private simulationHeartCurves(): void {
         this.intervalHeartCurves = setInterval(() => {
             this.updateHeartRateCurves()
-        }, this.monitorState.heartSamplingRate)
+        }, curvesConfiguration.SAMPLING_RATE)
     }
 
-
-    private updateParametersValues(): void {
-        const parametersInformation: ParameterInfoI = JSON.parse(localStorage.getItem('parameterState'));
-        this.monitorState.parameterInformation = parametersInformation;
-    }
 
     public getAnimalName(): string {
         return this.monitorState.scenario.animalName;
     }
 
-    public getCurvesToShowInMonitor(): CurvesInformationI[] {
-        return this.monitorState.curvesInformation.filter((curveData: CurvesInformationI) => {
+    public getCurvesToShowInMonitor(): PhysiologicalParamaterI[] {
+        return this.monitorState.parametersWithCurves.filter((curveData: PhysiologicalParamaterI) => {
             return curveData.showCurves
         })
     }
 
     // Define la función trackByFn para realizar un seguimiento de los elementos por su ID
-    public trackByFn(index: number, item: CurvesInformationI): number {
+    public trackByFn(index: number, item: PhysiologicalParamaterI): number {
         return item.id_pp;
     }
 
@@ -112,11 +109,11 @@ export class Monitor2Component implements OnInit, AfterViewInit {
     }
 
     public isPausedSimulation(): boolean {
-        return this.monitorState.simulationStatus === 'PAUSED'
+        return this.monitorState.simulationStatus === SimulationStatusEnum.PAUSED
     }
 
     public isMonitorConnected(): boolean {
-        return this.monitorState && this.monitorState.simulationStatus !== 'OFF'
+        return this.monitorState && this.monitorState.simulationStatus !== SimulationStatusEnum.OFF
     }
 
 }

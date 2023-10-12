@@ -1,26 +1,25 @@
-import { CurvesInformationI } from "./CurvesInformationI";
-import { ParameterInfoI } from "./parameterInfoI";
+import { BatteryStatusEnum } from "../enum/batteryStatusEnum";
+import { SimulationStatusEnum } from "../enum/simulationStatusEnum";
+import { InputParameterI } from "./inputParameters";
+import { PhysiologicalParamaterI } from "./physiologicalParamaterI";
+
+export interface MonitorSound {
+    alarms: boolean;
+    heartFreqSound: boolean;
+    batterySound: boolean;
+}
 
 export interface MonitorStateI {
-    curvesInformation: CurvesInformationI[],
+    id: string;
+    parametersWithCurves: PhysiologicalParamaterI[],
     scenario: {
         name: string,
         description: string,
         animalName: string
     },
-    id: number;
-    simulationStatus: 'RUNNING' | 'STOP' | 'PAUSED' | 'OFF',
-    heartSamplingRate: number,
-    batteryStatus: 'LOW' | 'NORMAL',
-    breathSamplingRate: number,
-    soundStatus: {
-        alarms: boolean,
-        heartFreqSound: boolean,
-        batterySound: boolean
-    },
-    totalPoints: number;
-    totalPointsPerCycle: number;
-    currentIndexHeart?: number,
-    currentIndexBreath?: number,
-    parameterInformation: ParameterInfoI
+    simulationStatus: SimulationStatusEnum,
+    batteryStatus: BatteryStatusEnum,
+    // breathSamplingRate: number,
+    soundStatus: MonitorSound,
+    parameterInformation: InputParameterI
 }

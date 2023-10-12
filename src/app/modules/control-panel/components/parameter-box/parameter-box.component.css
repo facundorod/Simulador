@@ -21,3 +21,16 @@
     padding: 0;
     width: 30%;
 }
+
+.form-check-input {
+    margin-left: 2px;
+}
+
+label {
+    width: 100%;
+}
+
+.rate-value {
+    padding: 1.3em;
+    font-weight: bold;
+}

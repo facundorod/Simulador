@@ -1,6 +1,9 @@
 import { AfterViewInit, Component, Input, OnChanges, OnInit, SimpleChanges, ViewChild } from '@angular/core';
 import { ChartComponent } from '../chart/chart.component';
 import { curvesConfiguration } from '@app/shared/constants/curves';
+import { PhysiologicalParamaterI } from '@app/shared/models/physiologicalParamaterI';
+import { PhysiologicalParameterSourceEnum } from '@app/shared/enum/physiologicalParameterSourceEnum';
+import { CurvesService } from '@app/modules/control-panel/services/curves.service';
 
 @Component({
     selector: 'app-curves-preview',
@@ -10,10 +13,12 @@ import { curvesConfiguration } from '@app/shared/constants/curves';
 export class CurvesPreviewComponent implements OnInit, AfterViewInit, OnChanges {
     private _dataset: [number, number][]
     @Input() set dataset(d: [number, number][]) {
-        this._dataset = d;
+        this._dataset = [...d];
     };
     @Input() colorLine: string;
     @Input() maxY: number;
+    @Input() minY: number;
+    @Input() samplingRate: number;
     @ViewChild('chartComponent') chartComponent: ChartComponent;
 
     private intervalCurves: NodeJS.Timeout;
@@ -22,7 +27,7 @@ export class CurvesPreviewComponent implements OnInit, AfterViewInit, OnChanges 
     }
 
     ngAfterViewInit(): void {
-        this.simulationHeartCurves();
+        this.simulationCurve();
     }
 
     ngOnInit(): void {
@@ -36,11 +41,11 @@ export class CurvesPreviewComponent implements OnInit, AfterViewInit, OnChanges 
     }
 
 
-    public get dataset() {
+    get dataset(): [number, number][] {
         return this._dataset;
     }
 
-    private simulationHeartCurves(): void {
+    private simulationCurve(): void {
         this.intervalCurves = setInterval(() => {
             if (this._dataset.length) {
                 const currentIndex = this.chartComponent.getCurrentIndex();
@@ -50,6 +55,7 @@ export class CurvesPreviewComponent implements OnInit, AfterViewInit, OnChanges 
             }
             if (this.chartComponent)
                 this.chartComponent.updateRealTimeDataset();
-        }, 10)
+        }, this.samplingRate)
     }
+
 }

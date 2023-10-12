@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { PhysiologicalParameterEnum } from '@app/shared/enum/physiologicalParameterEnum';
 import { AnimalSpeciesI } from '@app/shared/models/animal-speciesI';
@@ -15,18 +15,27 @@ import { CurvesPreviewComponent } from '@app/modules/monitor/components/curves-p
 import { CurvesService } from '../../services/curves.service';
 import { PhysiologicalParameterSourceEnum } from '@app/shared/enum/physiologicalParameterSourceEnum';
 import { curvesConfiguration } from '@app/shared/constants/curves';
+import { LOCALSTORAGEITEMS } from '@app/shared/constants/localStorage';
+import { MonitorSound, MonitorStateI } from '@app/shared/models/MonitorStateI';
+import { v4 } from 'uuid';
+import { SimulationStatusEnum } from '@app/shared/enum/simulationStatusEnum';
+import { BatteryStatusEnum } from '@app/shared/enum/batteryStatusEnum';
+import { ParameterHelper } from '../../helpers/parameterHelper';
 
 @Component({
     selector: 'app-panel2',
     templateUrl: './panel2.component.html',
     styleUrls: ['./panel2.component.css']
 })
-export class Panel2Component implements OnInit {
+export class Panel2Component implements OnInit, OnDestroy {
 
     private simulationForm: FormGroup;
     private animalSpecies: AnimalSpeciesI[];
     public loading: boolean;
     private activeAnimalSpecie: AnimalSpeciesI;
+    private simulationStatus: SimulationStatusEnum = SimulationStatusEnum.OFF;
+    private batteryStatus: BatteryStatusEnum = BatteryStatusEnum.NORMAL;
+
     @Input() simulation: SimulationI;
     @ViewChild('scenarios') scenarios: ScenariosComponent;
     @ViewChild('parametersRanges') parametersSelectors: ParametersRangesComponent;
@@ -39,34 +48,63 @@ export class Panel2Component implements OnInit {
     private inputParameters: InputParameterI;
     private originalParametersWithCurves: PhysiologicalParamaterI[];
     private currentParametersWithCurves: PhysiologicalParamaterI[];
+    private monitorState: MonitorStateI = null;
+    private monitorSound: MonitorSound;
     constructor(
         private fb: FormBuilder,
         private animalService: AnimalSpeciesService,
         private curvesService: CurvesService
     ) { }
 
+
     ngOnInit(): void {
+        localStorage.removeItem(LOCALSTORAGEITEMS.SIMULATION)
         this.loading = true;
         this.animalSpecies = [];
         this.inputParameters = {
             breathRate: 0,
             heartRate: 0,
             spO2: 0,
-            temperature: 0
+            temperature: 0,
+            endTidalCO2: 0,
+            ibpDiastolic: 0,
+            ibpMean: 0,
+            startNIBP: false,
+            ibpSystolic: 0,
+            inspirationCO2: 0,
+            timeNIBP: 5
         }
         this.indexSimulationActive = 0;
+        this.monitorSound = {
+            alarms: true,
+            batterySound: true,
+            heartFreqSound: true
+        }
         this.activeAnimalSpecie = null;
         this.initFormSimulation();
         this.getAnimalSpeciesFromServer();
     }
 
-    existCurves(): any {
-        throw new Error('Method not implemented.');
+    ngOnDestroy(): void {
+        localStorage.removeItem(LOCALSTORAGEITEMS.SIMULATION)
     }
+
+
     public onApplyChanges(): void {
-        // localStorage.setItem('scenarioState', JSON.stringify(this.monitorState))
-        // this.saveParameterInfo();
-        // this.updateState();
+        this.monitorState = {
+            scenario: {
+                animalName: this.activeAnimalSpecie.name,
+                description: this.activeScenario.description,
+                name: this.activeAnimalSpecie.name
+            },
+            parametersWithCurves: this.currentParametersWithCurves,
+            id: v4(),
+            simulationStatus: this.simulationStatus,
+            batteryStatus: this.batteryStatus,
+            soundStatus: this.monitorSound,
+            parameterInformation: this.inputParameters,
+        }
+        localStorage.setItem(LOCALSTORAGEITEMS.SIMULATION, JSON.stringify(this.monitorState))
     }
 
     onPlaySimulation() {
@@ -142,6 +180,7 @@ export class Panel2Component implements OnInit {
         this.scenariosSimulation = scenarios;
         if (!this.activeScenario || this.activeScenario !== this.scenariosSimulation[this.indexSimulationActive])
             this.activeScenario = this.scenariosSimulation[this.indexSimulationActive];
+        this.simulationStatus = SimulationStatusEnum.RUNNING;
         this.setParameterInformation();
     }
 
@@ -163,9 +202,11 @@ export class Panel2Component implements OnInit {
 
     public disconnectParameter(disconnect: boolean, index: number) {
         const currentParameter: PhysiologicalParamaterI = this.currentParametersWithCurves[index]
+
         if (disconnect && !currentParameter.disconnected) {
             this.currentParametersWithCurves[index].curve = curvesConfiguration.CURVE_CONSTANT();
-            this.currentParametersWithCurves[index].normalizedCurve = curvesConfiguration.CURVE_CONSTANT();
+            this.currentParametersWithCurves[index].normalizedCurve = this.normalizeCurves(currentParameter)
+
         }
         if (!disconnect && currentParameter.disconnected) {
             this.currentParametersWithCurves[index].curve = this.originalParametersWithCurves[index].curve
@@ -179,7 +220,11 @@ export class Panel2Component implements OnInit {
 
     private setParameterInformation(): void {
         if (this.activeScenario) {
+            this.setParametersWithCurve();
             this.activeScenario.parameters.forEach((parameter: PhysiologicalParamaterI) => {
+                if (parameter.showInMonitor) {
+                    parameter.showCurves = true;
+                }
                 switch (parameter.label.toUpperCase()) {
                     case PhysiologicalParameterEnum.HeartRate:
                         this.inputParameters.heartRate = parameter.value;
@@ -187,19 +232,28 @@ export class Panel2Component implements OnInit {
                     case PhysiologicalParameterEnum.OxygenSaturation:
                         this.inputParameters.spO2 = parameter.value;
                         break;
-                    case PhysiologicalParameterEnum.RespirationRate:
+                    case PhysiologicalParameterEnum.Capnography:
                         this.inputParameters.breathRate = parameter.value;
+                        this.inputParameters.endTidalCO2 = ParameterHelper.getEndTidalCO2(parameter);
+                        this.inputParameters.inspirationCO2 = ParameterHelper.getInspirationCO2(parameter);
                         break;
                     case PhysiologicalParameterEnum.Temperature:
                         this.inputParameters.temperature = parameter.value;
+                        break;
+                    case PhysiologicalParameterEnum.InvasiveBloodPressure:
+                        this.inputParameters.ibpDiastolic = ParameterHelper.getDiastolicPressure(parameter);
+                        this.inputParameters.ibpSystolic = ParameterHelper.getSystolicPressure(parameter);
                         break;
                     default:
                         break;
                 }
             })
             this.parametersSelectors.setParametersInformation(this.inputParameters);
-            this.setParametersWithCurve();
         }
+    }
+
+    public hideParameter(hide: boolean, index: number): void {
+        this.currentParametersWithCurves[index].showCurves = hide;
     }
 
 
@@ -242,7 +296,7 @@ export class Panel2Component implements OnInit {
         this.inputParameters.heartRate = newHR;
         this.currentParametersWithCurves.forEach((par: PhysiologicalParamaterI, i: number) => {
             if (par.source === PhysiologicalParameterSourceEnum.Heart)
-                this.setNewDataset(par.curve, this.normalizeCurves(par), i);
+                this.setNewDataset({ curve: par.curve, normalized: this.normalizeCurves(par) }, i);
         });
     }
 
@@ -256,17 +310,80 @@ export class Panel2Component implements OnInit {
         this.inputParameters.breathRate = newBR;
         this.currentParametersWithCurves.forEach((par: PhysiologicalParamaterI, i: number) => {
             if (par.source === PhysiologicalParameterSourceEnum.Breath)
-                this.setNewDataset(par.curve, this.normalizeCurves(par), i);
+                this.setNewDataset({ curve: par.curve, normalized: this.normalizeCurves(par) }, i);
         })
+    }
+
+    public getSamplingRate(par: PhysiologicalParamaterI) {
+        if (par.source === PhysiologicalParameterSourceEnum.Breath)
+            return CurvesService.getBreathSamplingRate(this.inputParameters.breathRate)
+        return curvesConfiguration.SAMPLING_RATE;
     }
 
     public getParametersWithCurves(): PhysiologicalParamaterI[] {
         return this.currentParametersWithCurves;
     }
 
+    public setInspirationCO2(newValue: { newInspirationCO2: number, onlyUpdateValue: boolean }, index: number): void {
+        if (!newValue.onlyUpdateValue) {
+            const newCurve: [number, number][] =
+                CurvesService.updateInspirationCO2(this.currentParametersWithCurves[index].curve, this.inputParameters.inspirationCO2, newValue.newInspirationCO2);
+            this.setNewDataset({
+                curve: newCurve,
+                normalized: this.curvesService.normalizeDataset(newCurve, this.inputParameters.breathRate, PhysiologicalParameterSourceEnum.Breath)
+            }, index)
+        }
+        this.inputParameters.inspirationCO2 = newValue.newInspirationCO2;
+    }
 
-    public setNewDataset(original: [number, number][], normalized: [number, number][], index: number) {
-        this.currentParametersWithCurves[index].curve = original;
-        this.currentParametersWithCurves[index].normalizedCurve = normalized;
+    public setEndTidalCO2(newValue: { newEndTidalCO2: number, onlyUpdateValue: boolean }, index: number): void {
+        if (!newValue.onlyUpdateValue) {
+            const newCurve: [number, number][] =
+                CurvesService.updateEndTidalCO2(this.currentParametersWithCurves[index].curve, this.inputParameters.endTidalCO2, newValue.newEndTidalCO2);
+            this.setNewDataset({
+                curve: newCurve,
+                normalized: this.curvesService.normalizeDataset(newCurve, this.inputParameters.breathRate, PhysiologicalParameterSourceEnum.Breath)
+            }, index)
+        }
+        this.inputParameters.endTidalCO2 = newValue.newEndTidalCO2;
+    }
+
+    public setIbpSystolic(newValue: { newibpSystolic: number, onlyUpdateValue: boolean }, index: number): void {
+        if (!newValue.onlyUpdateValue) {
+            const newCurve: [number, number][] = CurvesService.updateIbpSystolic(this.currentParametersWithCurves[index].curve, this.inputParameters.ibpSystolic, newValue.newibpSystolic);
+            this.setNewDataset({
+                curve: newCurve,
+                normalized: this.curvesService.normalizeDataset(newCurve, this.inputParameters.heartRate, PhysiologicalParameterSourceEnum.Heart)
+            }, index)
+        }
+        this.inputParameters.ibpSystolic = newValue.newibpSystolic;
+    }
+
+    public setIbpDiastolic(newValue: { newibpDiastolic: number, onlyUpdateValue: boolean }, index: number): void {
+        if (!newValue.onlyUpdateValue) {
+            const newCurve: [number, number][] = CurvesService.updateIbpDiastolic(this.currentParametersWithCurves[index].curve, this.inputParameters.ibpDiastolic, newValue.newibpDiastolic);
+            this.setNewDataset({
+                curve: newCurve,
+                normalized: this.curvesService.normalizeDataset(newCurve, this.inputParameters.heartRate, PhysiologicalParameterSourceEnum.Heart)
+            }, index)
+        }
+        this.inputParameters.ibpDiastolic = newValue.newibpDiastolic;
+    }
+
+    public getMaxYValue(parameter: PhysiologicalParamaterI) {
+        return ParameterHelper.getMaxParameterValue(parameter);
+    }
+
+
+    public getMinYValue(parameter: PhysiologicalParamaterI) {
+        return ParameterHelper.getMinParameterValue(parameter);
+    }
+
+    public setNewDataset(curves: {
+        curve: [number, number][],
+        normalized: [number, number][]
+    }, index: number) {
+        this.currentParametersWithCurves[index].curve = curves.curve;
+        this.currentParametersWithCurves[index].normalizedCurve = curves.normalized;
     }
 }

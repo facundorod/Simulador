@@ -1,13 +1,15 @@
-import { AfterViewInit, Component, Input, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, Input, OnChanges, OnInit, SimpleChanges, ViewChild } from '@angular/core';
 import { ChartOptions } from '@app/modules/simulation/helpers/chartConfigurer';
+import { curvesConfiguration } from '@app/shared/constants/curves';
 import * as NgApexCharts from 'ng-apexcharts';
 @Component({
     selector: 'app-chart',
     templateUrl: './chart.component.html',
     styleUrls: ['./chart.component.css']
 })
-export class ChartComponent implements OnInit, AfterViewInit {
+export class ChartComponent implements OnInit, AfterViewInit, OnChanges {
     @Input() maxY: number;
+    @Input() minY: number;
     @Input() height: string;
     @Input() colorLine: string;
     @Input() dataset: [number, number][]
@@ -24,8 +26,17 @@ export class ChartComponent implements OnInit, AfterViewInit {
     }
 
 
+    ngOnChanges(changes: SimpleChanges): void {
+        if (changes.colorLine && !changes.colorLine.firstChange) {
+            this.updateColorLine(changes.colorLine.currentValue)
+        }
+    }
+
+
     ngAfterViewInit(): void {
     }
+
+
 
     ngOnInit(): void {
         this.initializeApexChart();
@@ -127,9 +138,9 @@ export class ChartComponent implements OnInit, AfterViewInit {
                     show: false,
                 },
                 axisBorder: {
-                    show: true,
+                    show: false,
                 },
-                max: 8,
+                max: curvesConfiguration.MAX_MONITOR,
                 min: 0,
             },
             chart: {
@@ -138,6 +149,12 @@ export class ChartComponent implements OnInit, AfterViewInit {
                 width: '100%',
                 height: this.height,
                 animations: {
+                    enabled: false,
+                },
+                toolbar: {
+                    show: false
+                },
+                zoom: {
                     enabled: false
                 }
             },
@@ -147,7 +164,7 @@ export class ChartComponent implements OnInit, AfterViewInit {
                 },
                 show: false,
                 max: this.maxY,
-                min: -1
+                min: this.minY
             },
             dataLabels: {
                 enabled: false,
@@ -160,7 +177,7 @@ export class ChartComponent implements OnInit, AfterViewInit {
             },
             tooltip: {
                 enabled: false
-            }
+            },
         }
     }
 

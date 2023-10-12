@@ -57,7 +57,7 @@
             <div class="col-12">
                 <h1 class="text-center">Curves Panel</h1>
             </div>
-            <div class="col-12">
+            <div class="col-12 mt-4">
                 <app-parameters-ranges #parametersRanges [parameters]="getParameterInformation()"
                     [connectedSimulation]="connectedSimulation()" (newHeartRate)="setHeartRate($event)"
                     (newBreathRate)="setBreathRate($event)" (newSPO2)="setSPO2($event)"
@@ -68,12 +68,16 @@
         <div class="row mt-3 justify-content-around" *ngFor="let parCurve of getParametersWithCurves(); let i=index">
             <div class="col-6 param-configuration">
                 <app-parameter-box [parameter]="parCurve" [breathRate]="getParameterInformation().breathRate"
-                    [heartRate]="getParameterInformation().heartRate"
-                    (newParameterDataset)="setNewDataset($event, $event, i)" (colorLine)="setNewColorLine($event, i)"
-                    (disconnectParameter)="disconnectParameter($event, i)"></app-parameter-box>
+                    [heartRate]="getParameterInformation().heartRate" (newParameterDataset)="setNewDataset($event, i)"
+                    (colorLine)="setNewColorLine($event, i)" (disconnectParameter)="disconnectParameter($event, i)"
+                    (hideParameter)="hideParameter($event, i)" (endTidalCO2)="setEndTidalCO2($event, i)"
+                    (inspirationCO2)="setInspirationCO2($event, i)" (ibpDiastolic)="setIbpDiastolic($event, i)"
+                    (ibpSystolic)="setIbpSystolic($event, i)"></app-parameter-box>
             </div>
             <div class="col-5 curves-configuration">
-                <app-curves-preview #curvesPreview [colorLine]="parCurve.colorLine" [dataset]="parCurve.normalizedCurve">
+                <app-curves-preview #curvesPreview [colorLine]="parCurve.colorLine"
+                    [samplingRate]="getSamplingRate(parCurve)" [dataset]="parCurve.normalizedCurve"
+                    [maxY]="getMaxYValue(parCurve)" [minY]="getMinYValue(parCurve)">
 
                 </app-curves-preview>
             </div>
@@ -111,7 +115,7 @@
         <!-- <button class="btn"> <img
                 src="https://img.icons8.com/external-kiranshastry-lineal-color-kiranshastry/33/000000/external-settings-interface-kiranshastry-lineal-color-kiranshastry.png" />
             &nbsp; Monitor settings</button> -->
-        <a [routerLink]="['/monitor']" target="_blank">
+        <a [routerLink]="['/monitor/monitor2']" target="_blank">
             <img src="/assets/icons/monitor.png" />
             &nbsp; Go to Monitor
         </a>

@@ -6,8 +6,10 @@ input {
 
 label {
     width: 100%;
+    font-weight: bold;
 }
 
 .rate-value {
     padding: 1.3em;
+    font-weight: bold;
 }

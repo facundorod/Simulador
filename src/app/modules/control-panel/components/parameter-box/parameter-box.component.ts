@@ -7,17 +7,25 @@ import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { RefCurvesI } from '@app/shared/models/refCurvesI';
 import { PhysiologicalParameterEnum } from '@app/shared/enum/physiologicalParameterEnum';
 import { PhysiologicalParameterSourceEnum } from '@app/shared/enum/physiologicalParameterSourceEnum';
+import { ParameterHelper } from '../../helpers/parameterHelper';
 
 @Component({
     selector: 'app-parameter-box',
     templateUrl: './parameter-box.component.html',
     styleUrls: ['./parameter-box.component.css']
-})
-export class ParameterBoxComponent implements OnInit {
+}) export class ParameterBoxComponent implements OnInit {
+
     private _parameter: PhysiologicalParamaterI; // Copia privada de parCurve
-    @Output() newParameterDataset: EventEmitter<[number, number][]> = new EventEmitter<[number, number][]>();
+    @Output() newParameterDataset: EventEmitter<{
+        curve: [number, number][], normalized: [number, number][]
+    }> = new EventEmitter<{ curve: [number, number][], normalized: [number, number][] }>();
+    @Output() ibpSystolic: EventEmitter<{ newibpSystolic: number, onlyUpdateValue: boolean }> = new EventEmitter<{ newibpSystolic: number, onlyUpdateValue: boolean }>();
+    @Output() ibpDiastolic: EventEmitter<{ newibpDiastolic: number, onlyUpdateValue: boolean }> = new EventEmitter<{ newibpDiastolic: number, onlyUpdateValue: boolean }>();
+    @Output() inspirationCO2: EventEmitter<{ newInspirationCO2: number, onlyUpdateValue: boolean }> = new EventEmitter<{ newInspirationCO2: number, onlyUpdateValue: boolean }>();
+    @Output() endTidalCO2: EventEmitter<{ newEndTidalCO2: number, onlyUpdateValue: boolean }> = new EventEmitter<{ newEndTidalCO2: number, onlyUpdateValue: boolean }>();
     @Output() colorLine: EventEmitter<string> = new EventEmitter<string>();
     @Output() disconnectParameter: EventEmitter<boolean> = new EventEmitter<boolean>();
+    @Output() hideParameter: EventEmitter<boolean> = new EventEmitter<boolean>();
     @Input() heartRate: number;
     @Input() breathRate: number;
     @Input() set parameter(param: PhysiologicalParamaterI) {
@@ -37,6 +45,7 @@ export class ParameterBoxComponent implements OnInit {
     }
 
 
+
     get parameter(): PhysiologicalParamaterI {
         return this._parameter;
     }
@@ -49,8 +58,12 @@ export class ParameterBoxComponent implements OnInit {
         this.parameterForm = this.formBuilder.group({
             disconnect: false,
             showInMonitor: true,
-            colorLine: this.parameter ? this.parameter.colorLine : '',
-            height: 0
+            colorLine: this._parameter ? this._parameter.colorLine : '',
+            height: 0,
+            ibpDiastolic: this._parameter.label === PhysiologicalParameterEnum.InvasiveBloodPressure ? ParameterHelper.getDiastolicPressure(this._parameter) : null,
+            ibpSystolic: this._parameter.label === PhysiologicalParameterEnum.InvasiveBloodPressure ? ParameterHelper.getSystolicPressure(this._parameter) : null,
+            etCO2: this._parameter.label === PhysiologicalParameterEnum.Capnography ? ParameterHelper.getEndTidalCO2(this._parameter) : null,
+            inspirationCO2: this._parameter.label === PhysiologicalParameterEnum.Capnography ? ParameterHelper.getInspirationCO2(this._parameter) : null,
         })
 
         this.onValueChanges();
@@ -64,6 +77,25 @@ export class ParameterBoxComponent implements OnInit {
         })
         this.parameterForm.get('disconnect').valueChanges.subscribe((disconnect: boolean) => {
             this.emitDisconnectParameter(disconnect);
+        })
+        this.parameterForm.get('showInMonitor').valueChanges.subscribe((hide: boolean) => {
+            this.emitHideParameter(hide)
+        })
+        this.parameterForm.get('ibpDiastolic').valueChanges.subscribe((diastolicValue: number) => {
+            if (diastolicValue !== ParameterHelper.getDiastolicPressure(this._parameter))
+                this.emitNewDiastolicValue(diastolicValue);
+        })
+        this.parameterForm.get('ibpSystolic').valueChanges.subscribe((systolicValue: number) => {
+            if (systolicValue !== ParameterHelper.getSystolicPressure(this._parameter))
+                this.emitNewSystolicValue(systolicValue);
+        })
+        this.parameterForm.get('etCO2').valueChanges.subscribe((newETCO2: number) => {
+            if (newETCO2 !== ParameterHelper.getEndTidalCO2(this._parameter))
+                this.emitNewEndTidalValue(newETCO2);
+        })
+        this.parameterForm.get('inspirationCO2').valueChanges.subscribe((newInspirationValue: number) => {
+            if (newInspirationValue !== ParameterHelper.getInspirationCO2(this._parameter))
+                this.emitNewInspirationValue(newInspirationValue);
         })
     }
 
@@ -91,22 +123,74 @@ export class ParameterBoxComponent implements OnInit {
                 this._parameter.curve = value.dataset;
                 this._parameter.normalizedCurve = this.curvesService
                     .normalizeDataset(value.dataset, this.parameter.source === PhysiologicalParameterSourceEnum.Heart ? this.heartRate : this.breathRate,
-                        this.parameter.source)
+                        this.parameter.source);
+                this.calculateNewPressure();
                 this.emitNewParameterDataset();
+                this.calculateNewCapnoValues();
             }
         })
     }
 
 
-    public emitNewColorLine(newColorLine: string): void {
+    public calculateNewPressure(): void {
+        if (this.isIBPParameter()) {
+            const newIbpDiastolic: number = ParameterHelper.getDiastolicPressure(this._parameter);
+            const newIbpSystolic: number = ParameterHelper.getSystolicPressure(this._parameter);
+            this.parameterForm.patchValue({ ibpDiastolic: newIbpDiastolic, ibpSystolic: newIbpSystolic })
+            this.emitNewDiastolicValue(newIbpDiastolic, true)
+            this.emitNewSystolicValue(newIbpSystolic, true);
+        }
+    }
+
+    private calculateNewCapnoValues() {
+        if (this.isCapnoParameter()) {
+            const newInspirationValue: number = ParameterHelper.getInspirationCO2(this._parameter);
+            const newEndTidalCO2: number = ParameterHelper.getEndTidalCO2(this._parameter);
+            this.parameterForm.patchValue({ inspirationCO2: newInspirationValue, etCO2: newEndTidalCO2 });
+            this.emitNewInspirationValue(newInspirationValue, true);
+            this.emitNewEndTidalValue(newEndTidalCO2, true);
+        }
+    }
+
+    public isCapnoParameter(): boolean {
+        return this._parameter.label === PhysiologicalParameterEnum.Capnography
+    }
+
+    public isIBPParameter(): boolean {
+        return this._parameter.label === PhysiologicalParameterEnum.InvasiveBloodPressure
+    }
+
+    private emitNewColorLine(newColorLine: string): void {
         this.colorLine.emit(newColorLine);
     }
 
-    public emitNewParameterDataset(): void {
-        this.newParameterDataset.emit(this._parameter.curve)
+    private emitNewParameterDataset(): void {
+        this.newParameterDataset.emit({ curve: this._parameter.curve, normalized: this._parameter.normalizedCurve })
     }
 
-    public emitDisconnectParameter(disconnectValue: boolean) {
+    private emitDisconnectParameter(disconnectValue: boolean) {
         this.disconnectParameter.emit(disconnectValue);
+    }
+
+    private emitNewSystolicValue(newValue: number, onlyUpdateValue: boolean = false): void {
+        this.ibpSystolic.emit({ newibpSystolic: newValue, onlyUpdateValue });
+    }
+
+
+    private emitNewDiastolicValue(newValue: number, onlyUpdateValue: boolean = false): void {
+        this.ibpDiastolic.emit({ newibpDiastolic: newValue, onlyUpdateValue });
+    }
+
+    private emitNewInspirationValue(newValue: number, onlyUpdateValue: boolean = false): void {
+        this.inspirationCO2.emit({ newInspirationCO2: newValue, onlyUpdateValue });
+    }
+
+    private emitNewEndTidalValue(newValue: number, onlyUpdateValue: boolean = false): void {
+        this.endTidalCO2.emit({ newEndTidalCO2: newValue, onlyUpdateValue });
+    }
+
+
+    private emitHideParameter(hide: boolean) {
+        this.hideParameter.emit(hide);
     }
 }
