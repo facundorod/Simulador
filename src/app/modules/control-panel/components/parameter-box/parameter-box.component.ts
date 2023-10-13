@@ -76,27 +76,57 @@ import { ParameterHelper } from '../../helpers/parameterHelper';
             }
         })
         this.parameterForm.get('disconnect').valueChanges.subscribe((disconnect: boolean) => {
+            if (disconnect) {
+                if (this.isCapnoParameter()) {
+                    this.parameterForm.patchValue({ etCO2: 0, inspirationCO2: 0 })
+                }
+                if (this.isIBPParameter()) {
+                    this.parameterForm.patchValue({ ibpDiastolic: 0, ibpSystolic: 0 })
+                }
+            } else {
+                if (this.isCapnoParameter()) {
+                    const inspirationCO2: number = ParameterHelper.getInspirationCO2(this._parameter)
+                    const endTidalCO2: number = ParameterHelper.getEndTidalCO2(this._parameter)
+                    this.parameterForm.patchValue({ etCO2: endTidalCO2, inspirationCO2 })
+                }
+                if (this.isIBPParameter()) {
+                    const ibpDiastolic: number = ParameterHelper.getDiastolicPressure(this._parameter)
+                    const ibpSystolic: number = ParameterHelper.getSystolicPressure(this._parameter)
+                    this.parameterForm.patchValue({ ibpDiastolic, ibpSystolic })
+                }
+            }
             this.emitDisconnectParameter(disconnect);
         })
         this.parameterForm.get('showInMonitor').valueChanges.subscribe((hide: boolean) => {
             this.emitHideParameter(hide)
         })
         this.parameterForm.get('ibpDiastolic').valueChanges.subscribe((diastolicValue: number) => {
-            if (diastolicValue !== ParameterHelper.getDiastolicPressure(this._parameter))
-                this.emitNewDiastolicValue(diastolicValue);
+            if (!this.disconnectValue())
+                if (diastolicValue !== ParameterHelper.getDiastolicPressure(this._parameter))
+                    this.emitNewDiastolicValue(diastolicValue);
         })
         this.parameterForm.get('ibpSystolic').valueChanges.subscribe((systolicValue: number) => {
-            if (systolicValue !== ParameterHelper.getSystolicPressure(this._parameter))
-                this.emitNewSystolicValue(systolicValue);
+            if (!this.disconnectValue())
+                if (systolicValue !== ParameterHelper.getSystolicPressure(this._parameter))
+                    this.emitNewSystolicValue(systolicValue);
         })
         this.parameterForm.get('etCO2').valueChanges.subscribe((newETCO2: number) => {
-            if (newETCO2 !== ParameterHelper.getEndTidalCO2(this._parameter))
-                this.emitNewEndTidalValue(newETCO2);
+            if (!this.disconnectValue())
+                if (newETCO2 !== ParameterHelper.getEndTidalCO2(this._parameter))
+                    this.emitNewEndTidalValue(newETCO2);
         })
         this.parameterForm.get('inspirationCO2').valueChanges.subscribe((newInspirationValue: number) => {
-            if (newInspirationValue !== ParameterHelper.getInspirationCO2(this._parameter))
-                this.emitNewInspirationValue(newInspirationValue);
+            if (!this.disconnectValue())
+                if (newInspirationValue !== ParameterHelper.getInspirationCO2(this._parameter))
+                    this.emitNewInspirationValue(newInspirationValue);
         })
+    }
+
+    public getCurrentCurve(): string {
+        if (!this._parameter.runningCurve) {
+            return ''
+        }
+        return this.parameter.runningCurve;
     }
 
     public disconnectValue(): boolean {
@@ -121,11 +151,11 @@ import { ParameterHelper } from '../../helpers/parameterHelper';
         refModalCurves.result.then((value: RefCurvesI) => {
             if (value?.dataset && value.dataset.length) {
                 this._parameter.curve = value.dataset;
-                this._parameter.normalizedCurve = this.curvesService
-                    .normalizeDataset(value.dataset, this.parameter.source === PhysiologicalParameterSourceEnum.Heart ? this.heartRate : this.breathRate,
-                        this.parameter.source);
+                const valueSource: number = ParameterHelper.isHeartSource(this._parameter) ? this.heartRate : this.breathRate;
+                this._parameter.normalizedCurve = this.curvesService.normalizeDataset(value.dataset, valueSource, this.parameter.source);
                 this.calculateNewPressure();
                 this.emitNewParameterDataset();
+                this._parameter.runningCurve = value.name;
                 this.calculateNewCapnoValues();
             }
         })
@@ -133,7 +163,7 @@ import { ParameterHelper } from '../../helpers/parameterHelper';
 
 
     public calculateNewPressure(): void {
-        if (this.isIBPParameter()) {
+        if (ParameterHelper.isIBPParameter(this._parameter)) {
             const newIbpDiastolic: number = ParameterHelper.getDiastolicPressure(this._parameter);
             const newIbpSystolic: number = ParameterHelper.getSystolicPressure(this._parameter);
             this.parameterForm.patchValue({ ibpDiastolic: newIbpDiastolic, ibpSystolic: newIbpSystolic })
@@ -143,7 +173,7 @@ import { ParameterHelper } from '../../helpers/parameterHelper';
     }
 
     private calculateNewCapnoValues() {
-        if (this.isCapnoParameter()) {
+        if (ParameterHelper.isCapnoParameter(this._parameter)) {
             const newInspirationValue: number = ParameterHelper.getInspirationCO2(this._parameter);
             const newEndTidalCO2: number = ParameterHelper.getEndTidalCO2(this._parameter);
             this.parameterForm.patchValue({ inspirationCO2: newInspirationValue, etCO2: newEndTidalCO2 });
@@ -152,13 +182,7 @@ import { ParameterHelper } from '../../helpers/parameterHelper';
         }
     }
 
-    public isCapnoParameter(): boolean {
-        return this._parameter.label === PhysiologicalParameterEnum.Capnography
-    }
 
-    public isIBPParameter(): boolean {
-        return this._parameter.label === PhysiologicalParameterEnum.InvasiveBloodPressure
-    }
 
     private emitNewColorLine(newColorLine: string): void {
         this.colorLine.emit(newColorLine);
@@ -189,6 +213,13 @@ import { ParameterHelper } from '../../helpers/parameterHelper';
         this.endTidalCO2.emit({ newEndTidalCO2: newValue, onlyUpdateValue });
     }
 
+    public isIBPParameter(): boolean {
+        return ParameterHelper.isIBPParameter(this._parameter)
+    }
+
+    public isCapnoParameter(): boolean {
+        return ParameterHelper.isCapnoParameter(this._parameter)
+    }
 
     private emitHideParameter(hide: boolean) {
         this.hideParameter.emit(hide);

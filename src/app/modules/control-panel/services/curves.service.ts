@@ -145,7 +145,7 @@ export class CurvesService {
     */
     public static getBreathSamplingRate(breathRate: number): number {
         // Tiempo que tiene que tardar el monitor en dibujar una curva
-        const drawCurveTime: number = 60 / breathRate;
+        const drawCurveTime: number = 40 / breathRate;
         const heartSamplingRate: number = (drawCurveTime / curvesConfiguration.TOTAL_POINTS) * 1000;
         return heartSamplingRate;
     }

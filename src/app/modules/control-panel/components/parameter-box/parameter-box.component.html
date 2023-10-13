@@ -10,54 +10,63 @@
             </button>
         </div>
     </div>
-    <div class="col-12">
-        <form [formGroup]="getFormGroup()">
-            <div class="row mt-3">
-                <div class="col-4">
-                    <input class="form-check-input" type="checkbox" role="switch" formControlName="disconnect"
-                        [value]="disconnectValue()">
-                    <label class="form-check-label ml-4" for="flexSwitchCheckChecked">Disconnect</label>
-                </div>
-                <div class="col-4">
-                    <input class="form-check-input" type="checkbox" formControlName="showInMonitor"
-                        [value]="showInMonitor()">
-                    <label class="form-check-label ml-4" for="showInMonitor">Show in monitor</label>
-                </div>
-                <div class="col-4">
-                    <input type="color" class="form-control color-picker" formControlName="colorLine" title="Color line"
-                        [value]="getColorLine()" position="top" ngbTooltip="Color line">
-                    <!-- <label class="form-check-label" for="colorLine">Color line</label> -->
-                </div>
+    <div class="row justify-content-center" *ngIf="getCurrentCurve()">
+        <div class="col-12">
+            <p class="text-left playing-curve-text"> <span>
+                    <img src="/assets/icons/info.png" alt="Info icon">
+                </span> Playing {{getCurrentCurve()}} curve </p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <form [formGroup]="getFormGroup()">
+                <div class="row mt-3">
+                    <div class="col-4">
+                        <input class="form-check-input" type="checkbox" role="switch" formControlName="disconnect"
+                            [value]="disconnectValue()">
+                        <label class="form-check-label ml-4" for="flexSwitchCheckChecked">Disconnect</label>
+                    </div>
+                    <div class="col-4">
+                        <input class="form-check-input" type="checkbox" formControlName="showInMonitor"
+                            [value]="showInMonitor()">
+                        <label class="form-check-label ml-4" for="showInMonitor">Show in monitor</label>
+                    </div>
+                    <div class="col-4">
+                        <input type="color" class="form-control color-picker" formControlName="colorLine"
+                            title="Color line" [value]="getColorLine()" position="top" ngbTooltip="Color line">
+                        <!-- <label class="form-check-label" for="colorLine">Color line</label> -->
+                    </div>
 
-            </div>
-            <div class="row mt-3 mb-3" *ngIf="isCapnoParameter()">
-                <div class="col-4">
-                    <label for="inspirationInput" class="form-label">Inspiration</label>
-                    <input type="range" class="form-range" id="inspirationInput" min="0" max="30" step="1"
-                        formControlName="inspirationCO2">
-                    <span class="rate-value">{{getFormGroup().get('inspirationCO2').value}}</span>
                 </div>
-                <div class="col-4">
-                    <label for="endTidalCO2Input" class="form-label">End Tidal</label>
-                    <input type="range" class="form-range" id="endTidalCO2Input" min="5" max="60" step="1"
-                        formControlName="etCO2">
-                    <span class="rate-value">{{getFormGroup().get('etCO2').value}}</span>
+                <div class="row mt-3 mb-3" *ngIf="isCapnoParameter()">
+                    <div class="col-4">
+                        <label for="inspirationInput" class="form-label">Inspiration</label>
+                        <input type="range" class="form-range" id="inspirationInput" min="0" max="30" step="1"
+                            formControlName="inspirationCO2">
+                        <span class="rate-value">{{getFormGroup().get('inspirationCO2').value}}</span>
+                    </div>
+                    <div class="col-4">
+                        <label for="endTidalCO2Input" class="form-label">End Tidal</label>
+                        <input type="range" class="form-range" id="endTidalCO2Input" min="5" max="60" step="1"
+                            formControlName="etCO2">
+                        <span class="rate-value">{{getFormGroup().get('etCO2').value}}</span>
+                    </div>
                 </div>
-            </div>
-            <div class="row mt-3 mb-3" *ngIf="isIBPParameter()">
-                <div class="col-4">
-                    <label for="ibpSystolicInput" class="form-label">Systolic</label>
-                    <input type="range" class="form-range" id="ibpSystolicInput" min="20" max="250" step="1"
-                        formControlName="ibpSystolic">
-                    <span class="rate-value">{{getFormGroup().get('ibpSystolic').value}}</span>
+                <div class="row mt-3 mb-3" *ngIf="isIBPParameter()">
+                    <div class="col-4">
+                        <label for="ibpSystolicInput" class="form-label">Systolic</label>
+                        <input type="range" class="form-range" id="ibpSystolicInput" min="20" max="250" step="1"
+                            formControlName="ibpSystolic">
+                        <span class="rate-value">{{getFormGroup().get('ibpSystolic').value}}</span>
+                    </div>
+                    <div class="col-4">
+                        <label for="ibpDiastolicInput" class="form-label">Diastolic</label>
+                        <input type="range" class="form-range" id="ibpDiastolicInput" min="0" max="30" step="1"
+                            formControlName="ibpDiastolic">
+                        <span class="rate-value">{{getFormGroup().get('ibpDiastolic').value}}</span>
+                    </div>
                 </div>
-                <div class="col-4">
-                    <label for="ibpDiastolicInput" class="form-label">Diastolic</label>
-                    <input type="range" class="form-range" id="ibpDiastolicInput" min="0" max="30" step="1"
-                        formControlName="ibpDiastolic">
-                    <span class="rate-value">{{getFormGroup().get('ibpDiastolic').value}}</span>
-                </div>
-            </div>
-        </form>
+            </form>
+        </div>
     </div>
 </div>

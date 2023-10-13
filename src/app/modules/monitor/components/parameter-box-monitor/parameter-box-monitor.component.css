@@ -9,3 +9,55 @@
 .first-row {
     max-height: 10px;
 }
+
+@media screen and (min-width: 1600px) {
+    .text-value {
+        font-size: 5em;
+    }
+
+    .text-2-values {
+        font-size: 3em;
+    }
+
+    .label-value,
+    .unit-value,
+    .source-value {
+        font-size: 1.4em
+    }
+}
+
+@media screen and (max-width: 1000px) {
+    .text-value {
+        font-size: 1.5em;
+    }
+
+    .text-2-values {
+        font-size: 1.2em;
+    }
+
+    .label-value,
+    .unit-value,
+    .source-value {
+        font-size: 1em
+    }
+}
+
+@media screen and (max-width: 600px) {
+    .text-2-values {
+        font-size: 1em;
+        text-align: left !important;
+    }
+
+    .values-container {
+        display: none;
+    }
+
+    .unit-value,
+    .source-value {
+        display: none;
+    }
+
+    .source-values-container {
+        display: none;
+    }
+}

@@ -1,4 +1,4 @@
-<div class="container-fluid h-100" *ngIf="isMonitorConnected() else noSimulation">
+<div class="container-fluid h-100 monitor-container" *ngIf="isMonitorConnected() else noSimulation">
     <div class="row header-monitor">
         <div class="col-5">
             <p class="text-left">
@@ -19,7 +19,7 @@
                         [height]="getChartHeight()" [dataset]="curveData.normalizedCurve"> </app-chart>
                 </div>
             </div>
-            <div class=" col-3 curve-container" style="border: 2px solid yellow" *ngIf="curveData.showCurves">
+            <div class="col-3 curve-container parameter-box" *ngIf="curveData.showCurves">
                 <!-- Parameter Box -->
                 <div class="container-fluid chart-container">
                     <app-parameter-box-monitor [color]="curveData.colorLine" [breathRate]="getBreathRate()"

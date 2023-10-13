@@ -202,21 +202,25 @@ export class Panel2Component implements OnInit, OnDestroy {
 
     public disconnectParameter(disconnect: boolean, index: number) {
         const currentParameter: PhysiologicalParamaterI = this.currentParametersWithCurves[index]
-
         if (disconnect && !currentParameter.disconnected) {
-            this.currentParametersWithCurves[index].curve = curvesConfiguration.CURVE_CONSTANT();
-            this.currentParametersWithCurves[index].normalizedCurve = this.normalizeCurves(currentParameter)
-
+            const newCurve: [number, number][] = [[0, 0]]
+            const value: number = ParameterHelper.isHeartSource(currentParameter) ? this.inputParameters.heartRate : this.inputParameters.breathRate;
+            this.currentParametersWithCurves[index].normalizedCurve = this.curvesService.normalizeDataset(newCurve, value, currentParameter.source)
+            currentParameter.disconnected = true;
         }
+
         if (!disconnect && currentParameter.disconnected) {
-            this.currentParametersWithCurves[index].curve = this.originalParametersWithCurves[index].curve
-            this.currentParametersWithCurves[index].normalizedCurve = this.originalParametersWithCurves[index].normalizedCurve
+            const value: number = ParameterHelper.isHeartSource(currentParameter) ? this.inputParameters.heartRate : this.inputParameters.breathRate;
+            this.currentParametersWithCurves[index].normalizedCurve =
+                this.curvesService.normalizeDataset(this.currentParametersWithCurves[index].curve, value, currentParameter.source);
+            currentParameter.disconnected = false;
         }
     }
 
     public setNewColorLine(newColorLine: string, index: number) {
         this.originalParametersWithCurves[index].colorLine = newColorLine;
     }
+
 
     private setParameterInformation(): void {
         if (this.activeScenario) {

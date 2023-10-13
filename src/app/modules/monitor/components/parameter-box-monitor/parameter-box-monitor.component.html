@@ -1,14 +1,14 @@
 <div class="row first-row justify-content-between" [style.color]="color">
     <div class="col-4">
-        <p class="text-left">{{getLabel()}}</p>
+        <p class="text-left label-value">{{getLabel()}}</p>
     </div>
     <div class="col-4">
-        <p class="text-right">{{getUnitValue()}}</p>
+        <p class="text-right unit-value">{{getUnitValue()}}</p>
     </div>
 </div>
 
 <div class="row mt-2 justify-content-end" [style.color]="color">
-    <div class="col-7">
+    <div class="col-7 values-container">
         <p class="text-center text-value" *ngIf="isECGParameter() || isPletismographyParameter()">
             {{getValue()}}
         </p>
@@ -21,11 +21,11 @@
             {{meanPressure}}
         </p>
     </div>
-    <div class="col-4">
-        <p class="text-right" *ngIf="isSourceCar()">
+    <div class="col-4 mt-2 source-values-container">
+        <p class="text-right source-value" *ngIf="isSourceCar()">
             HR: {{heartRate}}
         </p>
-        <p class="text-right" *ngIf="isSourceBreath()">
+        <p class="text-right source-value" *ngIf="isSourceBreath()">
             RR: {{breathRate}}
         </p>
     </div>

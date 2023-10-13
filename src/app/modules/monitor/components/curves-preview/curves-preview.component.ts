@@ -45,14 +45,9 @@ export class CurvesPreviewComponent implements OnInit, AfterViewInit, OnChanges 
 
     private simulationCurve(): void {
         this.intervalCurves = setInterval(() => {
-            if (this._dataset.length) {
-                const currentIndex = this.chartComponent.getCurrentIndex();
-                if (currentIndex % curvesConfiguration.TOTAL_POINTS === 0) {
-                    this.dataset = [...this._dataset];
-                }
-            }
-            if (this.chartComponent)
+            if (this.chartComponent) {
                 this.chartComponent.updateRealTimeDataset();
+            }
         }, this.samplingRate)
     }
 

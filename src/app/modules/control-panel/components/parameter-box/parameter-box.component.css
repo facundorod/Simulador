@@ -17,6 +17,11 @@
     background-color: #fff;
 }
 
+.playing-curve-text {
+    font-weight: bold;
+
+}
+
 .color-picker {
     padding: 0;
     width: 30%;

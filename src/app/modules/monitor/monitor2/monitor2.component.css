@@ -27,3 +27,21 @@ h4 {
 .chart-container {
     height: calc(79vh / 4);
 }
+
+.parameter-box {
+    margin-top: 2px;
+    margin-bottom: 2px;
+    border: 4px solid #fff;
+    border-radius: 10px;
+}
+
+.monitor-container {
+    max-height: 100%;
+    overflow: hidden;
+}
+
+@media screen and (max-width=600px) {
+    .parameter-box {
+        display: none;
+    }
+}
