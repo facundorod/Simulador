@@ -12,9 +12,10 @@ import { MiniMonitorComponent } from './components/mini-monitor/mini-monitor.com
 import { Monitor2Component } from './monitor2/monitor2.component';
 import { ChartComponent } from './components/chart/chart.component';
 import { CurvesPreviewComponent } from './components/curves-preview/curves-preview.component';
+import { ParameterBoxMonitorComponent } from './components/parameter-box-monitor/parameter-box-monitor.component';
 
 @NgModule({
-    declarations: [MonitorComponent, MiniMonitorComponent, Monitor2Component, ChartComponent, CurvesPreviewComponent],
+    declarations: [MonitorComponent, MiniMonitorComponent, Monitor2Component, ChartComponent, CurvesPreviewComponent, ParameterBoxMonitorComponent],
     imports: [
         CommonModule,
         SimulationModule,

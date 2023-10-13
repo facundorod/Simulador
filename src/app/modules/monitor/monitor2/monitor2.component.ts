@@ -18,6 +18,7 @@ export class Monitor2Component implements OnInit, AfterViewInit {
     private monitorState: MonitorStateI;
     private intervalHeartCurves: NodeJS.Timeout;
     private intervalBreathCurves: NodeJS.Timeout;
+
     constructor(private monitorService: MonitorService) {
     }
 
@@ -41,6 +42,9 @@ export class Monitor2Component implements OnInit, AfterViewInit {
             }
         })
     }
+
+
+
 
     private runSimulation(): void {
         if (this.intervalBreathCurves) clearInterval(this.intervalBreathCurves)
@@ -120,6 +124,38 @@ export class Monitor2Component implements OnInit, AfterViewInit {
 
     public isMonitorConnected(): boolean {
         return this.monitorState && this.monitorState.simulationStatus !== SimulationStatusEnum.OFF
+    }
+
+    public getBreathRate(): number {
+        return this.monitorState.parameterInformation.breathRate;
+    }
+
+    public getHeartRate(): number {
+        return this.monitorState.parameterInformation.heartRate;
+    }
+
+    public getInspirationCO2(): number {
+        return this.monitorState.parameterInformation.inspirationCO2;
+    }
+
+    public getEndTidalCO2(): number {
+        return this.monitorState.parameterInformation.endTidalCO2;
+    }
+
+    public getDiastolicPressure(): number {
+        return this.monitorState.parameterInformation.ibpDiastolic;
+    }
+
+    public getSystolicPressure(): number {
+        return this.monitorState.parameterInformation.ibpSystolic;
+    }
+
+    public getMeanPressure(): number {
+        return this.monitorState.parameterInformation.ibpMean;
+    }
+
+    public getOxygenSaturation(): number {
+        return this.monitorState.parameterInformation.spO2;
     }
 
 }

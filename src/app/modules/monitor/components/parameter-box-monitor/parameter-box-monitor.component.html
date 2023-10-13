@@ -1,0 +1,32 @@
+<div class="row first-row justify-content-between" [style.color]="color">
+    <div class="col-4">
+        <p class="text-left">{{getLabel()}}</p>
+    </div>
+    <div class="col-4">
+        <p class="text-right">{{getUnitValue()}}</p>
+    </div>
+</div>
+
+<div class="row mt-2 justify-content-end" [style.color]="color">
+    <div class="col-7">
+        <p class="text-center text-value" *ngIf="isECGParameter() || isPletismographyParameter()">
+            {{getValue()}}
+        </p>
+        <p class="text-center text-2-values" *ngIf="isCapnoParameter()">
+            {{etCO2}} / {{inspirationCO2}}
+        </p>
+        <p class="text-center text-2-values" *ngIf="isIbpParameter()">
+            {{systolicPressure}} / {{diastolicPressure}}
+            <br>
+            {{meanPressure}}
+        </p>
+    </div>
+    <div class="col-4">
+        <p class="text-right" *ngIf="isSourceCar()">
+            HR: {{heartRate}}
+        </p>
+        <p class="text-right" *ngIf="isSourceBreath()">
+            RR: {{breathRate}}
+        </p>
+    </div>
+</div>

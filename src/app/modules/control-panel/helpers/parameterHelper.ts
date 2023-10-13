@@ -55,6 +55,10 @@ export class ParameterHelper {
         return Math.max(...curve.map(point => point[1]));
     }
 
+    public static getMeanPressure(diastolicIBP: number, systolicIBP: number): number {
+        return Math.round(((2 * diastolicIBP) + systolicIBP) / 3)
+    }
+
     public static getMinValue(curve: [number, number][]): number {
         return Math.min(...curve.map(point => point[1]));
     }

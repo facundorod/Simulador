@@ -240,6 +240,8 @@ export class Panel2Component implements OnInit, OnDestroy {
                     case PhysiologicalParameterEnum.InvasiveBloodPressure:
                         this.inputParameters.ibpDiastolic = ParameterHelper.getDiastolicPressure(parameter);
                         this.inputParameters.ibpSystolic = ParameterHelper.getSystolicPressure(parameter);
+                        this.inputParameters.ibpMean =
+                            ParameterHelper.getMeanPressure(this.inputParameters.ibpDiastolic, this.inputParameters.ibpSystolic);
                         break;
                     default:
                         break;
@@ -356,6 +358,8 @@ export class Panel2Component implements OnInit, OnDestroy {
                 normalized: this.curvesService.normalizeDataset(newCurve, this.inputParameters.heartRate, PhysiologicalParameterSourceEnum.Heart)
             }, index)
         }
+        this.inputParameters.ibpMean =
+            ParameterHelper.getMeanPressure(this.inputParameters.ibpDiastolic, newValue.newibpSystolic);
         this.inputParameters.ibpSystolic = newValue.newibpSystolic;
     }
 
@@ -367,6 +371,8 @@ export class Panel2Component implements OnInit, OnDestroy {
                 normalized: this.curvesService.normalizeDataset(newCurve, this.inputParameters.heartRate, PhysiologicalParameterSourceEnum.Heart)
             }, index)
         }
+        this.inputParameters.ibpMean =
+            ParameterHelper.getMeanPressure(newValue.newibpDiastolic, this.inputParameters.ibpSystolic)
         this.inputParameters.ibpDiastolic = newValue.newibpDiastolic;
     }
 

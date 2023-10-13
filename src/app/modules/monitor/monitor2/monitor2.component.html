@@ -10,7 +10,8 @@
     </div>
 
     <div class="curves-container">
-        <div class="row curve-container" *ngFor="let curveData of getCurvesToShowInMonitor(); let i = index; trackBy: trackByFn">
+        <div class="row curve-container"
+            *ngFor="let curveData of getCurvesToShowInMonitor(); let i = index; trackBy: trackByFn">
             <div class="col-9" *ngIf="curveData.showCurves">
                 <!-- Gráficos -->
                 <div class="container-fluid chart-container">
@@ -20,7 +21,13 @@
             </div>
             <div class=" col-3 curve-container" style="border: 2px solid yellow" *ngIf="curveData.showCurves">
                 <!-- Parameter Box -->
-                <div class="container-fluid chart-container"></div>
+                <div class="container-fluid chart-container">
+                    <app-parameter-box-monitor [color]="curveData.colorLine" [breathRate]="getBreathRate()"
+                        [diastolicPressure]="getDiastolicPressure()" [etCO2]="getEndTidalCO2()"
+                        [heartRate]="getHeartRate()" [inspirationCO2]="getInspirationCO2()"
+                        [systolicPressure]="getSystolicPressure()" [oxygenSaturation]="getOxygenSaturation()"
+                        [parameter]="curveData" [meanPressure]="getMeanPressure()"> </app-parameter-box-monitor>
+                </div>
             </div>
         </div>
     </div>
