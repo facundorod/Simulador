@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnInit, ViewChildren } from '@angular/core';
+import { AfterViewInit, Component, OnInit, Renderer2, ViewChildren } from '@angular/core';
 import { PhysiologicalParameterSourceEnum } from '@app/shared/enum/physiologicalParameterSourceEnum';
 import { SimulationStatusEnum } from '@app/shared/enum/simulationStatusEnum';
 import { MonitorStateI } from '@app/shared/models/MonitorStateI';
@@ -19,7 +19,7 @@ export class Monitor2Component implements OnInit, AfterViewInit {
     private intervalHeartCurves: NodeJS.Timeout;
     private intervalBreathCurves: NodeJS.Timeout;
 
-    constructor(private monitorService: MonitorService) {
+    constructor(private monitorService: MonitorService, private render: Renderer2) {
     }
 
     ngAfterViewInit(): void {
@@ -27,6 +27,11 @@ export class Monitor2Component implements OnInit, AfterViewInit {
     }
 
     ngOnInit(): void {
+    }
+
+    public isFullScreen(): boolean {
+        if (document.fullscreenElement) return true
+        return false;
     }
 
     private checkLocalStorage(): void {
@@ -43,7 +48,31 @@ export class Monitor2Component implements OnInit, AfterViewInit {
         })
     }
 
+    public openFullScreen(): void {
+        const element: any = document.documentElement; // Elemento HTML principal
+        if (element.requestFullscreen) {
+            element.requestFullscreen();
+        } else if (element.mozRequestFullScreen) { // Firefox
+            element.mozRequestFullScreen();
+        } else if (element.webkitRequestFullscreen) { // Chrome, Safari y Opera
+            element.webkitRequestFullscreen();
+        } else if (element.msRequestFullscreen) { // IE/Edge
+            element.msRequestFullscreen();
+        }
+    }
 
+    public exitFullScreen(): void {
+        const element: any = document.documentElement; // Elemento HTML principal
+        if (element.exitFullscreen) {
+            document.exitFullscreen();
+        } else if (element.mozCancelFullScreen) { // Firefox
+            element.mozCancelFullScreen();
+        } else if (element.webkitExitFullscreen) { // Chrome, Safari y Opera
+            element.webkitExitFullscreen();
+        } else if (element.msExitFullscreen) { // IE/Edge
+            element.msExitFullscreen();
+        }
+    }
 
 
     private runSimulation(): void {
@@ -124,6 +153,19 @@ export class Monitor2Component implements OnInit, AfterViewInit {
 
     public isMonitorConnected(): boolean {
         return this.monitorState && this.monitorState.simulationStatus !== SimulationStatusEnum.OFF
+            && this.monitorState.simulationStatus !== SimulationStatusEnum.STOPPED
+    }
+
+    public startMeasureNIBP(): boolean {
+        return this.monitorState?.nibpMeasurement.startInmediatly
+    }
+
+    public getTimePeriodNIBP(): number {
+        return this.monitorState?.nibpMeasurement?.time;
+    }
+
+    public isStoppedSimulation(): boolean {
+        return this.monitorState && this.monitorState.simulationStatus === SimulationStatusEnum.STOPPED;
     }
 
     public getBreathRate(): number {
@@ -132,6 +174,10 @@ export class Monitor2Component implements OnInit, AfterViewInit {
 
     public getHeartRate(): number {
         return this.monitorState.parameterInformation.heartRate;
+    }
+
+    public getTemperature(): number {
+        return this.monitorState.parameterInformation.temperature;
     }
 
     public getInspirationCO2(): number {

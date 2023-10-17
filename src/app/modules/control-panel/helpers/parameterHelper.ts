@@ -2,6 +2,11 @@ import { PhysiologicalParameterEnum } from "@app/shared/enum/physiologicalParame
 import { PhysiologicalParameterSourceEnum } from "@app/shared/enum/physiologicalParameterSourceEnum";
 import { PhysiologicalParamaterI } from "@app/shared/models/physiologicalParamaterI";
 
+export type BloodPressureMeasurement = {
+    systolic: number;
+    diastolic: number;
+    mean: number;
+}
 export class ParameterHelper {
     private static parameterMaxandMinValues = {
         ibp: {
@@ -84,4 +89,17 @@ export class ParameterHelper {
     public static isBreathSource(parameter: PhysiologicalParamaterI): boolean {
         return parameter.source === PhysiologicalParameterSourceEnum.Breath
     }
+
+    public static calculateNIBP(ibpSystolic: number, ibpDiastolic: number, ibpMean: number): BloodPressureMeasurement {
+        const randomVariation = Math.ceil(Math.random() * (15 - 5 + 1) + 5);
+        const valueToAdjustDiastolic: number = (ibpDiastolic * (randomVariation / 100));
+        const valueToAdjustSystolic: number = (ibpSystolic * (randomVariation / 100));
+        const valueToAdjustMean: number = (ibpMean * (randomVariation / 100));
+        return {
+            diastolic: Math.round(ibpDiastolic - valueToAdjustDiastolic),
+            mean: Math.round(ibpMean - valueToAdjustMean),
+            systolic: Math.round(ibpSystolic - valueToAdjustSystolic)
+        }
+    }
+
 }

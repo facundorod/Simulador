@@ -13,9 +13,10 @@ import { Monitor2Component } from './monitor2/monitor2.component';
 import { ChartComponent } from './components/chart/chart.component';
 import { CurvesPreviewComponent } from './components/curves-preview/curves-preview.component';
 import { ParameterBoxMonitorComponent } from './components/parameter-box-monitor/parameter-box-monitor.component';
+import { NibpMeasurementComponent } from './components/nibp-measurement/nibp-measurement.component';
 
 @NgModule({
-    declarations: [MonitorComponent, MiniMonitorComponent, Monitor2Component, ChartComponent, CurvesPreviewComponent, ParameterBoxMonitorComponent],
+    declarations: [MonitorComponent, MiniMonitorComponent, Monitor2Component, ChartComponent, CurvesPreviewComponent, ParameterBoxMonitorComponent, NibpMeasurementComponent],
     imports: [
         CommonModule,
         SimulationModule,

@@ -1,11 +1,40 @@
 <div class="container-fluid h-100 monitor-container" *ngIf="isMonitorConnected() else noSimulation">
-    <div class="row header-monitor">
-        <div class="col-5">
+    <div class="row header-monitor justify-content-between">
+        <div class="col-4">
             <p class="text-left">
                 <span *ngIf="getAnimalName()" class="text-animal-specie">
                     {{ getAnimalName() }} - {{getScenarioDescription() | textOverflow: 40 }}
                 </span>
             </p>
+        </div>
+        <div class="col-1 text-center">
+            <img src="/assets/icons/pause-1.png" title="Freeze simulation" *ngIf="isPausedSimulation()">
+            <img src="/assets/icons/stop.png" title="Stop simulation" *ngIf="isStoppedSimulation()">
+        </div>
+
+        <div class="col-4" *ngIf="getDiastolicPressure()">
+            <app-nibp-measurement [diastolicIBP]="getDiastolicPressure()" [meanIBP]="getMeanPressure()"
+                [systolicIBP]="getSystolicPressure()" [startNow]="startMeasureNIBP()"
+                [timePeriod]="getTimePeriodNIBP()"></app-nibp-measurement>
+        </div>
+
+        <div class="col-3">
+            <div class="row justify-content-between">
+                <div class="col-6">
+                    <p class="full-screen" *ngIf="!isFullScreen()"> <a class="btn btn-link"
+                            (click)="openFullScreen()"><img src="/assets/icons/fullscreen.png" />
+                            FS</a></p>
+                    <p class="full-screen" *ngIf="isFullScreen()"> <a class="btn btn-link" (click)="exitFullScreen()">
+                            <img src="/assets/icons/exitFS.png" />Exit </a> </p>
+                </div>
+                <div class="col-6">
+                    <p class="text-right">
+                        <span *ngIf="getTemperature()" class="text-temperature">
+                            {{getTemperature()}} °C
+                        </span>
+                    </p>
+                </div>
+            </div>
         </div>
     </div>
 

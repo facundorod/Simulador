@@ -25,5 +25,6 @@ export interface PhysiologicalParamaterI {
     refCurves?: RefCurvesI[];
     curve?: [number, number][];
     normalizedCurve?: [number, number][];
+    runningCurve?: string;
     disconnected?: boolean;
 }

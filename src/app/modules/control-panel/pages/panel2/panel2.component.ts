@@ -21,6 +21,9 @@ import { v4 } from 'uuid';
 import { SimulationStatusEnum } from '@app/shared/enum/simulationStatusEnum';
 import { BatteryStatusEnum } from '@app/shared/enum/batteryStatusEnum';
 import { ParameterHelper } from '../../helpers/parameterHelper';
+import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
+import { NibpComponent } from '../../modals/nibp/nibp.component';
+import { NIBPTIME } from '@app/shared/constants/simulation';
 
 @Component({
     selector: 'app-panel2',
@@ -50,10 +53,14 @@ export class Panel2Component implements OnInit, OnDestroy {
     private currentParametersWithCurves: PhysiologicalParamaterI[];
     private monitorState: MonitorStateI = null;
     private monitorSound: MonitorSound;
+    private timeNIBP: number;
+    private startNIBPInmediatly: boolean = false;
+
     constructor(
         private fb: FormBuilder,
         private animalService: AnimalSpeciesService,
-        private curvesService: CurvesService
+        private curvesService: CurvesService,
+        private modalRef: NgbModal
     ) { }
 
 
@@ -98,6 +105,10 @@ export class Panel2Component implements OnInit, OnDestroy {
                 name: this.activeAnimalSpecie.name
             },
             parametersWithCurves: this.currentParametersWithCurves,
+            nibpMeasurement: {
+                time: this.timeNIBP,
+                startInmediatly: this.startNIBPInmediatly
+            },
             id: v4(),
             simulationStatus: this.simulationStatus,
             batteryStatus: this.batteryStatus,
@@ -107,15 +118,33 @@ export class Panel2Component implements OnInit, OnDestroy {
         localStorage.setItem(LOCALSTORAGEITEMS.SIMULATION, JSON.stringify(this.monitorState))
     }
 
-    onPlaySimulation() {
-        throw new Error('Method not implemented.');
+    public onPlaySimulation() {
+        this.simulationStatus = SimulationStatusEnum.RUNNING;
+        this.onApplyChanges();
     }
-    onPauseSimulation() {
-        throw new Error('Method not implemented.');
+    public onPauseSimulation(): void {
+        this.simulationStatus = SimulationStatusEnum.PAUSED;
+        this.onApplyChanges();
     }
-    configureNIBP() {
-        throw new Error('Method not implemented.');
+
+    public configureNIBP(): void {
+        const modal = this.modalRef.open(NibpComponent, { size: 'm', windowClass: 'modal-medium' });
+        modal.componentInstance.setInitialValue(NIBPTIME);
+        modal.result.then((nibpSettings: { timeNibp: number, startNow: boolean }) => {
+            this.timeNIBP = nibpSettings.timeNibp;
+            this.startNIBPInmediatly = nibpSettings.startNow;
+            this.monitorState.nibpMeasurement = {
+                startInmediatly: nibpSettings.startNow,
+                time: nibpSettings.timeNibp
+            }
+            this.onApplyChanges();
+            this.startNIBPInmediatly = false;
+        })
+            .catch((error: Error) => {
+                console.error(error);
+            });
     }
+
     resetSimulation() {
         throw new Error('Method not implemented.');
     }
@@ -125,8 +154,10 @@ export class Panel2Component implements OnInit, OnDestroy {
     onUnmuteAlarms() {
         throw new Error('Method not implemented.');
     }
-    onStopSimulation() {
-        throw new Error('Method not implemented.');
+
+    public onStopSimulation() {
+        this.simulationStatus = SimulationStatusEnum.STOPPED;
+        this.onApplyChanges();
     }
 
     private initFormSimulation(): void {

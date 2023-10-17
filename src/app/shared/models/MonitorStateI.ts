@@ -17,9 +17,12 @@ export interface MonitorStateI {
         description: string,
         animalName: string
     },
+    nibpMeasurement: {
+        time: number,
+        startInmediatly: boolean
+    }
     simulationStatus: SimulationStatusEnum,
     batteryStatus: BatteryStatusEnum,
-    // breathSamplingRate: number,
     soundStatus: MonitorSound,
     parameterInformation: InputParameterI
 }

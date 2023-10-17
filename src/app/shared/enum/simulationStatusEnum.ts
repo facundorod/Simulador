@@ -1,6 +1,6 @@
 export enum SimulationStatusEnum {
     RUNNING = 'RUNNING',
-    STOPED = 'STOPPED',
+    STOPPED = 'STOPPED',
     PAUSED = 'PAUSED',
     OFF = 'OFF'
 }
