@@ -81,7 +81,7 @@ export class CurvesService {
      * Normaliza el dataset unicamente de la figura de la curva a una cantidad fijada de puntos
      * @param dataset
      */
-    private normalizeCurveDataset(dataset: [number, number][]): [number, number][] {
+    public normalizeCurveDataset(dataset: [number, number][]): [number, number][] {
         const normalizedCurve: [number, number][] = [];
         this.interpolatorService.setDataset(dataset);
         for (let i = 0; i < curvesConfiguration.TOTAL_POINTS; i++) {
@@ -104,8 +104,7 @@ export class CurvesService {
             return curvesConfiguration.CURVE_CONSTANT();
         }
         if (source === PhysiologicalParameterSourceEnum.Heart) {
-            const normalizedCurveDataset: [number, number][] = this.normalizeCurveDataset(dataset);
-            return this.normalizeCurve(normalizedCurveDataset, value);
+            return this.normalizeCurve(dataset, value);
         }
         this.interpolatorService.setDataset(dataset)
         return this.normalizeRespirationCurve();
@@ -145,7 +144,7 @@ export class CurvesService {
     */
     public static getBreathSamplingRate(breathRate: number): number {
         // Tiempo que tiene que tardar el monitor en dibujar una curva
-        const drawCurveTime: number = 40 / breathRate;
+        const drawCurveTime: number = 30 / breathRate;
         const heartSamplingRate: number = (drawCurveTime / curvesConfiguration.TOTAL_POINTS) * 1000;
         return heartSamplingRate;
     }

@@ -41,7 +41,6 @@ export class NibpMeasurementComponent implements OnInit, OnDestroy, OnChanges {
             this.calculateNIBP();
         }
         if (this.timePeriod) {
-            console.log("timePeriod", this.timePeriod)
             this.nibpTimer = setInterval(() => {
                 this.calculateNIBP();
             }, this.timePeriod * 60 * 1000)

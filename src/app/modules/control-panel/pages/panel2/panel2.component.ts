@@ -297,12 +297,14 @@ export class Panel2Component implements OnInit, OnDestroy {
         }).sort((par1: PhysiologicalParamaterI, par2: PhysiologicalParamaterI) => {
             return par1.order - par2.order;
         }).map((par: PhysiologicalParamaterI) => {
+            let normalizeCurve: [number, number][] = this.curvesService.normalizeCurveDataset(par.curve);
+            par.curve = normalizeCurve;
             let normalizedDataset: [number, number][] = this.normalizeCurves(par);
             if (par.showInMonitor) {
                 par.showCurves = true;
             }
             return {
-                curve: normalizedDataset,
+                curve: normalizeCurve,
                 normalizedCurve: normalizedDataset,
                 ...par
             };

@@ -150,9 +150,9 @@ import { ParameterHelper } from '../../helpers/parameterHelper';
         refModalCurves.componentInstance.setRefCurves(this.parameter.refCurves);
         refModalCurves.result.then((value: RefCurvesI) => {
             if (value?.dataset && value.dataset.length) {
-                this._parameter.curve = value.dataset;
                 const valueSource: number = ParameterHelper.isHeartSource(this._parameter) ? this.heartRate : this.breathRate;
-                this._parameter.normalizedCurve = this.curvesService.normalizeDataset(value.dataset, valueSource, this.parameter.source);
+                this._parameter.curve = this.curvesService.normalizeCurveDataset(value.dataset);
+                this._parameter.normalizedCurve = this.curvesService.normalizeDataset(this._parameter.curve, valueSource, this.parameter.source);
                 this.calculateNewPressure();
                 this.emitNewParameterDataset();
                 this._parameter.runningCurve = value.name;

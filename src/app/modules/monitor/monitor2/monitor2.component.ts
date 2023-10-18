@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnInit, Renderer2, ViewChildren } from '@angular/core';
+import { AfterViewInit, Component, OnInit, Renderer2, ViewChild, ViewChildren } from '@angular/core';
 import { PhysiologicalParameterSourceEnum } from '@app/shared/enum/physiologicalParameterSourceEnum';
 import { SimulationStatusEnum } from '@app/shared/enum/simulationStatusEnum';
 import { MonitorStateI } from '@app/shared/models/MonitorStateI';
@@ -7,6 +7,8 @@ import { ChartComponent } from '../components/chart/chart.component';
 import { MonitorService } from '../services/monitor.service';
 import { CurvesService } from '@app/modules/control-panel/services/curves.service';
 import { curvesConfiguration } from '@app/shared/constants/curves';
+import { AudioComponent } from '@app/shared/components/audio/audio.component';
+import { AudioPlayerService } from '@app/shared/services/audio-player.service';
 
 @Component({
     selector: 'app-monitor2',
@@ -15,11 +17,12 @@ import { curvesConfiguration } from '@app/shared/constants/curves';
 })
 export class Monitor2Component implements OnInit, AfterViewInit {
     @ViewChildren('chartComponent') chartComponents: ChartComponent[];
+    private audioPlayerService: AudioPlayerService = new AudioPlayerService();
     private monitorState: MonitorStateI;
     private intervalHeartCurves: NodeJS.Timeout;
     private intervalBreathCurves: NodeJS.Timeout;
-
-    constructor(private monitorService: MonitorService, private render: Renderer2) {
+    private heartAttackAudioService: AudioPlayerService = new AudioPlayerService();
+    constructor(private monitorService: MonitorService) {
     }
 
     ngAfterViewInit(): void {
@@ -27,6 +30,8 @@ export class Monitor2Component implements OnInit, AfterViewInit {
     }
 
     ngOnInit(): void {
+        this.audioPlayerService.initSoundProvider('/assets/sounds/monitor.mp3', false, false, false);
+        this.heartAttackAudioService.initSoundProvider('/assets/sounds/flatline.mp3', true, false, false);
     }
 
     public isFullScreen(): boolean {
@@ -108,6 +113,7 @@ export class Monitor2Component implements OnInit, AfterViewInit {
 
     private updateHeartRateCurves(): void {
         this.chartComponents.forEach((chartComponent: ChartComponent, index: number) => {
+            if (!index) this.soundHeartRate(chartComponent.getCurrentIndex());
             const curveConfiguration: PhysiologicalParamaterI = this.monitorState.parametersWithCurves[index];
             if (curveConfiguration.source === PhysiologicalParameterSourceEnum.Heart) {
                 chartComponent.updateRealTimeDataset();
@@ -164,6 +170,10 @@ export class Monitor2Component implements OnInit, AfterViewInit {
         return this.monitorState?.nibpMeasurement?.time;
     }
 
+    public getPlayRate(): number {
+        return (this.getHeartRate() / 60);
+    }
+
     public isStoppedSimulation(): boolean {
         return this.monitorState && this.monitorState.simulationStatus === SimulationStatusEnum.STOPPED;
     }
@@ -202,6 +212,19 @@ export class Monitor2Component implements OnInit, AfterViewInit {
 
     public getOxygenSaturation(): number {
         return this.monitorState.parameterInformation.spO2;
+    }
+
+    private soundHeartRate(currentIndex: number): void {
+        const ecgParameter: PhysiologicalParamaterI = this.monitorState.parametersWithCurves[0];
+        if (!ecgParameter.disconnected) {
+            this.heartAttackAudioService.stopSound();
+            const currentValueNormalized: number = this.monitorState.parametersWithCurves[0].normalizedCurve[currentIndex][1];
+            const firstValue: number = this.monitorState.parametersWithCurves[0].curve[0][1];
+            if (currentValueNormalized && currentValueNormalized === firstValue)
+                this.audioPlayerService.playSound();
+        } else {
+            this.heartAttackAudioService.playSound(false);
+        }
     }
 
 }

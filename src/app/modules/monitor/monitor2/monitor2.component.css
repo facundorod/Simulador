@@ -41,8 +41,9 @@ h4 {
     overflow: hidden;
 }
 
-.text-temperature {
-    font-size: 1.3em;
+.text-temperature,
+.full-screen {
+    font-size: 2em;
 }
 
 @media screen and (max-width=600px) {

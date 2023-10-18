@@ -14,6 +14,7 @@ import { LocalStorageService } from './services/localStorage.service';
 import { AudioComponent } from './components/audio/audio.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { TextOverflowPipe } from './pipes/text-overflow.pipe';
+import { AudioPlayerService } from './services/audio-player.service';
 
 @NgModule({
     declarations: [
@@ -41,6 +42,6 @@ import { TextOverflowPipe } from './pipes/text-overflow.pipe';
         TextOverflowPipe,
         AudioComponent
     ],
-    providers: [ApiService, AuthSession, LocalStorageService],
+    providers: [ApiService, AuthSession, LocalStorageService, AudioPlayerService],
 })
 export class SharedModule { }

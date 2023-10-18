@@ -1,12 +1,11 @@
-<app-audio [play]="isMeasuringNIBP" [src]="'/assets/sounds/nibp.aac'" [playRate]=1></app-audio>
+<app-audio [play]="isMeasuringNIBP" [src]="'/assets/sounds/nibp.aac'" [playRate]=1.0 [loopSound]=false></app-audio>
 <div class="container-fluid">
     <div class="row">
         <div class="col-12" *ngIf="isMeasuringNIBP">
             <p><img src="/assets/icons/nibp-small.png" class="img-status" /> NIBP in progress</p>
         </div>
         <div class="col-12" *ngIf="!isMeasuringNIBP && previousMeasurement()">
-            <p class="text-center nibp-value">NIBP &nbsp; &nbsp; <img src="/assets/icons/nibp-small.png"
-                    class="img-status" />
+            <p class="nibp-value">NIBP &nbsp; &nbsp; <img src="/assets/icons/nibp-small.png" class="img-status" />
                 {{getSystolicNIBP()}} / {{getDiastolicNIBP()}} ({{getMeanNIBP()}})</p>
         </div>
     </div>
