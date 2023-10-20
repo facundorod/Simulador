@@ -14,7 +14,7 @@ export class ParameterHelper {
             min: 0
         },
         co2: {
-            max: 50,
+            max: 45,
             min: -1
         },
         ecg: {

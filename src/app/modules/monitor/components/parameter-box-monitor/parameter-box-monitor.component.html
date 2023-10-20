@@ -22,11 +22,15 @@
         </p>
     </div>
     <div class="col-4 mt-2 source-values-container">
-        <p class="text-right source-value" *ngIf="isSourceCar()">
+        <p class="text-right source-value" *ngIf="isSourceCar() && !isPletismographyParameter()">
             HR: {{heartRate}}
         </p>
         <p class="text-right source-value" *ngIf="isSourceBreath()">
             RR: {{breathRate}}
         </p>
+        <p class="text-right source-value" *ngIf="isPletismographyParameter()">
+            PR: {{breathRate}}
+        </p>
+
     </div>
 </div>

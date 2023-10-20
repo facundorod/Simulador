@@ -26,3 +26,7 @@
 .curves-configuration {
     background-color: #000;
 }
+
+.full-height {
+    min-height: 100%;
+}

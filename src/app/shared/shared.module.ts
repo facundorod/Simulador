@@ -15,6 +15,7 @@ import { AudioComponent } from './components/audio/audio.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { TextOverflowPipe } from './pipes/text-overflow.pipe';
 import { AudioPlayerService } from './services/audio-player.service';
+import { SpinnerComponent } from './animations/spinner/spinner.component';
 
 @NgModule({
     declarations: [
@@ -25,6 +26,7 @@ import { AudioPlayerService } from './services/audio-player.service';
         ArrayJsonPipe,
         AudioComponent,
         TextOverflowPipe,
+        SpinnerComponent,
     ],
     imports: [
         CommonModule,
@@ -40,7 +42,8 @@ import { AudioPlayerService } from './services/audio-player.service';
         ConfirmModalComponent,
         ArrayJsonPipe,
         TextOverflowPipe,
-        AudioComponent
+        AudioComponent,
+        SpinnerComponent
     ],
     providers: [ApiService, AuthSession, LocalStorageService, AudioPlayerService],
 })

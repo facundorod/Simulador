@@ -1,4 +1,4 @@
-<div class="container-fluid" *ngIf="!loading">
+<div class="container-fluid full-height" *ngIf="!isLoadingAnimals">
     <div class="row mt-5">
         <div class="col-12">
             <h1 class="text-center"> Control panel </h1>
@@ -37,20 +37,8 @@
         </form>
     </div>
 
-    <div class="container-fluid mt-5">
-        <div class="row">
-            <div class="col-12">
-                <h1 class="text-center"> Scenario Panel </h1>
-            </div>
-        </div>
-        <div class="row text-center">
-            <div class="col-12">
-                <app-scenarios [scenariosSelected]="getScenariosSimulation()" [animal]="getActiveAnimal()"
-                    (posScenarios)="getPosScenarios($event)" (returnScenarios)="getScenarios($event)" #scenarios>
-                </app-scenarios>
-            </div>
-        </div>
-    </div>
+    <app-spinner *ngIf="getActiveAnimal()" [show]="isLoadingScenario"
+        [message]="'Configuring scenario for '.concat(getActiveAnimal().name).concat('...')"></app-spinner>
 
     <div class="container-fluid mt-5">
         <div class="row">
@@ -83,41 +71,41 @@
             </div>
         </div>
     </div>
+
+
+    <footer class="button-box">
+        <div class="container footerBtn">
+            <button class="btn" (click)="onApplyChanges()">
+                <img src="/assets/icons/refresh.png" />&nbsp; Apply Changes
+            </button>
+            <button class="btn" (click)="onPlaySimulation()"> <img src="/assets/icons/play.png"
+                    title="Play simulation" />&nbsp;Play</button>
+            <button class="btn" (click)="onPauseSimulation()"> <img src="/assets/icons/pause.png"
+                    title="Freeze simulation" />&nbsp;Freeze</button>
+            <button class="btn" (click)="onStopSimulation()" title="Stop simulation"><img
+                    src="/assets/icons/stop.png" />&nbsp;Stop</button>
+            <button class="btn" (click)="onUnmuteAlarms()" *ngIf="muteAlarms"> <img src="/assets/icons/mute.png" />
+                &nbsp; Unmute
+                alarms</button>
+            <button class="btn" (click)="onMuteAlarms()" *ngIf="!muteAlarms">
+                <img src="/assets/icons/sound.png" />
+                &nbsp; Mute alarms
+            </button>
+            <button class="btn" (click)="resetSimulation()">
+                <img src="/assets/icons/refresh2.png" />
+                &nbsp; Reset Simulation
+            </button>
+            <button class="btn" (click)="configureNIBP()">
+                <img src="/assets/icons/nibp.png" />
+                &nbsp; NIBP &nbsp;
+            </button>
+            <!-- <button class="btn"> <img
+                        src="https://img.icons8.com/external-kiranshastry-lineal-color-kiranshastry/33/000000/external-settings-interface-kiranshastry-lineal-color-kiranshastry.png" />
+                        &nbsp; Monitor settings</button> -->
+            <a [routerLink]="['/monitor/monitor2']" target="_blank">
+                <img src="/assets/icons/monitor.png" />
+                &nbsp; Go to Monitor
+            </a>
+        </div>
+    </footer>
 </div>
-
-
-<footer class="button-box">
-    <div class="container footerBtn">
-        <button class="btn" (click)="onApplyChanges()">
-            <img src="/assets/icons/refresh.png" />&nbsp; Apply Changes
-        </button>
-        <button class="btn" (click)="onPlaySimulation()"> <img src="/assets/icons/play.png"
-                title="Play simulation" />&nbsp;Play</button>
-        <button class="btn" (click)="onPauseSimulation()"> <img src="/assets/icons/pause.png"
-                title="Freeze simulation" />&nbsp;Freeze</button>
-        <button class="btn" (click)="onStopSimulation()" title="Stop simulation"><img
-                src="/assets/icons/stop.png" />&nbsp;Stop</button>
-        <button class="btn" (click)="onUnmuteAlarms()" *ngIf="muteAlarms"> <img src="/assets/icons/mute.png" />
-            &nbsp; Unmute
-            alarms</button>
-        <button class="btn" (click)="onMuteAlarms()" *ngIf="!muteAlarms">
-            <img src="/assets/icons/sound.png" />
-            &nbsp; Mute alarms
-        </button>
-        <button class="btn" (click)="resetSimulation()">
-            <img src="/assets/icons/refresh2.png" />
-            &nbsp; Reset Simulation
-        </button>
-        <button class="btn" (click)="configureNIBP()">
-            <img src="/assets/icons/nibp.png" />
-            &nbsp; NIBP &nbsp;
-        </button>
-        <!-- <button class="btn"> <img
-                src="https://img.icons8.com/external-kiranshastry-lineal-color-kiranshastry/33/000000/external-settings-interface-kiranshastry-lineal-color-kiranshastry.png" />
-            &nbsp; Monitor settings</button> -->
-        <a [routerLink]="['/monitor/monitor2']" target="_blank">
-            <img src="/assets/icons/monitor.png" />
-            &nbsp; Go to Monitor
-        </a>
-    </div>
-</footer>

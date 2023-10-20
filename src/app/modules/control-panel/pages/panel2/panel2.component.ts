@@ -6,11 +6,9 @@ import { InputParameterI } from '@app/shared/models/inputParameters';
 import { PaginatedItemI } from '@app/shared/models/paginatedItemsI';
 import { PhysiologicalParamaterI } from '@app/shared/models/physiologicalParamaterI';
 import { ScenarioI } from '@app/shared/models/scenarioI';
-import { ScenarioParamsI } from '@app/shared/models/scenarioParamsI';
 import { SimulationI } from '@app/shared/models/simulationI';
 import { ParametersRangesComponent } from '../../components/parameters-ranges/parameters-ranges.component';
 import { AnimalSpeciesService } from '../../services/animalSpecies.service';
-import { ScenariosComponent } from '../scenarios/scenarios.component';
 import { CurvesPreviewComponent } from '@app/modules/monitor/components/curves-preview/curves-preview.component';
 import { CurvesService } from '../../services/curves.service';
 import { PhysiologicalParameterSourceEnum } from '@app/shared/enum/physiologicalParameterSourceEnum';
@@ -21,33 +19,30 @@ import { v4 } from 'uuid';
 import { SimulationStatusEnum } from '@app/shared/enum/simulationStatusEnum';
 import { BatteryStatusEnum } from '@app/shared/enum/batteryStatusEnum';
 import { ParameterHelper } from '../../helpers/parameterHelper';
-import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { NibpComponent } from '../../modals/nibp/nibp.component';
 import { NIBPTIME } from '@app/shared/constants/simulation';
+import { ScenarioService } from '../../services/scenario.service';
 
 @Component({
     selector: 'app-panel2',
     templateUrl: './panel2.component.html',
-    styleUrls: ['./panel2.component.css']
+    styleUrls: ['./panel2.component.css'],
 })
 export class Panel2Component implements OnInit, OnDestroy {
 
     private simulationForm: FormGroup;
     private animalSpecies: AnimalSpeciesI[];
-    public loading: boolean;
     private activeAnimalSpecie: AnimalSpeciesI;
     private simulationStatus: SimulationStatusEnum = SimulationStatusEnum.OFF;
     private batteryStatus: BatteryStatusEnum = BatteryStatusEnum.NORMAL;
 
     @Input() simulation: SimulationI;
-    @ViewChild('scenarios') scenarios: ScenariosComponent;
     @ViewChild('parametersRanges') parametersSelectors: ParametersRangesComponent;
     @ViewChildren('curvesPreview') curvesPreviews: QueryList<CurvesPreviewComponent>;
 
     muteAlarms: any;
-    private indexSimulationActive: number;
-    private activeScenario: ScenarioI;
-    private scenariosSimulation: ScenarioI[] = [];
+    private clinicScenario: ScenarioI;
     private inputParameters: InputParameterI;
     private originalParametersWithCurves: PhysiologicalParamaterI[];
     private currentParametersWithCurves: PhysiologicalParamaterI[];
@@ -55,10 +50,13 @@ export class Panel2Component implements OnInit, OnDestroy {
     private monitorSound: MonitorSound;
     private timeNIBP: number;
     private startNIBPInmediatly: boolean = false;
+    public isLoadingScenario: boolean = false;
+    public isLoadingAnimals: boolean = true;
 
     constructor(
         private fb: FormBuilder,
         private animalService: AnimalSpeciesService,
+        private scenarioService: ScenarioService,
         private curvesService: CurvesService,
         private modalRef: NgbModal
     ) { }
@@ -66,7 +64,6 @@ export class Panel2Component implements OnInit, OnDestroy {
 
     ngOnInit(): void {
         localStorage.removeItem(LOCALSTORAGEITEMS.SIMULATION)
-        this.loading = true;
         this.animalSpecies = [];
         this.inputParameters = {
             breathRate: 0,
@@ -81,7 +78,6 @@ export class Panel2Component implements OnInit, OnDestroy {
             inspirationCO2: 0,
             timeNIBP: 5
         }
-        this.indexSimulationActive = 0;
         this.monitorSound = {
             alarms: true,
             batterySound: true,
@@ -101,7 +97,7 @@ export class Panel2Component implements OnInit, OnDestroy {
         this.monitorState = {
             scenario: {
                 animalName: this.activeAnimalSpecie.name,
-                description: this.activeScenario.description,
+                description: this.simulationForm.get('simulationName').value,
                 name: this.activeAnimalSpecie.name
             },
             parametersWithCurves: this.currentParametersWithCurves,
@@ -146,7 +142,7 @@ export class Panel2Component implements OnInit, OnDestroy {
     }
 
     resetSimulation() {
-        throw new Error('Method not implemented.');
+        this.currentParametersWithCurves = [...this.originalParametersWithCurves];
     }
     onMuteAlarms() {
         throw new Error('Method not implemented.');
@@ -196,39 +192,31 @@ export class Panel2Component implements OnInit, OnDestroy {
         this.animalService.list().subscribe((animals: PaginatedItemI<AnimalSpeciesI>) => {
             if (animals)
                 this.animalSpecies = animals.data;
-            this.loading = false;
+            this.isLoadingAnimals = false;
         })
-    }
-
-    public getPosScenarios(pos: { indexActive: number }): void {
-        if (this.indexSimulationActive != pos.indexActive) {
-            this.indexSimulationActive = pos.indexActive;
-            this.activeScenario = this.scenariosSimulation[this.indexSimulationActive];
-        }
-    }
-
-    public getScenarios(scenarios: ScenarioParamsI | any): void {
-        this.scenariosSimulation = scenarios;
-        if (!this.activeScenario || this.activeScenario !== this.scenariosSimulation[this.indexSimulationActive])
-            this.activeScenario = this.scenariosSimulation[this.indexSimulationActive];
-        this.simulationStatus = SimulationStatusEnum.RUNNING;
-        this.setParameterInformation();
-    }
-
-    public getScenariosSimulation(): ScenarioI[] {
-        return this.scenariosSimulation;
     }
 
 
     private onValueChanges(): void {
         this.simulationForm.get('animalSpecie').valueChanges.subscribe((val: AnimalSpeciesI) => {
-            this.scenarios.setAnimal(val);
             if (val && val.id_as !== this.activeAnimalSpecie?.id_as) {
-                this.scenarios.clearScenarios();
                 this.activeAnimalSpecie = val;
-                this.activeScenario = null;
+                this.getNormalScenarioFromAnimal(val.id_as);
             }
         });
+    }
+
+    private getNormalScenarioFromAnimal(idAs: number): void {
+        this.isLoadingScenario = true;
+        this.scenarioService.getNormalScenario(idAs).subscribe((normalScenario: ScenarioI) => {
+            if (normalScenario) {
+                this.clinicScenario = normalScenario;
+                this.setParameterInformation();
+            }
+            setTimeout(() => {
+                this.isLoadingScenario = false;
+            }, 1500)
+        })
     }
 
     public disconnectParameter(disconnect: boolean, index: number) {
@@ -254,9 +242,9 @@ export class Panel2Component implements OnInit, OnDestroy {
 
 
     private setParameterInformation(): void {
-        if (this.activeScenario) {
+        if (this.clinicScenario) {
             this.setParametersWithCurve();
-            this.activeScenario.parameters.forEach((parameter: PhysiologicalParamaterI) => {
+            this.clinicScenario.parameters.forEach((parameter: PhysiologicalParamaterI) => {
                 switch (parameter.label.toUpperCase()) {
                     case PhysiologicalParameterEnum.HeartRate:
                         this.inputParameters.heartRate = parameter.value;
@@ -292,7 +280,7 @@ export class Panel2Component implements OnInit, OnDestroy {
 
 
     private setParametersWithCurve() {
-        this.originalParametersWithCurves = this.activeScenario.parameters.filter((par: PhysiologicalParamaterI) => {
+        this.originalParametersWithCurves = this.clinicScenario.parameters.filter((par: PhysiologicalParamaterI) => {
             return par.showInMonitor;
         }).sort((par1: PhysiologicalParamaterI, par2: PhysiologicalParamaterI) => {
             return par1.order - par2.order;
@@ -328,7 +316,7 @@ export class Panel2Component implements OnInit, OnDestroy {
     }
 
     public connectedSimulation(): boolean {
-        return this.activeScenario !== null && this.activeScenario !== undefined;
+        return this.clinicScenario !== null && this.clinicScenario !== undefined;
     }
 
     public setHeartRate(newHR: number): void {
