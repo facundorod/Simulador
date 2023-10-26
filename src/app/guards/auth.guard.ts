@@ -44,7 +44,7 @@ export class AuthGuard implements CanActivate {
                             this.toast.toastrConfig.positionClass =
                                 'toast-bottom-full-width';
                             this.toast.error(
-                                'You don\'t have access!'
+                                `You don't have access!`
                             );
                             localStorage.clear();
                             this.router.navigateByUrl('/home');

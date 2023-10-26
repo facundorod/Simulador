@@ -67,20 +67,20 @@ const routes: Routes = [
             },
         ],
     },
-    {
-        path: "simulation",
-        component: NewComponent,
-        canActivate: [AuthGuard],
-        children: [
-            {
-                path: "",
-                loadChildren: () =>
-                    import("./modules/simulation/simulation.module").then(
-                        (m) => m.SimulationModule
-                    ),
-            },
-        ],
-    },
+    // {
+    //     path: "simulation",
+    //     component: NewComponent,
+    //     canActivate: [AuthGuard],
+    //     children: [
+    //         {
+    //             path: "",
+    //             loadChildren: () =>
+    //                 import("./modules/simulation/simulation.module").then(
+    //                     (m) => m.SimulationModule
+    //                 ),
+    //         },
+    //     ],
+    // },
     {
         path: "monitor",
         component: SimulationLayoutComponent,

@@ -25,7 +25,7 @@ import { NgbModule, NgbTooltip } from '@ng-bootstrap/ng-bootstrap';
         FormsModule,
         BrowserAnimationsModule,
         ToastrModule.forRoot(),
-        SimulationModule,
+        // SimulationModule,
         HttpClientModule,
         LayoutModule,
         SharedModule,

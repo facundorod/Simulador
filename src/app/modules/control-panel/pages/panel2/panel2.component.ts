@@ -34,7 +34,7 @@ export class Panel2Component implements OnInit, OnDestroy {
     private simulationForm: FormGroup;
     private animalSpecies: AnimalSpeciesI[];
     private activeAnimalSpecie: AnimalSpeciesI;
-    private simulationStatus: SimulationStatusEnum = SimulationStatusEnum.OFF;
+    private simulationStatus: SimulationStatusEnum = SimulationStatusEnum.RUNNING;
     private batteryStatus: BatteryStatusEnum = BatteryStatusEnum.NORMAL;
 
     @Input() simulation: SimulationI;
@@ -145,7 +145,7 @@ export class Panel2Component implements OnInit, OnDestroy {
         this.currentParametersWithCurves = [...this.originalParametersWithCurves];
     }
     onMuteAlarms() {
-        throw new Error('Method not implemented.');
+        // this.monitorSound.
     }
     onUnmuteAlarms() {
         throw new Error('Method not implemented.');
@@ -215,7 +215,7 @@ export class Panel2Component implements OnInit, OnDestroy {
             }
             setTimeout(() => {
                 this.isLoadingScenario = false;
-            }, 1500)
+            }, 1000)
         })
     }
 

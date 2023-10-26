@@ -16,6 +16,7 @@ import { ParameterHelper } from '../../helpers/parameterHelper';
 }) export class ParameterBoxComponent implements OnInit {
 
     private _parameter: PhysiologicalParamaterI; // Copia privada de parCurve
+    private height: number = 1;
     @Output() newParameterDataset: EventEmitter<{
         curve: [number, number][], normalized: [number, number][]
     }> = new EventEmitter<{ curve: [number, number][], normalized: [number, number][] }>();
@@ -26,6 +27,7 @@ import { ParameterHelper } from '../../helpers/parameterHelper';
     @Output() colorLine: EventEmitter<string> = new EventEmitter<string>();
     @Output() disconnectParameter: EventEmitter<boolean> = new EventEmitter<boolean>();
     @Output() hideParameter: EventEmitter<boolean> = new EventEmitter<boolean>();
+    @Output() updateHeight: EventEmitter<number> = new EventEmitter<number>();
     @Input() heartRate: number;
     @Input() breathRate: number;
     @Input() set parameter(param: PhysiologicalParamaterI) {
@@ -59,7 +61,7 @@ import { ParameterHelper } from '../../helpers/parameterHelper';
             disconnect: false,
             showInMonitor: true,
             colorLine: this._parameter ? this._parameter.colorLine : '',
-            height: 0,
+            height: 1,
             ibpDiastolic: this._parameter.label === PhysiologicalParameterEnum.InvasiveBloodPressure ? ParameterHelper.getDiastolicPressure(this._parameter) : null,
             ibpSystolic: this._parameter.label === PhysiologicalParameterEnum.InvasiveBloodPressure ? ParameterHelper.getSystolicPressure(this._parameter) : null,
             etCO2: this._parameter.label === PhysiologicalParameterEnum.Capnography ? ParameterHelper.getEndTidalCO2(this._parameter) : null,
@@ -120,6 +122,15 @@ import { ParameterHelper } from '../../helpers/parameterHelper';
                 if (newInspirationValue !== ParameterHelper.getInspirationCO2(this._parameter))
                     this.emitNewInspirationValue(newInspirationValue);
         })
+
+        this.parameterForm.get('height').valueChanges.subscribe((newHeight: number) => {
+            if (!this.disconnectValue())
+                if (newHeight !== this.height) {
+                    this.emitUpdateHeight(newHeight);
+                    this.height = newHeight;
+                }
+        })
+
     }
 
     public getCurrentCurve(): string {
@@ -223,5 +234,9 @@ import { ParameterHelper } from '../../helpers/parameterHelper';
 
     private emitHideParameter(hide: boolean) {
         this.hideParameter.emit(hide);
+    }
+
+    private emitUpdateHeight(newHeight: number): void {
+        this.updateHeight.emit(newHeight);
     }
 }
