@@ -23,6 +23,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { NibpComponent } from '../../modals/nibp/nibp.component';
 import { NIBPTIME } from '@app/shared/constants/simulation';
 import { ScenarioService } from '../../services/scenario.service';
+import { MonitorSoundsComponent } from '../../modals/monitor-sounds/monitor-sounds.component';
 
 @Component({
     selector: 'app-panel2',
@@ -145,10 +146,19 @@ export class Panel2Component implements OnInit, OnDestroy {
         this.currentParametersWithCurves = [...this.originalParametersWithCurves];
     }
     onMuteAlarms() {
-        // this.monitorSound.
-    }
-    onUnmuteAlarms() {
-        throw new Error('Method not implemented.');
+
+        const modal = this.modalRef.open(MonitorSoundsComponent, { size: 'm', windowClass: 'modal-medium' });
+        modal.componentInstance.setMonitorSound(this.monitorSound);
+
+        modal.result.then((monitorSound: MonitorSound) => {
+            if (monitorSound) {
+                this.monitorSound = monitorSound;
+                this.onApplyChanges();
+             }
+            })
+            .catch((error: Error) => {
+                console.error(error);
+            });
     }
 
     public onStopSimulation() {
@@ -204,6 +214,16 @@ export class Panel2Component implements OnInit, OnDestroy {
                 this.getNormalScenarioFromAnimal(val.id_as);
             }
         });
+    }
+
+    public setHeight({ newHeight, previousHeight }, index: number): void {
+        const currentParameter = this.currentParametersWithCurves[index];
+        const currentCurveHeight: number = ParameterHelper.getMaxValue(currentParameter.curve);
+        const newCurveHeight: number = currentCurveHeight * (1 + newHeight / 100);
+        const newCurve = CurvesService.updateMaxY(currentParameter.curve, previousHeight, newCurveHeight);
+        this.currentParametersWithCurves[index].curve = newCurve;
+         const value: number = ParameterHelper.isHeartSource(currentParameter) ? this.inputParameters.heartRate : this.inputParameters.breathRate;
+        this.currentParametersWithCurves[index].normalizedCurve = this.curvesService.normalizeDataset(newCurve, value, currentParameter.source)
     }
 
     private getNormalScenarioFromAnimal(idAs: number): void {

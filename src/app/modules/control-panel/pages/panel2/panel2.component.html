@@ -60,7 +60,7 @@
                     (colorLine)="setNewColorLine($event, i)" (disconnectParameter)="disconnectParameter($event, i)"
                     (hideParameter)="hideParameter($event, i)" (endTidalCO2)="setEndTidalCO2($event, i)"
                     (inspirationCO2)="setInspirationCO2($event, i)" (ibpDiastolic)="setIbpDiastolic($event, i)"
-                    (ibpSystolic)="setIbpSystolic($event, i)"></app-parameter-box>
+                    (ibpSystolic)="setIbpSystolic($event, i)" (updateHeight)="setHeight($event, i)"></app-parameter-box>
             </div>
             <div class="col-5 curves-configuration">
                 <app-curves-preview #curvesPreview [colorLine]="parCurve.colorLine"
@@ -85,12 +85,9 @@
                 title="Freeze simulation" />&nbsp;Freeze</button>
         <button class="btn" (click)="onStopSimulation()" title="Stop simulation"><img
                 src="/assets/icons/stop.png" />&nbsp;Stop</button>
-        <button class="btn" (click)="onUnmuteAlarms()" *ngIf="muteAlarms"> <img src="/assets/icons/mute.png" />
-            &nbsp; Unmute
-            alarms</button>
-        <button class="btn" (click)="onMuteAlarms()" *ngIf="!muteAlarms">
+        <button class="btn" (click)="onMuteAlarms()">
             <img src="/assets/icons/sound.png" />
-            &nbsp; Mute alarms
+            &nbsp; Alarms
         </button>
         <button class="btn" (click)="resetSimulation()">
             <img src="/assets/icons/refresh2.png" />

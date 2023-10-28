@@ -10,6 +10,9 @@
     max-height: 10px;
 }
 
+
+
+
 @media screen and (min-width: 1600px) {
     .text-value {
         font-size: 5em;

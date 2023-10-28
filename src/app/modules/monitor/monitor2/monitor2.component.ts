@@ -7,8 +7,8 @@ import { ChartComponent } from '../components/chart/chart.component';
 import { MonitorService } from '../services/monitor.service';
 import { CurvesService } from '@app/modules/control-panel/services/curves.service';
 import { curvesConfiguration } from '@app/shared/constants/curves';
-import { AudioComponent } from '@app/shared/components/audio/audio.component';
 import { AudioPlayerService } from '@app/shared/services/audio-player.service';
+import { ParameterHelper } from '@app/modules/control-panel/helpers/parameterHelper';
 
 @Component({
     selector: 'app-monitor2',
@@ -18,6 +18,7 @@ import { AudioPlayerService } from '@app/shared/services/audio-player.service';
 export class Monitor2Component implements OnInit, AfterViewInit {
     @ViewChildren('chartComponent') chartComponents: ChartComponent[];
     private audioPlayerService: AudioPlayerService = new AudioPlayerService();
+    private alarmPlayerService: AudioPlayerService = new AudioPlayerService();
     private monitorState: MonitorStateI;
     private intervalHeartCurves: NodeJS.Timeout;
     private intervalBreathCurves: NodeJS.Timeout;
@@ -32,6 +33,7 @@ export class Monitor2Component implements OnInit, AfterViewInit {
     ngOnInit(): void {
         this.audioPlayerService.initSoundProvider('/assets/sounds/monitor.mp3', false, false, false);
         this.heartAttackAudioService.initSoundProvider('/assets/sounds/flatline.mp3', true, false, false);
+        this.alarmPlayerService.initSoundProvider('/assets/sounds/alarmLimit.mp3', true, false, false);
     }
 
     public isFullScreen(): boolean {
@@ -84,6 +86,7 @@ export class Monitor2Component implements OnInit, AfterViewInit {
         if (this.intervalBreathCurves) clearInterval(this.intervalBreathCurves)
         if (this.intervalHeartCurves) clearInterval(this.intervalHeartCurves)
         if (this.monitorState.simulationStatus === SimulationStatusEnum.RUNNING) {
+            this.soundAlarm();
             this.simulationBreathCurves();
             this.simulationHeartCurves();
         }
@@ -210,20 +213,71 @@ export class Monitor2Component implements OnInit, AfterViewInit {
         return this.monitorState.parameterInformation.ibpMean;
     }
 
+
+    public showAlarms(index: number): boolean {
+        const parameter: PhysiologicalParamaterI = this.monitorState.parametersWithCurves[index];
+        if (ParameterHelper.isECGParameter(parameter)) {
+            if (this.monitorState.parameterInformation.heartRate <= parameter.alert_low ||
+                this.monitorState.parameterInformation.heartRate >= parameter.alert_high) {
+                if (this.monitorState?.soundStatus?.alarms)
+                    this.alarmPlayerService.playSound(false);
+                return true;
+            }
+        }
+        if (ParameterHelper.isIBPParameter(parameter)) {
+            if (this.monitorState.parameterInformation.ibpDiastolic <= parameter.alert_low ||
+                this.monitorState.parameterInformation.ibpDiastolic >= parameter.alert_high_2 ||
+                this.monitorState.parameterInformation.ibpSystolic <= parameter.alert_low_2 ||
+                this.monitorState.parameterInformation.ibpSystolic >= parameter.alert_high) {
+                if (this.monitorState?.soundStatus?.alarms)
+                    this.alarmPlayerService.playSound(false);
+                return true;
+            }
+        }
+
+        if (ParameterHelper.isCapnoParameter(parameter)) {
+             if (this.monitorState.parameterInformation.inspirationCO2 <= parameter.alert_low ||
+                this.monitorState.parameterInformation.inspirationCO2 >= parameter.alert_high_2 ||
+                this.monitorState.parameterInformation.endTidalCO2 <= parameter.alert_low_2 ||
+                this.monitorState.parameterInformation.endTidalCO2 >= parameter.alert_high) {
+                if (this.monitorState?.soundStatus?.alarms)
+                    this.alarmPlayerService.playSound(false);
+                    return true;
+            }
+        }
+
+        if (ParameterHelper.isPletismographyParameter(parameter)) {
+            if (this.monitorState.parameterInformation.spO2 <= parameter.alert_low ||
+                this.monitorState.parameterInformation.spO2 >= parameter.alert_high) {
+               if (this.monitorState?.soundStatus?.alarms)
+                    this.alarmPlayerService.playSound(false);
+                return true;
+            }
+        }
+        return false;
+    }
+
     public getOxygenSaturation(): number {
         return this.monitorState.parameterInformation.spO2;
     }
 
+
+    private soundAlarm(): void {
+            this.alarmPlayerService.stopSound();
+    }
     private soundHeartRate(currentIndex: number): void {
         const ecgParameter: PhysiologicalParamaterI = this.monitorState.parametersWithCurves[0];
         if (!ecgParameter.disconnected) {
             this.heartAttackAudioService.stopSound();
             const currentValueNormalized: number = this.monitorState.parametersWithCurves[0].normalizedCurve[currentIndex][1];
             const firstValue: number = this.monitorState.parametersWithCurves[0].curve[0][1];
-            if (currentValueNormalized && currentValueNormalized === firstValue)
-                this.audioPlayerService.playSound();
+            if (currentValueNormalized && currentValueNormalized === firstValue) {
+                if (this.monitorState?.soundStatus?.heartFreqSound)
+                    this.audioPlayerService.playSound();
+            }
         } else {
-            this.heartAttackAudioService.playSound(false);
+            if (this.monitorState?.soundStatus?.heartFreqSound)
+                this.heartAttackAudioService.playSound(false);
         }
     }
 

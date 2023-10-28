@@ -21,6 +21,7 @@ import { Panel2Component } from './pages/panel2/panel2.component';
 import { ParametersRangesComponent } from './components/parameters-ranges/parameters-ranges.component';
 import { ParameterBoxComponent } from './components/parameter-box/parameter-box.component';
 import { InterpolatorService } from './services/interpolator.service';
+import { MonitorSoundsComponent } from './modals/monitor-sounds/monitor-sounds.component';
 
 @NgModule({
     declarations: [
@@ -46,6 +47,7 @@ import { InterpolatorService } from './services/interpolator.service';
         Panel2Component,
         ParametersRangesComponent,
         ParameterBoxComponent,
+        MonitorSoundsComponent,
     ],
     imports: [
         CommonModule,

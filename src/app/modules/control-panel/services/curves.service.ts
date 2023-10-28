@@ -151,7 +151,6 @@ export class CurvesService {
 
     public static updateIbpSystolic(curveDataset: [number, number][], previousValue: number, newValue: number): [number, number][] {
         return this.updateMaxY(curveDataset, previousValue, newValue);
-
     }
 
     public static updateIbpDiastolic(curveDataset: [number, number][], previousValue: number, newValue: number): [number, number][] {
@@ -166,7 +165,7 @@ export class CurvesService {
         return this.updateMaxY(curveDataset, previousValue, newValue);
     }
 
-    private static updateMaxY(curveDataset: [number, number][], previousValue: number, newValue: number): [number, number][] {
+    public static updateMaxY(curveDataset: [number, number][], previousValue: number, newValue: number): [number, number][] {
         // Calcula el factor de escala para mantener la relación de aspecto
         const rFactor = newValue / previousValue;
         return curveDataset.map(point => [point[0], point[1] * rFactor]);

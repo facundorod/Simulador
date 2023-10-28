@@ -27,7 +27,7 @@ import { ParameterHelper } from '../../helpers/parameterHelper';
     @Output() colorLine: EventEmitter<string> = new EventEmitter<string>();
     @Output() disconnectParameter: EventEmitter<boolean> = new EventEmitter<boolean>();
     @Output() hideParameter: EventEmitter<boolean> = new EventEmitter<boolean>();
-    @Output() updateHeight: EventEmitter<number> = new EventEmitter<number>();
+    @Output() updateHeight: EventEmitter<{ newHeight: number, previousHeight: number }> = new EventEmitter<{ newHeight: number, previousHeight: number }>();
     @Input() heartRate: number;
     @Input() breathRate: number;
     @Input() set parameter(param: PhysiologicalParamaterI) {
@@ -124,9 +124,10 @@ import { ParameterHelper } from '../../helpers/parameterHelper';
         })
 
         this.parameterForm.get('height').valueChanges.subscribe((newHeight: number) => {
+            debugger;
             if (!this.disconnectValue())
                 if (newHeight !== this.height) {
-                    this.emitUpdateHeight(newHeight);
+                    this.emitUpdateHeight({newHeight, previousHeight: this.height});
                     this.height = newHeight;
                 }
         })
@@ -236,7 +237,7 @@ import { ParameterHelper } from '../../helpers/parameterHelper';
         this.hideParameter.emit(hide);
     }
 
-    private emitUpdateHeight(newHeight: number): void {
-        this.updateHeight.emit(newHeight);
+    private emitUpdateHeight({ newHeight, previousHeight }): void {
+        this.updateHeight.emit({ newHeight, previousHeight });
     }
 }

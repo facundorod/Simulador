@@ -37,7 +37,7 @@ export class MonitorService {
             (!state && this.currentMonitorState != null) ||
             state.id !== this.currentMonitorState.id ||
             state.simulationStatus !== this.currentMonitorState.simulationStatus ||
-            state.soundStatus.alarms !== this.currentMonitorState.soundStatus.alarms
+            state.soundStatus?.alarms !== this.currentMonitorState?.soundStatus?.alarms
         );
     }
 

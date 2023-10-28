@@ -12,6 +12,28 @@
     box-sizing: border-box;
 }
 
+.alert-enabled {
+    animation: pulse 3s infinite;
+    font-weight: bold;
+}
+
+@keyframes pulse {
+    0% {
+        background-color: #FF4242;
+        /* Rojo más brillante */
+    }
+
+    50% {
+        background-color: #FF2828;
+        /* Rojo medio */
+    }
+
+    100% {
+        background-color: #FF1616;
+        /* Rojo más oscuro */
+    }
+}
+
 p,
 h3,
 h4 {

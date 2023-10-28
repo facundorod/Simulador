@@ -82,6 +82,14 @@ export class ParameterHelper {
         return parameter.label === PhysiologicalParameterEnum.InvasiveBloodPressure
     }
 
+    public static isECGParameter(parameter: PhysiologicalParamaterI): boolean {
+        return parameter.label === PhysiologicalParameterEnum.HeartRate;
+    }
+
+    public static isPletismographyParameter(parameter: PhysiologicalParamaterI): boolean {
+        return parameter.label === PhysiologicalParameterEnum.OxygenSaturation;
+    }
+
     public static isHeartSource(parameter: PhysiologicalParamaterI): boolean {
         return parameter.source === PhysiologicalParameterSourceEnum.Heart
     }

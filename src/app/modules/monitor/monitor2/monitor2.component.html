@@ -48,7 +48,9 @@
                         [height]="getChartHeight()" [dataset]="curveData.normalizedCurve"> </app-chart>
                 </div>
             </div>
-            <div class="col-3 curve-container parameter-box" *ngIf="curveData.showCurves">
+            <div class="col-3 curve-container parameter-box" *ngIf="curveData.showCurves"
+                [ngClass]="{'alert-enabled': showAlarms(i)}">
+
                 <!-- Parameter Box -->
                 <div class="container-fluid chart-container">
                     <app-parameter-box-monitor [color]="curveData.colorLine" [breathRate]="getBreathRate()"
