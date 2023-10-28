@@ -1,0 +1,16 @@
+version: "3.8"
+services:
+  simvet-web:
+    container_name: simvet-web
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - 80:80
+    volumes:
+      - ./:/usr/src/app
+    networks:
+      - simvet
+networks:
+    simvet:
+        driver: bridge

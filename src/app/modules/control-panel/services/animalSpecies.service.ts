@@ -2,8 +2,9 @@ import { AnimalSpeciesI } from '@models/animal-speciesI';
 import { ApiService } from './../../../shared/services/api.service';
 import { HelperService } from '@app/shared/services/helper.service';
 import { environment } from '@environments/environment';
-import { Subject } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { Injectable } from '@angular/core';
+import { PaginatedItemI } from '@app/shared/models/paginatedItemsI';
 
 @Injectable()
 export class AnimalSpeciesService {
@@ -14,8 +15,8 @@ export class AnimalSpeciesService {
      * @param query
      * @param order
      */
-    public list(query: any = null, order: any = null) {
-        const subject = new Subject<any>();
+    public list(query: any = null, order: any = null): Observable<PaginatedItemI<AnimalSpeciesI>> {
+        const subject = new Subject<PaginatedItemI<AnimalSpeciesI>>();
 
         let endpoint = environment.api.animalSpecies;
 
@@ -27,10 +28,10 @@ export class AnimalSpeciesService {
         }
 
         this.api.httpGet(endpoint).subscribe(
-            (data: any) => {
+            (data: PaginatedItemI<AnimalSpeciesI>) => {
                 subject.next(data);
             },
-            (err: any) => {
+            (err: Error) => {
                 subject.error(err);
             },
             () => {

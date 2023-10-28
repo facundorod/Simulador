@@ -17,7 +17,7 @@ export class UsersListComponent implements OnInit {
     public formGroup: FormGroup;
     private loading: boolean = true;
     public queryOptions = {
-        pageSize: 5,
+        pageSize: 10,
         page: 1,
     };
     public paginatorData: {

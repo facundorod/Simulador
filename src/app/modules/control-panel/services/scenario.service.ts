@@ -242,4 +242,26 @@ export class ScenarioService {
 
         return subject.asObservable();
     }
+
+     public getNormalScenario(animalId: number): Observable<ScenarioI> {
+        const subject = new Subject<ScenarioI>();
+
+        const endpoint = environment.api.scenarios + `${animalId}/normal`;
+
+        this.api
+            .httpGet(endpoint)
+            .subscribe(
+                (data: ScenarioI) => {
+                    subject.next(data);
+                },
+                (error: Error) => {
+                    subject.error(error);
+                },
+                () => {
+                    subject.complete();
+                }
+            );
+
+        return subject.asObservable();
+    }
 }

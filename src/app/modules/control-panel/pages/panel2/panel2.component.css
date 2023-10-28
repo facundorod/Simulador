@@ -1,0 +1,38 @@
+.button-box {
+    margin-top: 50px;
+    width: 100%;
+    background-color: #49377e;
+    position: sticky;
+    top: 100;
+    bottom: 0;
+}
+
+.button-box button {
+    color: #fff;
+}
+
+.param-configuration {
+    background-color: #BAAFE4;
+}
+
+.param-configuration,
+.curves-configuration {
+    border-radius: 10px;
+    border: 2px solid #59478d;
+    margin-top: 20px;
+    width: 100%;
+}
+
+.curves-configuration {
+    background-color: #000;
+}
+
+.container-principal {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.full-height {
+    min-height: 100%;
+}

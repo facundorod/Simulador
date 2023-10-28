@@ -1,12 +1,11 @@
 import {
-    AfterViewInit,
     Component,
     Input,
     OnChanges,
     OnInit,
     SimpleChanges,
-    ViewChild,
 } from '@angular/core';
+import { AudioPlayerService } from '@app/shared/services/audio-player.service';
 
 @Component({
     selector: 'app-audio',
@@ -16,16 +15,37 @@ import {
 export class AudioComponent implements OnInit, OnChanges {
     @Input() src: string;
     @Input() play = false;
-    @ViewChild('audio') audio: HTMLAudioElement;
-    @Input() playRate = 1.0;
-    constructor() {}
+    @Input() playRate: number = 1.0;
+    @Input() loopSound: boolean = false;
+    private audioPlayerService: AudioPlayerService;
 
-    ngOnChanges(changes: SimpleChanges): void {
-        const audio = document.querySelector('audio');
-        if (audio && changes.playRate) {
-            audio.playbackRate = changes.playRate.currentValue;
-        }
+    constructor() {
+        this.audioPlayerService = new AudioPlayerService();
     }
 
-    ngOnInit(): void {}
+    ngOnInit(): void {
+        this.audioPlayerService.initSoundProvider(this.src, this.loopSound, this.loopSound, this.play);
+    }
+
+    public playSound(): void {
+        this.audioPlayerService.playSound();
+    }
+
+    ngOnChanges(changes: SimpleChanges): void {
+        if (changes.play !== undefined && !changes.play.firstChange) {
+            this.updateAudioState();
+        }
+
+    }
+
+    private updateAudioState() {
+        if (this.play) {
+            this.audioPlayerService.playSound();
+        } else {
+            this.audioPlayerService.stopSound();
+        }
+    }
 }
+
+
+

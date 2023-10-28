@@ -1,0 +1,76 @@
+<div class="container-fluid h-100 monitor-container" *ngIf="isMonitorConnected() else noSimulation">
+    <div class="row header-monitor justify-content-between">
+        <div class="col-4">
+            <p class="text-left">
+                <span *ngIf="getAnimalName()" class="text-animal-specie">
+                    {{ getAnimalName() }} - {{getScenarioDescription() | textOverflow: 40 }}
+                </span>
+            </p>
+        </div>
+        <div class="col-1 text-center">
+            <img src="/assets/icons/pause-1.png" title="Freeze simulation" *ngIf="isPausedSimulation()">
+            <img src="/assets/icons/stop.png" title="Stop simulation" *ngIf="isStoppedSimulation()">
+        </div>
+
+        <div class="col-4" *ngIf="getDiastolicPressure()">
+            <app-nibp-measurement [diastolicIBP]="getDiastolicPressure()" [meanIBP]="getMeanPressure()"
+                [systolicIBP]="getSystolicPressure()" [startNow]="startMeasureNIBP()"
+                [timePeriod]="getTimePeriodNIBP()"></app-nibp-measurement>
+        </div>
+
+        <div class="col-3">
+            <div class="row justify-content-between">
+                <div class="col-6">
+                    <p class="full-screen" *ngIf="!isFullScreen()"> <a class="btn btn-link"
+                            (click)="openFullScreen()"><img src="/assets/icons/fullscreen.png" />
+                        </a></p>
+                    <p class="full-screen" *ngIf="isFullScreen()"> <a class="btn btn-link" (click)="exitFullScreen()">
+                            <img src="/assets/icons/exitFS.png" /></a> </p>
+                </div>
+                <div class="col-6">
+                    <p class="text-right">
+                        <span *ngIf="getTemperature()" class="text-temperature">
+                            {{getTemperature()}} °C
+                        </span>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="curves-container">
+        <div class="row curve-container"
+            *ngFor="let curveData of getCurvesToShowInMonitor(); let i = index; trackBy: trackByFn">
+            <div class="col-9" *ngIf="curveData.showCurves">
+                <!-- Gráficos -->
+                <div class="container-fluid chart-container">
+                    <app-chart #chartComponent [colorLine]="curveData.colorLine" [maxY]="curveData.maxY"
+                        [height]="getChartHeight()" [dataset]="curveData.normalizedCurve"> </app-chart>
+                </div>
+            </div>
+            <div class="col-3 curve-container parameter-box" *ngIf="curveData.showCurves"
+                [ngClass]="{'alert-enabled': showAlarms(i)}">
+
+                <!-- Parameter Box -->
+                <div class="container-fluid chart-container">
+                    <app-parameter-box-monitor [color]="curveData.colorLine" [breathRate]="getBreathRate()"
+                        [diastolicPressure]="getDiastolicPressure()" [etCO2]="getEndTidalCO2()"
+                        [heartRate]="getHeartRate()" [inspirationCO2]="getInspirationCO2()"
+                        [systolicPressure]="getSystolicPressure()" [oxygenSaturation]="getOxygenSaturation()"
+                        [parameter]="curveData" [meanPressure]="getMeanPressure()"> </app-parameter-box-monitor>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<ng-template #noSimulation class="mt-4 no-simulation">
+
+    <div class="container row no-simulation">
+        <div class="spinner-border text-danger" role="status">
+        </div>
+        <div class="ml-4">
+            <h3 class="text-center">Waiting for simulation</h3>
+        </div>
+    </div>
+</ng-template>

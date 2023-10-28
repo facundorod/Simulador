@@ -1,3 +1,4 @@
+import { trigger, state, style, transition, animate } from '@angular/animations';
 import { Component, OnInit } from '@angular/core';
 import { Sidebar } from 'ng-sidebar';
 
@@ -5,11 +6,32 @@ import { Sidebar } from 'ng-sidebar';
     selector: 'app-panel-layout',
     templateUrl: './panel-layout.component.html',
     styleUrls: ['./panel-layout.component.css'],
+     animations: [
+    trigger('headerAnimation', [
+      state('normal', style({
+        transform: 'translateY(0)',
+      })),
+      state('extended', style({
+        transform: 'translateY(70px)',
+      })),
+      transition('normal => extended', animate('300ms ease-out')),
+      transition('extended => normal', animate('300ms ease-in'))
+    ]),
+  ]
 })
 export class PanelLayoutComponent implements OnInit {
     public sidebarOpen = false;
     public user: any;
     public toggleFlag = false;
+    headerState = 'normal';
+
+    onScroll() {
+        if (window.scrollY > 50 && this.headerState === 'normal') {
+        this.headerState = 'extended';
+        } else if (window.scrollY <= 50 && this.headerState === 'extended') {
+        this.headerState = 'normal';
+        }
+    }
 
     ngOnInit(): void {
         const user = JSON.parse(localStorage.getItem('authToken'));

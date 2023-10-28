@@ -1,0 +1,15 @@
+input {
+    /* -webkit-appearance: none; */
+    /* appearance: none; */
+    width: 80%;
+}
+
+label {
+    width: 100%;
+    font-weight: bold;
+}
+
+.rate-value {
+    padding: 1.3em;
+    font-weight: bold;
+}

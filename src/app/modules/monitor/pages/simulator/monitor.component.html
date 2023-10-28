@@ -3,7 +3,7 @@
         <div class="col-5">
             <p class="text-left">
                 <span *ngIf="animalSpecie" class="text-animal-specie">
-                    {{ animalSpecie.name }} - {{currentState.scenario.description | scenarioText }}
+                    {{ animalSpecie.name }} - {{currentState.scenario.description | textOverflow: 40 }}
                 </span>
             </p>
         </div>
@@ -224,7 +224,7 @@
         <div class="spinner-border text-danger" role="status">
         </div>
         <div class="ml-4">
-            <h3 class="text-center">Waiting for simulation</h3>
+            <h3 class="text-center text-simulation">Waiting for simulation</h3>
         </div>
     </div>
 </ng-template>

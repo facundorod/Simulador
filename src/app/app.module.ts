@@ -14,7 +14,6 @@ import { SimulationModule } from './modules/simulation/simulation.module';
 import { SharedModule } from './shared/shared.module';
 import { NgbModule, NgbTooltip } from '@ng-bootstrap/ng-bootstrap';
 
-
 @NgModule({
     declarations: [
         AppComponent,
@@ -26,7 +25,7 @@ import { NgbModule, NgbTooltip } from '@ng-bootstrap/ng-bootstrap';
         FormsModule,
         BrowserAnimationsModule,
         ToastrModule.forRoot(),
-        SimulationModule,
+        // SimulationModule,
         HttpClientModule,
         LayoutModule,
         SharedModule,

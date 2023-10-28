@@ -7,20 +7,20 @@ import { Sidebar } from 'ng-sidebar';
     styleUrls: ['./main.component.css']
 })
 export class MainComponent implements OnInit {
-    public sidebarOpen = false;
+    // public sidebarOpen = false;
     constructor() { }
 
     ngOnInit(): void {
     }
 
 
-    openSidebar(sidebar: Sidebar): void {
-        sidebar.open();
-        this.sidebarOpen = true;
-    }
+    // openSidebar(sidebar: Sidebar): void {
+    //     sidebar.open();
+    //     this.sidebarOpen = true;
+    // }
 
-    onClosed(): void {
-        this.sidebarOpen = false;
-    }
+    // onClosed(): void {
+    //     this.sidebarOpen = false;
+    // }
 
 }
