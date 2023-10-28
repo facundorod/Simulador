@@ -18,7 +18,7 @@ export class LoginGuard implements CanActivate {
     canActivate(): boolean {
         const statusUser = this.authSvc.isLogged();
         if (statusUser == true) {
-            this.router.navigateByUrl('/simulation/new');
+            this.router.navigate(['/panel/']);
         }
         return true;
     }

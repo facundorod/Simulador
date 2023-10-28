@@ -1,52 +1,54 @@
-    <div class="row modal-header">
-        <div class="col">
-            <h2>Select the new curve to simulate</h2>
-        </div>
+<div class="row modal-header">
+    <div class="col">
+        <h2>Select the new curve to simulate</h2>
     </div>
+</div>
 
-    <div class="row justify-content-center modal-body" *ngIf="getRefCurves().length > 1">
-        <div class="col-4 box-curve mt-2" *ngFor="let refCurve of getRefCurves(); let i=index">
-            <div class="inner" *ngIf="refCurve" (click)="onSelectCurve(refCurve)">
-                <div class="front">
-                    <p>{{refCurve.curves.name}}</p>
-                </div>
-                <div class="back">
-                    <p>{{(refCurve.curves.description) && (refCurve.curves.description.length > 300) ? (refCurve.curves.description | slice:0:300)+'..':(refCurve.curves.description) }}</p>
-                </div>
+<div class="row justify-content-center modal-body" *ngIf="getRefCurves().length">
+    <div class="col-4 box-curve mt-2" *ngFor="let refCurve of getRefCurves(); let i=index">
+        <div class="inner" *ngIf="refCurve" (click)="onSelectCurve(refCurve)">
+            <div class="front">
+                <p>{{refCurve.name}}</p>
             </div>
-            <div class="inner" *ngIf="!refCurve">
-                <div class="front">
-                    <p>Custom Curve</p>
-                    <input class="form-control curves-dataset-input" id="formFile" type="file" accept=".csv"
-                            (change)="onFileChange($event)">
-                </div>
-                <div class="back">
-                    <label class="custom-file-upload"> Insert new curve from your computer <input class="form-control curves-dataset-input" id="formFile" type="file" accept=".csv"
+            <div class="back">
+                <p>{{(refCurve.description) && (refCurve.description.length > 300) ? (refCurve.description |
+                    slice:0:300)+'..':(refCurve.description) }}</p>
+            </div>
+        </div>
+        <!-- <div class="inner"
+            *ngIf="(getRefCurves().length > 1 && i == getRefCurves().length) || (getRefCurves().length == 1 && i == getRefCurves().length - 1)">
+            <div class="front">
+                <p>Custom Curve</p>
+                <input class="form-control curves-dataset-input" id="formFile" type="file" accept=".csv"
+                    (change)="onFileChange($event)">
+            </div>
+            <div class="back">
+                <label class="custom-file-upload"> Insert new curve from your computer <input
+                        class="form-control curves-dataset-input" id="formFile" type="file" accept=".csv"
                         (change)="onFileChange($event)"></label>
-                </div>
             </div>
-        </div>
+        </div> -->
     </div>
+</div>
 
-    <div class="row justify-content-evenly modal-body" *ngIf="getRefCurves().length == 1">
-        <div class="col-4 box-curve box-curve-margin" *ngFor="let refCurve of getRefCurves()">
-            <div class="inner" *ngIf="!refCurve">
-                <div class="front">
-                    <p>Custom Curve</p>
-
-                </div>
-                <div class="back">
-                    <label class="custom-file-upload"> Insert new curve from your computer <input class="form-control curves-dataset-input" id="formFile" type="file" accept=".csv"
+<!-- <div class="row justify-content-evenly modal-body" *ngIf="!getRefCurves().length">
+    <div class="col-4 box-curve box-curve-margin">
+        <div class="inner">
+            <div class="front">
+                <p>Custom Curve</p>
+            </div>
+            <div class="back">
+                <label class="custom-file-upload"> Insert new curve from your computer <input
+                        class="form-control curves-dataset-input" id="formFile" type="file" accept=".csv"
                         (change)="onFileChange($event)"></label>
 
-                </div>
             </div>
         </div>
     </div>
+</div> -->
 
-    <div class="row modal-footer">
-        <button class="btn btn-danger" (click)="onCancelModal()">
-            Close
-        </button>
-    </div>
-
+<div class="row modal-footer">
+    <button class="btn btn-danger" (click)="onCancelModal()">
+        Close
+    </button>
+</div>

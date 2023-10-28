@@ -27,7 +27,7 @@ export class LoginComponent implements OnInit {
         this.authService.login(this.email, this.password).subscribe(
             () => {
                 // Logueo exitoso
-                this.router.navigateByUrl('/simulation/new');
+                this.router.navigate(['/panel/']);
                 this.submit = true;
                 const auth = JSON.parse(localStorage.getItem('authToken'));
                 const { user } = auth;

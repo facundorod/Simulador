@@ -57,7 +57,7 @@ export class NewComponent implements OnInit {
                         'Simulation',
                         JSON.stringify(simulation)
                     );
-                    this.router.navigateByUrl('/panel');
+                    this.router.navigateByUrl('/panel/');
                 }
             },
             (error: Error) => {
@@ -67,7 +67,7 @@ export class NewComponent implements OnInit {
     }
 
     public initiateWithPreviousScenario(): void {
-        this.router.navigateByUrl('/panel');
+        this.router.navigateByUrl('/panel/');
     }
 
 

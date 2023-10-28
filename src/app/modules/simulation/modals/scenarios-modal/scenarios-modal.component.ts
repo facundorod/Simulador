@@ -5,6 +5,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, Validators } from '@angular/forms';
 import { BaseComponent } from '@app/shared/components/base.component';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { PaginatedItemI } from '@app/shared/models/paginatedItemsI';
 
 @Component({
     templateUrl: './scenarios-modal.component.html',
@@ -27,8 +28,8 @@ export class ScenariosModalComponent extends BaseComponent implements OnInit {
 
     async loadData(): Promise<any> {
         return new Promise((resolve, reject) => {
-            this.scenariosService.listWithParams({ animal: this.animalSpecie }).subscribe(
-                (data: any) => {
+            this.scenariosService.list({ animal: this.animalSpecie }).subscribe(
+                (data: PaginatedItemI<ScenarioI>) => {
                     if (data) { resolve(data); }
                 },
                 (error: any) => {

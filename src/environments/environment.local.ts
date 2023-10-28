@@ -1,7 +1,7 @@
 export const environment = {
     production: false,
     api: {
-        baseUrl: "http://server-simvet:3000/api",
+        baseUrl: "http://localhost:3000/api",
         animalSpecies: "/animalSpecies/",
         arrhythmias: "/arrhythmia/",
         medications: "/medication/",
@@ -11,6 +11,7 @@ export const environment = {
         login: "/auth/login",
         register: "/auth/register",
         verifyToken: "/auth/verify",
+        curvesV2: '/curves/v2/',
         simulations: "/simulation/",
         curves: "/curves/",
         refCurves: '/refCurves',
@@ -19,6 +20,6 @@ export const environment = {
         users: "/auth/users",
         roles: "/auth/roles"
     },
-    simulation: "http://simvet-web:4200/monitor",
-    userManual: 'http://server-simvet:3000/files/user-manual.pdf'
+    simulation: "http://localhost:4200/monitor",
+    userManual: 'http://localhost:3000/files/user-manual.pdf'
 };

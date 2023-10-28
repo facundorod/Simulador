@@ -13,7 +13,9 @@ import { ArrayJsonPipe } from './pipes/array-json.pipe';
 import { LocalStorageService } from './services/localStorage.service';
 import { AudioComponent } from './components/audio/audio.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { ScenarioTextPipe } from './pipes/scenario-text.pipe';
+import { TextOverflowPipe } from './pipes/text-overflow.pipe';
+import { AudioPlayerService } from './services/audio-player.service';
+import { SpinnerComponent } from './animations/spinner/spinner.component';
 
 @NgModule({
     declarations: [
@@ -23,7 +25,8 @@ import { ScenarioTextPipe } from './pipes/scenario-text.pipe';
         ConfirmModalComponent,
         ArrayJsonPipe,
         AudioComponent,
-        ScenarioTextPipe,
+        TextOverflowPipe,
+        SpinnerComponent,
     ],
     imports: [
         CommonModule,
@@ -38,9 +41,10 @@ import { ScenarioTextPipe } from './pipes/scenario-text.pipe';
         MessageComponent,
         ConfirmModalComponent,
         ArrayJsonPipe,
-        ScenarioTextPipe,
-        AudioComponent
+        TextOverflowPipe,
+        AudioComponent,
+        SpinnerComponent
     ],
-    providers: [ApiService, AuthSession, LocalStorageService],
+    providers: [ApiService, AuthSession, LocalStorageService, AudioPlayerService],
 })
 export class SharedModule { }

@@ -1,0 +1,25 @@
+<form [formGroup]="soundForm" (ngSubmit)="onSubmit()" *ngIf="!isLoading">
+    <div class="modal-header">
+        <h3>Monitor sounds configuration</h3>
+    </div>
+    <div class="modal-body">
+        <div class="custom-control custom-switch">
+            <input type="checkbox" class="custom-control-input" id="freqRateSound" formControlName="heartFreqSound">
+            <label class="custom-control-label" for="freqRateSound">Freq. rate sound</label>
+        </div>
+        <div class="custom-control custom-switch">
+            <input type="checkbox" class="custom-control-input" id="alarms" formControlName="alarms">
+            <label class="custom-control-label" for="alarms">Parameter alarms</label>
+        </div>
+        <div class="custom-control custom-switch">
+            <input type="checkbox" class="custom-control-input" id="batterySound" formControlName="batterySound">
+            <label class="custom-control-label" for="batterySound">Low battery sound</label>
+        </div>
+        <div class="modal-footer mt-3">
+            <button type="submit" class="btn btn-primary btn-save" *ngIf="soundForm.valid">Save changes</button>
+            <button type="submit" class="btn btn-primary btn-save" *ngIf="!soundForm.valid" disabled>Save
+                changes</button>
+            <button type="button" class="btn btn-danger" (click)="onCancel()">Cancel</button>
+        </div>
+    </div>
+</form>

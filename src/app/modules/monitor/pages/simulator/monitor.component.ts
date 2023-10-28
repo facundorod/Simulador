@@ -139,7 +139,7 @@ export class MonitorComponent
         );
     }
 
-    public getPlayRate():  number {
+    public getPlayRate(): number {
         if (this.playRate) {
             return this.playRate;
         }
@@ -547,11 +547,11 @@ export class MonitorComponent
         if (curve?.curveConfiguration && curve.curveConfiguration.source) {
             switch (curve.curveConfiguration.source.toUpperCase()) {
                 case 'CAR':
+                    if (curve.curveConfiguration.label.toUpperCase() === 'SPO2')
+                        return this.parameterInfo.spO2
                     return this.parameterInfo.heartRate;
                 case 'RESP':
                     return this.parameterInfo.breathRate;
-                case 'SPO2':
-                    return this.parameterInfo.spO2;
                 default:
                     break;
             }
@@ -565,6 +565,10 @@ export class MonitorComponent
         }
 
         return -1;
+    }
+
+    public getSPO2Value(): number {
+        return this.parameterInfo.spO2
     }
 
     public getParameterInfo(): ParameterInfoI {
@@ -660,7 +664,7 @@ export class MonitorComponent
         const curve: string = this.currentState.curves[index].curveConfiguration?.label?.toUpperCase();
 
         return ((breathCurve && source == 'RESP' && !ecgCurve) || (!breathCurve && ecgCurve && curve === 'ECG') ||
-         (!breathCurve && !ecgCurve && curve !== 'ECG' && source !== 'RESP'));
+            (!breathCurve && !ecgCurve && curve !== 'ECG' && source !== 'RESP'));
     }
 
     /**

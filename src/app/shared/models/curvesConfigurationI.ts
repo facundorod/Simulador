@@ -1,3 +1,4 @@
+import { PhysiologicalParameterSourceEnum } from '../enum/physiologicalParameterSourceEnum';
 import { PhysiologicalParamaterI } from './physiologicalParamaterI';
 
 export interface CurvesConfigurationI {
@@ -10,7 +11,7 @@ export interface CurvesConfigurationI {
     id_pp: number;
     name: string;
     description: string;
-    source?: string;
+    source?: PhysiologicalParameterSourceEnum;
     colorLine?: string;
     minY?: number;
     maxY?: number;
@@ -18,4 +19,5 @@ export interface CurvesConfigurationI {
     maxValue?: number;
     mediumValue?: number;
     refValue?: number;
+    showMonitor?: boolean;
 }

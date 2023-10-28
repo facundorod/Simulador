@@ -1,48 +1,67 @@
-<ng-sidebar-container class="sidebar">
-
-    <!-- Sidebar -->
-    <ng-sidebar #sidebar [mode]="'push'" [animate]="true" [showBackdrop]="true" [trapFocus]="true" [autoFocus]="true"
+<!-- Sidebar -->
+<!-- <ng-sidebar #sidebar [mode]="'push'" [animate]="true" [showBackdrop]="true" [trapFocus]="true" [autoFocus]="true"
         [keyClose]="true" [closeOnClickBackdrop]="true" [closeOnClickOutside]="true" [dock]="true" [dockedSize]="'60px'"
         [animate]="true" (onClosed)="onClosed()">
         <app-sidebar [type]="'user'" [sidebarOpen]="sidebarOpen" class="sidebarS"></app-sidebar>
-    </ng-sidebar>
+    </ng-sidebar> -->
 
-    <!-- Page content -->
-    <div ng-sidebar-content class="panel-content">
-        <nav class="navbar navbar-expand-lg">
-            <div class="container-fluid">
-                <div class="row row-navbar">
-                    <div class="col-4">
-                        <button (click)="openSidebar(sidebar)" class="navbar__toogle"></button>
-                    </div>
-                    <div class="col-4 div-navbar-logo">
-                        <h3><a class="navbar-brand" href="#"><img src="../../../../assets/images/simvetLogo.png"
-                                    width="90" height="40"></a></h3>
-                    </div>
-                    <div class="col-4 div-profile">
-                        <div class="dropdown">
-                            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton"
-                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" (click)="showMenu()">
-                                <img src="/assets/icons/veterinarian.png" />
-                                &nbsp; Hi, {{getUserName()}}
-                            </button>
-                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton"
-                                [ngClass]="{'show': toggleFlag}">
-                                <a class="dropdown-item" [routerLink]="['/users/my-profile']">My Profile</a>
-                                <a class="dropdown-item" [routerLink]="['/auth/logout']">Logout</a>
-                            </div>
-                        </div>
+<!-- Page content -->
+<nav class="navbar navbar-expand-lg" [@headerAnimation]="headerState" (window:scroll)="onScroll()">
+    <div class="container-fluid">
+
+        <div class="row w-100 d-flex justify-content-between">
+            <div class="col-7 d-flex justify-content-end align-items-center">
+                <a class="text-center" [routerLink]="['/panel/']">
+                    <img src="../../../../assets/images/simvetLogo.png" width="100" height="50">
+                </a>
+            </div>
+            <div class="col-3 d-flex justify-content-end pl-10">
+                <div class="dropdown">
+                    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton"
+                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" (click)="showMenu()">
+                        <img src="/assets/icons/veterinarian.png" />
+                        &nbsp; Hi, {{getUserName()}}
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" [ngClass]="{'show': toggleFlag}">
+                        <a class="dropdown-item" [routerLink]="['/users/my-profile']">My Profile</a>
+                        <a class="dropdown-item" [routerLink]="['/auth/logout']">Logout</a>
                     </div>
                 </div>
             </div>
-        </nav>
-        <main role="main">
-            <div class="template">
-                <div class="content rounded">
-                    <router-outlet></router-outlet>
-                </div>
-            </div>
+        </div>
 
-        </main>
     </div>
-</ng-sidebar-container>
+
+    <!-- <div class="row justify-content-center" style="border: 2px solid yellow">
+            <div class="col-8 " style="border: 2px solid red;">
+                <div class="row justify-content-center">
+                    <a class="text-center" href="#">
+                        <img src="../../../../assets/images/simvetLogo.png" width="90" height="40">
+                    </a>
+                </div>
+            </div>
+            <div class="col-4" style="border: 2px solid rgb(122, 65, 65);">
+                <div class="dropdown">
+                    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton"
+                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" (click)="showMenu()">
+                        <img src="/assets/icons/veterinarian.png" />
+                        &nbsp; Hi, {{getUserName()}}
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" [ngClass]="{'show': toggleFlag}">
+                        <a class="dropdown-item" [routerLink]="['/users/my-profile']">My Profile</a>
+                        <a class="dropdown-item" [routerLink]="['/auth/logout']">Logout</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div> -->
+</nav>
+
+<main role="main">
+    <div class="template">
+        <div class="content rounded">
+            <router-outlet></router-outlet>
+        </div>
+    </div>
+
+</main>

@@ -1,52 +1,8 @@
-.navbar__toogle {
-    background: transparent;
-    border: 0.15rem solid #fff;
-    border-left: 0;
-    border-right: 0;
-    cursor: pointer;
-    font-size: 0;
-    height: 1.5rem;
-    margin-right: 1rem;
-    position: relative;
-    width: 2rem;
-}
-
-.navbar__toogle:after {
-    background: #fff;
-    content: "";
-    height: 0.15rem;
-    left: 0;
-    margin-top: -0.075rem;
-    position: absolute;
-    top: 50%;
-    width: 100%;
-}
-
 .navbar {
     background-color: #8e7cc3;
-}
-
-.sidebar {
-    position: fixed;
-}
-
-h3 a {
-    padding-top: 0%;
-    font-size: 1em;
-    color: #05263c;
-}
-
-h3 {
-    text-align: center;
-}
-
-.row-navbar {
-    width: 100%;
-}
-
-.panel-content,
-.content .rounded {
-    height: 100%;
+    opacity: 100%;
+    z-index: 20;
+    height: 70px;
 }
 
 .dropdown-toggle,
@@ -58,11 +14,9 @@ h3 {
 .dropdown-toggle:visited {
     background-color: transparent !important;
     border: 0px !important;
-    margin-left: 15%;
 }
 
 .dropdown-menu {
-    margin-left: 15%;
     background-color: #8e7cc3;
 }
 
@@ -72,40 +26,4 @@ h3 {
 
 .dropdown-menu a:hover {
     color: #616161;
-}
-
-
-.simvet-head {
-    display: none;
-}
-
-.div-profile {
-    left: 15%;
-}
-
-.div-navbar-logo {
-    display: none;
-}
-
-
-@media (min-width: 1024px) {
-    .simvet-head {
-        display: block;
-    }
-
-    .div-navbar-logo {
-        display: block;
-    }
-
-    .dropdown-toggle {
-        padding-left: 50%;
-    }
-
-    .dropdown-menu {
-        margin-left: 65%;
-    }
-
-    .div-profile {
-        left: 0%;
-    }
 }
