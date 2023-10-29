@@ -14,6 +14,7 @@ import { MonitorI } from '@app/shared/models/monitorI';
 export class LoginComponent implements OnInit {
     email: String;
     password: String;
+    isLoading: boolean = false;
     submit: Boolean = false;
     constructor(
         private authService: AuthService,
@@ -23,9 +24,11 @@ export class LoginComponent implements OnInit {
     ) { }
 
     login() {
-
+        this.isLoading = true;
         this.authService.login(this.email, this.password).subscribe(
             () => {
+                this.isLoading = false;
+
                 // Logueo exitoso
                 this.router.navigate(['/panel/']);
                 this.submit = true;
@@ -41,6 +44,7 @@ export class LoginComponent implements OnInit {
                 // En caso de error lo intercepta el servicio Interceptor.
             },
             (error: any) => {
+                this.isLoading = false;
                 console.log(error);
             }
         );

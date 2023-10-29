@@ -1,3 +1,4 @@
+<app-spinner *ngIf="!getActiveAnimal()" [show]="isLoadingAnimals" [message]="'Preparing patients...'"></app-spinner>
 <div class="container-fluid container-principal" *ngIf="!isLoadingAnimals">
     <div class="row mt-5">
         <div class="col-12">
@@ -36,6 +37,7 @@
             </div>
         </form>
     </div>
+
 
     <app-spinner *ngIf="getActiveAnimal()" [show]="isLoadingScenario"
         [message]="'Configuring scenario for '.concat(getActiveAnimal().name).concat('...')"></app-spinner>
