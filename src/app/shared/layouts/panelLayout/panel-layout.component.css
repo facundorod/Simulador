@@ -1,6 +1,6 @@
 .navbar {
     background-color: #8e7cc3;
-    opacity: 100%;
+    /* opacity: 100%; */
     z-index: 20;
     height: 70px;
 }
