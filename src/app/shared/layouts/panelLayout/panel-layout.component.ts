@@ -1,4 +1,3 @@
-import { trigger, state, style, transition, animate } from '@angular/animations';
 import { Component, OnInit } from '@angular/core';
 import { Sidebar } from 'ng-sidebar';
 
@@ -7,16 +6,16 @@ import { Sidebar } from 'ng-sidebar';
     templateUrl: './panel-layout.component.html',
     styleUrls: ['./panel-layout.component.css'],
      animations: [
-    trigger('headerAnimation', [
-      state('normal', style({
-        transform: 'translateY(0)',
-      })),
-      state('extended', style({
-        transform: 'translateY(70px)',
-      })),
-      transition('normal => extended', animate('300ms ease-out')),
-      transition('extended => normal', animate('300ms ease-in'))
-    ]),
+    // trigger('headerAnimation', [
+    //   state('normal', style({
+    //     transform: 'translateY(0)',
+    //   })),
+    //   state('extended', style({
+    //     transform: 'translateY(70px)',
+    //   })),
+    //   transition('normal => extended', animate('300ms ease-out')),
+    //   transition('extended => normal', animate('300ms ease-in'))
+    // ]),
   ]
 })
 export class PanelLayoutComponent implements OnInit {
