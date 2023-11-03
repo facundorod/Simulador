@@ -42,7 +42,6 @@ export class Panel2Component implements OnInit, OnDestroy {
     @ViewChild('parametersRanges') parametersSelectors: ParametersRangesComponent;
     @ViewChildren('curvesPreview') curvesPreviews: QueryList<CurvesPreviewComponent>;
 
-    muteAlarms: any;
     private clinicScenario: ScenarioI;
     private inputParameters: InputParameterI;
     private originalParametersWithCurves: PhysiologicalParamaterI[];
@@ -143,10 +142,9 @@ export class Panel2Component implements OnInit, OnDestroy {
     }
 
     resetSimulation() {
-        this.currentParametersWithCurves = [...this.originalParametersWithCurves];
+        this.setParameterInformation();
     }
     onMuteAlarms() {
-
         const modal = this.modalRef.open(MonitorSoundsComponent, { size: 'm', windowClass: 'modal-medium' });
         modal.componentInstance.setMonitorSound(this.monitorSound);
 
@@ -218,11 +216,9 @@ export class Panel2Component implements OnInit, OnDestroy {
 
     public setHeight({ newHeight, previousHeight }, index: number): void {
         const currentParameter = this.currentParametersWithCurves[index];
-        const currentCurveHeight: number = ParameterHelper.getMaxValue(currentParameter.curve);
-        const newCurveHeight: number = currentCurveHeight * (1 + newHeight / 100);
-        const newCurve = CurvesService.updateMaxY(currentParameter.curve, previousHeight, newCurveHeight);
-        this.currentParametersWithCurves[index].curve = newCurve;
-         const value: number = ParameterHelper.isHeartSource(currentParameter) ? this.inputParameters.heartRate : this.inputParameters.breathRate;
+        const factor: number = 1 + (newHeight / 100);
+        const newCurve = CurvesService.updateMaxY(currentParameter.curve, previousHeight, undefined, factor);
+        const value: number = ParameterHelper.isHeartSource(currentParameter) ? this.inputParameters.heartRate : this.inputParameters.breathRate;
         this.currentParametersWithCurves[index].normalizedCurve = this.curvesService.normalizeDataset(newCurve, value, currentParameter.source)
     }
 
@@ -235,7 +231,7 @@ export class Panel2Component implements OnInit, OnDestroy {
             }
             setTimeout(() => {
                 this.isLoadingScenario = false;
-            }, 1000)
+            }, 100)
         })
     }
 

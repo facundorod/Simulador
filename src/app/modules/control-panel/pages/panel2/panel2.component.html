@@ -78,31 +78,28 @@
 </div>
 <footer class="button-box">
     <div class="container footerBtn">
-        <button class="btn" (click)="onApplyChanges()">
+        <button class="btn" (click)="onApplyChanges()" position="top" ngbTooltip="Apply changes in the Monitor">
             <img src="/assets/icons/refresh.png" />&nbsp; Apply Changes
         </button>
-        <button class="btn" (click)="onPlaySimulation()"> <img src="/assets/icons/play.png"
-                title="Play simulation" />&nbsp;Play</button>
-        <button class="btn" (click)="onPauseSimulation()"> <img src="/assets/icons/pause.png"
-                title="Freeze simulation" />&nbsp;Freeze</button>
-        <button class="btn" (click)="onStopSimulation()" title="Stop simulation"><img
-                src="/assets/icons/stop.png" />&nbsp;Stop</button>
-        <button class="btn" (click)="onMuteAlarms()">
+        <button class="btn" (click)="onPlaySimulation()" position="top" ngbTooltip="Play simulation"> <img
+                src="/assets/icons/play.png" title="Play simulation" />&nbsp;Play</button>
+        <button class="btn" (click)="onPauseSimulation()" position="top" ngbTooltip="Pause simulation"> <img
+                src="/assets/icons/pause.png" title="Freeze simulation" />&nbsp;Freeze</button>
+        <button class="btn" (click)="onStopSimulation()" position="top" ngbTooltip="Stop simulation"
+            title="Stop simulation"><img src="/assets/icons/stop.png" />&nbsp;Stop</button>
+        <button class="btn" (click)="onMuteAlarms()" position="top" ngbTooltip="Alarms configuration">
             <img src="/assets/icons/sound.png" />
             &nbsp; Alarms
         </button>
-        <button class="btn" (click)="resetSimulation()">
+        <button class="btn" (click)="resetSimulation()" position="top" ngbTooltip="Reset simulation">
             <img src="/assets/icons/refresh2.png" />
-            &nbsp; Reset Simulation
+            &nbsp; Reset
         </button>
-        <button class="btn" (click)="configureNIBP()">
+        <button class="btn" (click)="configureNIBP()" position="top" ngbTooltip="Non-invasive blood pressure">
             <img src="/assets/icons/nibp.png" />
             &nbsp; NIBP &nbsp;
         </button>
-        <!-- <button class="btn"> <img
-                    src="https://img.icons8.com/external-kiranshastry-lineal-color-kiranshastry/33/000000/external-settings-interface-kiranshastry-lineal-color-kiranshastry.png" />
-                    &nbsp; Monitor settings</button> -->
-        <a [routerLink]="['/monitor/']" target="_blank">
+        <a [routerLink]="['/monitor/']" target="_blank" position="top" ngbTooltip="Go to the Vital Signs Monitor">
             <img src="/assets/icons/monitor.png" />
             &nbsp; Go to Monitor
         </a>

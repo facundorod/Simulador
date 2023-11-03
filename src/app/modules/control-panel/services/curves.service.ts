@@ -165,9 +165,9 @@ export class CurvesService {
         return this.updateMaxY(curveDataset, previousValue, newValue);
     }
 
-    public static updateMaxY(curveDataset: [number, number][], previousValue: number, newValue: number): [number, number][] {
+    public static updateMaxY(curveDataset: [number, number][], previousValue: number, newValue: number, factor?: number): [number, number][] {
         // Calcula el factor de escala para mantener la relación de aspecto
-        const rFactor = newValue / previousValue;
+        let rFactor = factor ? factor : newValue / previousValue;
         return curveDataset.map(point => [point[0], point[1] * rFactor]);
     }
 
