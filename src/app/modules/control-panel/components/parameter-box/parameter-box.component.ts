@@ -124,7 +124,6 @@ import { ParameterHelper } from '../../helpers/parameterHelper';
         })
 
         this.parameterForm.get('height').valueChanges.subscribe((newHeight: number) => {
-            debugger;
             if (!this.disconnectValue())
                 if (newHeight !== this.height) {
                     this.emitUpdateHeight({newHeight, previousHeight: this.height});
@@ -161,10 +160,14 @@ import { ParameterHelper } from '../../helpers/parameterHelper';
         const refModalCurves: NgbModalRef = this.modal.open(RefCurvesComponent, { size: 'lg', windowClass: 'modal-small' });
         refModalCurves.componentInstance.setRefCurves(this.parameter.refCurves);
         refModalCurves.result.then((value: RefCurvesI) => {
-            if (value?.dataset && value.dataset.length) {
+            if (value?.dataset?.length) {
                 const valueSource: number = ParameterHelper.isHeartSource(this._parameter) ? this.heartRate : this.breathRate;
                 this._parameter.curve = this.curvesService.normalizeCurveDataset(value.dataset);
-                this._parameter.normalizedCurve = this.curvesService.normalizeDataset(this._parameter.curve, valueSource, this.parameter.source);
+                const normalizedDataset = this.curvesService.normalizeCurve(this._parameter.curve, valueSource);
+                console.log("normalizedDt", normalizedDataset);
+                this._parameter.normalizedCurve = this.curvesService.normalizeDataset(normalizedDataset, valueSource, this.parameter.source);
+                console.log("normalizedDt2", this._parameter.normalizedCurve);
+
                 this.calculateNewPressure();
                 this.emitNewParameterDataset();
                 this._parameter.runningCurve = value.name;

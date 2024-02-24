@@ -132,13 +132,13 @@ export class ChartComponent implements OnInit, AfterViewInit, OnChanges {
             xaxis: {
                 type: 'numeric',
                 labels: {
-                    show: false,
+                    show: true,
                 },
                 axisTicks: {
-                    show: false,
+                    show: true,
                 },
                 axisBorder: {
-                    show: false,
+                    show: true,
                 },
                 max: curvesConfiguration.MAX_MONITOR,
                 min: 0,

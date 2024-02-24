@@ -1,23 +1,22 @@
 import { Injectable } from '@angular/core';
 import { curvesConfiguration } from '@app/shared/constants/curves';
-import { CurveStateI } from '@app/shared/models/curveStateI';
-import { RefCurvesResponse } from '@app/shared/models/refCurvesResponse';
-import { StatesI } from '@app/shared/models/stateI';
 import { ApiService } from '@app/shared/services/api.service';
 import { HelperService } from '@app/shared/services/helper.service';
 import { environment } from '@environments/environment';
-import { Observable, Subject } from 'rxjs';
+import { Subject } from 'rxjs';
 import { InterpolatorService } from './interpolator.service';
-import { PhysiologicalParameterEnum } from '@app/shared/enum/physiologicalParameterEnum';
 import { PhysiologicalParameterSourceEnum } from '@app/shared/enum/physiologicalParameterSourceEnum';
 import { ParameterHelper } from '../helpers/parameterHelper';
+import { CurvesHelper } from '@app/modules/simulation/helpers/curvesHelper';
 
 @Injectable()
 export class CurvesService {
     private interpolatorService: InterpolatorService;
+    private curvesHelper: CurvesHelper;
 
     constructor(private api: ApiService) {
         this.interpolatorService = new InterpolatorService();
+        this.curvesHelper = new CurvesHelper();
     }
 
     /**
@@ -53,27 +52,43 @@ export class CurvesService {
       * @param dataset
       * @param freqRate
       */
-    private normalizeCurve(dataset: [number, number][], freqRate: number = 60): [number, number][] {
+    public normalizeCurve(dataset: [number, number][], freqRate: number = 60): [number, number][] {
         const normalizedCurve = [];
         const lastElement = dataset[dataset.length - 1];
-        const freqCurve: number = 60 / freqRate;
         let time: number = 0.0;
-        const constantPoints: number = (curvesConfiguration.TOTAL_POINTS * freqCurve) - curvesConfiguration.CURVE_POINTS;
+        const constantPoints: number = curvesConfiguration.TOTAL_POINTS - curvesConfiguration.CURVE_POINTS;
+        const scale = 60 / freqRate;
+
+        const stepsHeart = scale / curvesConfiguration.TOTAL_POINTS;
         while (time < curvesConfiguration.MAX_MONITOR) {
-            for (let i = 0; i < constantPoints / 2 && time < curvesConfiguration.MAX_MONITOR; i++) {
+            for (let i = 0; i < constantPoints / 2; i++) {
                 normalizedCurve.push([time, lastElement[1]]);
-                time += curvesConfiguration.STEPS_HEART;
+                time += stepsHeart;
             }
-            for (let j = 0; j < dataset.length && time < curvesConfiguration.MAX_MONITOR; j++) {
-                normalizedCurve.push([time, dataset[j][1]]);
-                time += curvesConfiguration.STEPS_HEART;
+            for (const element of dataset) {
+                normalizedCurve.push([time, element[1]]);
+                time += stepsHeart;
             }
-            for (let k = 0; k < constantPoints / 2 && time < curvesConfiguration.MAX_MONITOR; k++) {
+            for (let k = 0; k < constantPoints / 2; k++) {
                 normalizedCurve.push([time, lastElement[1]]);
-                time += curvesConfiguration.STEPS_HEART;
+                time += stepsHeart;
             }
         }
+
+
         return normalizedCurve;
+    }
+
+    public normalizeByHr(dataset: [number, number][], heartRate: number): [number, number][] {
+        let x = 0;
+        const normalizedDataset: [number, number][] = []
+        const steps = (60 / heartRate) / curvesConfiguration.TOTAL_POINTS;
+        while (x < curvesConfiguration.MAX_MONITOR)
+            for (const element of dataset) {
+                normalizedDataset.push([x, element[1]]);
+                x += steps;
+            }
+        return normalizedDataset;
     }
 
 
@@ -104,7 +119,7 @@ export class CurvesService {
             return curvesConfiguration.CURVE_CONSTANT();
         }
         if (source === PhysiologicalParameterSourceEnum.Heart) {
-            return this.normalizeCurve(dataset, value);
+            return this.normalizeByHr(dataset, value);
         }
         this.interpolatorService.setDataset(dataset)
         return this.normalizeRespirationCurve();
@@ -129,8 +144,8 @@ export class CurvesService {
         if (curves.length)
             // Repite el ciclo de la curva original a lo largo del nuevo rango
             for (let x = 0; x < curvesConfiguration.MAX_MONITOR; x += curves[curves.length - 1][0]) {
-                for (let i = 0; i < curves.length; i++) {
-                    extendedCurves.push([x + curves[i][0], curves[i][1]])
+                for (const element of curves) {
+                    extendedCurves.push([x + element[0], element[1]])
                 }
             }
         return extendedCurves;
@@ -167,7 +182,7 @@ export class CurvesService {
 
     public static updateMaxY(curveDataset: [number, number][], previousValue: number, newValue: number, factor?: number): [number, number][] {
         // Calcula el factor de escala para mantener la relación de aspecto
-        let rFactor = factor ? factor : newValue / previousValue;
+        let rFactor = factor || newValue / previousValue;
         return curveDataset.map(point => [point[0], point[1] * rFactor]);
     }
 

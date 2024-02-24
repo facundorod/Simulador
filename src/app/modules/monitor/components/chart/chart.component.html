@@ -1,8 +1,7 @@
-
 <ng-template [ngIf]="isChartConfigured()">
     <apx-chart #chart [series]="getChart().series" [stroke]="getChart().stroke" [xaxis]="getChart().xaxis"
-        [yaxis]="getChart().yaxis" [dataLabels]="getChart().dataLabels" [chart]="getChart().chart" [grid]="getChart().grid"
-        [tooltip]="getChart().tooltip" [legend]="getChart().legend" >
+        [yaxis]="getChart().yaxis" [dataLabels]="getChart().dataLabels" [chart]="getChart().chart"
+        [grid]="getChart().grid" [tooltip]="getChart().tooltip" [legend]="getChart().legend" [autoUpdateSeries]=true>
     </apx-chart>
 
 </ng-template>

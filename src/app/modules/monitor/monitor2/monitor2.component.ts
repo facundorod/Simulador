@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnInit, Renderer2, ViewChild, ViewChildren } from '@angular/core';
+import { AfterViewInit, Component, OnInit, ViewChildren } from '@angular/core';
 import { PhysiologicalParameterSourceEnum } from '@app/shared/enum/physiologicalParameterSourceEnum';
 import { SimulationStatusEnum } from '@app/shared/enum/simulationStatusEnum';
 import { MonitorStateI } from '@app/shared/models/MonitorStateI';
@@ -9,6 +9,7 @@ import { CurvesService } from '@app/modules/control-panel/services/curves.servic
 import { curvesConfiguration } from '@app/shared/constants/curves';
 import { AudioPlayerService } from '@app/shared/services/audio-player.service';
 import { ParameterHelper } from '@app/modules/control-panel/helpers/parameterHelper';
+import { CurvesHelper } from '@app/modules/simulation/helpers/curvesHelper';
 
 @Component({
     selector: 'app-monitor2',
@@ -19,9 +20,11 @@ export class Monitor2Component implements OnInit, AfterViewInit {
     @ViewChildren('chartComponent') chartComponents: ChartComponent[];
     private audioPlayerService: AudioPlayerService = new AudioPlayerService();
     private alarmPlayerService: AudioPlayerService = new AudioPlayerService();
+    private curvesHelper: CurvesHelper = new CurvesHelper();
     private monitorState: MonitorStateI;
     private intervalHeartCurves: NodeJS.Timeout;
     private intervalBreathCurves: NodeJS.Timeout;
+    private soundInterval: NodeJS.Timeout;
     private heartAttackAudioService: AudioPlayerService = new AudioPlayerService();
     constructor(private monitorService: MonitorService) {
     }
@@ -49,6 +52,7 @@ export class Monitor2Component implements OnInit, AfterViewInit {
                 this.runSimulation();
             } else {
                 if (this.monitorState) this.monitorState.simulationStatus = SimulationStatusEnum.OFF
+                clearInterval(this.soundInterval);
                 clearInterval(this.intervalBreathCurves)
                 clearInterval(this.intervalHeartCurves)
             }
@@ -85,10 +89,16 @@ export class Monitor2Component implements OnInit, AfterViewInit {
     private runSimulation(): void {
         if (this.intervalBreathCurves) clearInterval(this.intervalBreathCurves)
         if (this.intervalHeartCurves) clearInterval(this.intervalHeartCurves)
+        if (this.soundInterval) clearInterval(this.soundInterval)
         if (this.monitorState.simulationStatus === SimulationStatusEnum.RUNNING) {
             this.soundAlarm();
             this.simulationBreathCurves();
             this.simulationHeartCurves();
+            if (this.monitorState?.soundStatus?.heartFreqSound) {
+                this.soundInterval = setInterval(() => {
+                    this.audioPlayerService.playSound();
+                }, (60 / this.getHeartRate()) * 1000)
+            }
         }
     }
 
@@ -126,9 +136,11 @@ export class Monitor2Component implements OnInit, AfterViewInit {
 
     private simulationHeartCurves(): void {
         this.intervalHeartCurves = setInterval(() => {
-            this.updateHeartRateCurves()
-        }, curvesConfiguration.SAMPLING_RATE)
+            this.updateHeartRateCurves();
+        }, this.curvesHelper.getDrawFrequency(this.getHeartRate()))
     }
+
+
 
 
     public getAnimalName(): string {
@@ -242,7 +254,7 @@ export class Monitor2Component implements OnInit, AfterViewInit {
                 this.monitorState.parameterInformation.endTidalCO2 >= parameter.alert_high) {
                 if (this.monitorState?.soundStatus?.alarms)
                     this.alarmPlayerService.playSound(false);
-                    return true;
+                return true;
             }
         }
 
@@ -251,7 +263,7 @@ export class Monitor2Component implements OnInit, AfterViewInit {
                 this.monitorState.parameterInformation.spO2 >= parameter.alert_high) {
                if (this.monitorState?.soundStatus?.alarms)
                     this.alarmPlayerService.playSound(false);
-                return true;
+               return true;
             }
         }
         return false;
@@ -265,6 +277,7 @@ export class Monitor2Component implements OnInit, AfterViewInit {
     private soundAlarm(): void {
             this.alarmPlayerService.stopSound();
     }
+
     private soundHeartRate(currentIndex: number): void {
         const ecgParameter: PhysiologicalParamaterI = this.monitorState.parametersWithCurves[0];
         if (!ecgParameter.disconnected) {
@@ -272,13 +285,10 @@ export class Monitor2Component implements OnInit, AfterViewInit {
             const currentValueNormalized: number = this.monitorState.parametersWithCurves[0].normalizedCurve[currentIndex][1];
             const firstValue: number = this.monitorState.parametersWithCurves[0].curve[0][1];
             if (currentValueNormalized && currentValueNormalized === firstValue) {
-                if (this.monitorState?.soundStatus?.heartFreqSound)
-                    this.audioPlayerService.playSound();
+                    // this.audioPlayerService.playSound();
             }
-        } else {
-            if (this.monitorState?.soundStatus?.heartFreqSound)
+        } else if (this.monitorState?.soundStatus?.heartFreqSound)
                 this.heartAttackAudioService.playSound(false);
-        }
     }
 
 }

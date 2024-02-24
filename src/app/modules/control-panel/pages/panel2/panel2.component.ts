@@ -24,6 +24,7 @@ import { NibpComponent } from '../../modals/nibp/nibp.component';
 import { NIBPTIME } from '@app/shared/constants/simulation';
 import { ScenarioService } from '../../services/scenario.service';
 import { MonitorSoundsComponent } from '../../modals/monitor-sounds/monitor-sounds.component';
+import { RefCurvesI } from '@app/shared/models/refCurvesI';
 
 @Component({
     selector: 'app-panel2',
@@ -307,9 +308,19 @@ export class Panel2Component implements OnInit, OnDestroy {
             if (par.showInMonitor) {
                 par.showCurves = true;
             }
+            const refCurves: RefCurvesI[] = par.refCurves.map((curve) => {
+                return {
+                    createdAt: curve.createdAt,
+                    dataset: this.curvesService.normalizeCurve(curve.dataset, this.inputParameters.heartRate || undefined),
+                    description: curve.description,
+                    name: curve.name,
+                    updatedAt: curve.updatedAt
+                }
+            })
             return {
                 curve: normalizeCurve,
                 normalizedCurve: normalizedDataset,
+                refCurves: refCurves,
                 ...par
             };
         });
@@ -317,10 +328,14 @@ export class Panel2Component implements OnInit, OnDestroy {
         this.currentParametersWithCurves = [...this.originalParametersWithCurves];
     }
 
+    private normalizeHrCurves(par: PhysiologicalParamaterI): [number, number][] {
+        return this.curvesService.normalizeByHr(par.curve, this.inputParameters.heartRate || null);
+    }
+
     private normalizeCurves(par: PhysiologicalParamaterI): [number, number][] {
         let normalizedDataset: [number, number][] = [];
         if (par.source === PhysiologicalParameterSourceEnum.Heart) {
-            normalizedDataset = this.curvesService.normalizeDataset(par.curve, this.inputParameters.heartRate, PhysiologicalParameterSourceEnum.Heart);
+            normalizedDataset = this.curvesService.normalizeDataset(par.curve, this.inputParameters.heartRate || null, PhysiologicalParameterSourceEnum.Heart);
         } else {
             normalizedDataset = this.curvesService.normalizeDataset(par.curve, this.inputParameters.breathRate, PhysiologicalParameterSourceEnum.Breath);
         }
@@ -339,7 +354,7 @@ export class Panel2Component implements OnInit, OnDestroy {
         this.inputParameters.heartRate = newHR;
         this.currentParametersWithCurves.forEach((par: PhysiologicalParamaterI, i: number) => {
             if (par.source === PhysiologicalParameterSourceEnum.Heart)
-                this.setNewDataset({ curve: par.curve, normalized: this.normalizeCurves(par) }, i);
+                this.setNewDataset({ curve: par.curve, normalized: this.normalizeHrCurves(par) }, i);
         });
     }
 
